@@ -53,6 +53,36 @@ Un code fait 12 caractères tirés d'un alphabet de 32 symboles sans ambiguïté
 (ni `0`/`O`, ni `1`/`I`), soit **60 bits**. Derrière 310 000 itérations PBKDF2,
 une attaque par force brute sur le fichier public est hors de portée.
 
+### Durée de la session
+
+Après la saisie du code, la session est **mémorisée sur l'appareil** : fermer
+l'onglet ou le navigateur ne déconnecte pas.
+
+À **chaque chargement de la page**, la session est vérifiée :
+
+| Cas | Comportement |
+|---|---|
+| Session valide | reconnexion silencieuse, et l'échéance repart pour `sessionHours` |
+| Échéance dépassée | code redemandé, avec « Session expirée. Entre ton code pour continuer. » |
+| Accès retiré ou code changé entre-temps | code redemandé, avec « Session fermée : ton accès a été modifié ou retiré. » |
+
+L'échéance est **glissante** : chaque visite la repousse. Une session ne meurt
+donc qu'après `sessionHours` d'inactivité. La valeur se règle dans
+`js/config.js` (12 heures par défaut) et l'onglet **Paramètres** affiche la date
+d'expiration et le temps restant.
+
+**Se déconnecter** efface immédiatement la session mémorisée.
+
+Ce qui est conservé, c'est le **code**, pas le jeton GitHub — et dans
+`localStorage`, donc sur cet appareil et ce navigateur uniquement, jamais
+transmis ni partagé. Si `localStorage` est indisponible (navigation privée,
+données de site bloquées), le repli est `sessionStorage`, puis la mémoire : la
+session dure alors le temps de l'onglet, ou de la page.
+
+> Conséquence à connaître : quiconque a accès au profil du navigateur reprend la
+> session sans connaître le code. C'est le compromis habituel du « rester
+> connecté ». Sur un poste partagé, utiliser **Se déconnecter**.
+
 ### Gérer les accès depuis le site
 
 Une personne dont l'accès porte le droit **« accès aux paramètres »** voit, dans
@@ -224,8 +254,9 @@ et interdit un `RETENU` sans réserve.
 
 ## Stockage des données
 
-GitHub sert de base de données via l'API Contents. Aucun service externe,
-aucun `localStorage`.
+GitHub sert de base de données via l'API Contents. Aucun service externe.
+**Aucune donnée de dossier n'est stockée dans le navigateur** : tout vit dans le
+dépôt, pour être partagé entre examinateurs où qu'ils soient.
 
 | Branche | Contenu | Déployée |
 |---|---|---|
@@ -257,8 +288,8 @@ GitHub Pages : écrire les brouillons sur `main` déclencherait une
 reconstruction du site toutes les 30 secondes, et les builds Pages sont
 limités en nombre par heure.
 
-Le seul usage de `sessionStorage` est optionnel et sert à garder le code
-personnel le temps de l'onglet.
+Le stockage du navigateur ne sert qu'à la session de connexion, décrite
+ci-dessus. Il ne contient aucun dossier, aucune note, aucun candidat.
 
 ---
 
@@ -289,7 +320,7 @@ tools/
   restore.mjs               retour arrière sur les données : log, diff, rollback
 
 js/
-  config.js                 dépôt GitHub, branche de données, délai d'autosave
+  config.js                 dépôt GitHub, branche de données, autosave, durée de session
   app.js                    contrôleur, autosave, window.app (handlers du HTML)
 
   data/
@@ -302,7 +333,8 @@ js/
     dom.js                  helpers DOM, échappement HTML, initiales
     github-api.js           client API Contents GitHub (lecture/écriture/retry)
     store.js                couche de persistance (driver github ou mémoire)
-    auth.js                 session examinateur, code personnel, rôles
+    auth.js                 session examinateur, code personnel, rôles, expiration
+    session-store.js        mémorisation de la session, avec replis
     roster.js               création et retrait des accès depuis le site
     crypto.js               AES-GCM + PBKDF2, génération et format des codes
     state.js                modèle du dossier, création, migration, mutations
@@ -330,7 +362,7 @@ JavaScript natif, modules ES, aucune dépendance et aucune étape de build.
 
 | Situation | Comportement |
 |---|---|
-| Code personnel | lecture et écriture, brouillon partagé, clôture possible |
+| Code personnel | lecture et écriture, brouillon partagé, clôture possible, session mémorisée |
 | Code avec droit « paramètres » | idem, plus la gestion des accès et de la direction |
 | Jeton GitHub personnel | idem, droit « paramètres » inclus, révocation individuelle côté GitHub |
 | `js/config.js` sans `owner`/`repo` | mode local : le site marche, les dossiers restent dans l'onglet |

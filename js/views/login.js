@@ -1,5 +1,5 @@
 import { byId, esc } from '../core/dom.js';
-import { isConfigured } from '../config.js';
+import { CONFIG, isConfigured } from '../config.js';
 
 const HOST = 'login';
 
@@ -44,7 +44,7 @@ function emptyRosterBox(notice) {
     </div>`;
 }
 
-function rosterBox(entries, notice) {
+function rosterBox(entries, notice, hours) {
   const options = entries
     .map(entry => `<option value="${esc(entry.id)}">${esc(entry.label)}</option>`)
     .join('');
@@ -58,13 +58,13 @@ function rosterBox(entries, notice) {
         <select id="loginWho">${options}</select>
         <label>Code personnel</label>
         <input id="loginCode" type="password" autocomplete="off" placeholder="BAC-XXXX-XXXX-XXXX">
-        <label>
-          <input class="inline-check" type="checkbox" id="loginKeep">
-          Garder la session jusqu’à la fermeture de cet onglet
-        </label>
         <div class="modal-actions">
           <button class="primary" onclick="app.submitLogin()">Se connecter</button>
         </div>
+        <p class="mut">
+          La session reste ouverte ${hours} h sur cet appareil, puis le code est
+          redemandé. « Se déconnecter » la ferme immédiatement.
+        </p>
         <p class="mut">
           Ton code est personnel. Il ne figure nulle part en clair et ne donne accès
           qu’à ce dépôt. En cas de perte, demande au directeur BAC d’en générer un nouveau.
@@ -86,7 +86,7 @@ export function showLogin(message, entries) {
   }
 
   const list = Array.isArray(entries) ? entries : [];
-  host.innerHTML = list.length ? rosterBox(list, notice) : emptyRosterBox(notice);
+  host.innerHTML = list.length ? rosterBox(list, notice, CONFIG.sessionHours) : emptyRosterBox(notice);
 
   const field = byId('loginCode');
   field?.focus();
@@ -103,8 +103,7 @@ export function hideLogin() {
 export function readCredentials() {
   return {
     entryId: byId('loginWho')?.value || '',
-    code: byId('loginCode')?.value.trim() || '',
-    keep: Boolean(byId('loginKeep')?.checked)
+    code: byId('loginCode')?.value.trim() || ''
   };
 }
 

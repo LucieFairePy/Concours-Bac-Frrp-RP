@@ -144,12 +144,19 @@ async function boot() {
   }
 
   const restored = await auth.restore();
-  if (restored) {
+
+  if (restored.status === 'ok') {
     await afterSignIn();
     return;
   }
 
-  showLogin('', entries);
+  const notice = restored.status === 'expired'
+    ? 'Session expirée. Entre ton code pour continuer.'
+    : restored.status === 'invalid'
+      ? `Session fermée : ${restored.reason}. Entre ton code.`
+      : '';
+
+  showLogin(notice, entries);
 }
 
 async function promptLogin(message) {
@@ -427,7 +434,7 @@ const app = {
   },
 
   async submitLogin() {
-    const { entryId, code, keep } = readCredentials();
+    const { entryId, code } = readCredentials();
     if (!code) {
       await promptLogin('Entre ton code personnel.');
       return;
@@ -435,7 +442,7 @@ const app = {
 
     setLoginBusy(true, 'Vérification…');
     try {
-      await auth.signIn(entryId, code, keep);
+      await auth.signIn(entryId, code);
       await afterSignIn();
     } catch (error) {
       setLoginBusy(false);

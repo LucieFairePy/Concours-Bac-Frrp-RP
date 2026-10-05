@@ -5,6 +5,7 @@ export const CONFIG = {
   dataDir: 'data',
   accessFile: 'access.json',
   autosaveDelay: 30000,
+  sessionHours: 12,
   defaultCommand: {
     dg: 'Lieutenant',
     dn: 'BOUSSERE Kevin',

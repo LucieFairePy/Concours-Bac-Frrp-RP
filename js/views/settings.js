@@ -30,6 +30,19 @@ function commandCard() {
     </div>`;
 }
 
+function expiryLabel() {
+  const at = auth.expiry();
+  if (!at) return 'session non mémorisée';
+
+  const when = new Date(at);
+  const left = Math.max(0, Math.round((at - Date.now()) / 60000));
+  const hours = Math.floor(left / 60);
+  const minutes = left % 60;
+  const remaining = hours ? `${hours} h ${String(minutes).padStart(2, '0')}` : `${minutes} min`;
+
+  return `${when.toLocaleString('fr-FR', { dateStyle: 'short', timeStyle: 'short' })} (dans ${remaining})`;
+}
+
 function sessionCard() {
   const session = auth.current();
 
@@ -41,6 +54,8 @@ function sessionCard() {
         <tr><th>Identifiant</th><td>${esc(session ? session.login : '—')}</td></tr>
         <tr><th>Rôle</th><td>${esc(session ? session.role : '—')}</td></tr>
         <tr><th>Accès aux paramètres</th><td>${auth.canManage() ? 'oui' : 'non'}</td></tr>
+        <tr><th>Session valable jusqu’à</th><td>${esc(expiryLabel())}</td></tr>
+        <tr><th>Mémorisée sur cet appareil</th><td>${auth.persistent() ? 'oui' : 'non — onglet seulement'}</td></tr>
       </table>
       <button class="danger" onclick="app.signOut()">Se déconnecter</button>
     </div>`;

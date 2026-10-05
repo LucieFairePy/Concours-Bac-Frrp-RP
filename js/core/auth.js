@@ -1,13 +1,14 @@
-import { isConfigured } from '../config.js';
+import { CONFIG, isConfigured } from '../config.js';
 import * as gh from './github-api.js';
 import * as store from './store.js';
 import * as roster from './roster.js';
+import * as vault from './session-store.js';
 import { openPayload, normalizeCode, KDF } from './crypto.js';
 
-const TAB_KEY = 'bac_tab_session';
 const PAT_PATTERN = /^(github_pat_|ghp_|gho_|ghu_|ghs_)/;
 
 let session = null;
+let expiresAt = 0;
 
 export function current() {
   return session;
@@ -34,22 +35,28 @@ export function rosterEntries() {
   return file ? file.entries : [];
 }
 
-function readTabSession() {
-  try {
-    const raw = sessionStorage.getItem(TAB_KEY);
-    return raw ? JSON.parse(raw) : null;
-  } catch (error) {
-    return null;
-  }
+function ttl() {
+  const hours = Number(CONFIG.sessionHours);
+  return (Number.isFinite(hours) && hours > 0 ? hours : 12) * 3600 * 1000;
 }
 
-function writeTabSession(value) {
-  try {
-    if (value) sessionStorage.setItem(TAB_KEY, JSON.stringify(value));
-    else sessionStorage.removeItem(TAB_KEY);
-  } catch (error) {
+function remember(credentials) {
+  if (!credentials) {
+    vault.clear();
+    expiresAt = 0;
     return;
   }
+
+  expiresAt = Date.now() + ttl();
+  vault.write({ ...credentials, expiresAt });
+}
+
+export function expiry() {
+  return expiresAt;
+}
+
+export function persistent() {
+  return vault.persistent();
 }
 
 function matchUser(users, login) {
@@ -70,7 +77,7 @@ export async function signInLocal(displayName) {
   return session;
 }
 
-export async function signInWithCode(entryId, code, keepForTab) {
+export async function signInWithCode(entryId, code) {
   let file = await roster.load();
   let entry = file.entries.find(item => item.id === entryId);
 
@@ -97,11 +104,11 @@ export async function signInWithCode(entryId, code, keepForTab) {
     offline: false
   };
 
-  writeTabSession(keepForTab ? { entryId, code: normalizeCode(code) } : null);
+  remember({ entryId, code: normalizeCode(code) });
   return session;
 }
 
-export async function signInWithPat(code, keepForTab) {
+export async function signInWithPat(code) {
   gh.setToken(code);
 
   let account;
@@ -136,34 +143,40 @@ export async function signInWithPat(code, keepForTab) {
     offline: false
   };
 
-  writeTabSession(keepForTab ? { pat: code } : null);
+  remember({ pat: code });
   return session;
 }
 
-export async function signIn(entryId, code, keepForTab) {
+export async function signIn(entryId, code) {
   if (!isConfigured()) return signInLocal('Examinateur local');
-  if (looksLikePat(code)) return signInWithPat(String(code).trim(), keepForTab);
-  return signInWithCode(entryId, code, keepForTab);
+  if (looksLikePat(code)) return signInWithPat(String(code).trim());
+  return signInWithCode(entryId, code);
 }
 
 export async function restore() {
-  const saved = readTabSession();
-  if (!saved) return null;
+  const saved = vault.read();
+  if (!saved) return { status: 'none' };
 
-  try {
-    if (saved.pat) return await signInWithPat(saved.pat, true);
-    if (saved.entryId) return await signInWithCode(saved.entryId, saved.code, true);
-  } catch (error) {
-    writeTabSession(null);
-    return null;
+  if (!saved.expiresAt || Date.now() >= saved.expiresAt) {
+    remember(null);
+    return { status: 'expired' };
   }
 
-  return null;
+  try {
+    if (saved.pat) return { status: 'ok', session: await signInWithPat(saved.pat) };
+    if (saved.entryId) return { status: 'ok', session: await signInWithCode(saved.entryId, saved.code) };
+  } catch (error) {
+    remember(null);
+    return { status: 'invalid', reason: 'ton accès a été modifié ou retiré' };
+  }
+
+  remember(null);
+  return { status: 'none' };
 }
 
 export function signOut() {
   gh.setToken(null);
-  writeTabSession(null);
+  remember(null);
   session = null;
   roster.forget();
 }
