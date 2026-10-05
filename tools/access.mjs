@@ -93,7 +93,9 @@ function printRoster(access) {
   }
   stdout.write(`${access.entries.length} accès sur la branche ${CONFIG.dataBranch} :\n\n`);
   for (const entry of access.entries) {
-    stdout.write(`  ${entry.id.padEnd(14)} ${entry.label.padEnd(32)} ${entry.role || 'examinateur'}\n`);
+    const role = (entry.role || 'examinateur').padEnd(13);
+    const flag = entry.manage === true ? 'paramètres' : '';
+    stdout.write(`  ${entry.id.padEnd(14)} ${entry.label.padEnd(32)} ${role} ${flag}\n`);
   }
   stdout.write('\n');
 }
@@ -232,6 +234,7 @@ async function cmdCheck(rest) {
   }
 
   stdout.write(`\n  Code valide — ${payload.grade} ${payload.name} (${payload.role})\n`);
+  stdout.write(`  Accès aux paramètres : ${payload.manage === true ? 'oui' : 'non'}\n`);
   stdout.write(`  Jeton scellé : ${payload.token.slice(0, 11)}…${payload.token.slice(-4)}\n\n`);
 }
 

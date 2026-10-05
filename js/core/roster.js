@@ -2,6 +2,8 @@ import * as gh from './github-api.js';
 import * as store from './store.js';
 import { sealPayload, generateCode, KDF } from './crypto.js';
 
+let cache = null;
+
 function slugify(value) {
   return String(value || '')
     .normalize('NFD')
@@ -21,20 +23,49 @@ function uniqueId(base, taken) {
   throw new Error('Impossible de générer un identifiant libre.');
 }
 
-async function readFile() {
-  const file = await store.loadAccess();
-  if (file && Array.isArray(file.entries)) return file;
+function blank() {
   return { version: 1, kdf: KDF, entries: [] };
 }
 
-export async function list() {
-  const file = await readFile();
-  return file.entries.map(entry => ({
+export async function load(force) {
+  if (cache && !force) return cache;
+  const file = await store.loadAccess();
+  cache = file && Array.isArray(file.entries) ? file : blank();
+  return cache;
+}
+
+export function cached() {
+  return cache;
+}
+
+export function forget() {
+  cache = null;
+}
+
+async function commit(file, label) {
+  await store.saveAccess(file);
+  cache = file;
+  return label;
+}
+
+function describe(entry) {
+  return {
     id: entry.id,
     label: entry.label,
     role: entry.role || 'examinateur',
     manage: entry.manage === true
-  }));
+  };
+}
+
+export async function list() {
+  const file = await load(true);
+  return file.entries.map(describe);
+}
+
+export async function find(id) {
+  const file = await load();
+  const entry = file.entries.find(item => item.id === id);
+  return entry || null;
 }
 
 export async function createEntry({ grade, name, manage }) {
@@ -47,33 +78,32 @@ export async function createEntry({ grade, name, manage }) {
   if (!cleanGrade) throw new Error('Renseigne le grade.');
   if (!cleanName) throw new Error('Renseigne le nom.');
 
-  const file = await readFile();
+  const file = await load(true);
   const taken = new Set(file.entries.map(entry => entry.id));
   const id = uniqueId(slugify(cleanName), taken);
 
   const label = `${cleanGrade} ${cleanName}`;
-  const role = manage ? 'directeur' : 'examinateur';
+  const allowed = manage === true;
+  const role = allowed ? 'directeur' : 'examinateur';
   const code = generateCode();
 
   const sealed = await sealPayload(
-    { token, name: cleanName, grade: cleanGrade, role, manage: manage === true },
+    { token, name: cleanName, grade: cleanGrade, role, manage: allowed },
     code,
     file.kdf || KDF
   );
 
-  file.entries.push({ id, label, role, manage: manage === true, ...sealed });
-  await store.saveAccess(file);
+  file.entries.push({ id, label, role, manage: allowed, ...sealed });
+  await commit(file, label);
 
-  return { id, label, role, manage: manage === true, code };
+  return { id, label, role, manage: allowed, code };
 }
 
 export async function removeEntry(id) {
-  const file = await readFile();
+  const file = await load(true);
   const entry = file.entries.find(item => item.id === id);
   if (!entry) throw new Error('Accès introuvable.');
 
   file.entries = file.entries.filter(item => item.id !== id);
-  await store.saveAccess(file);
-
-  return entry.label;
+  return commit(file, entry.label);
 }

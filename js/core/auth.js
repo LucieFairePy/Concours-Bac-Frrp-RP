@@ -1,13 +1,13 @@
 import { isConfigured } from '../config.js';
 import * as gh from './github-api.js';
 import * as store from './store.js';
+import * as roster from './roster.js';
 import { openPayload, normalizeCode, KDF } from './crypto.js';
 
 const TAB_KEY = 'bac_tab_session';
 const PAT_PATTERN = /^(github_pat_|ghp_|gho_|ghu_|ghs_)/;
 
 let session = null;
-let roster = null;
 
 export function current() {
   return session;
@@ -25,15 +25,13 @@ export function looksLikePat(code) {
   return PAT_PATTERN.test(String(code || '').trim());
 }
 
-export async function loadRoster(force) {
-  if (roster && !force) return roster;
-  const file = await store.loadAccess();
-  roster = file || { version: 1, kdf: KDF, entries: [] };
-  return roster;
+export function loadRoster(force) {
+  return roster.load(force);
 }
 
 export function rosterEntries() {
-  return roster ? roster.entries : [];
+  const file = roster.cached();
+  return file ? file.entries : [];
 }
 
 function readTabSession() {
@@ -73,8 +71,13 @@ export async function signInLocal(displayName) {
 }
 
 export async function signInWithCode(entryId, code, keepForTab) {
-  const file = await loadRoster();
-  const entry = file.entries.find(item => item.id === entryId);
+  let file = await roster.load();
+  let entry = file.entries.find(item => item.id === entryId);
+
+  if (!entry) {
+    file = await roster.load(true);
+    entry = file.entries.find(item => item.id === entryId);
+  }
 
   if (!entry) throw new Error('Examinateur inconnu. Recharge la page.');
   if (!normalizeCode(code)) throw new Error('Entre ton code.');
@@ -162,6 +165,7 @@ export function signOut() {
   gh.setToken(null);
   writeTabSession(null);
   session = null;
+  roster.forget();
 }
 
 export function describeOperator() {

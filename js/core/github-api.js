@@ -39,6 +39,10 @@ function contentsUrl(path) {
   return `${API}/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${path}`;
 }
 
+function fresh(url) {
+  return `${url}${url.includes('?') ? '&' : '?'}t=${Date.now()}`;
+}
+
 export function encodeContent(text) {
   const bytes = new TextEncoder().encode(text);
   let binary = '';
@@ -82,7 +86,7 @@ export async function viewer() {
 }
 
 async function readRaw(path) {
-  const url = `${RAW}/${CONFIG.owner}/${CONFIG.repo}/${CONFIG.dataBranch}/${path}?t=${Date.now()}`;
+  const url = `${RAW}/${CONFIG.owner}/${CONFIG.repo}/${CONFIG.dataBranch}/${path}`;
   const response = await fetch(url, { cache: 'no-store' });
 
   if (response.status === 404) return null;
@@ -97,9 +101,15 @@ async function readRaw(path) {
 }
 
 export async function readJson(path) {
-  if (!token) return readRaw(path);
+  let payload;
+  try {
+    payload = await request(fresh(`${contentsUrl(path)}?ref=${CONFIG.dataBranch}`));
+  } catch (error) {
+    const throttled = error instanceof GitHubError && (error.status === 403 || error.status === 429);
+    if (token || !throttled) throw error;
+    return readRaw(path);
+  }
 
-  const payload = await request(`${contentsUrl(path)}?ref=${CONFIG.dataBranch}`);
   if (!payload || !payload.content) return null;
   try {
     return { value: JSON.parse(decodeContent(payload.content)), sha: payload.sha };
@@ -109,7 +119,7 @@ export async function readJson(path) {
 }
 
 export async function listDir(path) {
-  const payload = await request(`${contentsUrl(path)}?ref=${CONFIG.dataBranch}`);
+  const payload = await request(fresh(`${contentsUrl(path)}?ref=${CONFIG.dataBranch}`));
   if (!Array.isArray(payload)) return [];
   return payload.filter(entry => entry.type === 'file');
 }
