@@ -8,7 +8,7 @@ import { totals, suggestedDecision } from './scoring/totals.js';
 import { renderPassage } from './views/passage.js';
 import { renderCorrection } from './views/correction.js';
 import { renderResults, refreshResults } from './views/results.js';
-import { renderDossier } from './views/dossier.js';
+import { renderDossier, DOSSIER_IMAGES } from './views/dossier.js';
 import { renderHistory } from './views/history.js';
 import {
   renderSettings,
@@ -71,6 +71,22 @@ async function flush() {
   } finally {
     saving = false;
   }
+}
+
+function loadImage(src) {
+  return new Promise(resolve => {
+    const image = new Image();
+    image.onload = () => resolve(true);
+    image.onerror = () => resolve(false);
+    image.src = src;
+  });
+}
+
+async function preloadSheetImages() {
+  const timeout = new Promise(resolve => { window.setTimeout(() => resolve([]), 8000); });
+  const loads = Promise.all(DOSSIER_IMAGES.map(loadImage));
+  const done = await Promise.race([loads, timeout]);
+  return Array.isArray(done) ? done.filter(Boolean).length : 0;
 }
 
 function renderAll() {
@@ -343,6 +359,29 @@ const app = {
     setBanner('');
     setSync('reprise…');
     await afterSignIn();
+  },
+
+  async downloadPdf() {
+    const D = state.dossier;
+    if (!D) return;
+
+    openStep('final');
+
+    const name = `${D.c.last.toUpperCase()} ${D.c.first}`.trim();
+    const previous = document.title;
+    document.title = name ? `${D.id} — ${name}` : D.id;
+
+    setSync('préparation du PDF…');
+    const ready = await preloadSheetImages();
+
+    if (ready < DOSSIER_IMAGES.length) {
+      setSync(`${DOSSIER_IMAGES.length - ready} image(s) indisponible(s)`, 'error');
+    } else {
+      setSync('');
+    }
+
+    window.print();
+    document.title = previous;
   },
 
   async closeDossier() {

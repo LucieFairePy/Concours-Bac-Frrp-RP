@@ -22,6 +22,8 @@ const IMAGES = {
   shooting: 'assets/img/epreuve-tir.jpg'
 };
 
+export const DOSSIER_IMAGES = Object.values(IMAGES);
+
 function photo(image, height) {
   return `<div class="dp-photo" style="height:${height};background-image:linear-gradient(#06152211,#06152255),url('${image}')"></div>`;
 }

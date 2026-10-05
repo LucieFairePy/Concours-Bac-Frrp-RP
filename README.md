@@ -18,7 +18,8 @@ Site statique hébergé sur GitHub Pages, dossiers stockés dans ce dépôt sur 
    (`BAC-XXXX-XXXX-XXXX`). Un code est nécessaire : il n'y a pas d'accès anonyme
 3. Dérouler les 9 étapes : Identité → Théorie → Radio → Situations → Physique →
    Tir → Correction → Résultats → Fiche finale
-4. **Imprimer / Enregistrer en PDF** pour sortir le dossier 8 pages A4
+4. **Télécharger en PDF** pour sortir le dossier A4, en choisissant
+   « Enregistrer au format PDF » comme destination dans la fenêtre du navigateur
 5. **CLÔTURER DÉFINITIVEMENT** écrit le dossier dans le dépôt et le verrouille
 
 Le brouillon en cours est enregistré automatiquement toutes les 30 secondes, à
@@ -227,6 +228,36 @@ Déplacer `data/` dans un **dépôt séparé**, avec un jeton limité à ce dép
 le code du site totalement hors d'atteinte : au pire, les données sont abîmées,
 jamais le site. Il suffit de créer le dépôt, d'y pousser la branche `data`, et de
 renseigner son nom dans `js/config.js`.
+
+## Export PDF
+
+Le bouton **Télécharger en PDF** de la fiche finale précharge les photos, nomme
+le document d'après le dossier et le candidat — le navigateur propose donc
+`BAC-2026-001 — DURAND Léa.pdf` — puis ouvre la fenêtre d'impression. Il faut y
+choisir **Enregistrer au format PDF** comme destination.
+
+C'est le moteur d'impression du navigateur qui produit le fichier, et non une
+bibliothèque JavaScript : les pages sont de vraies A4, le texte reste
+sélectionnable et vectoriel, les cotes en millimètres et les sauts de page sont
+respectés. Une bibliothèque de rastérisation donnerait un texte flou et des
+fichiers plus lourds.
+
+Le CSS d'impression garantit que rien ne manque :
+
+- `print-color-adjust: exact` sur **tout** le sous-arbre de la fiche, sinon le
+  navigateur supprime les fonds : en-têtes, pieds, bandeaux et en-têtes de
+  tableau sortiraient en blanc sur blanc, et les photos disparaîtraient
+- `@page { margin: 0 }`, parce que chaque page fait déjà exactement 210 × 297 mm
+  et porte ses propres marges internes
+- hauteur **automatique** avec un minimum de 297 mm, au lieu d'une hauteur fixe
+  qui coupait les réponses longues
+
+> Conséquence de ce dernier point : si les réponses sont très longues, une page
+> logique peut s'étaler sur deux feuilles, et les pieds de page continuent
+> d'indiquer la section (`3/8`). Le contenu complet est privilégié sur le nombre
+> de feuilles. Pour imposer huit feuilles exactement, remettre
+> `height: 297mm` et `overflow: hidden` sur `.dossier-page` dans
+> `css/print.css` — mais le texte en excès sera alors perdu.
 
 ## Barème
 
