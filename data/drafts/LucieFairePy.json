@@ -1,0 +1,171 @@
+{
+  "id": "BAC-2026-001",
+  "locked": false,
+  "created": "2026-10-05T21:52:56.264Z",
+  "c": {
+    "last": "",
+    "first": "",
+    "grade": "",
+    "mat": "",
+    "date": "2026-10-05",
+    "start": ""
+  },
+  "ex": [
+    {
+      "grade": "Brigadier",
+      "name": "LAURENT Cyril"
+    }
+  ],
+  "qs": [
+    {
+      "id": 195,
+      "theme": "Observation",
+      "q": "Comment restituez-vous une chronologie dont vous n’êtes pas certain  avec un nouvel équipier ?"
+    },
+    {
+      "id": 75,
+      "theme": "Radio",
+      "q": "Comment corrigez-vous une information radio erronée  en patrouille de nuit ?"
+    },
+    {
+      "id": 26,
+      "theme": "Connaissance BAC",
+      "q": "Pourquoi la discrétion est-elle importante dans certaines missions  avec des informations incomplètes ?"
+    },
+    {
+      "id": 190,
+      "theme": "Observation",
+      "q": "Comment restituez-vous une chronologie dont vous n’êtes pas certain ?"
+    },
+    {
+      "id": 9,
+      "theme": "Connaissance BAC",
+      "q": "Quel est le rôle principal d’un équipage BAC  avec plusieurs témoins ?"
+    },
+    {
+      "id": 18,
+      "theme": "Connaissance BAC",
+      "q": "Quelles qualités attendez-vous d’un bon équipier BAC  avec plusieurs témoins ?"
+    },
+    {
+      "id": 69,
+      "theme": "Radio",
+      "q": "Pourquoi faut-il distinguer ce que vous avez vu de ce qui vous a été rapporté  avec un nouvel équipier ?"
+    },
+    {
+      "id": 42,
+      "theme": "Connaissance BAC",
+      "q": "Comment gérez-vous un désaccord avec un collègue pendant une mission  avec un nouvel équipier ?"
+    },
+    {
+      "id": 139,
+      "theme": "Déontologie",
+      "q": "Comment réagissez-vous face à une provocation verbale  dans une zone fréquentée ?"
+    },
+    {
+      "id": 210,
+      "theme": "Observation",
+      "q": "Comment éviter que le stress déforme votre restitution  en patrouille de nuit ?"
+    }
+  ],
+  "ans": {},
+  "radioAns": [
+    "",
+    "",
+    "",
+    ""
+  ],
+  "scAns": [
+    [
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ]
+  ],
+  "phys": {
+    "run": "",
+    "push": "",
+    "abs": "",
+    "plank": "",
+    "pursuit": "",
+    "cog": "",
+    "obs": ""
+  },
+  "shoot": {
+    "safety": "",
+    "handling": "",
+    "precision": "",
+    "reaction": "",
+    "memory": "",
+    "memoryAsked": "",
+    "memoryGood": "",
+    "memoryErrors": "",
+    "discern": "",
+    "discernAsked": "",
+    "discernErrors": "",
+    "analysis": "",
+    "hostage": 0,
+    "obs": ""
+  },
+  "marks": {
+    "theory": {},
+    "radio": {},
+    "sc": {},
+    "phys": "",
+    "shoot": ""
+  },
+  "strength": "",
+  "improve": "",
+  "general": "",
+  "decision": "",
+  "reason": "",
+  "retakes": [],
+  "retakeDate": "",
+  "el": {
+    "cheat": false,
+    "refusal": false,
+    "abandon": false,
+    "danger": false
+  },
+  "cmd": {
+    "dg": "Lieutenant",
+    "dn": "BOUSSERE Kevin",
+    "ag": "Brigadier",
+    "an": "LAURENT Cyril"
+  },
+  "total": null,
+  "closedAt": null,
+  "closedBy": null
+}
