@@ -22,15 +22,6 @@
       "salt": "mlPNKSdbNPST+LbDYOicGw==",
       "iv": "SjbE6tJcZYVQ3fOa",
       "data": "MhIMOsfGQm7oXpr+G8W5HEhV5UQRVOPAfSEaYE0D8LaAp5EE45l7kvBibTs4TZOlJ6YM+dkJiK1mR1r/M5/oWlrbLYh9W3ajOiYyyT8CeJ3XWErhhQv0rM3D0KCmMGAKD6D3UB9lSO5CWjIuYL5xYgTxP8pvt4yQ6TYANwBGjZlYVFi6zvxbn2e85OpDeC9c9dWbV6Pw7fy70wdTtUAfnMIZ+1jc5IKTFHlNH00SCaGAyJDUZfecNrE3KNUX92p/8+OmX5vtAQ=="
-    },
-    {
-      "id": "zztest",
-      "label": "Gardien TEST Freshness",
-      "role": "examinateur",
-      "manage": false,
-      "salt": "4wY234vDk/bs3fTKop/8vg==",
-      "iv": "KEFADdrYJWFErOpW",
-      "data": "WlS9wPRlv0gPqdxjZQ1bYh0d825oZwcxTi5J0Cg5vdxQQ+rIQZmXuytW0S27b+0FPsCm3FdCP7Ahmsu5+jOrZB17T6o484ZFEuo+DbL1teHlU/unOKWvJj81v98xR0pjnP3NpABzO17JRuJK+mMhuUfDxG86he3gdA8oxv0ODvhx8hgUYDIf+8mTfI3covgIXl4LNWDRzXPXa6OjoGHBdZ2tVmLweMsmuUasmdMD1ydTl27De0161d7Zdou9exiyD83BcV0JsQ=="
     }
   ]
 }
