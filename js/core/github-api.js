@@ -1,6 +1,7 @@
 import { CONFIG } from '../config.js';
 
 const API = 'https://api.github.com';
+const RAW = 'https://raw.githubusercontent.com';
 const MAX_RETRY = 5;
 
 let token = null;
@@ -76,7 +77,24 @@ export async function viewer() {
   return request(`${API}/user`);
 }
 
+async function readRaw(path) {
+  const url = `${RAW}/${CONFIG.owner}/${CONFIG.repo}/${CONFIG.dataBranch}/${path}?t=${Date.now()}`;
+  const response = await fetch(url, { cache: 'no-store' });
+
+  if (response.status === 404) return null;
+  if (!response.ok) throw new GitHubError(response.status, response.statusText);
+
+  const text = await response.text();
+  try {
+    return { value: JSON.parse(text), sha: null };
+  } catch (error) {
+    throw new GitHubError(422, `JSON invalide dans ${path}`);
+  }
+}
+
 export async function readJson(path) {
+  if (!token) return readRaw(path);
+
   const payload = await request(`${contentsUrl(path)}?ref=${CONFIG.dataBranch}`);
   if (!payload || !payload.content) return null;
   try {
@@ -93,6 +111,8 @@ export async function listDir(path) {
 }
 
 export async function writeJson(path, value, message, sha) {
+  if (!token) throw new GitHubError(401, 'Code personnel requis pour enregistrer.');
+
   const body = {
     message,
     branch: CONFIG.dataBranch,
@@ -103,6 +123,8 @@ export async function writeJson(path, value, message, sha) {
 }
 
 export async function deleteFile(path, message, sha) {
+  if (!token) throw new GitHubError(401, 'Code personnel requis pour supprimer.');
+
   return request(contentsUrl(path), {
     method: 'DELETE',
     body: { message, branch: CONFIG.dataBranch, sha }

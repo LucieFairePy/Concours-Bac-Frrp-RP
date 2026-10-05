@@ -28,6 +28,14 @@ function setBanner(html) {
   setHTML('banner', html);
 }
 
+function setBannerRetry(message) {
+  setBanner(`
+    <div class="banner error">
+      ${esc(message)}
+      <div class="modal-actions"><button onclick="app.retry()">Réessayer</button></div>
+    </div>`);
+}
+
 function markDirty() {
   dirty = true;
   setSync('modifications non enregistrées');
@@ -64,7 +72,16 @@ function renderAll() {
 
 async function startDossier() {
   const year = new Date().getFullYear();
-  const id = await store.nextDossierId(year);
+
+  let id;
+  try {
+    id = await store.nextDossierId(year);
+  } catch (error) {
+    setBannerRetry(`Numéro de dossier indisponible : ${error.message}`);
+    setSync('dépôt injoignable', 'error');
+    return;
+  }
+
   state.dossier = blankDossier(id, state.settings);
   state.readOnly = false;
   dirty = true;
@@ -76,30 +93,34 @@ async function startDossier() {
 async function loadInitialDossier() {
   const session = auth.current();
 
-  if (session.canWrite) {
-    let draft = null;
-    try {
-      draft = await store.loadDraft(session.login);
-    } catch (error) {
-      setBanner(`<div class="banner error">Brouillon illisible : ${esc(error.message)}</div>`);
-    }
-    if (draft) {
-      state.dossier = migrate(draft);
-      state.readOnly = false;
-      renderAll();
-      openStep('id');
-      setSync('brouillon repris');
-      return;
-    }
-    await startDossier();
+  if (!session.canWrite) {
+    state.dossier = blankDossier('BAC-LECTURE', state.settings);
+    state.readOnly = true;
+    renderAll();
+    openStep('id');
+    setSync('consultation — écriture désactivée');
     return;
   }
 
-  state.dossier = blankDossier('BAC-LECTURE', state.settings);
-  state.readOnly = true;
-  renderAll();
-  openStep('id');
-  setSync('consultation — écriture désactivée');
+  let draft = null;
+  try {
+    draft = await store.loadDraft(session.login);
+  } catch (error) {
+    setBannerRetry(`Brouillon illisible : ${error.message}`);
+    setSync('dépôt injoignable', 'error');
+    return;
+  }
+
+  if (draft) {
+    state.dossier = migrate(draft);
+    state.readOnly = false;
+    renderAll();
+    openStep('id');
+    setSync('brouillon repris');
+    return;
+  }
+
+  await startDossier();
 }
 
 async function boot() {
@@ -126,18 +147,23 @@ async function boot() {
 async function afterSignIn() {
   hideLogin();
 
-  try {
-    const stored = await store.loadSettings();
-    if (stored) state.settings = { ...CONFIG.defaultCommand, ...stored };
-  } catch (error) {
-    setBanner(`<div class="banner error">Paramètres illisibles : ${esc(error.message)}</div>`);
-  }
-
   const session = auth.current();
   const who = `${session.grade} ${session.name}`.trim() || session.login;
   setHTML('who', esc(who));
 
-  await loadInitialDossier();
+  try {
+    const stored = await store.loadSettings();
+    if (stored) state.settings = { ...CONFIG.defaultCommand, ...stored };
+  } catch (error) {
+    setBannerRetry(`Paramètres illisibles : ${error.message}`);
+  }
+
+  try {
+    await loadInitialDossier();
+  } catch (error) {
+    setBannerRetry(`Démarrage impossible : ${error.message}`);
+    setSync('dépôt injoignable', 'error');
+  }
 }
 
 const app = {
@@ -220,6 +246,12 @@ const app = {
   async saveNow() {
     dirty = true;
     await flush();
+  },
+
+  async retry() {
+    setBanner('');
+    setSync('reprise…');
+    await afterSignIn();
   },
 
   async closeDossier() {
