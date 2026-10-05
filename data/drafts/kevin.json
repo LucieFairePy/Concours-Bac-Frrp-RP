@@ -1,0 +1,171 @@
+{
+  "id": "BAC-2026-001",
+  "locked": false,
+  "created": "2026-10-05T23:46:55.469Z",
+  "c": {
+    "last": "",
+    "first": "",
+    "grade": "",
+    "mat": "",
+    "date": "2026-10-05",
+    "start": ""
+  },
+  "ex": [
+    {
+      "grade": "Brigadier",
+      "name": "LAURENT Cyril"
+    }
+  ],
+  "qs": [
+    {
+      "id": 186,
+      "theme": "Observation",
+      "q": "Quels détails retenez-vous en priorité lors d’une observation brève  avec un nouvel équipier ?"
+    },
+    {
+      "id": 170,
+      "theme": "Déontologie",
+      "q": "Pourquoi faut-il conserver un langage professionnel sous pression  avec des informations incomplètes ?"
+    },
+    {
+      "id": 146,
+      "theme": "Déontologie",
+      "q": "Que signifie rendre compte loyalement d’une erreur  en début de vacation ?"
+    },
+    {
+      "id": 121,
+      "theme": "Analyse",
+      "q": "Pourquoi la temporisation peut-elle parfois être une bonne décision  dans une zone fréquentée ?"
+    },
+    {
+      "id": 166,
+      "theme": "Déontologie",
+      "q": "Pourquoi faut-il conserver un langage professionnel sous pression  dans une zone fréquentée ?"
+    },
+    {
+      "id": 116,
+      "theme": "Analyse",
+      "q": "Que faites-vous si votre première analyse était mauvaise  avec des informations incomplètes ?"
+    },
+    {
+      "id": 132,
+      "theme": "Analyse",
+      "q": "Comment hiérarchisez-vous plusieurs risques simultanés  avec un nouvel équipier ?"
+    },
+    {
+      "id": 187,
+      "theme": "Observation",
+      "q": "Quels détails retenez-vous en priorité lors d’une observation brève  dans une situation évolutive ?"
+    },
+    {
+      "id": 136,
+      "theme": "Déontologie",
+      "q": "Comment réagissez-vous face à une provocation verbale ?"
+    },
+    {
+      "id": 182,
+      "theme": "Observation",
+      "q": "Quels détails retenez-vous en priorité lors d’une observation brève  en début de vacation ?"
+    }
+  ],
+  "ans": {},
+  "radioAns": [
+    "",
+    "",
+    "",
+    ""
+  ],
+  "scAns": [
+    [
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ]
+  ],
+  "phys": {
+    "run": "",
+    "push": "",
+    "abs": "",
+    "plank": "",
+    "pursuit": "",
+    "cog": "",
+    "obs": ""
+  },
+  "shoot": {
+    "safety": "",
+    "handling": "",
+    "precision": "",
+    "reaction": "",
+    "memory": "",
+    "memoryAsked": "",
+    "memoryGood": "",
+    "memoryErrors": "",
+    "discern": "",
+    "discernAsked": "",
+    "discernErrors": "",
+    "analysis": "",
+    "hostage": 0,
+    "obs": ""
+  },
+  "marks": {
+    "theory": {},
+    "radio": {},
+    "sc": {},
+    "phys": "",
+    "shoot": ""
+  },
+  "strength": "",
+  "improve": "",
+  "general": "",
+  "decision": "",
+  "reason": "",
+  "retakes": [],
+  "retakeDate": "",
+  "el": {
+    "cheat": false,
+    "refusal": false,
+    "abandon": false,
+    "danger": false
+  },
+  "cmd": {
+    "dg": "Lieutenant",
+    "dn": "BOUSSERE Kevin",
+    "ag": "Brigadier",
+    "an": "LAURENT Cyril"
+  },
+  "total": null,
+  "closedAt": null,
+  "closedBy": null
+}
