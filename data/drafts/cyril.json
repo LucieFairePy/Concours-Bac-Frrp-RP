@@ -1,0 +1,171 @@
+{
+  "id": "BAC-2026-001",
+  "locked": false,
+  "created": "2026-10-05T22:46:36.537Z",
+  "c": {
+    "last": "",
+    "first": "",
+    "grade": "",
+    "mat": "",
+    "date": "2026-10-05",
+    "start": ""
+  },
+  "ex": [
+    {
+      "grade": "Brigadier",
+      "name": "LAURENT Cyril"
+    }
+  ],
+  "qs": [
+    {
+      "id": 39,
+      "theme": "Connaissance BAC",
+      "q": "Comment gérez-vous un désaccord avec un collègue pendant une mission  en patrouille de nuit ?"
+    },
+    {
+      "id": 63,
+      "theme": "Radio",
+      "q": "Comment rendre un message radio court mais exploitable  avec plusieurs témoins ?"
+    },
+    {
+      "id": 21,
+      "theme": "Connaissance BAC",
+      "q": "Pourquoi la discrétion est-elle importante dans certaines missions  en patrouille de nuit ?"
+    },
+    {
+      "id": 97,
+      "theme": "Analyse",
+      "q": "Deux témoins donnent des versions différentes : comment réagissez-vous  dans une situation évolutive ?"
+    },
+    {
+      "id": 84,
+      "theme": "Radio",
+      "q": "Comment rendez-vous compte d’une évolution importante  en patrouille de nuit ?"
+    },
+    {
+      "id": 80,
+      "theme": "Radio",
+      "q": "Comment corrigez-vous une information radio erronée  avec des informations incomplètes ?"
+    },
+    {
+      "id": 89,
+      "theme": "Radio",
+      "q": "Comment rendez-vous compte d’une évolution importante  avec des informations incomplètes ?"
+    },
+    {
+      "id": 82,
+      "theme": "Radio",
+      "q": "Comment rendez-vous compte d’une évolution importante ?"
+    },
+    {
+      "id": 108,
+      "theme": "Analyse",
+      "q": "Comment évitez-vous de transformer une hypothèse en certitude  avec plusieurs témoins ?"
+    },
+    {
+      "id": 43,
+      "theme": "Connaissance BAC",
+      "q": "Comment gérez-vous un désaccord avec un collègue pendant une mission  dans une situation évolutive ?"
+    }
+  ],
+  "ans": {},
+  "radioAns": [
+    "",
+    "",
+    "",
+    ""
+  ],
+  "scAns": [
+    [
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ]
+  ],
+  "phys": {
+    "run": "",
+    "push": "",
+    "abs": "",
+    "plank": "",
+    "pursuit": "",
+    "cog": "",
+    "obs": ""
+  },
+  "shoot": {
+    "safety": "",
+    "handling": "",
+    "precision": "",
+    "reaction": "",
+    "memory": "",
+    "memoryAsked": "",
+    "memoryGood": "",
+    "memoryErrors": "",
+    "discern": "",
+    "discernAsked": "",
+    "discernErrors": "",
+    "analysis": "",
+    "hostage": 0,
+    "obs": ""
+  },
+  "marks": {
+    "theory": {},
+    "radio": {},
+    "sc": {},
+    "phys": "",
+    "shoot": ""
+  },
+  "strength": "",
+  "improve": "",
+  "general": "",
+  "decision": "",
+  "reason": "",
+  "retakes": [],
+  "retakeDate": "",
+  "el": {
+    "cheat": false,
+    "refusal": false,
+    "abandon": false,
+    "danger": false
+  },
+  "cmd": {
+    "dg": "Lieutenant",
+    "dn": "BOUSSERE Kevin",
+    "ag": "Brigadier",
+    "an": "LAURENT Cyril"
+  },
+  "total": null,
+  "closedAt": null,
+  "closedBy": null
+}
