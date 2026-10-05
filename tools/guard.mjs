@@ -71,6 +71,13 @@ async function cmdStatus(flags) {
   const token = typeof flags['admin-token'] === 'string' ? flags['admin-token'] : null;
   const { status, payload } = await api(token, '/rulesets');
 
+  if (status === 403 && !token) {
+    fail(
+      'Quota de l\'API GitHub atteint pour les requêtes anonymes (60 par heure et par IP).\n'
+      + '        Relance avec --admin-token=... pour lire les protections.'
+    );
+  }
+
   if (status === 404 || !Array.isArray(payload)) {
     fail(`Lecture des protections impossible (HTTP ${status}).`);
   }
