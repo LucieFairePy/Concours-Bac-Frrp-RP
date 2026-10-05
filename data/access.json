@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "kdf": {
+    "name": "PBKDF2",
+    "hash": "SHA-256",
+    "iterations": 310000
+  },
+  "entries": [
+    {
+      "id": "cyril",
+      "label": "Brigadier LAURENT Cyril",
+      "role": "examinateur",
+      "salt": "HQhBUvKyIzBVSrch49+wxw==",
+      "iv": "CoNSN1IytOR2bIcT",
+      "data": "Hkxu5awpjJupOEdmKuBxW1bXLwPLD6+UJ9CzgYN5WpesodYNh3QJaZf7/q4NOXzMyXzxwMwE8DNpJsC9x6EpMBiLb1FlyAfRBGdjtrvQB0jxq89xGOGb8Mf+u7mh2Z1gMsN3PyApy58EQJBg4tW4k2tCwyLLV4DQ41fDoJSFNzMNcMfI4EUknEcdLXrmV9lgIQNlNtJ5BnKtbtBVV6Hq9+y2fsAClFfRCHsMQHW3ha2aw5kSuO3nDtg="
+    }
+  ]
+}
