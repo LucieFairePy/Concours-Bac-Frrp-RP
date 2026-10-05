@@ -1,6 +1,10 @@
 import { createInterface } from 'node:readline';
 import { stdin, stdout, env, exit } from 'node:process';
 
+stdout.on('error', error => {
+  exit(error && error.code === 'EPIPE' ? 0 : 1);
+});
+
 let prompter = null;
 let masked = false;
 let piped = null;
