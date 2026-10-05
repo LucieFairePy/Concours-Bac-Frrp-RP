@@ -1,0 +1,70 @@
+@media print {
+  @page { size: A4; margin: 14mm }
+
+  body { background: white !important; color: #111 }
+
+  header, .tabs, .no-print, .modal { display: none !important }
+
+  main { max-width: none; padding: 0 }
+
+  .section { display: none !important }
+  .section.printme { display: block !important }
+
+  .card, .hero, .correction {
+    background: white;
+    color: #111;
+    border: 1px solid #aaa;
+    break-inside: avoid;
+  }
+
+  .mut, label { color: #444 }
+
+  .hero {
+    border-top: 7px solid #163f67;
+    padding: 24px;
+  }
+
+  .hero:after {
+    content: 'BRIGADE ANTI-CRIMINALITÉ';
+    color: #0000000a;
+    font-size: 48px;
+  }
+
+  .hero h2 { font-size: 24px }
+
+  .score { font-size: 42px }
+
+  .card {
+    border-radius: 0;
+    margin: 10px 0;
+    padding: 16px;
+  }
+
+  .card h3 { border-bottom: 2px solid #163f67; padding-bottom: 5px }
+
+  .q { background: #fafafa; border-left: 3px solid #163f67 }
+
+  .finalDecision { font-size: 28px }
+
+  #s-final { padding: 0 !important; background: white !important }
+  #sheet { max-width: none }
+
+  .dossier-page {
+    box-shadow: none;
+    margin: 0;
+    width: 210mm;
+    height: 297mm;
+    min-height: 297mm;
+    page-break-after: always;
+    break-after: page;
+  }
+
+  .dossier-page:last-child { page-break-after: auto }
+
+  .cover-v2 .coverHero,
+  .cover-v2 .coverScore,
+  .cover-v2 .juryTitle {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}

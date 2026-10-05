@@ -1,0 +1,190 @@
+#s-final { background: #d8dde2; padding: 14px }
+#sheet { max-width: 210mm; margin: auto }
+
+.dossier-page {
+  width: 210mm;
+  min-height: 297mm;
+  background: #fff;
+  color: #18222b;
+  margin: 0 auto 18px;
+  box-shadow: 0 8px 28px #0007;
+  position: relative;
+  padding: 17mm 12mm 15mm;
+  overflow: hidden;
+}
+
+.dossier-page:before {
+  content: "B.A.C";
+  position: absolute;
+  inset: 38% 0 auto;
+  text-align: center;
+  font-size: 92px;
+  font-weight: 900;
+  color: #09263b08;
+  transform: rotate(-18deg);
+  pointer-events: none;
+}
+
+.dp-head {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 13mm;
+  background: #071d2c;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  padding: 0 11mm;
+  border-bottom: 3px solid #1e5aa8;
+  gap: 12px;
+}
+
+.dp-flag {
+  width: 25px;
+  height: 15px;
+  background: linear-gradient(90deg, #1753a4 0 33%, #fff 33% 66%, #e33b43 66%);
+}
+
+.dp-brand { font-size: 12px; font-weight: 900; letter-spacing: .6px }
+.dp-sub { font-size: 8px; opacity: .82 }
+.dp-id { margin-left: auto; font-size: 9px; font-weight: 800 }
+
+.dp-foot {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 9mm;
+  background: #071d2c;
+  color: #fff;
+  padding: 2.7mm 11mm;
+  font-size: 8px;
+  letter-spacing: .4px;
+}
+
+.dp-page { float: right; font-weight: 900 }
+
+.dp-title {
+  font-size: 24px;
+  line-height: 1.05;
+  text-transform: uppercase;
+  margin: 5mm 0 3mm;
+  color: #071d2c;
+}
+
+.dp-kicker {
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #587080;
+}
+
+.dp-band {
+  background: #082538;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 900;
+  padding: 6px 9px;
+  margin: 9px 0 5px;
+  text-transform: uppercase;
+  border-left: 5px solid #1e5aa8;
+}
+
+.dp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px }
+.dp-grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px }
+
+.dp-box { border: 1px solid #aebbc5; background: #f7f9fa; padding: 8px }
+.dp-box b { color: #09263b }
+
+.dp-table { width: 100%; border-collapse: collapse; font-size: 10px }
+.dp-table th { background: #0b2a3e; color: #fff; padding: 6px; border: 1px solid #9aabb7 }
+.dp-table td { padding: 6px; border: 1px solid #b7c2ca; vertical-align: top }
+
+.dp-score {
+  background: #071d2c;
+  color: #55e8a0;
+  text-align: center;
+  padding: 13px;
+  font-size: 31px;
+  font-weight: 900;
+  border: 1px solid #28485d;
+}
+
+.dp-decision {
+  text-align: center;
+  font-size: 28px;
+  font-weight: 900;
+  color: #168252;
+  padding: 9px;
+}
+
+.dp-photo {
+  height: 55mm;
+  background-size: cover;
+  background-position: center;
+  border: 1px solid #233d4e;
+  position: relative;
+  margin: 6px 0 10px;
+}
+
+.dp-photo:after {
+  content: "BRIGADE ANTI-CRIMINALITÉ — FRANCE ROLEPLAY";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #061b29dd;
+  color: #fff;
+  padding: 6px 10px;
+  font-size: 8px;
+  letter-spacing: 1px;
+}
+
+.dp-q {
+  border-left: 3px solid #173e59;
+  background: #f6f8f9;
+  padding: 7px 9px;
+  margin: 5px 0;
+  font-size: 9.5px;
+}
+
+.dp-q .ans { margin: 4px 0; color: #273943 }
+.dp-note { font-weight: 900; color: #168252 }
+
+.dp-scenario {
+  border: 1px solid #aebbc5;
+  margin: 7px 0;
+  padding: 8px;
+  break-inside: avoid;
+}
+
+.dp-scenario h4 { margin: 0 0 5px; color: #082538 }
+
+.dp-statement { font-size: 9px; background: #edf2f5; padding: 6px; margin-bottom: 5px }
+
+.dp-signs {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 4px;
+  text-align: center;
+  font-size: 8px;
+}
+
+.dp-sign { border-right: 1px solid #ccd4da; min-height: 28mm; padding: 5px }
+.dp-sign:last-child { border: 0 }
+.dp-sign .sig { font-size: 27px; margin-top: 8px }
+
+.dp-stamp {
+  display: inline-block;
+  border: 4px double #c92d35;
+  color: #c92d35;
+  font-weight: 900;
+  font-size: 21px;
+  padding: 7px 13px;
+  transform: rotate(-5deg);
+  text-align: center;
+}
+
+.dp-check { font-weight: 900; color: #168252 }
+.dp-muted { color: #617582; font-size: 9px }

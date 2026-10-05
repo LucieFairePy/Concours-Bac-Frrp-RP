@@ -1,0 +1,138 @@
+.cover-v2 { padding-top: 17mm }
+.cover-v2:before { display: none }
+
+.cover-v2 .coverHero {
+  height: 91mm;
+  margin: -4mm -12mm 0;
+  position: relative;
+  background-size: cover;
+  background-position: center 42%;
+  border-bottom: 5px solid #071d2c;
+}
+
+.cover-v2 .coverHero:after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, #06152205 42%, #061522e8 100%);
+}
+
+.cover-v2 .coverTitle {
+  position: absolute;
+  left: 7mm;
+  right: 7mm;
+  bottom: 8mm;
+  z-index: 2;
+  text-align: center;
+  color: #fff;
+  text-shadow: 0 2px 4px #000;
+  font-weight: 900;
+}
+
+.cover-v2 .coverTitle .big { font-size: 24px; letter-spacing: .4px; line-height: 1.02 }
+.cover-v2 .coverTitle .small { font-size: 16px; letter-spacing: 1.2px; margin-top: 2px }
+.cover-v2 .coverMotto { font-size: 7px; letter-spacing: 3px; margin-top: 5px; opacity: .9 }
+
+.cover-v2 .coverStrip {
+  background: #f3f5f6;
+  color: #0a2335;
+  border: 1px solid #aebbc5;
+  font-size: 10px;
+  font-weight: 900;
+  padding: 4px 7px;
+  margin: 3mm 0 2mm;
+}
+
+.cover-v2 .candidateWrap { display: grid; grid-template-columns: 1fr 33mm; gap: 5mm }
+
+.cover-v2 .candidatePhoto {
+  height: 43mm;
+  background: #0a1720;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  color: #fff;
+  font-size: 8px;
+  font-weight: 900;
+  padding-bottom: 5px;
+  position: relative;
+  overflow: hidden;
+}
+
+.cover-v2 .candidatePhoto:before {
+  content: "";
+  position: absolute;
+  width: 21mm;
+  height: 21mm;
+  border-radius: 50%;
+  background: #020507;
+  top: 5mm;
+  left: 6mm;
+}
+
+.cover-v2 .candidatePhoto:after {
+  content: "";
+  position: absolute;
+  width: 29mm;
+  height: 22mm;
+  border-radius: 50% 50% 0 0;
+  background: #020507;
+  bottom: 8mm;
+  left: 2mm;
+}
+
+.cover-v2 .candidatePhoto span { z-index: 2 }
+
+.cover-v2 .coverResults { display: grid; grid-template-columns: 1.2fr .9fr; gap: 5mm; margin-top: 3mm }
+
+.cover-v2 .coverScore {
+  background: #071d2c;
+  border: 1px solid #294b61;
+  text-align: center;
+  padding: 7px 5px;
+  color: white;
+  min-height: 40mm;
+}
+
+.cover-v2 .coverScore .label { font-size: 9px; font-weight: 900; color: #fff; margin-bottom: 3px }
+.cover-v2 .coverScore .number { font-size: 26px; font-weight: 900 }
+.cover-v2 .coverScore .verdict { font-size: 22px; font-weight: 900; margin-top: 3px }
+
+.cover-v2 .juryBox { border: 1px solid #aebbc5; background: #f7f9fa; min-height: 40mm }
+
+.cover-v2 .juryTitle {
+  background: #0a293d;
+  color: #fff;
+  text-align: center;
+  font-size: 9px;
+  font-weight: 900;
+  padding: 4px;
+}
+
+.cover-v2 .juryRows { padding: 4px 8px; font-size: 9px; line-height: 1.65 }
+
+.cover-v2 .juryRows .box {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border: 1px solid #526a79;
+  margin-right: 6px;
+  vertical-align: -1px;
+  text-align: center;
+  line-height: 9px;
+  font-weight: 900;
+}
+
+.cover-v2 .juryRows .chosen { background: #079447; color: #fff; border-color: #079447 }
+
+.cover-v2 .coverSigns {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  text-align: center;
+  margin-top: 4mm;
+  font-size: 7.5px;
+}
+
+.cover-v2 .coverSign { border-right: 1px solid #c5cdd3; min-height: 25mm; padding: 2px 5px }
+.cover-v2 .coverSign:last-child { border: 0 }
+.cover-v2 .coverSign .sig { font-size: 23px; margin-top: 5px }
