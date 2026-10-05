@@ -38,8 +38,15 @@ function rulesetFor(branch) {
   };
 }
 
+function bust(path) {
+  if (path.includes('?')) return `${path}&t=${Date.now()}`;
+  return `${path}?t=${Date.now()}`;
+}
+
 async function api(token, path, options = {}) {
-  const response = await fetch(`${API}/repos/${SLUG}${path}`, {
+  const target = (options.method || 'GET') === 'GET' ? bust(path) : path;
+
+  const response = await fetch(`${API}/repos/${SLUG}${target}`, {
     method: options.method || 'GET',
     cache: 'no-store',
     headers: {
