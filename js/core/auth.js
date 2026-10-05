@@ -30,11 +30,6 @@ export function loadRoster(force) {
   return roster.load(force);
 }
 
-export function rosterEntries() {
-  const file = roster.cached();
-  return file ? file.entries : [];
-}
-
 function ttl() {
   const hours = Number(CONFIG.sessionHours);
   return (Number.isFinite(hours) && hours > 0 ? hours : 12) * 3600 * 1000;
@@ -65,15 +60,19 @@ function matchUser(users, login) {
 }
 
 export async function signInLocal(displayName) {
+  const name = displayName || 'Examinateur local';
+
   session = {
     login: 'local',
-    name: displayName || 'Examinateur local',
+    name,
     grade: '',
     role: 'examinateur',
     manage: true,
     canWrite: true,
     offline: true
   };
+
+  remember({ local: name });
   return session;
 }
 
@@ -163,6 +162,7 @@ export async function restore() {
   }
 
   try {
+    if (saved.local) return { status: 'ok', session: await signInLocal(saved.local) };
     if (saved.pat) return { status: 'ok', session: await signInWithPat(saved.pat) };
     if (saved.entryId) return { status: 'ok', session: await signInWithCode(saved.entryId, saved.code) };
   } catch (error) {

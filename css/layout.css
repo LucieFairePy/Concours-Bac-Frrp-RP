@@ -12,13 +12,14 @@ header {
 
 .logo {
   width: 56px;
-  height: 56px;
-  border: 2px solid #dce7ee;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  font-weight: 900;
-  background: #10283c;
+  height: 63px;
+  flex: none;
+  display: block;
+}
+
+body.booting > header,
+body.booting > main {
+  display: none;
 }
 
 nav { margin-left: auto; display: flex; gap: 6px; flex-wrap: wrap }

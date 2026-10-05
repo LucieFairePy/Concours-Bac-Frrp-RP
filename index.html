@@ -3,65 +3,36 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Concours BAC — France Roleplay</title>
+  <title>Accès examinateur — Concours BAC</title>
+  <meta name="description" content="Accès examinateur au concours d’intégration de la Brigade Anti-Criminalité — France Roleplay.">
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="apple-touch-icon" href="assets/favicon.svg">
   <link rel="stylesheet" href="css/base.css">
-  <link rel="stylesheet" href="css/layout.css">
   <link rel="stylesheet" href="css/components.css">
-  <link rel="stylesheet" href="css/dossier.css">
-  <link rel="stylesheet" href="css/cover.css">
-  <link rel="stylesheet" href="css/print.css">
+  <link rel="stylesheet" href="css/gate.css">
 </head>
-<body>
-  <div id="login"></div>
+<body class="gate">
+  <main class="gate-wrap">
+    <section class="gate-card">
+      <header class="gate-head">
+        <img class="gate-logo" src="assets/logo-bac.svg" width="64" height="72"
+             alt="Écusson Brigade Anti-Criminalité">
+        <div>
+          <h1>CONCOURS D’INTÉGRATION</h1>
+          <h2>Brigade Anti-Criminalité</h2>
+          <div class="flag"></div>
+          <p class="mut">Police Nationale • France Roleplay • outil fictif d’évaluation</p>
+        </div>
+      </header>
 
-  <header>
-    <div class="logo">BAC</div>
-    <div>
-      <h1>CONCOURS D’INTÉGRATION — BRIGADE ANTI-CRIMINALITÉ</h1>
-      <div class="mut">
-        Police Nationale • France Roleplay • outil fictif d’évaluation
-        <span id="who"></span>
-        <span id="sync" class="sync"></span>
-      </div>
-    </div>
-    <nav class="no-print">
-      <button onclick="app.view('home')">Dossier</button>
-      <button onclick="app.view('hist')">Historique</button>
-      <button onclick="app.view('settings')">Paramètres</button>
-      <button onclick="app.saveNow()">Enregistrer</button>
-      <button class="primary" onclick="app.newDossier()">Nouveau</button>
-    </nav>
-  </header>
-
-  <main>
-    <div id="banner" class="no-print"></div>
-
-    <section id="home" class="view">
-      <div class="hero">
-        <div class="flag"></div>
-        <h2 id="hero">Nouveau concours</h2>
-        <div class="mut">Passage candidat → Correction → Résultats → Fiche finale • /1000</div>
-      </div>
-      <div id="tabs" class="tabs no-print"></div>
-      <div class="no-print">
-        <div class="progress"><span id="prog"></span></div>
-        <div id="stepText" class="steptext"></div>
-      </div>
-      <div id="sections"></div>
+      <div id="gate"></div>
     </section>
 
-    <section id="hist" class="view" style="display:none">
-      <div class="card">
-        <h2>Historique des dossiers clôturés</h2>
-        <div id="histList"></div>
-      </div>
-    </section>
-
-    <section id="settings" class="view" style="display:none">
-      <div id="settingsBox"></div>
-    </section>
+    <p class="gate-foot mut">
+      Document fictif — France Roleplay — sans valeur administrative réelle.
+    </p>
   </main>
 
-  <script type="module" src="js/app.js"></script>
+  <script type="module" src="js/gate.js"></script>
 </body>
 </html>

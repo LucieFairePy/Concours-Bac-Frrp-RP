@@ -20,7 +20,6 @@ import {
   showGeneratedCode
 } from './views/settings.js';
 import { openStep, step, openView } from './views/navigation.js';
-import { showLogin, hideLogin, readCredentials, readLocalName, setLoginBusy } from './views/login.js';
 
 let autosaveTimer = null;
 let dirty = false;
@@ -139,8 +138,23 @@ async function loadInitialDossier() {
   await startDossier();
 }
 
+const GATE = 'index.html';
+
+function toGate(reason) {
+  window.location.replace(reason ? `${GATE}?r=${reason}` : GATE);
+}
+
 async function boot() {
   await store.detectDriver();
+
+  const restored = await auth.restore();
+
+  if (restored.status !== 'ok') {
+    toGate(restored.status === 'none' ? 'required' : restored.status);
+    return;
+  }
+
+  document.body.classList.remove('booting');
 
   if (!isConfigured()) {
     setBanner(`
@@ -151,43 +165,10 @@ async function boot() {
       </div>`);
   }
 
-  let entries = [];
-  try {
-    const file = await auth.loadRoster(true);
-    entries = file.entries;
-  } catch (error) {
-    setBannerRetry(`Liste des accès illisible : ${error.message}`);
-  }
-
-  const restored = await auth.restore();
-
-  if (restored.status === 'ok') {
-    await afterSignIn();
-    return;
-  }
-
-  const notice = restored.status === 'expired'
-    ? 'Session expirée. Entre ton code pour continuer.'
-    : restored.status === 'invalid'
-      ? `Session fermée : ${restored.reason}. Entre ton code.`
-      : '';
-
-  showLogin(notice, entries);
-}
-
-async function promptLogin(message) {
-  let entries = [];
-  try {
-    entries = (await auth.loadRoster()).entries;
-  } catch (error) {
-    entries = auth.rosterEntries();
-  }
-  showLogin(message, entries);
+  await afterSignIn();
 }
 
 async function afterSignIn() {
-  hideLogin();
-
   const who = auth.describeOperator();
   store.setOperator(who);
   setHTML('who', esc(who));
@@ -472,37 +453,12 @@ const app = {
     }
   },
 
-  async submitLogin() {
-    const { entryId, code } = readCredentials();
-    if (!code) {
-      await promptLogin('Entre ton code personnel.');
-      return;
-    }
-
-    setLoginBusy(true, 'Vérification…');
-    try {
-      await auth.signIn(entryId, code);
-      await afterSignIn();
-    } catch (error) {
-      setLoginBusy(false);
-      await promptLogin(error.message);
-    }
-  },
-
-  async submitLocalLogin() {
-    setLoginBusy(true);
-    await auth.signInLocal(readLocalName());
-    await afterSignIn();
-  },
-
-  async signOut() {
+  signOut() {
     auth.signOut();
     store.setOperator('');
     state.dossier = null;
     dirty = false;
-    setHTML('who', '');
-    setSync('');
-    await promptLogin('Session terminée.');
+    toGate('signedout');
   }
 };
 

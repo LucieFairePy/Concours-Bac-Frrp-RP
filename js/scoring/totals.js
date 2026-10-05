@@ -30,10 +30,17 @@ export function scenarioMark(dossier, scenarioIndex, questionIndex) {
   return finalMark(dossier.marks.sc[key], scenarioAuto(dossier, scenarioIndex, questionIndex), 15);
 }
 
-export function totals(dossier) {
-  const th = dossier.qs.reduce((sum, question) => sum + theoryMark(dossier, question), 0);
-  const ra = RADIO_EXERCISE.questions.reduce((sum, _, index) => sum + radioMark(dossier, index), 0);
-  const sc = SCENARIOS.reduce(
+export const SCENARIO_SECTION_MAX = 300;
+
+export const SCENARIO_QUESTION_MAX = 15;
+
+export const SCENARIO_RAW_MAX = SCENARIOS.reduce(
+  (sum, scenario) => sum + scenario.questions.length * SCENARIO_QUESTION_MAX,
+  0
+);
+
+export function scenarioRawTotal(dossier) {
+  return SCENARIOS.reduce(
     (sum, scenario, scenarioIndex) =>
       sum +
       scenario.questions.reduce(
@@ -42,10 +49,22 @@ export function totals(dossier) {
       ),
     0
   );
+}
+
+export function scaleScenarios(raw) {
+  if (!SCENARIO_RAW_MAX) return 0;
+  return Math.round((raw * SCENARIO_SECTION_MAX) / SCENARIO_RAW_MAX);
+}
+
+export function totals(dossier) {
+  const th = dossier.qs.reduce((sum, question) => sum + theoryMark(dossier, question), 0);
+  const ra = RADIO_EXERCISE.questions.reduce((sum, _, index) => sum + radioMark(dossier, index), 0);
+  const scRaw = scenarioRawTotal(dossier);
+  const sc = scaleScenarios(scRaw);
   const ph = finalMark(dossier.marks.phys, physicalAuto(dossier), 200);
   const sh = finalMark(dossier.marks.shoot, shootingAuto(dossier), 300);
 
-  return { th, ra, sc, ph, sh, total: th + ra + sc + ph + sh };
+  return { th, ra, sc, scRaw, ph, sh, total: th + ra + sc + ph + sh };
 }
 
 export function suggestedDecision(dossier) {

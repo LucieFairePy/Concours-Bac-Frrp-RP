@@ -13,9 +13,10 @@ Site statique hébergé sur GitHub Pages, dossiers stockés dans ce dépôt sur 
 
 ## Utilisation
 
-1. Ouvrir <https://luciefairepy.github.io/Concours-Bac-Frrp-RP/>
+1. Ouvrir <https://luciefairepy.github.io/Concours-Bac-Frrp-RP/> — c'est la
+   **page d'accès examinateur**, seule porte d'entrée du site
 2. Choisir son nom dans la liste et taper son **code personnel**
-   (`BAC-XXXX-XXXX-XXXX`). Un code est nécessaire : il n'y a pas d'accès anonyme
+   (`BAC-XXXX-XXXX-XXXX`). La connexion mène à l'application (`app.html`)
 3. Dérouler les 9 étapes : Identité → Théorie → Radio → Situations → Physique →
    Tir → Correction → Résultats → Fiche finale
 4. **Télécharger en PDF** pour sortir le dossier A4, en choisissant
@@ -31,6 +32,31 @@ Un dossier commencé sur un ordinateur se reprend sur un autre : le brouillon
 suit le code personnel, pas la machine. Rien n'est stocké dans le navigateur.
 
 ---
+
+## Deux pages
+
+| Page | Rôle |
+|---|---|
+| `index.html` | accès examinateur, seule porte d'entrée |
+| `app.html` | l'application : dossier, historique, paramètres |
+| `404.html` | adresse inconnue, renvoie vers l'accès |
+
+L'application **n'est pas** un écran masqué par une fenêtre modale : c'est une
+page distincte. Ouvrir `app.html` directement sans session valide déclenche une
+redirection vers l'accès, et le corps de la page reste masqué
+(`body.booting`) jusqu'à ce que la session soit vérifiée — rien n'apparaît,
+même brièvement.
+
+Se déconnecter renvoie à l'accès avec `?r=signedout`. Une session expirée
+renvoie avec `?r=expired`, un accès retiré avec `?r=invalid`.
+
+> **Ce que cette séparation fait, et ce qu'elle ne fait pas.** Elle empêche
+> d'atteindre l'application sans code, y compris en tapant l'URL. Elle ne rend
+> pas les données confidentielles : la branche `data` est publique, donc
+> lisible par quiconque connaît son adresse, sans passer par le site. Aucun
+> écran de connexion ne peut changer cela sur un hébergement statique. Pour une
+> vraie confidentialité, il faut un dépôt privé — et GitHub Pages exige alors
+> un plan payant.
 
 ## Accès des examinateurs
 
@@ -261,7 +287,7 @@ Le CSS d'impression garantit que rien ne manque :
 
 ## Barème
 
-Total sur **1000 points**.
+Total sur **1000 points**, plafond atteignable exactement.
 
 | Épreuve | Points |
 |---|---|
@@ -270,6 +296,13 @@ Total sur **1000 points**.
 | Mises en situation | 300 |
 | Physique & cognitif | 200 |
 | Tir | 300 |
+
+Les mises en situation comptent **27 questions notées sur 15**, soit 405 points
+bruts. La section pesant 300 points au barème, le total brut est ramené
+proportionnellement : `note = round(brut × 300 / 405)`. L'examinateur continue
+donc de noter chaque question sur 15, le classement entre candidats est
+conservé, et le total maximum du dossier vaut exactement 1000. La page de
+correction affiche les deux chiffres.
 
 Propositions automatiques : ≥ 800 `RETENU`, ≥ 650 `RETENU SOUS RÉSERVE`,
 en dessous `RECALÉ`. L'examinateur garde la décision finale.
@@ -327,15 +360,20 @@ ci-dessus. Il ne contient aucun dossier, aucune note, aucun candidat.
 ## Architecture
 
 ```
-index.html                  coquille HTML (header, 3 vues, points de montage)
+index.html                  page d'accès examinateur
+app.html                    application (header, 3 vues, points de montage)
+404.html                    adresse inconnue
 .nojekyll                   désactive Jekyll
 serve.cmd                   serveur local pour le développement
 .github/workflows/pages.yml déploiement GitHub Pages
 
+assets/favicon.svg          écusson, icône d'onglet
+assets/logo-bac.svg         écusson complet, en-tête et page d'accès
 assets/img/                 4 photos du dossier final
 
 css/
   base.css                  variables, reset, typo, boutons, champs, tableaux
+  gate.css                  page d'accès examinateur
   layout.css                header, nav, grille 12 colonnes, onglets, progression
   components.css            cards, questions, énoncés, scores, bannières, modale
   dossier.css               pages A4 du dossier final (.dossier-page, .dp-*)
@@ -352,6 +390,7 @@ tools/
 
 js/
   config.js                 dépôt GitHub, branche de données, autosave, durée de session
+  gate.js                   entrée de la page d'accès
   app.js                    contrôleur, autosave, window.app (handlers du HTML)
 
   data/
@@ -382,7 +421,7 @@ js/
     dossier.js              fiche finale, 8 pages A4
     history.js              liste des dossiers clôturés
     settings.js             direction BAC, gestion des accès, état de session
-    login.js                modale d'accès examinateur
+    gate.js                 formulaire de la page d'accès
 ```
 
 JavaScript natif, modules ES, aucune dépendance et aucune étape de build.

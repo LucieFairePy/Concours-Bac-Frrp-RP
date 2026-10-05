@@ -3,6 +3,12 @@ import { SCENARIOS } from '../data/scenarios.js';
 import { esc, setHTML } from '../core/dom.js';
 import { state, isEditable } from '../core/state.js';
 import { theoryAuto, radioAuto, scenarioAuto, physicalAuto, shootingAuto } from '../scoring/auto.js';
+import {
+  scenarioRawTotal,
+  scaleScenarios,
+  SCENARIO_RAW_MAX,
+  SCENARIO_SECTION_MAX
+} from '../scoring/totals.js';
 
 function markInput(path, value, max) {
   const dis = isEditable() ? '' : 'disabled';
@@ -17,6 +23,23 @@ function block(title, answer, auto, max, path, value) {
       <p class="auto">Suggestion automatique : ${auto}/${max}</p>
       <label>Note de l’examinateur /${max}</label>
       ${markInput(path, value, max)}
+    </div>`;
+}
+
+function scenarioSummary(D) {
+  const raw = scenarioRawTotal(D);
+  return `
+    <div class="card">
+      <h3>Mises en situation — total de la section</h3>
+      <p>
+        Somme des notes attribuées : <b>${raw}/${SCENARIO_RAW_MAX}</b><br>
+        Ramenée au poids de l’épreuve : <b>${scaleScenarios(raw)}/${SCENARIO_SECTION_MAX}</b>
+      </p>
+      <p class="mut">
+        Les ${SCENARIO_RAW_MAX / 15} questions sont notées sur 15, soit ${SCENARIO_RAW_MAX} points.
+        La section pesant ${SCENARIO_SECTION_MAX} points au barème, le total est converti
+        proportionnellement. Le classement entre candidats est conservé.
+      </p>
     </div>`;
 }
 
@@ -54,7 +77,7 @@ export function renderCorrection() {
       );
     }).join('');
     return `<div class="card"><h3>${esc(scenario.title)}</h3>${questions}</div>`;
-  }).join('');
+  }).join('') + scenarioSummary(D);
 
   setHTML('correction', `
     <div class="card">
