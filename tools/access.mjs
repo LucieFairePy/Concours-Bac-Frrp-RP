@@ -39,29 +39,57 @@ function parseFlags(args) {
   return { flags, rest };
 }
 
-function ask(question, hidden) {
+let prompter = null;
+let masked = false;
+
+function getPrompter() {
+  if (prompter) return prompter;
+
+  const interactive = Boolean(stdin.isTTY);
+  prompter = createInterface({ input: stdin, output: stdout, terminal: interactive });
+
+  if (interactive) {
+    const write = chunk => stdout.write(chunk);
+    prompter._writeToOutput = function writeToOutput(chunk) {
+      if (!masked) return write(chunk);
+      if (masked.prompt && String(chunk).includes(masked.prompt)) return write(masked.prompt);
+      return undefined;
+    };
+  }
+
+  return prompter;
+}
+
+function closePrompter() {
+  if (prompter) {
+    prompter.close();
+    prompter = null;
+  }
+}
+
+let piped = null;
+
+async function readPipedLines() {
+  const chunks = [];
+  for await (const chunk of stdin) chunks.push(chunk);
+  return Buffer.concat(chunks).toString('utf8').split(/\r?\n/);
+}
+
+async function ask(question, hidden) {
+  if (!stdin.isTTY) {
+    if (!piped) piped = await readPipedLines();
+    const answer = (piped.shift() ?? '').trim();
+    stdout.write(`${question}${hidden ? '' : answer}\n`);
+    return answer;
+  }
+
+  const rl = getPrompter();
+  masked = hidden ? { prompt: question } : false;
+
   return new Promise(resolve => {
-    const rl = createInterface({ input: stdin, output: stdout, terminal: true });
-
-    if (hidden) {
-      const onData = chunk => {
-        const text = chunk.toString();
-        if (text.includes('\n') || text.includes('\r')) stdin.removeListener('data', onData);
-        else stdout.write('*');
-      };
-      stdout.write(question);
-      stdin.on('data', onData);
-      rl.question('', answer => {
-        stdin.removeListener('data', onData);
-        stdout.write('\n');
-        rl.close();
-        resolve(answer.trim());
-      });
-      return;
-    }
-
     rl.question(question, answer => {
-      rl.close();
+      if (hidden) stdout.write('\n');
+      masked = false;
       resolve(answer.trim());
     });
   });
@@ -79,6 +107,7 @@ async function resolveToken(flags) {
 
 function fail(message) {
   stdout.write(`\nErreur : ${message}\n`);
+  closePrompter();
   exit(1);
 }
 
@@ -92,23 +121,51 @@ async function writeAccess(value, message) {
   await gh.updateJson(ACCESS_PATH, () => value, message);
 }
 
+const SLUG = () => `${CONFIG.owner}/${CONFIG.repo}`;
+
+async function probeWrite(token) {
+  const response = await fetch(
+    `https://api.github.com/repos/${SLUG()}/contents/${CONFIG.dataDir}/settings.json`,
+    {
+      method: 'PUT',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: 'application/vnd.github+json',
+        'X-GitHub-Api-Version': '2022-11-28'
+      },
+      body: JSON.stringify({
+        message: 'probe',
+        branch: CONFIG.dataBranch,
+        content: 'e30K',
+        sha: '0'.repeat(40)
+      })
+    }
+  );
+  return response.status;
+}
+
 async function verifyToken(token) {
   gh.setToken(token);
-  const account = await gh.viewer();
-  if (!account || !account.login) fail('Jeton refusé par GitHub.');
 
-  const probe = await fetch(
-    `https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}`,
-    { headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json' } }
-  );
-  if (!probe.ok) fail(`Le jeton ne voit pas ${CONFIG.owner}/${CONFIG.repo} (HTTP ${probe.status}).`);
-
-  const repo = await probe.json();
-  if (!repo.permissions || !repo.permissions.push) {
-    fail('Le jeton n\'a pas le droit d\'écriture sur ce dépôt (Contents: Read and write).');
+  let account = null;
+  try {
+    account = await gh.viewer();
+  } catch (error) {
+    if (error.status === 401) fail('Jeton refusé par GitHub.');
   }
 
-  return account.login;
+  const status = await probeWrite(token);
+
+  if (status === 401) fail('Jeton refusé par GitHub.');
+  if (status === 403) fail(`Le jeton n'a pas le droit d'écriture sur ${SLUG()} (Contents: Read and write).`);
+  if (status === 404) {
+    fail(`Le jeton ne voit pas ${SLUG()}, ou la branche ${CONFIG.dataBranch} est absente.`);
+  }
+  if (status !== 409 && status !== 422) {
+    stdout.write(`Avertissement : sonde d'écriture inattendue (HTTP ${status}).\n`);
+  }
+
+  return (account && account.login) || 'jeton restreint';
 }
 
 function printRoster(access) {
@@ -251,6 +308,7 @@ async function cmdCheck(rest) {
 
   if (!payload) {
     stdout.write('\n  Code incorrect.\n\n');
+    closePrompter();
     exit(1);
   }
 
@@ -277,6 +335,7 @@ if (!command || !COMMANDS[command]) {
 
 try {
   await COMMANDS[command]();
+  closePrompter();
   exit(0);
 } catch (error) {
   fail(error.message);
