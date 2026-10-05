@@ -15,7 +15,7 @@ Site statique hébergé sur GitHub Pages, dossiers stockés dans ce dépôt sur 
 
 1. Ouvrir <https://luciefairepy.github.io/Concours-Bac-Frrp-RP/>
 2. Choisir son nom dans la liste et taper son **code personnel**
-   (`BAC-XXXX-XXXX-XXXX`), ou cliquer **Consulter sans code** pour la lecture seule
+   (`BAC-XXXX-XXXX-XXXX`). Un code est nécessaire : il n'y a pas d'accès anonyme
 3. Dérouler les 9 étapes : Identité → Théorie → Radio → Situations → Physique →
    Tir → Correction → Résultats → Fiche finale
 4. **Imprimer / Enregistrer en PDF** pour sortir le dossier 8 pages A4
@@ -53,13 +53,36 @@ Un code fait 12 caractères tirés d'un alphabet de 32 symboles sans ambiguïté
 (ni `0`/`O`, ni `1`/`I`), soit **60 bits**. Derrière 310 000 itérations PBKDF2,
 une attaque par force brute sur le fichier public est hors de portée.
 
-### Gérer les accès
+### Gérer les accès depuis le site
 
-Tout passe par un outil local. Le jeton reste sur ta machine.
+Une personne dont l'accès porte le droit **« accès aux paramètres »** voit, dans
+l'onglet **Paramètres**, une carte *Accès des examinateurs* :
+
+- la liste des accès existants, avec qui a ce droit et un bouton **Retirer**
+- un formulaire **Ajouter une personne** : grade, nom, et une case
+  *Autoriser l'accès à cette page Paramètres*
+
+À la création, le code est généré aléatoirement, affiché **une seule fois** dans
+un champ avec un bouton **Copier**, prêt à être transmis. Il n'est stocké nulle
+part en clair : en cas de perte, retirer l'accès et le recréer.
+
+L'identifiant est dérivé du nom (`LAURENT Cyril` → `laurent-cyril`), avec un
+suffixe numérique si le nom est déjà pris. On ne peut pas retirer sa propre
+session.
+
+> Ce droit est une **barrière d'interface**, pas une frontière de sécurité :
+> toute personne ayant un code valide détient le même jeton GitHub et pourrait,
+> via l'API, faire ce que le jeton permet. Il sert à éviter les fausses
+> manœuvres, pas à contenir quelqu'un de malveillant. Ce qui contient
+> réellement, ce sont les protections de branche décrites plus bas.
+
+### Gérer les accès en ligne de commande
+
+Même chose hors du site, utile pour créer le premier accès.
 
 ```bash
 node tools/access.mjs list
-node tools/access.mjs add <id> <grade> <nom>
+node tools/access.mjs add <id> <grade> <nom> [--manage]
 node tools/access.mjs recode <id>
 node tools/access.mjs remove <id>
 node tools/access.mjs rotate
@@ -69,20 +92,20 @@ node tools/access.mjs check <id>
 | Commande | Effet |
 |---|---|
 | `add` | crée un accès et affiche son code **une seule fois** |
+| `--manage` | donne le droit d'accès à la page Paramètres |
 | `recode` | remplace le code d'une personne, l'ancien cesse de fonctionner |
 | `remove` | retire l'accès d'une personne |
 | `rotate` | remplace le jeton stocké pour tout le monde, les codes restent valables |
-| `check` | vérifie qu'un code ouvre bien son entrée |
+| `check` | vérifie qu'un code ouvre bien son entrée, et affiche ses droits |
 
 Exemple :
 
 ```bash
-node tools/access.mjs add cyril Brigadier "LAURENT Cyril"
+node tools/access.mjs add kevin Lieutenant "BOUSSERE Kevin" --manage
 ```
 
-Le jeton est lu dans `--token=...`, sinon dans `BAC_TOKEN`, sinon demandé à la saisie
-(masquée). Transmets le code affiché par un canal privé : il n'est stocké nulle part
-en clair et ne peut pas être réaffiché.
+Le jeton est lu dans `--token=...`, sinon dans `BAC_TOKEN`, sinon demandé à la
+saisie (masquée).
 
 ### Le jeton du dépôt
 
@@ -280,6 +303,7 @@ js/
     github-api.js           client API Contents GitHub (lecture/écriture/retry)
     store.js                couche de persistance (driver github ou mémoire)
     auth.js                 session examinateur, code personnel, rôles
+    roster.js               création et retrait des accès depuis le site
     crypto.js               AES-GCM + PBKDF2, génération et format des codes
     state.js                modèle du dossier, création, migration, mutations
 
@@ -294,7 +318,7 @@ js/
     results.js              récapitulatif, incidents, décision finale
     dossier.js              fiche finale, 8 pages A4
     history.js              liste des dossiers clôturés
-    settings.js             paramètres partagés + état de session
+    settings.js             direction BAC, gestion des accès, état de session
     login.js                modale d'accès examinateur
 ```
 
@@ -306,10 +330,12 @@ JavaScript natif, modules ES, aucune dépendance et aucune étape de build.
 
 | Situation | Comportement |
 |---|---|
-| Code personnel valide | lecture et écriture, brouillon partagé, clôture possible |
-| Jeton GitHub personnel | idem, avec révocation individuelle côté GitHub |
-| « Consulter sans code » | lecture seule : historique et dossiers clôturés visibles |
+| Code personnel | lecture et écriture, brouillon partagé, clôture possible |
+| Code avec droit « paramètres » | idem, plus la gestion des accès et de la direction |
+| Jeton GitHub personnel | idem, droit « paramètres » inclus, révocation individuelle côté GitHub |
 | `js/config.js` sans `owner`/`repo` | mode local : le site marche, les dossiers restent dans l'onglet |
+
+Il n'y a pas d'accès en lecture seule : un code est nécessaire pour entrer.
 
 ---
 

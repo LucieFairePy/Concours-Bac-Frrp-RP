@@ -17,6 +17,10 @@ export function canWrite() {
   return Boolean(session && session.canWrite);
 }
 
+export function canManage() {
+  return Boolean(session && session.manage);
+}
+
 export function looksLikePat(code) {
   return PAT_PATTERN.test(String(code || '').trim());
 }
@@ -61,6 +65,7 @@ export async function signInLocal(displayName) {
     name: displayName || 'Examinateur local',
     grade: '',
     role: 'examinateur',
+    manage: true,
     canWrite: true,
     offline: true
   };
@@ -84,6 +89,7 @@ export async function signInWithCode(entryId, code, keepForTab) {
     name: payload.name || entry.label,
     grade: payload.grade || '',
     role: payload.role || 'examinateur',
+    manage: payload.manage === true,
     canWrite: true,
     offline: false
   };
@@ -122,6 +128,7 @@ export async function signInWithPat(code, keepForTab) {
     name: (profile && profile.name) || account.name || account.login,
     grade: (profile && profile.grade) || '',
     role: (profile && profile.role) || 'examinateur',
+    manage: true,
     canWrite: true,
     offline: false
   };
@@ -134,19 +141,6 @@ export async function signIn(entryId, code, keepForTab) {
   if (!isConfigured()) return signInLocal('Examinateur local');
   if (looksLikePat(code)) return signInWithPat(String(code).trim(), keepForTab);
   return signInWithCode(entryId, code, keepForTab);
-}
-
-export async function signInReadOnly() {
-  gh.setToken(null);
-  session = {
-    login: 'lecture',
-    name: 'Consultation',
-    grade: '',
-    role: 'lecture',
-    canWrite: false,
-    offline: false
-  };
-  return session;
 }
 
 export async function restore() {

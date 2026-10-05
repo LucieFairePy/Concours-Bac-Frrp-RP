@@ -137,3 +137,19 @@
 
 .modal-box h2 { margin-top: 0 }
 .modal-actions { display: flex; gap: 10px; margin-top: 14px }
+
+.code-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin: 10px 0 4px;
+}
+
+.code-field {
+  font: 700 18px ui-monospace, "Cascadia Mono", Consolas, monospace;
+  letter-spacing: 1px;
+  text-align: center;
+  background: #07131e;
+  border-color: #2c6a4e;
+  color: #55e8a0;
+}

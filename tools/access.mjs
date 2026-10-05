@@ -11,7 +11,7 @@ const USAGE = `
 Gestion des accès — ${CONFIG.owner}/${CONFIG.repo}
 
   node tools/access.mjs list
-  node tools/access.mjs add <id> <grade> <nom> [--role=examinateur] [--code=BAC-...]
+  node tools/access.mjs add <id> <grade> <nom> [--manage] [--code=BAC-...]
   node tools/access.mjs recode <id>
   node tools/access.mjs remove <id>
   node tools/access.mjs rotate
@@ -22,6 +22,7 @@ Il doit être un jeton GitHub à portée restreinte sur ce dépôt uniquement,
 avec la permission « Contents: Read and write ».
 
   add      crée un accès et affiche son code une seule fois
+           --manage donne accès à la page Paramètres du site
   recode   remplace le code d'une personne, le jeton stocké ne change pas
   remove   retire l'accès d'une personne
   rotate   remplace le jeton stocké pour tout le monde, les codes restent valables
@@ -117,10 +118,11 @@ async function cmdAdd(rest, flags) {
   }
 
   const code = typeof flags.code === 'string' ? formatCode(normalizeCode(flags.code)) : generateCode();
-  const role = typeof flags.role === 'string' ? flags.role : 'examinateur';
-  const sealed = await sealPayload({ token, name, grade, role }, code, access.kdf || KDF);
+  const manage = flags.manage === true || flags.role === 'directeur';
+  const role = manage ? 'directeur' : 'examinateur';
+  const sealed = await sealPayload({ token, name, grade, role, manage }, code, access.kdf || KDF);
 
-  access.entries.push({ id, label: `${grade} ${name}`, role, ...sealed });
+  access.entries.push({ id, label: `${grade} ${name}`, role, manage, ...sealed });
   await writeAccess(access, `chore(access): ajout de ${grade} ${name}`);
 
   stdout.write(`\n  Accès créé pour ${grade} ${name}\n`);
@@ -145,7 +147,7 @@ async function cmdRecode(rest, flags) {
   const grade = entry.label.split(' ')[0];
   const name = entry.label.split(' ').slice(1).join(' ');
   const sealed = await sealPayload(
-    { token, name, grade, role: entry.role || 'examinateur' },
+    { token, name, grade, role: entry.role || 'examinateur', manage: entry.manage === true },
     code,
     access.kdf || KDF
   );

@@ -22,6 +22,10 @@ export function hasToken() {
   return Boolean(token);
 }
 
+export function getToken() {
+  return token;
+}
+
 function headers() {
   const out = {
     Accept: 'application/vnd.github+json',

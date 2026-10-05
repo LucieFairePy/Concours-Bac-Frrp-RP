@@ -3,13 +3,22 @@ import { byId, esc, setHTML } from './core/dom.js';
 import { state, blankDossier, migrate, setPath, isEditable } from './core/state.js';
 import * as store from './core/store.js';
 import * as auth from './core/auth.js';
+import * as roster from './core/roster.js';
 import { totals, suggestedDecision } from './scoring/totals.js';
 import { renderPassage } from './views/passage.js';
 import { renderCorrection } from './views/correction.js';
 import { renderResults, refreshResults } from './views/results.js';
 import { renderDossier } from './views/dossier.js';
 import { renderHistory } from './views/history.js';
-import { renderSettings, readSettingsForm, setSettingsStatus } from './views/settings.js';
+import {
+  renderSettings,
+  readSettingsForm,
+  setSettingsStatus,
+  readNewAccessForm,
+  clearNewAccessForm,
+  setAccessStatus,
+  showGeneratedCode
+} from './views/settings.js';
 import { openStep, step, openView } from './views/navigation.js';
 import { showLogin, hideLogin, readCredentials, readLocalName, setLoginBusy } from './views/login.js';
 
@@ -93,15 +102,6 @@ async function startDossier() {
 async function loadInitialDossier() {
   const session = auth.current();
 
-  if (!session.canWrite) {
-    state.dossier = blankDossier('BAC-LECTURE', state.settings);
-    state.readOnly = true;
-    renderAll();
-    openStep('id');
-    setSync('consultation — écriture désactivée');
-    return;
-  }
-
   let draft = null;
   try {
     draft = await store.loadDraft(session.login);
@@ -137,8 +137,8 @@ async function boot() {
 
   let entries = [];
   try {
-    const roster = await auth.loadRoster(true);
-    entries = roster.entries;
+    const file = await auth.loadRoster(true);
+    entries = file.entries;
   } catch (error) {
     setBannerRetry(`Liste des accès illisible : ${error.message}`);
   }
@@ -248,7 +248,73 @@ const app = {
   async view(name) {
     openView(name);
     if (name === 'hist') await renderHistory();
-    if (name === 'settings') renderSettings();
+    if (name === 'settings') await app.openSettings();
+  },
+
+  async openSettings() {
+    if (!auth.canManage()) {
+      renderSettings([]);
+      return;
+    }
+
+    renderSettings([]);
+    try {
+      renderSettings(await roster.list());
+    } catch (error) {
+      setAccessStatus(`<div class="banner error">Liste des accès illisible : ${esc(error.message)}</div>`);
+    }
+  },
+
+  async createAccess() {
+    if (!auth.canManage()) return;
+
+    const form = readNewAccessForm();
+    setAccessStatus('<div class="banner">Création de l’accès…</div>');
+
+    try {
+      const created = await roster.createEntry(form);
+      await auth.loadRoster(true);
+      clearNewAccessForm();
+      renderSettings(await roster.list());
+      showGeneratedCode(created);
+    } catch (error) {
+      setAccessStatus(`<div class="banner error">${esc(error.message)}</div>`);
+    }
+  },
+
+  async removeAccess(id) {
+    if (!auth.canManage()) return;
+
+    const entries = await roster.list();
+    const entry = entries.find(item => item.id === id);
+    if (!entry) return;
+
+    if (!window.confirm(`Retirer l’accès de ${entry.label} ? Son code cessera de fonctionner.`)) return;
+
+    setAccessStatus('<div class="banner">Retrait en cours…</div>');
+    try {
+      const label = await roster.removeEntry(id);
+      await auth.loadRoster(true);
+      renderSettings(await roster.list());
+      setAccessStatus(`<div class="banner ok">Accès retiré : ${esc(label)}</div>`);
+    } catch (error) {
+      setAccessStatus(`<div class="banner error">${esc(error.message)}</div>`);
+    }
+  },
+
+  async copyCode() {
+    const field = byId('newCode');
+    if (!field) return;
+
+    field.focus();
+    field.select();
+
+    try {
+      await navigator.clipboard.writeText(field.value);
+      setSync('code copié', 'ok');
+    } catch (error) {
+      setSync('copie refusée — le code est sélectionné, fais Ctrl+C', 'error');
+    }
   },
 
   async newDossier() {
@@ -375,12 +441,6 @@ const app = {
       setLoginBusy(false);
       await promptLogin(error.message);
     }
-  },
-
-  async submitReadOnly() {
-    setLoginBusy(true);
-    await auth.signInReadOnly();
-    await afterSignIn();
   },
 
   async submitLocalLogin() {

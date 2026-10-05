@@ -39,7 +39,6 @@ function emptyRosterBox(notice) {
         <input id="loginCode" type="password" autocomplete="off" placeholder="github_pat_...">
         <div class="modal-actions">
           <button class="primary" onclick="app.submitLogin()">Se connecter</button>
-          <button onclick="app.submitReadOnly()">Consulter sans code</button>
         </div>
       </div>
     </div>`;
@@ -65,7 +64,6 @@ function rosterBox(entries, notice) {
         </label>
         <div class="modal-actions">
           <button class="primary" onclick="app.submitLogin()">Se connecter</button>
-          <button onclick="app.submitReadOnly()">Consulter sans code</button>
         </div>
         <p class="mut">
           Ton code est personnel. Il ne figure nulle part en clair et ne donne accès

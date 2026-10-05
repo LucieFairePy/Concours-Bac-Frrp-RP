@@ -63,6 +63,11 @@ const memoryDriver = {
     return memory.access;
   },
 
+  async saveAccess(value) {
+    memory.access = value;
+    return value;
+  },
+
   async loadSettings() {
     return memory.settings;
   },
@@ -120,6 +125,10 @@ const githubDriver = {
   async loadAccess() {
     const file = await gh.readJson(ACCESS_PATH());
     return file ? file.value : null;
+  },
+
+  async saveAccess(value) {
+    return gh.updateJson(ACCESS_PATH(), () => value, `chore(access): mise à jour des accès${by()}`);
   },
 
   async loadSettings() {
@@ -226,6 +235,10 @@ export function loadUsers() {
 
 export function loadAccess() {
   return driver.loadAccess();
+}
+
+export function saveAccess(value) {
+  return driver.saveAccess(value);
 }
 
 export function loadSettings() {
