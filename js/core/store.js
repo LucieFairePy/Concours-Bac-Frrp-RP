@@ -3,10 +3,21 @@ import * as gh from './github-api.js';
 
 const SETTINGS_PATH = () => `${CONFIG.dataDir}/settings.json`;
 const USERS_PATH = () => `${CONFIG.dataDir}/users.json`;
+const ACCESS_PATH = () => `${CONFIG.dataDir}/${CONFIG.accessFile}`;
 const INDEX_PATH = () => `${CONFIG.dataDir}/dossiers/index.json`;
 const DOSSIERS_DIR = () => `${CONFIG.dataDir}/dossiers`;
 const DOSSIER_PATH = id => `${CONFIG.dataDir}/dossiers/${id}.json`;
 const DRAFT_PATH = login => `${CONFIG.dataDir}/drafts/${login}.json`;
+
+let operator = '';
+
+export function setOperator(name) {
+  operator = name || '';
+}
+
+function by() {
+  return operator ? ` — par ${operator}` : '';
+}
 
 function summarize(dossier) {
   return {
@@ -35,6 +46,7 @@ function nextNumber(ids, year) {
 const memory = {
   settings: null,
   users: [],
+  access: null,
   drafts: new Map(),
   dossiers: new Map()
 };
@@ -45,6 +57,10 @@ const memoryDriver = {
 
   async loadUsers() {
     return memory.users;
+  },
+
+  async loadAccess() {
+    return memory.access;
   },
 
   async loadSettings() {
@@ -101,13 +117,18 @@ const githubDriver = {
     return [];
   },
 
+  async loadAccess() {
+    const file = await gh.readJson(ACCESS_PATH());
+    return file ? file.value : null;
+  },
+
   async loadSettings() {
     const file = await gh.readJson(SETTINGS_PATH());
     return file ? file.value : null;
   },
 
   async saveSettings(settings) {
-    return gh.updateJson(SETTINGS_PATH(), () => settings, 'chore(data): maj paramètres BAC');
+    return gh.updateJson(SETTINGS_PATH(), () => settings, `chore(data): maj paramètres BAC${by()}`);
   },
 
   async nextDossierId(year) {
@@ -129,13 +150,13 @@ const githubDriver = {
   },
 
   async saveDraft(login, dossier) {
-    await gh.updateJson(DRAFT_PATH(login), () => dossier, `chore(data): brouillon ${dossier.id}`);
+    await gh.updateJson(DRAFT_PATH(login), () => dossier, `chore(data): brouillon ${dossier.id}${by()}`);
   },
 
   async deleteDraft(login) {
     const file = await gh.readJson(DRAFT_PATH(login));
     if (!file) return;
-    await gh.deleteFile(DRAFT_PATH(login), `chore(data): clôture brouillon ${login}`, file.sha);
+    await gh.deleteFile(DRAFT_PATH(login), `chore(data): brouillon ${login} archivé${by()}`, file.sha);
   },
 
   async listClosed() {
@@ -168,7 +189,7 @@ const githubDriver = {
         await gh.createJson(
           DOSSIER_PATH(candidate.id),
           candidate,
-          `feat(data): clôture ${candidate.id} — ${candidate.c.last} ${candidate.c.first}`
+          `feat(data): clôture ${candidate.id} — ${candidate.c.last} ${candidate.c.first}${by()}`
         );
         break;
       } catch (error) {
@@ -185,7 +206,7 @@ const githubDriver = {
         list.push(summarize(candidate));
         return list;
       },
-      `chore(data): index ${candidate.id}`
+      `chore(data): index ${candidate.id}${by()}`
     );
 
     return candidate;
@@ -201,6 +222,10 @@ export async function detectDriver() {
 
 export function loadUsers() {
   return driver.loadUsers();
+}
+
+export function loadAccess() {
+  return driver.loadAccess();
 }
 
 export function loadSettings() {

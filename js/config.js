@@ -3,6 +3,7 @@ export const CONFIG = {
   repo: 'Concours-Bac-Frrp-RP',
   dataBranch: 'data',
   dataDir: 'data',
+  accessFile: 'access.json',
   autosaveDelay: 30000,
   defaultCommand: {
     dg: 'Lieutenant',

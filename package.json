@@ -1,0 +1,11 @@
+{
+  "name": "concours-bac-frrp-rp",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Outil d'evaluation du concours d'integration BAC - France Roleplay",
+  "scripts": {
+    "serve": "python -m http.server 8777",
+    "access": "node tools/access.mjs"
+  }
+}

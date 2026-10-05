@@ -14,8 +14,8 @@ Site statique hébergé sur GitHub Pages, dossiers stockés dans ce dépôt sur 
 ## Utilisation
 
 1. Ouvrir <https://luciefairepy.github.io/Concours-Bac-Frrp-RP/>
-2. Coller son **code personnel** dans la modale d'accès, ou cliquer
-   **Consulter sans code** pour la lecture seule
+2. Choisir son nom dans la liste et taper son **code personnel**
+   (`BAC-XXXX-XXXX-XXXX`), ou cliquer **Consulter sans code** pour la lecture seule
 3. Dérouler les 9 étapes : Identité → Théorie → Radio → Situations → Physique →
    Tir → Correction → Résultats → Fiche finale
 4. **Imprimer / Enregistrer en PDF** pour sortir le dossier 8 pages A4
@@ -31,41 +31,89 @@ suit le code personnel, pas la machine. Rien n'est stocké dans le navigateur.
 
 ---
 
-## Obtenir un code personnel
+## Accès des examinateurs
 
-Chaque examinateur a son propre code, révocable sans toucher aux autres.
+Chaque examinateur a un **code personnel court** du type `BAC-7K3M-Q82F-RVT9`.
+Il n'y a pas de jeton GitHub à distribuer, et rien n'est lisible en clair.
 
-1. Aller sur <https://github.com/settings/personal-access-tokens/new>
-2. **Token name** : `concours-bac`
-3. **Resource owner** : `LucieFairePy`
-4. **Expiration** : au choix
-5. **Repository access** : `Only select repositories` → `Concours-Bac-Frrp-RP`
-6. **Permissions → Repository permissions → Contents** : `Read and write`
-7. **Generate token**, puis copier le code (il commence par `github_pat_`)
+### Comment ça marche
 
-Le code se colle dans la modale d'accès du site. La case
-« Garder le code jusqu'à la fermeture de cet onglet » évite de le ressaisir à
-chaque rechargement.
+Le jeton d'écriture du dépôt est stocké **chiffré** dans `data/access.json`,
+une fois par personne, avec son code comme clé :
 
-> Un code ne donne que le droit d'écrire dans ce dépôt. Il reste lisible par la
-> personne qui le détient : chacun doit avoir le sien. Un code se révoque depuis
-> les réglages GitHub.
-
-### Déclarer un nouvel examinateur
-
-Éditer `data/users.json` **sur la branche `data`** :
-
-```json
-[
-  { "login": "LucieFairePy", "name": "BOUSSERE Kevin", "grade": "Lieutenant", "role": "directeur" },
-  { "login": "compte-github", "name": "LAURENT Cyril", "grade": "Brigadier", "role": "examinateur" }
-]
+```
+AES-256-GCM, clé dérivée par PBKDF2-SHA256, 310 000 itérations, sel et IV aléatoires
 ```
 
-`login` est le nom de compte GitHub. Un compte absent de cette liste voit son
-code refusé. Si la liste est vide, tout code valide est accepté.
+Le fichier est public, son contenu est inexploitable sans le code. À la connexion,
+la personne choisit son nom dans la liste, tape son code, et le navigateur déchiffre
+le jeton localement. Le jeton ne quitte jamais la mémoire de l'onglet.
 
----
+Un code fait 12 caractères tirés d'un alphabet de 32 symboles sans ambiguïté
+(ni `0`/`O`, ni `1`/`I`), soit **60 bits**. Derrière 310 000 itérations PBKDF2,
+une attaque par force brute sur le fichier public est hors de portée.
+
+### Gérer les accès
+
+Tout passe par un outil local. Le jeton reste sur ta machine.
+
+```bash
+node tools/access.mjs list
+node tools/access.mjs add <id> <grade> <nom>
+node tools/access.mjs recode <id>
+node tools/access.mjs remove <id>
+node tools/access.mjs rotate
+node tools/access.mjs check <id>
+```
+
+| Commande | Effet |
+|---|---|
+| `add` | crée un accès et affiche son code **une seule fois** |
+| `recode` | remplace le code d'une personne, l'ancien cesse de fonctionner |
+| `remove` | retire l'accès d'une personne |
+| `rotate` | remplace le jeton stocké pour tout le monde, les codes restent valables |
+| `check` | vérifie qu'un code ouvre bien son entrée |
+
+Exemple :
+
+```bash
+node tools/access.mjs add cyril Brigadier "LAURENT Cyril"
+```
+
+Le jeton est lu dans `--token=...`, sinon dans `BAC_TOKEN`, sinon demandé à la saisie
+(masquée). Transmets le code affiché par un canal privé : il n'est stocké nulle part
+en clair et ne peut pas être réaffiché.
+
+### Le jeton du dépôt
+
+Un seul jeton sert à tout le monde, à créer une fois sur
+<https://github.com/settings/personal-access-tokens/new> :
+
+- **Token name** : `concours-bac`
+- **Resource owner** : `LucieFairePy`
+- **Repository access** : `Only select repositories` → `Concours-Bac-Frrp-RP`
+- **Permissions → Repository permissions → Contents** : `Read and write`
+
+> Il doit être *fine-grained* et limité à ce dépôt. Un jeton classique à scope
+> `repo` donnerait accès à **tous** tes dépôts : ne scelle jamais un jeton
+> classique dans `access.json`.
+
+### Ce que ce modèle ne protège pas
+
+Deux limites à connaître, inhérentes à un site sans serveur :
+
+1. **Le jeton est le même pour tous.** Une personne ayant un code valide peut
+   techniquement l'extraire de la mémoire de son navigateur. Retirer son code
+   l'empêche de se connecter au site, mais pas d'utiliser un jeton déjà extrait.
+   La vraie révocation est `rotate` avec un jeton neuf, puis la révocation de
+   l'ancien sur GitHub.
+2. **Le périmètre du jeton est le plancher de sécurité.** Au pire, une personne
+   mal intentionnée peut écrire dans ce dépôt — ce que son rôle lui permet déjà.
+   D'où l'exigence d'un jeton limité à ce seul dépôt.
+
+Pour une révocation individuelle stricte, chaque personne peut aussi se connecter
+avec **son propre** jeton *fine-grained* : la modale accepte un `github_pat_...`
+à la place d'un code, et l'identité est alors lue dans `data/users.json`.
 
 ## Barème
 
@@ -103,8 +151,9 @@ aucun `localStorage`.
 
 ```
 data/
+  access.json             codes des examinateurs, jeton chiffré par code
   settings.json           direction BAC, partagée par tous
-  users.json              examinateurs autorisés
+  users.json              comptes GitHub autorisés (connexion par jeton)
   dossiers/index.json     index des dossiers clôturés
   dossiers/<ID>.json      un fichier par dossier clôturé
   drafts/<login>.json     brouillon en cours de chaque examinateur
@@ -148,6 +197,9 @@ css/
   cover.css                 page 1 du dossier (.cover-v2)
   print.css                 toutes les règles @media print
 
+package.json                type module, pour l'outil d'administration
+tools/access.mjs            gestion des codes examinateurs (local)
+
 js/
   config.js                 dépôt GitHub, branche de données, délai d'autosave
   app.js                    contrôleur, autosave, window.app (handlers du HTML)
@@ -163,6 +215,7 @@ js/
     github-api.js           client API Contents GitHub (lecture/écriture/retry)
     store.js                couche de persistance (driver github ou mémoire)
     auth.js                 session examinateur, code personnel, rôles
+    crypto.js               AES-GCM + PBKDF2, génération et format des codes
     state.js                modèle du dossier, création, migration, mutations
 
   scoring/
@@ -189,6 +242,7 @@ JavaScript natif, modules ES, aucune dépendance et aucune étape de build.
 | Situation | Comportement |
 |---|---|
 | Code personnel valide | lecture et écriture, brouillon partagé, clôture possible |
+| Jeton GitHub personnel | idem, avec révocation individuelle côté GitHub |
 | « Consulter sans code » | lecture seule : historique et dossiers clôturés visibles |
 | `js/config.js` sans `owner`/`repo` | mode local : le site marche, les dossiers restent dans l'onglet |
 

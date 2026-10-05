@@ -11,7 +11,7 @@ import { renderDossier } from './views/dossier.js';
 import { renderHistory } from './views/history.js';
 import { renderSettings, readSettingsForm, setSettingsStatus } from './views/settings.js';
 import { openStep, step, openView } from './views/navigation.js';
-import { showLogin, hideLogin, readCode, readLocalName, setLoginBusy } from './views/login.js';
+import { showLogin, hideLogin, readCredentials, readLocalName, setLoginBusy } from './views/login.js';
 
 let autosaveTimer = null;
 let dirty = false;
@@ -135,20 +135,38 @@ async function boot() {
       </div>`);
   }
 
+  let entries = [];
+  try {
+    const roster = await auth.loadRoster(true);
+    entries = roster.entries;
+  } catch (error) {
+    setBannerRetry(`Liste des accès illisible : ${error.message}`);
+  }
+
   const restored = await auth.restore();
   if (restored) {
     await afterSignIn();
     return;
   }
 
-  showLogin('');
+  showLogin('', entries);
+}
+
+async function promptLogin(message) {
+  let entries = [];
+  try {
+    entries = (await auth.loadRoster()).entries;
+  } catch (error) {
+    entries = auth.rosterEntries();
+  }
+  showLogin(message, entries);
 }
 
 async function afterSignIn() {
   hideLogin();
 
-  const session = auth.current();
-  const who = `${session.grade} ${session.name}`.trim() || session.login;
+  const who = auth.describeOperator();
+  store.setOperator(who);
   setHTML('who', esc(who));
 
   try {
@@ -343,18 +361,19 @@ const app = {
   },
 
   async submitLogin() {
-    const { code, keep } = readCode();
+    const { entryId, code, keep } = readCredentials();
     if (!code) {
-      showLogin('Entre ton code personnel.');
+      await promptLogin('Entre ton code personnel.');
       return;
     }
-    setLoginBusy(true);
+
+    setLoginBusy(true, 'Vérification…');
     try {
-      await auth.signIn(code, keep);
+      await auth.signIn(entryId, code, keep);
       await afterSignIn();
     } catch (error) {
       setLoginBusy(false);
-      showLogin(error.message);
+      await promptLogin(error.message);
     }
   },
 
@@ -370,18 +389,15 @@ const app = {
     await afterSignIn();
   },
 
-  signOut() {
+  async signOut() {
     auth.signOut();
+    store.setOperator('');
     state.dossier = null;
     dirty = false;
     setHTML('who', '');
     setSync('');
-    showLogin('Session terminée.');
-  },
-
-  renderCorrection,
-  renderResults,
-  renderDossier
+    await promptLogin('Session terminée.');
+  }
 };
 
 window.app = app;
