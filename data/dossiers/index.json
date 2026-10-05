@@ -1,13 +1,1 @@
-[
-  {
-    "id": "BAC-2026-001",
-    "last": "TESTCHAINE",
-    "first": "Verification",
-    "grade": "Gardien",
-    "date": "2026-10-05",
-    "decision": "RETENU",
-    "total": 752,
-    "closedAt": "2026-10-05T21:10:24.007Z",
-    "closedBy": "LucieFairePy"
-  }
-]
+[]
