@@ -22,6 +22,15 @@
       "salt": "mlPNKSdbNPST+LbDYOicGw==",
       "iv": "SjbE6tJcZYVQ3fOa",
       "data": "MhIMOsfGQm7oXpr+G8W5HEhV5UQRVOPAfSEaYE0D8LaAp5EE45l7kvBibTs4TZOlJ6YM+dkJiK1mR1r/M5/oWlrbLYh9W3ajOiYyyT8CeJ3XWErhhQv0rM3D0KCmMGAKD6D3UB9lSO5CWjIuYL5xYgTxP8pvt4yQ6TYANwBGjZlYVFi6zvxbn2e85OpDeC9c9dWbV6Pw7fy70wdTtUAfnMIZ+1jc5IKTFHlNH00SCaGAyJDUZfecNrE3KNUX92p/8+OmX5vtAQ=="
+    },
+    {
+      "id": "zz-jetable",
+      "label": "Gardien ZZ Jetable",
+      "role": "examinateur",
+      "manage": false,
+      "salt": "lKguTlZIpr4Q6JJTnM1K/Q==",
+      "iv": "TLzn+dCQnGcxBT/B",
+      "data": "5cVVX0vyKR4A9rgcJt4RUU332egu/iZGNW2xe1S6o9FF2x5s16l2rVBosS5LNqpENQxTwHU9vEl1HFpHCnFcjOs57Pij/Q2AZEkAVSsmoSxFnnTVd74ffuZUW5xc87dF0/ZxWJx+qZRx8FcrC0U1q2K0H0gh1YqjZNQMXlKkDJpLvRIXZerDo1YuE19Fy9lvuDPOeuDdRlMlcrzdVb92H1jKVyoX6BbbQfp68sWMbclfeAJyJLcAiPHSJZI5W9INK/JE"
     }
   ]
 }
