@@ -1,7 +1,7 @@
 {
   "id": "BAC-2026-001",
   "locked": false,
-  "created": "2026-10-05T22:46:36.537Z",
+  "created": "2026-10-05T23:44:27.740Z",
   "c": {
     "last": "",
     "first": "",
@@ -18,54 +18,54 @@
   ],
   "qs": [
     {
-      "id": 39,
-      "theme": "Connaissance BAC",
-      "q": "Comment gérez-vous un désaccord avec un collègue pendant une mission  en patrouille de nuit ?"
-    },
-    {
-      "id": 63,
+      "id": 74,
       "theme": "Radio",
-      "q": "Comment rendre un message radio court mais exploitable  avec plusieurs témoins ?"
+      "q": "Comment corrigez-vous une information radio erronée  en début de vacation ?"
     },
     {
-      "id": 21,
-      "theme": "Connaissance BAC",
-      "q": "Pourquoi la discrétion est-elle importante dans certaines missions  en patrouille de nuit ?"
-    },
-    {
-      "id": 97,
+      "id": 92,
       "theme": "Analyse",
-      "q": "Deux témoins donnent des versions différentes : comment réagissez-vous  dans une situation évolutive ?"
-    },
-    {
-      "id": 84,
-      "theme": "Radio",
-      "q": "Comment rendez-vous compte d’une évolution importante  en patrouille de nuit ?"
-    },
-    {
-      "id": 80,
-      "theme": "Radio",
-      "q": "Comment corrigez-vous une information radio erronée  avec des informations incomplètes ?"
-    },
-    {
-      "id": 89,
-      "theme": "Radio",
-      "q": "Comment rendez-vous compte d’une évolution importante  avec des informations incomplètes ?"
-    },
-    {
-      "id": 82,
-      "theme": "Radio",
-      "q": "Comment rendez-vous compte d’une évolution importante ?"
-    },
-    {
-      "id": 108,
-      "theme": "Analyse",
-      "q": "Comment évitez-vous de transformer une hypothèse en certitude  avec plusieurs témoins ?"
+      "q": "Deux témoins donnent des versions différentes : comment réagissez-vous  en début de vacation ?"
     },
     {
       "id": 43,
       "theme": "Connaissance BAC",
       "q": "Comment gérez-vous un désaccord avec un collègue pendant une mission  dans une situation évolutive ?"
+    },
+    {
+      "id": 4,
+      "theme": "Connaissance BAC",
+      "q": "Quel est le rôle principal d’un équipage BAC  dans une zone fréquentée ?"
+    },
+    {
+      "id": 186,
+      "theme": "Observation",
+      "q": "Quels détails retenez-vous en priorité lors d’une observation brève  avec un nouvel équipier ?"
+    },
+    {
+      "id": 62,
+      "theme": "Radio",
+      "q": "Comment rendre un message radio court mais exploitable  avec des informations incomplètes ?"
+    },
+    {
+      "id": 47,
+      "theme": "Radio",
+      "q": "Quelles informations doivent être prioritaires dans un premier message radio  en début de vacation ?"
+    },
+    {
+      "id": 204,
+      "theme": "Observation",
+      "q": "Que faites-vous si vous ne vous souvenez plus d’un détail demandé  avec un nouvel équipier ?"
+    },
+    {
+      "id": 16,
+      "theme": "Connaissance BAC",
+      "q": "Quelles qualités attendez-vous d’un bon équipier BAC  dans une situation évolutive ?"
+    },
+    {
+      "id": 38,
+      "theme": "Connaissance BAC",
+      "q": "Comment gérez-vous un désaccord avec un collègue pendant une mission  en début de vacation ?"
     }
   ],
   "ans": {},
@@ -131,18 +131,16 @@
     "memory": "",
     "memoryAsked": "",
     "memoryGood": "",
-    "memoryErrors": "0",
+    "memoryErrors": "",
     "discern": "",
     "discernAsked": "",
-    "discernErrors": "7",
+    "discernErrors": "",
     "analysis": "",
-    "hostage": "0",
+    "hostage": 0,
     "obs": ""
   },
   "marks": {
-    "theory": {
-      "39": ""
-    },
+    "theory": {},
     "radio": {},
     "sc": {},
     "phys": "",
@@ -151,7 +149,7 @@
   "strength": "",
   "improve": "",
   "general": "",
-  "decision": "RECALE",
+  "decision": "",
   "reason": "",
   "retakes": [],
   "retakeDate": "",
