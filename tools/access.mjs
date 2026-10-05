@@ -1,7 +1,7 @@
-import { createInterface } from 'node:readline';
-import { stdin, stdout, argv, env, exit } from 'node:process';
+import { stdout, argv, exit } from 'node:process';
 
 import { CONFIG } from '../js/config.js';
+import { ask, fail, closePrompter, resolveToken, parseFlags } from './prompt.mjs';
 import * as gh from '../js/core/github-api.js';
 import { sealPayload, openPayload, generateCode, normalizeCode, formatCode, KDF } from '../js/core/crypto.js';
 
@@ -27,89 +27,6 @@ avec la permission « Contents: Read and write ».
   rotate   remplace le jeton stocké pour tout le monde, les codes restent valables
   check    vérifie qu'un code ouvre bien son entrée
 `;
-
-function parseFlags(args) {
-  const flags = {};
-  const rest = [];
-  for (const arg of args) {
-    const match = /^--([a-z-]+)(?:=(.*))?$/.exec(arg);
-    if (match) flags[match[1]] = match[2] ?? true;
-    else rest.push(arg);
-  }
-  return { flags, rest };
-}
-
-let prompter = null;
-let masked = false;
-
-function getPrompter() {
-  if (prompter) return prompter;
-
-  const interactive = Boolean(stdin.isTTY);
-  prompter = createInterface({ input: stdin, output: stdout, terminal: interactive });
-
-  if (interactive) {
-    const write = chunk => stdout.write(chunk);
-    prompter._writeToOutput = function writeToOutput(chunk) {
-      if (!masked) return write(chunk);
-      if (masked.prompt && String(chunk).includes(masked.prompt)) return write(masked.prompt);
-      return undefined;
-    };
-  }
-
-  return prompter;
-}
-
-function closePrompter() {
-  if (prompter) {
-    prompter.close();
-    prompter = null;
-  }
-}
-
-let piped = null;
-
-async function readPipedLines() {
-  const chunks = [];
-  for await (const chunk of stdin) chunks.push(chunk);
-  return Buffer.concat(chunks).toString('utf8').split(/\r?\n/);
-}
-
-async function ask(question, hidden) {
-  if (!stdin.isTTY) {
-    if (!piped) piped = await readPipedLines();
-    const answer = (piped.shift() ?? '').trim();
-    stdout.write(`${question}${hidden ? '' : answer}\n`);
-    return answer;
-  }
-
-  const rl = getPrompter();
-  masked = hidden ? { prompt: question } : false;
-
-  return new Promise(resolve => {
-    rl.question(question, answer => {
-      if (hidden) stdout.write('\n');
-      masked = false;
-      resolve(answer.trim());
-    });
-  });
-}
-
-async function resolveToken(flags) {
-  const provided = typeof flags.token === 'string' ? flags.token : env.BAC_TOKEN;
-  const token = (provided || await ask('Jeton d\'écriture du dépôt : ', true)).trim();
-  if (!token) fail('Aucun jeton fourni.');
-  if (!/^(github_pat_|ghp_)/.test(token)) {
-    fail('Ce jeton ne ressemble pas à un jeton GitHub (github_pat_... ou ghp_...).');
-  }
-  return token;
-}
-
-function fail(message) {
-  stdout.write(`\nErreur : ${message}\n`);
-  closePrompter();
-  exit(1);
-}
 
 async function readAccess() {
   const file = await gh.readJson(ACCESS_PATH);

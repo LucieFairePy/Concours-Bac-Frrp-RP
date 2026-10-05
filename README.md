@@ -100,20 +100,80 @@ Un seul jeton sert à tout le monde, à créer une fois sur
 
 ### Ce que ce modèle ne protège pas
 
-Deux limites à connaître, inhérentes à un site sans serveur :
+Le jeton scellé porte « Contents: Read and write » sur le dépôt. Les permissions
+*fine-grained* de GitHub s'arrêtent au dépôt : elles ne se restreignent ni à une
+branche, ni à un chemin. Conséquences, mesurées et non supposées :
+
+| Action avec le jeton | Résultat |
+|---|---|
+| Écrire dans `data/` sur la branche `data` | autorisé, c'est le but |
+| Écrire `index.html` ou `js/` sur `main` | **autorisé** |
+| Supprimer une branche, réécrire l'historique | autorisé si aucune protection n'est posée |
+| Créer une protection de branche | refusé |
+| Modifier les réglages du dépôt | refusé |
+| Créer ou supprimer un dépôt | refusé |
+
+Deux limites s'ajoutent, inhérentes à un site sans serveur :
 
 1. **Le jeton est le même pour tous.** Une personne ayant un code valide peut
    techniquement l'extraire de la mémoire de son navigateur. Retirer son code
-   l'empêche de se connecter au site, mais pas d'utiliser un jeton déjà extrait.
-   La vraie révocation est `rotate` avec un jeton neuf, puis la révocation de
-   l'ancien sur GitHub.
-2. **Le périmètre du jeton est le plancher de sécurité.** Au pire, une personne
-   mal intentionnée peut écrire dans ce dépôt — ce que son rôle lui permet déjà.
-   D'où l'exigence d'un jeton limité à ce seul dépôt.
+   l'empêche de se connecter, mais pas d'utiliser un jeton déjà extrait. La vraie
+   révocation est `rotate` avec un jeton neuf, puis la révocation de l'ancien.
+2. **Le périmètre du jeton est le plancher de sécurité.** D'où les protections de
+   branche ci-dessous, qui rendent toute dégradation réversible.
 
-Pour une révocation individuelle stricte, chaque personne peut aussi se connecter
-avec **son propre** jeton *fine-grained* : la modale accepte un `github_pat_...`
-à la place d'un code, et l'identité est alors lue dans `data/users.json`.
+Pour une révocation individuelle stricte, chaque personne peut se connecter avec
+**son propre** jeton *fine-grained* : la modale accepte un `github_pat_...` à la
+place d'un code, et l'identité est lue dans `data/users.json`.
+
+## Protection et restauration
+
+### Protéger les branches
+
+```bash
+node tools/guard.mjs status
+node tools/guard.mjs apply
+node tools/guard.mjs test
+```
+
+`apply` interdit sur `main` et `data` la **suppression de branche** et la
+**réécriture d'historique**. Toute dégradation devient alors un commit de plus,
+visible et réversible : rien ne peut être détruit définitivement.
+
+Le jeton d'écriture ne peut pas retirer cette protection (`403` sur la création
+de rulesets), donc il ne peut pas se libérer lui-même.
+
+`apply` est la seule commande qui exige un jeton avec
+« Administration: Read and write », à révoquer juste après. `test` vérifie
+ensuite, avec le jeton d'écriture ordinaire, qu'une réécriture est bien refusée.
+
+### Restaurer après une dégradation
+
+```bash
+node tools/restore.mjs log            # derniers changements de data/
+node tools/restore.mjs show <sha>     # état des fichiers à ce commit
+node tools/restore.mjs diff <sha>     # écart avec l'état actuel
+node tools/restore.mjs rollback <sha> # remet data/ dans cet état
+```
+
+`rollback` n'efface aucun historique : il ajoute des commits. Tout état passé
+reste atteignable, y compris celui d'avant la restauration. `log`, `show` et
+`diff` fonctionnent sans jeton.
+
+Exemple : quelqu'un vide les dossiers.
+
+```bash
+node tools/restore.mjs log
+node tools/restore.mjs diff a1b2c3d4
+node tools/restore.mjs rollback a1b2c3d4
+```
+
+### Pour aller plus loin
+
+Déplacer `data/` dans un **dépôt séparé**, avec un jeton limité à ce dépôt, rend
+le code du site totalement hors d'atteinte : au pire, les données sont abîmées,
+jamais le site. Il suffit de créer le dépôt, d'y pousser la branche `data`, et de
+renseigner son nom dans `js/config.js`.
 
 ## Barème
 
@@ -197,8 +257,13 @@ css/
   cover.css                 page 1 du dossier (.cover-v2)
   print.css                 toutes les règles @media print
 
-package.json                type module, pour l'outil d'administration
-tools/access.mjs            gestion des codes examinateurs (local)
+package.json                type module, pour les outils d'administration
+
+tools/
+  prompt.mjs                saisie masquée, lecture des jetons, confirmations
+  access.mjs                codes examinateurs : add, recode, remove, rotate
+  guard.mjs                 protection des branches : status, apply, test
+  restore.mjs               retour arrière sur les données : log, diff, rollback
 
 js/
   config.js                 dépôt GitHub, branche de données, délai d'autosave
