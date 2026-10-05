@@ -26,9 +26,9 @@
       </div>
     </div>
     <nav class="no-print">
-      <button onclick="app.view('home')">Dossier</button>
-      <button onclick="app.view('hist')">Historique</button>
-      <button onclick="app.view('settings')">Paramètres</button>
+      <button data-view="home" onclick="app.view('home')">Dossier</button>
+      <button data-view="hist" onclick="app.view('hist')">Historique</button>
+      <button data-view="settings" onclick="app.view('settings')">Paramètres</button>
       <button onclick="app.saveNow()">Enregistrer</button>
       <button class="primary" onclick="app.newDossier()">Nouveau</button>
     </nav>

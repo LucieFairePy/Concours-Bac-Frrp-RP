@@ -9,7 +9,7 @@ import { renderPassage } from './views/passage.js';
 import { renderCorrection } from './views/correction.js';
 import { renderResults, refreshResults } from './views/results.js';
 import { renderDossier, DOSSIER_IMAGES } from './views/dossier.js';
-import { renderHistory } from './views/history.js';
+import { renderHistory, forgetHistory } from './views/history.js';
 import {
   renderSettings,
   readSettingsForm,
@@ -261,7 +261,14 @@ const app = {
       return;
     }
 
-    renderSettings([]);
+    const known = roster.cached();
+    renderSettings(known ? known.entries.map(entry => ({
+      id: entry.id,
+      label: entry.label,
+      role: entry.role || 'examinateur',
+      manage: entry.manage === true
+    })) : []);
+
     try {
       renderSettings(await roster.list());
     } catch (error) {
@@ -403,6 +410,7 @@ const app = {
     setSync('clôture en cours…');
     try {
       const published = await store.publishClosed(D);
+      forgetHistory();
       state.dossier = published;
       await store.deleteDraft(session.login);
       dirty = false;

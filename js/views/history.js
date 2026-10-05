@@ -2,6 +2,12 @@ import { esc, setHTML } from '../core/dom.js';
 import { DECISION_LABEL } from '../scoring/totals.js';
 import * as store from '../core/store.js';
 
+let cache = null;
+
+export function forgetHistory() {
+  cache = null;
+}
+
 function row(entry) {
   const name = `${String(entry.last || '').toUpperCase()} ${entry.first || ''}`.trim();
   const decision = entry.decision ? DECISION_LABEL[entry.decision] || entry.decision : '—';
@@ -16,19 +22,11 @@ function row(entry) {
   </tr>`;
 }
 
-export async function renderHistory() {
-  setHTML('histList', '<p class="mut">Chargement des dossiers clôturés…</p>');
-
-  let entries;
-  try {
-    entries = await store.listClosed();
-  } catch (error) {
-    setHTML('histList', `<div class="banner error">Lecture impossible : ${esc(error.message)}</div>`);
-    return;
-  }
-
+function paint(entries, pending) {
   if (!entries.length) {
-    setHTML('histList', '<p class="mut">Aucun dossier clôturé.</p>');
+    setHTML('histList', pending
+      ? '<p class="mut">Chargement des dossiers clôturés…</p>'
+      : '<p class="mut">Aucun dossier clôturé.</p>');
     return;
   }
 
@@ -36,5 +34,25 @@ export async function renderHistory() {
     <table>
       <tr><th>N°</th><th>Candidat</th><th>Date</th><th>Total</th><th>Décision</th><th></th></tr>
       ${entries.map(row).join('')}
-    </table>`);
+    </table>
+    ${pending ? '<p class="mut">Mise à jour…</p>' : ''}`);
+}
+
+export async function renderHistory() {
+  paint(cache || [], cache === null);
+
+  let entries;
+  try {
+    entries = await store.listClosed();
+  } catch (error) {
+    if (cache) {
+      paint(cache, false);
+      return;
+    }
+    setHTML('histList', `<div class="banner error">Lecture impossible : ${esc(error.message)}</div>`);
+    return;
+  }
+
+  cache = entries;
+  paint(entries, false);
 }

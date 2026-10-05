@@ -58,7 +58,7 @@ function describe(entry) {
 }
 
 export async function list() {
-  const file = await load(true);
+  const file = await load();
   return file.entries.map(describe);
 }
 

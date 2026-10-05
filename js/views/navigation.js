@@ -62,6 +62,13 @@ export function step(delta) {
 
 export function openView(name) {
   qsa('.view').forEach(node => { node.style.display = 'none' });
+
   const view = byId(name);
   if (view) view.style.display = 'block';
+
+  qsa('nav button[data-view]').forEach(node => {
+    node.classList.toggle('active', node.dataset.view === name);
+  });
+
+  window.scrollTo({ top: 0 });
 }
