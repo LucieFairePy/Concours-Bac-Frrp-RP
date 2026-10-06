@@ -62,15 +62,25 @@ function sessionCard() {
 }
 
 function rosterRow(entry, selfId) {
-  const isSelf = entry.id === selfId;
-  const action = isSelf
-    ? '<span class="mut">session en cours</span>'
-    : `<button class="danger" onclick="app.removeAccess('${esc(entry.id)}')">Retirer</button>`;
+  if (entry.id === selfId) {
+    return `<tr>
+      <td>${esc(entry.label)}</td>
+      <td>${entry.manage ? '<b>oui</b>' : 'non'}</td>
+      <td class="row-actions"><span class="mut">session en cours</span></td>
+    </tr>`;
+  }
+
+  const bascule = entry.manage
+    ? `<button onclick="app.setAccessManage('${esc(entry.id)}',false)">Retirer les paramètres</button>`
+    : `<button onclick="app.setAccessManage('${esc(entry.id)}',true)">Donner les paramètres</button>`;
 
   return `<tr>
     <td>${esc(entry.label)}</td>
     <td>${entry.manage ? '<b>oui</b>' : 'non'}</td>
-    <td>${action}</td>
+    <td class="row-actions">
+      ${bascule}
+      <button class="danger" onclick="app.removeAccess('${esc(entry.id)}')">Retirer</button>
+    </td>
   </tr>`;
 }
 
@@ -149,10 +159,10 @@ export function setAccessStatus(html) {
   setHTML('accessStatus', html);
 }
 
-export function showGeneratedCode(created) {
+export function showGeneratedCode(created, titre) {
   setAccessStatus(`
     <div class="banner ok">
-      <b>Accès créé pour ${esc(created.label)}</b>
+      <b>${esc(titre || `Accès créé pour ${created.label}`)}</b>
       ${created.manage ? ' — avec accès aux paramètres' : ''}
       <div class="code-row">
         <input id="newCode" class="code-field" readonly value="${esc(created.code)}">
@@ -160,7 +170,8 @@ export function showGeneratedCode(created) {
       </div>
       <p class="mut">
         Transmets ce code par un canal privé. Il n’est stocké nulle part en clair
-        et ne pourra pas être réaffiché. En cas de perte, retire l’accès et recrée-le.
+        et ne pourra pas être réaffiché. L’ancien code de cette personne, s’il
+        existait, ne fonctionne plus.
       </p>
     </div>`);
 

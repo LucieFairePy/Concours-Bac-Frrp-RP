@@ -23,6 +23,14 @@ function uniqueId(base, taken) {
   throw new Error('Impossible de générer un identifiant libre.');
 }
 
+export function identity(entry) {
+  if (entry.grade !== undefined || entry.name !== undefined) {
+    return { grade: entry.grade || '', name: entry.name || '' };
+  }
+  const parts = String(entry.label || '').trim().split(' ');
+  return { grade: parts[0] || '', name: parts.slice(1).join(' ') };
+}
+
 function blank() {
   return { version: 1, kdf: KDF, entries: [] };
 }
@@ -93,10 +101,34 @@ export async function createEntry({ grade, name, manage }) {
     file.kdf || KDF
   );
 
-  file.entries.push({ id, label, role, manage: allowed, ...sealed });
+  file.entries.push({ id, label, grade: cleanGrade, name: cleanName, role, manage: allowed, ...sealed });
   await commit(file, label);
 
   return { id, label, role, manage: allowed, code };
+}
+
+export async function setManage(id, allowed) {
+  const token = gh.getToken();
+  if (!token) throw new Error('Session sans jeton : reconnecte-toi.');
+
+  const file = await load(true);
+  const entry = file.entries.find(item => item.id === id);
+  if (!entry) throw new Error('Accès introuvable.');
+
+  const { grade, name } = identity(entry);
+  const role = allowed ? 'directeur' : 'examinateur';
+  const code = generateCode();
+
+  const sealed = await sealPayload(
+    { token, name, grade, role, manage: allowed },
+    code,
+    file.kdf || KDF
+  );
+
+  Object.assign(entry, { grade, name, role, manage: allowed, ...sealed });
+  await commit(file, entry.label);
+
+  return { id, label: entry.label, role, manage: allowed, code };
 }
 
 export async function removeEntry(id) {

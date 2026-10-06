@@ -115,7 +115,8 @@ session dure alors le temps de l'onglet, ou de la page.
 Une personne dont l'accès porte le droit **« accès aux paramètres »** voit, dans
 l'onglet **Paramètres**, une carte *Accès des examinateurs* :
 
-- la liste des accès existants, avec qui a ce droit et un bouton **Retirer**
+- la liste des accès existants, avec qui a ce droit
+- par ligne : **Donner / Retirer les paramètres** et **Retirer** l'accès
 - un formulaire **Ajouter une personne** : grade, nom, et une case
   *Autoriser l'accès à cette page Paramètres*
 
@@ -124,8 +125,42 @@ un champ avec un bouton **Copier**, prêt à être transmis. Il n'est stocké nu
 part en clair : en cas de perte, retirer l'accès et le recréer.
 
 L'identifiant est dérivé du nom (`LAURENT Cyril` → `laurent-cyril`), avec un
-suffixe numérique si le nom est déjà pris. On ne peut pas retirer sa propre
-session.
+suffixe numérique si le nom est déjà pris. On ne peut ni retirer ni modifier sa
+propre session.
+
+Changer le droit d'une personne **régénère son code** : la charge chiffrée est
+rescellée, donc l'ancien code cesse de fonctionner et le nouveau s'affiche une
+fois. C'est inévitable — le droit est scellé avec le code.
+
+### Où est stocké le droit
+
+Un booléen `manage`, écrit à deux endroits dans `data/access.json` :
+
+```json
+{
+  "id": "kevin",
+  "label": "Lieutenant BOUSSERE Kevin",
+  "grade": "Lieutenant", "name": "BOUSSERE Kevin",
+  "role": "directeur",
+  "manage": true,
+  "salt": "…", "iv": "…", "data": "…"
+}
+```
+
+La partie publique sert **uniquement à l'affichage** de la liste. L'autorisation
+réelle est lue dans la charge **déchiffrée** :
+
+```js
+manage: payload.manage === true    // js/core/auth.js
+```
+
+Personne ne se promeut donc en éditant le fichier : sans le code, la charge
+chiffrée ne peut pas être reforgée, et le champ public n'autorise rien.
+
+Deux portes de secours accordent le droit automatiquement : la connexion avec un
+**jeton GitHub** à la place d'un code, et le **mode local** (`js/config.js` sans
+`owner`/`repo`). Si tous les codes administrateurs sont perdus, le jeton reprend
+la main.
 
 > Ce droit est une **barrière d'interface**, pas une frontière de sécurité :
 > toute personne ayant un code valide détient le même jeton GitHub et pourrait,
@@ -140,7 +175,7 @@ Même chose hors du site, utile pour créer le premier accès.
 ```bash
 node tools/access.mjs list
 node tools/access.mjs add <id> <grade> <nom> [--manage]
-node tools/access.mjs recode <id>
+node tools/access.mjs recode <id> [--manage|--no-manage]
 node tools/access.mjs remove <id>
 node tools/access.mjs rotate
 node tools/access.mjs check <id>
@@ -151,6 +186,7 @@ node tools/access.mjs check <id>
 | `add` | crée un accès et affiche son code **une seule fois** |
 | `--manage` | donne le droit d'accès à la page Paramètres |
 | `recode` | remplace le code d'une personne, l'ancien cesse de fonctionner |
+| `recode --manage` / `--no-manage` | change aussi son accès aux paramètres |
 | `remove` | retire l'accès d'une personne |
 | `rotate` | remplace le jeton stocké pour tout le monde, les codes restent valables |
 | `check` | vérifie qu'un code ouvre bien son entrée, et affiche ses droits |

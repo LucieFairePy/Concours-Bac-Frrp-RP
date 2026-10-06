@@ -153,3 +153,10 @@
   border-color: #2c6a4e;
   color: #55e8a0;
 }
+
+.row-actions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}

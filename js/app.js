@@ -293,6 +293,31 @@ const app = {
     }
   },
 
+  async setAccessManage(id, allowed) {
+    if (!auth.canManage()) return;
+
+    const entries = await roster.list();
+    const entry = entries.find(item => item.id === id);
+    if (!entry) return;
+
+    const question = allowed
+      ? `Donner à ${entry.label} l’accès à la page Paramètres ?`
+      : `Retirer à ${entry.label} l’accès à la page Paramètres ?`;
+
+    if (!window.confirm(`${question}
+
+Un nouveau code sera généré et l’ancien cessera de fonctionner.`)) return;
+
+    setAccessStatus('<div class="banner">Mise à jour de l’accès…</div>');
+    try {
+      const updated = await roster.setManage(id, allowed);
+      renderSettings(await roster.list());
+      showGeneratedCode(updated, `Nouveau code pour ${updated.label}`);
+    } catch (error) {
+      setAccessStatus(`<div class="banner error">${esc(error.message)}</div>`);
+    }
+  },
+
   async removeAccess(id) {
     if (!auth.canManage()) return;
 

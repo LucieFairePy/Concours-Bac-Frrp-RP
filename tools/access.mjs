@@ -4,6 +4,7 @@ import { CONFIG } from '../js/config.js';
 import { ask, fail, closePrompter, resolveToken, parseFlags } from './prompt.mjs';
 import * as gh from '../js/core/github-api.js';
 import { sealPayload, openPayload, generateCode, normalizeCode, formatCode, KDF } from '../js/core/crypto.js';
+import { identity } from '../js/core/roster.js';
 
 const ACCESS_PATH = `${CONFIG.dataDir}/${CONFIG.accessFile}`;
 
@@ -12,7 +13,7 @@ Gestion des accès — ${CONFIG.owner}/${CONFIG.repo}
 
   node tools/access.mjs list
   node tools/access.mjs add <id> <grade> <nom> [--manage] [--code=BAC-...]
-  node tools/access.mjs recode <id>
+  node tools/access.mjs recode <id> [--manage|--no-manage]
   node tools/access.mjs remove <id>
   node tools/access.mjs rotate
   node tools/access.mjs check <id>
@@ -124,7 +125,7 @@ async function cmdAdd(rest, flags) {
   const role = manage ? 'directeur' : 'examinateur';
   const sealed = await sealPayload({ token, name, grade, role, manage }, code, access.kdf || KDF);
 
-  access.entries.push({ id, label: `${grade} ${name}`, role, manage, ...sealed });
+  access.entries.push({ id, label: `${grade} ${name}`, grade, name, role, manage, ...sealed });
   await writeAccess(access, `chore(access): ajout de ${grade} ${name}`);
 
   stdout.write(`\n  Accès créé pour ${grade} ${name}\n`);
@@ -146,18 +147,22 @@ async function cmdRecode(rest, flags) {
   if (!entry) fail(`Aucun accès « ${id} ».`);
 
   const code = typeof flags.code === 'string' ? formatCode(normalizeCode(flags.code)) : generateCode();
-  const grade = entry.label.split(' ')[0];
-  const name = entry.label.split(' ').slice(1).join(' ');
-  const sealed = await sealPayload(
-    { token, name, grade, role: entry.role || 'examinateur', manage: entry.manage === true },
-    code,
-    access.kdf || KDF
-  );
+  const { grade, name } = identity(entry);
 
-  Object.assign(entry, sealed);
+  const manage = flags.manage === true
+    ? true
+    : flags['no-manage'] === true
+      ? false
+      : entry.manage === true;
+
+  const role = manage ? 'directeur' : 'examinateur';
+  const sealed = await sealPayload({ token, name, grade, role, manage }, code, access.kdf || KDF);
+
+  Object.assign(entry, { grade, name, role, manage, ...sealed });
   await writeAccess(access, `chore(access): nouveau code pour ${entry.label}`);
 
   stdout.write(`\n  Nouveau code pour ${entry.label}\n`);
+  stdout.write(`  Accès aux paramètres : ${manage ? 'oui' : 'non'}\n`);
   stdout.write(`  Code : ${code}\n\n`);
   stdout.write('  L\'ancien code ne fonctionne plus.\n\n');
 }
