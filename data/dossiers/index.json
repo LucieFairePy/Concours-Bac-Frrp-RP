@@ -1,1 +1,13 @@
-[]
+[
+  {
+    "id": "BAC-2026-001",
+    "last": "dupont",
+    "first": "laurent",
+    "grade": "gpx",
+    "date": "2026-10-05",
+    "decision": "RECALE",
+    "total": 13,
+    "closedAt": "2026-10-06T14:42:47.126Z",
+    "closedBy": "cyril"
+  }
+]
