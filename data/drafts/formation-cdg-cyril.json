@@ -1,0 +1,40 @@
+{
+  "id": "FCG-2026-001",
+  "course": "formation-cdg",
+  "locked": false,
+  "created": "2026-10-06T22:48:18.010Z",
+  "c": {
+    "last": "",
+    "first": "",
+    "grade": "",
+    "mat": "",
+    "date": "2026-10-06",
+    "start": ""
+  },
+  "ex": [
+    {
+      "grade": "Brigadier",
+      "name": "LAURENT Cyril"
+    }
+  ],
+  "read": {},
+  "work": {},
+  "ans": {},
+  "marks": {},
+  "strength": "",
+  "improve": "",
+  "general": "",
+  "decision": "",
+  "reason": "",
+  "total": null,
+  "suggestedTotal": null,
+  "suggestedDecision": "",
+  "cmd": {
+    "dg": "Lieutenant",
+    "dn": "BOUSSERE Kevin",
+    "ag": "Brigadier",
+    "an": "LAURENT Cyril"
+  },
+  "closedAt": null,
+  "closedBy": null
+}
