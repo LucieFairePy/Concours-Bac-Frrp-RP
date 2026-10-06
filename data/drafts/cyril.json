@@ -1,0 +1,171 @@
+{
+  "id": "BAC-2026-002",
+  "locked": false,
+  "created": "2026-10-06T14:44:51.645Z",
+  "c": {
+    "last": "",
+    "first": "",
+    "grade": "",
+    "mat": "",
+    "date": "2026-10-06",
+    "start": ""
+  },
+  "ex": [
+    {
+      "grade": "Brigadier",
+      "name": "LAURENT Cyril"
+    }
+  ],
+  "qs": [
+    {
+      "id": 72,
+      "theme": "Radio",
+      "q": "Pourquoi faut-il distinguer ce que vous avez vu de ce qui vous a été rapporté  avec plusieurs témoins ?"
+    },
+    {
+      "id": 113,
+      "theme": "Analyse",
+      "q": "Que faites-vous si votre première analyse était mauvaise  après un effort physique ?"
+    },
+    {
+      "id": 114,
+      "theme": "Analyse",
+      "q": "Que faites-vous si votre première analyse était mauvaise  avec un nouvel équipier ?"
+    },
+    {
+      "id": 95,
+      "theme": "Analyse",
+      "q": "Deux témoins donnent des versions différentes : comment réagissez-vous  après un effort physique ?"
+    },
+    {
+      "id": 22,
+      "theme": "Connaissance BAC",
+      "q": "Pourquoi la discrétion est-elle importante dans certaines missions  dans une zone fréquentée ?"
+    },
+    {
+      "id": 8,
+      "theme": "Connaissance BAC",
+      "q": "Quel est le rôle principal d’un équipage BAC  avec des informations incomplètes ?"
+    },
+    {
+      "id": 129,
+      "theme": "Analyse",
+      "q": "Comment hiérarchisez-vous plusieurs risques simultanés  en patrouille de nuit ?"
+    },
+    {
+      "id": 130,
+      "theme": "Analyse",
+      "q": "Comment hiérarchisez-vous plusieurs risques simultanés  dans une zone fréquentée ?"
+    },
+    {
+      "id": 61,
+      "theme": "Radio",
+      "q": "Comment rendre un message radio court mais exploitable  dans une situation évolutive ?"
+    },
+    {
+      "id": 118,
+      "theme": "Analyse",
+      "q": "Pourquoi la temporisation peut-elle parfois être une bonne décision ?"
+    }
+  ],
+  "ans": {},
+  "radioAns": [
+    "",
+    "",
+    "",
+    ""
+  ],
+  "scAns": [
+    [
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ]
+  ],
+  "phys": {
+    "run": "",
+    "push": "",
+    "abs": "",
+    "plank": "",
+    "pursuit": "",
+    "cog": "",
+    "obs": ""
+  },
+  "shoot": {
+    "safety": "",
+    "handling": "",
+    "precision": "",
+    "reaction": "",
+    "memory": "",
+    "memoryAsked": "",
+    "memoryGood": "",
+    "memoryErrors": "",
+    "discern": "",
+    "discernAsked": "",
+    "discernErrors": "",
+    "analysis": "",
+    "hostage": 0,
+    "obs": ""
+  },
+  "marks": {
+    "theory": {},
+    "radio": {},
+    "sc": {},
+    "phys": "",
+    "shoot": ""
+  },
+  "strength": "",
+  "improve": "",
+  "general": "",
+  "decision": "",
+  "reason": "",
+  "retakes": [],
+  "retakeDate": "",
+  "el": {
+    "cheat": false,
+    "refusal": false,
+    "abandon": false,
+    "danger": false
+  },
+  "cmd": {
+    "dg": "Lieutenant",
+    "dn": "BOUSSERE Kevin",
+    "ag": "Brigadier",
+    "an": "LAURENT Cyril"
+  },
+  "total": null,
+  "closedAt": null,
+  "closedBy": null
+}
