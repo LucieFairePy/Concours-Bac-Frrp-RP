@@ -1,0 +1,112 @@
+/* Historique centralisé — page d'entrée, catégories, filtres, tableau. */
+
+.hhero h1 { font-size: 27px; letter-spacing: -.3px }
+
+.hsearch { margin-top: 16px; max-width: 520px }
+
+.hsearch input {
+  padding: 13px 15px;
+  font-size: 14px;
+  background: #061320e8;
+  border: 1px solid #3a688c;
+  border-radius: 10px;
+}
+
+.hcats {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+.hcat {
+  position: relative;
+  display: block;
+  padding: 0;
+  min-height: 160px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #0d1924;
+  text-align: left;
+  cursor: pointer;
+  transition: transform .18s, border-color .18s, box-shadow .18s;
+}
+
+.hcat:hover {
+  transform: translateY(-3px);
+  border-color: #4d8cb8;
+  box-shadow: 0 14px 30px #0008;
+}
+
+.hcat.active {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 1px var(--gold), 0 14px 30px #0008;
+}
+
+.hcat-img {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: .5;
+}
+
+.hcat:after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, #04101a55, #04101af0 74%);
+}
+
+.hcat-body {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: 160px;
+  padding: 14px 15px;
+}
+
+.hcat-count {
+  position: absolute;
+  top: 11px;
+  right: 15px;
+  font-size: 31px;
+  font-weight: 900;
+  color: var(--gold);
+  line-height: 1;
+}
+
+.hcat-title { font-size: 16px; font-weight: 900; margin-bottom: 4px }
+.hcat-blurb { font-size: 12px; color: #b8cbd9; font-weight: 400; line-height: 1.4 }
+
+.hcat-all { margin: 14px 0 4px }
+
+.hfilters { margin-top: 16px }
+
+.htable-wrap { overflow-x: auto; padding: 8px 10px 10px }
+
+.htable { font-size: 12.5px; min-width: 900px }
+
+.htable th {
+  position: sticky;
+  top: 0;
+  background: #0b2234;
+  font-size: 11px;
+  letter-spacing: .5px;
+  text-transform: uppercase;
+  z-index: 2;
+}
+
+.htable tr:not(:first-child) { cursor: pointer; transition: background .12s }
+.htable tr:not(:first-child):hover { background: #12293c }
+
+.htable .hid { font-weight: 800; color: #9dc2de; white-space: nowrap }
+.htable .hgo { color: var(--gold); font-weight: 800; white-space: nowrap }
+
+@media (max-width: 900px) {
+  .hhero h1 { font-size: 19px }
+  .hcat, .hcat-body { min-height: 132px }
+  .hcat-count { font-size: 24px }
+}

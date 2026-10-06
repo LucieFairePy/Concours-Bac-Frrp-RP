@@ -12,12 +12,12 @@ import {
   setBusy
 } from './views/gate.js';
 
-const APP = 'app.html';
+const APP = 'accueil.html';
 
 const REASONS = {
   expired: 'Session expirée. Entre ton code pour continuer.',
   invalid: 'Session fermée : ton accès a été modifié ou retiré. Entre ton code.',
-  required: 'Connecte-toi pour accéder au dossier.',
+  required: 'Connecte-toi pour accéder au portail BAC 75 N.',
   signedout: 'Session fermée.'
 };
 

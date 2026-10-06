@@ -4,6 +4,7 @@ import * as store from './store.js';
 import * as roster from './roster.js';
 import * as vault from './session-store.js';
 import { openPayload, normalizeCode, KDF } from './crypto.js';
+import { normalizeRole, roleCan, roleFromLegacy, roleLabel } from './roles.js';
 
 const PAT_PATTERN = /^(github_pat_|ghp_|gho_|ghu_|ghs_)/;
 
@@ -14,12 +15,27 @@ export function current() {
   return session;
 }
 
-export function canWrite() {
-  return Boolean(session && session.canWrite);
+// Le rôle et le drapeau `manage` viennent tous deux de la charge chiffrée :
+// ils ont la même valeur de preuve. La partie publique de access.json
+// n'autorise rien, elle ne sert qu'à afficher la liste.
+export function role() {
+  return session ? session.role : 'lecture';
 }
 
-export function canManage() {
-  return Boolean(session && session.manage);
+export function can(permission) {
+  if (!session) return false;
+  if (permission === 'settings' || permission === 'accounts') {
+    return session.manage === true || roleCan(session.role, permission);
+  }
+  return roleCan(session.role, permission);
+}
+
+export function canWrite() {
+  return Boolean(session && session.canWrite && roleCan(session.role, 'write'));
+}
+
+export function describeRole() {
+  return session ? roleLabel(session.role) : '—';
 }
 
 export function looksLikePat(code) {
@@ -66,7 +82,7 @@ export async function signInLocal(displayName) {
     login: 'local',
     name,
     grade: '',
-    role: 'examinateur',
+    role: 'admin',
     manage: true,
     canWrite: true,
     offline: true
@@ -93,13 +109,15 @@ export async function signInWithCode(entryId, code) {
 
   gh.setToken(payload.token);
 
+  const sealedRole = roleFromLegacy(payload.role, payload.manage === true);
+
   session = {
     login: entry.id,
     name: payload.name || entry.label,
     grade: payload.grade || '',
-    role: payload.role || 'examinateur',
-    manage: payload.manage === true,
-    canWrite: true,
+    role: sealedRole,
+    manage: payload.manage === true || roleCan(sealedRole, 'settings'),
+    canWrite: roleCan(sealedRole, 'write'),
     offline: false
   };
 
@@ -136,7 +154,7 @@ export async function signInWithPat(code) {
     login: account.login,
     name: (profile && profile.name) || account.name || account.login,
     grade: (profile && profile.grade) || '',
-    role: (profile && profile.role) || 'examinateur',
+    role: profile && profile.role ? normalizeRole(profile.role) : 'admin',
     manage: true,
     canWrite: true,
     offline: false

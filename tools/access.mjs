@@ -5,6 +5,7 @@ import { ask, fail, closePrompter, resolveToken, parseFlags } from './prompt.mjs
 import * as gh from '../js/core/github-api.js';
 import { sealPayload, openPayload, generateCode, normalizeCode, formatCode, KDF } from '../js/core/crypto.js';
 import { identity } from '../js/core/roster.js';
+import { normalizeRole, roleGrantsManage, roleLabel, roleFromLegacy, ROLE_ORDER } from '../js/core/roles.js';
 
 const ACCESS_PATH = `${CONFIG.dataDir}/${CONFIG.accessFile}`;
 
@@ -12,8 +13,8 @@ const USAGE = `
 Gestion des accès — ${CONFIG.owner}/${CONFIG.repo}
 
   node tools/access.mjs list
-  node tools/access.mjs add <id> <grade> <nom> [--manage] [--code=BAC-...]
-  node tools/access.mjs recode <id> [--manage|--no-manage]
+  node tools/access.mjs add <id> <grade> <nom> [--role=<role>] [--code=BAC-...]
+  node tools/access.mjs recode <id> [--role=<role>]
   node tools/access.mjs remove <id>
   node tools/access.mjs rotate
   node tools/access.mjs check <id>
@@ -22,8 +23,10 @@ Le jeton d'écriture est lu dans --token=..., puis dans BAC_TOKEN, sinon il est 
 Il doit être un jeton GitHub à portée restreinte sur ce dépôt uniquement,
 avec la permission « Contents: Read and write ».
 
+Rôles acceptés par --role : ${ROLE_ORDER.join(', ')}
+Par défaut : formateur. --manage reste accepté et vaut --role=adjoint.
+
   add      crée un accès et affiche son code une seule fois
-           --manage donne accès à la page Paramètres du site
   recode   remplace le code d'une personne, le jeton stocké ne change pas
   remove   retire l'accès d'une personne
   rotate   remplace le jeton stocké pour tout le monde, les codes restent valables
@@ -94,15 +97,35 @@ function printRoster(access) {
   }
   stdout.write(`${access.entries.length} accès sur la branche ${CONFIG.dataBranch} :\n\n`);
   for (const entry of access.entries) {
-    const role = (entry.role || 'examinateur').padEnd(13);
-    const flag = entry.manage === true ? 'paramètres' : '';
-    stdout.write(`  ${entry.id.padEnd(14)} ${entry.label.padEnd(32)} ${role} ${flag}\n`);
+    const role = roleFromLegacy(entry.role, entry.manage === true);
+    const flag = roleGrantsManage(role) ? 'paramètres' : '';
+    stdout.write(`  ${entry.id.padEnd(14)} ${entry.label.padEnd(32)} ${roleLabel(role).padEnd(27)} ${flag}\n`);
   }
   stdout.write('\n');
 }
 
 async function cmdList() {
   printRoster(await readAccess());
+}
+
+/**
+ * Rôle demandé en ligne de commande. `--manage` est conservé pour les
+ * habitudes et pour les scripts existants : il vaut « directeur adjoint »,
+ * et `--no-manage` vaut « formateur ».
+ */
+function pickRole(flags, fallback) {
+  if (typeof flags.role === 'string') {
+    const wanted = flags.role.trim().toLowerCase();
+    // normalizeRole retombe sur « formateur » pour tout inconnu. En ligne
+    // de commande, mieux vaut refuser que d'attribuer un rôle au hasard.
+    if (!ROLE_ORDER.includes(wanted)) {
+      fail(`Rôle inconnu : « ${flags.role} ». Attendu : ${ROLE_ORDER.join(', ')}`);
+    }
+    return normalizeRole(wanted);
+  }
+  if (flags.manage === true) return 'adjoint';
+  if (flags['no-manage'] === true) return 'formateur';
+  return fallback;
 }
 
 async function cmdAdd(rest, flags) {
@@ -121,15 +144,16 @@ async function cmdAdd(rest, flags) {
   }
 
   const code = typeof flags.code === 'string' ? formatCode(normalizeCode(flags.code)) : generateCode();
-  const manage = flags.manage === true || flags.role === 'directeur';
-  const role = manage ? 'directeur' : 'examinateur';
+  const role = pickRole(flags, 'formateur');
+  const manage = roleGrantsManage(role);
   const sealed = await sealPayload({ token, name, grade, role, manage }, code, access.kdf || KDF);
 
   access.entries.push({ id, label: `${grade} ${name}`, grade, name, role, manage, ...sealed });
-  await writeAccess(access, `chore(access): ajout de ${grade} ${name}`);
+  await writeAccess(access, `chore(access): ajout de ${grade} ${name} (${role})`);
 
   stdout.write(`\n  Accès créé pour ${grade} ${name}\n`);
   stdout.write(`  Identifiant : ${id}\n`);
+  stdout.write(`  Rôle        : ${roleLabel(role)}\n`);
   stdout.write(`  Code        : ${code}\n\n`);
   stdout.write('  Transmets ce code à la personne par un canal privé.\n');
   stdout.write('  Il n\'est pas stocké en clair et ne peut pas être réaffiché.\n\n');
@@ -149,19 +173,16 @@ async function cmdRecode(rest, flags) {
   const code = typeof flags.code === 'string' ? formatCode(normalizeCode(flags.code)) : generateCode();
   const { grade, name } = identity(entry);
 
-  const manage = flags.manage === true
-    ? true
-    : flags['no-manage'] === true
-      ? false
-      : entry.manage === true;
-
-  const role = manage ? 'directeur' : 'examinateur';
+  const current = roleFromLegacy(entry.role, entry.manage === true);
+  const role = pickRole(flags, current);
+  const manage = roleGrantsManage(role);
   const sealed = await sealPayload({ token, name, grade, role, manage }, code, access.kdf || KDF);
 
   Object.assign(entry, { grade, name, role, manage, ...sealed });
-  await writeAccess(access, `chore(access): nouveau code pour ${entry.label}`);
+  await writeAccess(access, `chore(access): nouveau code pour ${entry.label} (${role})`);
 
   stdout.write(`\n  Nouveau code pour ${entry.label}\n`);
+  stdout.write(`  Rôle                 : ${roleLabel(role)}\n`);
   stdout.write(`  Accès aux paramètres : ${manage ? 'oui' : 'non'}\n`);
   stdout.write(`  Code : ${code}\n\n`);
   stdout.write('  L\'ancien code ne fonctionne plus.\n\n');
@@ -211,7 +232,15 @@ async function cmdRotate(rest, flags) {
     }
 
     const sealed = await sealPayload({ ...payload, token }, code, access.kdf || KDF);
-    kept.push({ id: entry.id, label: entry.label, role: entry.role, ...sealed });
+    kept.push({
+      id: entry.id,
+      label: entry.label,
+      grade: payload.grade || '',
+      name: payload.name || '',
+      role: payload.role,
+      manage: payload.manage === true,
+      ...sealed
+    });
     stdout.write('    mis à jour\n');
   }
 
@@ -238,7 +267,9 @@ async function cmdCheck(rest) {
     exit(1);
   }
 
-  stdout.write(`\n  Code valide — ${payload.grade} ${payload.name} (${payload.role})\n`);
+  const effective = roleFromLegacy(payload.role, payload.manage === true);
+  stdout.write(`\n  Code valide — ${payload.grade} ${payload.name}\n`);
+  stdout.write(`  Rôle                 : ${roleLabel(effective)}\n`);
   stdout.write(`  Accès aux paramètres : ${payload.manage === true ? 'oui' : 'non'}\n`);
   stdout.write(`  Jeton scellé : ${payload.token.slice(0, 11)}…${payload.token.slice(-4)}\n\n`);
 }

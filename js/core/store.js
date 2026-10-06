@@ -19,17 +19,32 @@ function by() {
   return operator ? ` — par ${operator}` : '';
 }
 
+// Résumé écrit dans l'index des dossiers de concours.
+//
+// Le §12 demande que l'historique affiche au minimum le numéro, le nom, le
+// matricule, la date, le type, la note, le résultat et l'examinateur. Les
+// deux derniers champs ont donc été ajoutés ici : les dossiers clôturés
+// avant cet ajout ne les portent pas, et l'historique affiche « — » pour
+// eux plutôt que d'inventer une valeur.
 function summarize(dossier) {
+  const examiner = Array.isArray(dossier.ex) && dossier.ex[0]
+    ? `${dossier.ex[0].grade || ''} ${dossier.ex[0].name || ''}`.trim()
+    : '';
+
   return {
     id: dossier.id,
     last: dossier.c.last,
     first: dossier.c.first,
     grade: dossier.c.grade,
+    mat: dossier.c.mat || '',
     date: dossier.c.date,
     decision: dossier.decision,
     total: dossier.total ?? null,
+    max: 1000,
+    examiner,
     closedAt: dossier.closedAt,
-    closedBy: dossier.closedBy || null
+    closedBy: dossier.closedBy || null,
+    rectifies: dossier.rectifies || null
   };
 }
 
@@ -48,8 +63,13 @@ const memory = {
   users: [],
   access: null,
   drafts: new Map(),
-  dossiers: new Map()
+  dossiers: new Map(),
+  files: new Map()
 };
+
+function clone(value) {
+  return value === null || value === undefined ? value : JSON.parse(JSON.stringify(value));
+}
 
 const memoryDriver = {
   name: 'memory',
@@ -104,6 +124,34 @@ const memoryDriver = {
   async publishClosed(dossier) {
     memory.dossiers.set(dossier.id, dossier);
     return dossier;
+  },
+
+  // Couche générique : tout ce que les modules ajoutés après le concours
+  // écrivent (dossiers CDG, suivi de formation, journal) passe par ici.
+  async readData(path) {
+    return memory.files.has(path) ? clone(memory.files.get(path)) : null;
+  },
+
+  async writeData(path, value) {
+    memory.files.set(path, clone(value));
+    return value;
+  },
+
+  async updateData(path, mutate) {
+    const next = mutate(memory.files.has(path) ? clone(memory.files.get(path)) : null);
+    memory.files.set(path, clone(next));
+    return next;
+  },
+
+  async deleteData(path) {
+    memory.files.delete(path);
+  },
+
+  async listData(dir) {
+    const prefix = `${dir}/`;
+    return [...memory.files.keys()]
+      .filter(path => path.startsWith(prefix) && !path.slice(prefix.length).includes('/'))
+      .map(path => ({ name: path.slice(prefix.length) }));
   }
 };
 
@@ -219,13 +267,47 @@ const githubDriver = {
     );
 
     return candidate;
+  },
+
+  async readData(path) {
+    const file = await gh.readJson(`${CONFIG.dataDir}/${path}`);
+    return file ? file.value : null;
+  },
+
+  async writeData(path, value, message) {
+    return gh.updateJson(`${CONFIG.dataDir}/${path}`, () => value, `${message}${by()}`);
+  },
+
+  async updateData(path, mutate, message) {
+    return gh.updateJson(`${CONFIG.dataDir}/${path}`, mutate, `${message}${by()}`);
+  },
+
+  async deleteData(path, message) {
+    const full = `${CONFIG.dataDir}/${path}`;
+    const file = await gh.readJson(full);
+    if (!file) return;
+    await gh.deleteFile(full, `${message}${by()}`, file.sha);
+  },
+
+  async listData(dir) {
+    return gh.listDir(`${CONFIG.dataDir}/${dir}`);
   }
 };
 
 let driver = memoryDriver;
 
-export async function detectDriver() {
-  driver = isConfigured() ? githubDriver : memoryDriver;
+/**
+ * Choisit le pilote de stockage : GitHub si le dépôt est renseigné dans
+ * js/config.js, mémoire sinon.
+ *
+ * `force` n'existe que pour la suite de tests (tools/test.mjs), qui doit
+ * pouvoir tourner sans réseau ni jeton. Les pages du site appellent
+ * toujours detectDriver() sans argument.
+ */
+export async function detectDriver(force) {
+  if (force === 'memory') driver = memoryDriver;
+  else if (force === 'github') driver = githubDriver;
+  else driver = isConfigured() ? githubDriver : memoryDriver;
   return driver.name;
 }
 
@@ -275,4 +357,32 @@ export function getClosed(id) {
 
 export function publishClosed(dossier) {
   return driver.publishClosed(dossier);
+}
+
+export function readData(path) {
+  return driver.readData(path);
+}
+
+export function writeData(path, value, message) {
+  return driver.writeData(path, value, message);
+}
+
+export function updateData(path, mutate, message) {
+  return driver.updateData(path, mutate, message);
+}
+
+export function deleteData(path, message) {
+  return driver.deleteData(path, message);
+}
+
+export function listData(dir) {
+  return driver.listData(dir);
+}
+
+export function writable() {
+  return driver.writable === true;
+}
+
+export function driverName() {
+  return driver.name;
 }

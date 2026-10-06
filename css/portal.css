@@ -1,0 +1,464 @@
+/* Shell du portail : en-tête, navigation, profil, accueil terrain.
+   Chargé par toutes les pages du portail, après layout.css dont il
+   remplace les règles d'en-tête. */
+
+/* ─────────────────────────── En-tête ─────────────────────────── */
+
+header.phead {
+  display: block;
+  padding: 0;
+  background: #050f18f2;
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid var(--line);
+}
+
+.phead-main {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 20px;
+  max-width: 1440px;
+  margin: auto;
+}
+
+.phead-brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  text-decoration: none;
+  color: var(--ink);
+  flex: none;
+}
+
+.phead-title {
+  display: block;
+  font-size: 19px;
+  font-weight: 900;
+  letter-spacing: 2px;
+}
+
+.phead-sub {
+  display: block;
+  font-size: 11px;
+  color: var(--mut);
+  letter-spacing: .4px;
+}
+
+.phead-status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 20px 7px;
+  max-width: 1440px;
+  margin: auto;
+  border-top: 1px solid #16293a;
+  flex-wrap: wrap;
+}
+
+.phead-status .flag { width: 54px; height: 3px; flex: none }
+
+/* ─────────────────────────── Navigation ─────────────────────────── */
+
+.pnav {
+  display: flex;
+  gap: 2px;
+  margin-left: auto;
+  flex-wrap: wrap;
+}
+
+.pnav-item {
+  display: block;
+  padding: 10px 13px;
+  border-radius: 8px;
+  color: #cfdeea;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+  border: 1px solid transparent;
+  transition: background .15s, color .15s;
+}
+
+.pnav-item:hover { background: #12293c; color: #fff }
+
+.pnav-item.active {
+  background: #1d6598;
+  border-color: #4d8cb8;
+  color: #fff;
+  box-shadow: inset 0 -3px 0 var(--gold);
+}
+
+.pnav-group { position: relative }
+.pnav-caret { font-size: 9px; opacity: .7 }
+
+.pnav-drop {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 250px;
+  background: #0b1a27;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 6px;
+  box-shadow: 0 14px 34px #0009;
+  display: none;
+  z-index: 30;
+}
+
+.pnav-group:hover .pnav-drop,
+.pnav-group:focus-within .pnav-drop { display: block }
+
+.pnav-drop a {
+  display: block;
+  padding: 9px 11px;
+  border-radius: 7px;
+  color: #cfdeea;
+  font-size: 13px;
+  text-decoration: none;
+}
+
+.pnav-drop a:hover { background: #163b57; color: #fff }
+.pnav-drop a.active { background: #1d6598; color: #fff }
+
+.pburger {
+  display: none;
+  margin-left: auto;
+  padding: 8px 12px;
+  font-size: 17px;
+}
+
+/* ─────────────────────────── Profil ─────────────────────────── */
+
+.pprofile {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 6px 10px 6px 6px;
+  border: 1px solid var(--line);
+  border-radius: 40px;
+  background: #0b1a27;
+  flex: none;
+  cursor: default;
+}
+
+.pavatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1d6598, #0e3752);
+  border: 1px solid #4d8cb8;
+  display: grid;
+  place-items: center;
+  font-weight: 900;
+  font-size: 12px;
+  color: #fff;
+  flex: none;
+}
+
+.pprofile-name { font-size: 13px; font-weight: 800; white-space: nowrap }
+.pprofile-role { font-size: 10.5px; color: var(--mut); white-space: nowrap }
+
+.pprofile-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 6px;
+  min-width: 210px;
+  background: #0b1a27;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 7px;
+  box-shadow: 0 14px 34px #0009;
+  display: none;
+  z-index: 30;
+}
+
+.pprofile:hover .pprofile-menu,
+.pprofile:focus-within .pprofile-menu { display: block }
+
+.pprofile-menu a {
+  display: block;
+  padding: 9px 11px;
+  border-radius: 7px;
+  color: #cfdeea;
+  font-size: 13px;
+  text-decoration: none;
+}
+
+.pprofile-menu a:hover { background: #163b57; color: #fff }
+.pprofile-menu button { width: 100%; margin-top: 5px }
+
+/* ──────────────────── Barre d'actions du module ──────────────────── */
+
+.pmodulebar {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+  padding: 11px 20px;
+  max-width: 1440px;
+  margin: auto;
+  border-bottom: 1px solid #16293a;
+  background: #07131ec4;
+}
+
+.pmodulebar .spacer { margin-left: auto }
+
+/* ─────────────────────────── Accueil ─────────────────────────── */
+
+.phero {
+  position: relative;
+  min-height: 330px;
+  display: flex;
+  align-items: flex-end;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  overflow: hidden;
+  background: #09182a;
+  margin: 16px 0 22px;
+}
+
+.phero-img {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center 32%;
+  filter: saturate(.85);
+}
+
+.phero:after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, #03080d33 0%, #03080dcc 62%, #03080df2 100%);
+}
+
+.phero-body {
+  position: relative;
+  z-index: 2;
+  padding: 26px 30px;
+}
+
+.phero-kicker {
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: #9dc2de;
+  text-transform: uppercase;
+}
+
+.phero h1 {
+  font-size: 38px;
+  line-height: 1.05;
+  margin: 8px 0 6px;
+  font-weight: 900;
+  letter-spacing: -.5px;
+}
+
+.phero p { margin: 10px 0 0; max-width: 62ch; color: #c2d4e2; font-size: 14px }
+.phero .flag { margin: 12px 0 0; width: 150px; height: 4px }
+
+.psection-title {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin: 26px 0 12px;
+}
+
+.psection-title h2 { font-size: 17px; margin: 0; letter-spacing: .4px }
+.psection-title .mut { margin: 0 }
+
+/* Cartes d'accès : grandes pour les deux entrées principales (§4),
+   plus compactes pour les accès secondaires. */
+
+.pcards {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.pcards.compact { grid-template-columns: repeat(auto-fit, minmax(235px, 1fr)) }
+
+.pcard {
+  position: relative;
+  display: block;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  overflow: hidden;
+  background: #0d1924;
+  text-decoration: none;
+  color: var(--ink);
+  min-height: 210px;
+  transition: transform .18s, border-color .18s, box-shadow .18s;
+}
+
+.pcards.compact .pcard { min-height: 148px }
+
+.pcard:hover {
+  transform: translateY(-3px);
+  border-color: #4d8cb8;
+  box-shadow: 0 14px 30px #0008;
+}
+
+.pcard-img {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: .55;
+  transition: opacity .18s, transform .3s;
+}
+
+.pcard:hover .pcard-img { opacity: .72; transform: scale(1.04) }
+
+.pcard:after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, #04101a44, #04101ae8 72%);
+}
+
+.pcard-body {
+  position: relative;
+  z-index: 2;
+  padding: 16px 17px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  height: 100%;
+  min-height: 210px;
+}
+
+.pcards.compact .pcard-body { min-height: 148px; padding: 13px 14px }
+
+.pcard-tag {
+  position: absolute;
+  top: 13px;
+  left: 14px;
+  z-index: 3;
+  font-size: 10px;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  font-weight: 800;
+  padding: 4px 9px;
+  border-radius: 20px;
+  background: #0a2538cc;
+  border: 1px solid #2f6a94;
+  color: #a9d2ee;
+}
+
+.pcard h3 { margin: 0 0 5px; font-size: 19px; line-height: 1.15 }
+.pcards.compact .pcard h3 { font-size: 15px }
+.pcard p { margin: 0; font-size: 12.5px; color: #b8cbd9; line-height: 1.45 }
+
+.pcard-go {
+  margin-top: 11px;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--gold);
+  letter-spacing: .5px;
+}
+
+/* Zone dynamique : dossiers en cours, dernières activités (§4) */
+
+.plive {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+}
+
+.ptile {
+  border: 1px solid var(--line);
+  background: #0d1924;
+  border-radius: 14px;
+  padding: 15px 16px;
+}
+
+.ptile h3 { margin: 0 0 4px; font-size: 14px; letter-spacing: .3px }
+.ptile .mut { margin: 0 0 9px }
+
+.pstat {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 2px 0 8px;
+}
+
+.pstat b { font-size: 30px; font-weight: 900; color: var(--gold); line-height: 1 }
+
+.plist { list-style: none; margin: 0; padding: 0 }
+
+.plist li {
+  display: flex;
+  gap: 9px;
+  align-items: baseline;
+  padding: 7px 0;
+  border-top: 1px solid #1b3346;
+  font-size: 12.5px;
+}
+
+.plist li:first-child { border-top: 0 }
+.plist .pid { font-weight: 800; color: #9dc2de; white-space: nowrap }
+.plist .pwhen { margin-left: auto; color: var(--mut); font-size: 11px; white-space: nowrap }
+
+.pempty { color: var(--mut); font-size: 12.5px; padding: 8px 0 }
+
+/* Pastilles de décision, communes aux modules */
+
+.pchip {
+  display: inline-block;
+  padding: 3px 9px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.pchip-ok { background: #19523c; color: #8ff0bf; border: 1px solid #2c7f5c }
+.pchip-warn { background: #4e4018; color: #f0d79a; border: 1px solid #8a7030 }
+.pchip-wait { background: #4d3418; color: #f3c694; border: 1px solid #8a5f2c }
+.pchip-no { background: #55191f; color: #f6a7ad; border: 1px solid #8c3340 }
+.pchip-mut { background: #16293a; color: #9fb5c6; border: 1px solid #2b465c }
+
+/* ─────────────────────────── Mobile ─────────────────────────── */
+
+@media (max-width: 1100px) {
+  .pprofile-text { display: none }
+  .pprofile { border-radius: 50%; padding: 4px }
+}
+
+@media (max-width: 900px) {
+  .pburger { display: block }
+
+  .pnav {
+    display: none;
+    order: 3;
+    width: 100%;
+    flex-direction: column;
+    gap: 3px;
+    margin: 8px 0 2px;
+  }
+
+  .pnav.open { display: flex }
+  .pnav-item { white-space: normal }
+  .pnav-group { position: static }
+
+  .pnav-drop {
+    position: static;
+    display: block;
+    border: 0;
+    box-shadow: none;
+    background: #07131e;
+    min-width: 0;
+    margin: 2px 0 4px 12px;
+    padding: 2px;
+  }
+
+  .pnav-caret { display: none }
+
+  .phero { min-height: 240px }
+  .phero h1 { font-size: 26px }
+  .phead-main { gap: 10px; padding: 9px 14px }
+  .phead-status { padding: 5px 14px 7px }
+  .pmodulebar { padding: 10px 14px }
+}

@@ -1,36 +1,38 @@
-import { CONFIG, isConfigured } from './config.js';
+// Module « Concours d'intégration BAC » — cahier des charges §5.
+//
+// Le flux du concours n'a pas changé : identité → théorie → radio →
+// situations → physique → tir → correction → résultats → fiche finale, note
+// suggérée puis note retenue, décision humaine souveraine, clôture
+// définitive en lecture seule.
+//
+// Ce qui a changé autour : la page vit maintenant dans le shell du portail
+// (en-tête et navigation communs), l'historique et les paramètres ont leurs
+// propres pages, les actions sensibles passent au journal, et une
+// correction après clôture crée une version rectificative liée au dossier
+// d'origine au lieu de le réécrire.
+
+import { CONFIG } from './config.js';
 import { byId, esc, setHTML } from './core/dom.js';
 import { state, blankDossier, migrate, setPath, isEditable } from './core/state.js';
 import * as store from './core/store.js';
 import * as auth from './core/auth.js';
-import * as roster from './core/roster.js';
+import * as portal from './core/portal.js';
+import * as records from './core/records.js';
+import * as journal from './core/journal.js';
 import { totals, suggestedDecision } from './scoring/totals.js';
 import { renderPassage } from './views/passage.js';
 import { renderCorrection } from './views/correction.js';
-import { renderResults, refreshResults } from './views/results.js';
-import { renderDossier, DOSSIER_IMAGES } from './views/dossier.js';
-import { renderHistory, forgetHistory } from './views/history.js';
-import {
-  renderSettings,
-  readSettingsForm,
-  setSettingsStatus,
-  readNewAccessForm,
-  clearNewAccessForm,
-  setAccessStatus,
-  showGeneratedCode
-} from './views/settings.js';
+import { refreshResults } from './views/results.js';
+import { DOSSIER_IMAGES } from './views/dossier.js';
 import { openStep, step, openView } from './views/navigation.js';
+
+const MODULE = 'concours';
 
 let autosaveTimer = null;
 let dirty = false;
 let saving = false;
 
-function setSync(text, tone) {
-  const node = byId('sync');
-  if (!node) return;
-  node.textContent = text;
-  node.style.color = tone === 'error' ? 'var(--red)' : tone === 'ok' ? '#55e8a0' : 'var(--mut)';
-}
+const setSync = portal.setSync;
 
 function setBanner(html) {
   setHTML('banner', html);
@@ -42,6 +44,22 @@ function setBannerRetry(message) {
       ${esc(message)}
       <div class="modal-actions"><button onclick="app.retry()">Réessayer</button></div>
     </div>`);
+}
+
+function moduleBar() {
+  const readOnly = state.readOnly || (state.dossier && state.dossier.locked);
+
+  const rectify = readOnly && auth.can('write')
+    ? '<button onclick="app.rectify()">Créer une version rectificative</button>'
+    : '';
+
+  portal.setModuleBar(`
+    <b>Concours d’intégration BAC</b>
+    <span class="mut">dossier ${esc(state.dossier ? state.dossier.id : '—')}</span>
+    <span class="spacer"></span>
+    ${rectify}
+    <button onclick="app.saveNow()">Enregistrer</button>
+    <button class="primary" onclick="app.newDossier()">Nouveau dossier</button>`);
 }
 
 function markDirty() {
@@ -61,7 +79,7 @@ async function flush() {
   saving = true;
   setSync('enregistrement…');
   try {
-    await store.saveDraft(auth.current().login, state.dossier);
+    await records.saveDraft(MODULE, auth.current().login, state.dossier);
     dirty = false;
     const time = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
     setSync(`enregistré à ${time}`, 'ok');
@@ -90,6 +108,7 @@ async function preloadSheetImages() {
 
 function renderAll() {
   renderPassage();
+  moduleBar();
   const active = byId('s-correct')?.classList.contains('active');
   if (active) renderCorrection();
 }
@@ -99,7 +118,7 @@ async function startDossier() {
 
   let id;
   try {
-    id = await store.nextDossierId(year);
+    id = await records.nextId(MODULE, year);
   } catch (error) {
     setBannerRetry(`Numéro de dossier indisponible : ${error.message}`);
     setSync('dépôt injoignable', 'error');
@@ -114,12 +133,39 @@ async function startDossier() {
   await flush();
 }
 
+/** Ouverture directe d'un dossier clôturé depuis l'historique central. */
+async function openFromUrl() {
+  const id = new URLSearchParams(window.location.search).get('dossier');
+  if (!id) return false;
+
+  setSync('ouverture…');
+  try {
+    const dossier = await records.get(MODULE, id);
+    if (!dossier) {
+      setBanner(portal.errorBanner(`Dossier ${id} introuvable dans l’historique du concours.`));
+      return false;
+    }
+    state.dossier = migrate(dossier);
+    state.readOnly = true;
+    dirty = false;
+    renderAll();
+    openStep('final');
+    setSync(`${id} — lecture seule`);
+    return true;
+  } catch (error) {
+    setBanner(portal.errorBanner(`Lecture impossible : ${error.message}`));
+    return false;
+  }
+}
+
 async function loadInitialDossier() {
+  if (await openFromUrl()) return;
+
   const session = auth.current();
 
   let draft = null;
   try {
-    draft = await store.loadDraft(session.login);
+    draft = await records.loadDraft(MODULE, session.login);
   } catch (error) {
     setBannerRetry(`Brouillon illisible : ${error.message}`);
     setSync('dépôt injoignable', 'error');
@@ -135,43 +181,28 @@ async function loadInitialDossier() {
     return;
   }
 
-  await startDossier();
-}
-
-const GATE = 'index.html';
-
-function toGate(reason) {
-  window.location.replace(reason ? `${GATE}?r=${reason}` : GATE);
-}
-
-async function boot() {
-  await store.detectDriver();
-
-  const restored = await auth.restore();
-
-  if (restored.status !== 'ok') {
-    toGate(restored.status === 'none' ? 'required' : restored.status);
+  if (!auth.canWrite()) {
+    setBanner(`
+      <div class="banner">
+        Ton rôle est en consultation : tu peux ouvrir les dossiers clôturés
+        depuis l’<a href="historique.html">historique</a>, mais pas en créer.
+      </div>`);
+    moduleBar();
     return;
   }
 
-  document.body.classList.remove('booting');
+  await startDossier();
+}
 
-  if (!isConfigured()) {
-    setBanner(`
-      <div class="banner">
-        <b>Stockage non configuré.</b>
-        Renseigne <code>owner</code> et <code>repo</code> dans <code>js/config.js</code>
-        pour que les dossiers soient partagés via GitHub.
-      </div>`);
-  }
+async function boot() {
+  const { session } = await portal.boot({ active: 'concours' });
+  if (!session) return;
 
   await afterSignIn();
 }
 
 async function afterSignIn() {
-  const who = auth.describeOperator();
-  store.setOperator(who);
-  setHTML('who', esc(who));
+  setHTML('who', esc(auth.describeOperator()));
 
   try {
     const stored = await store.loadSettings();
@@ -249,114 +280,10 @@ const app = {
     step(delta);
   },
 
-  async view(name) {
-    openView(name);
-    if (name === 'hist') await renderHistory();
-    if (name === 'settings') await app.openSettings();
-  },
-
-  async openSettings() {
-    if (!auth.canManage()) {
-      renderSettings([]);
-      return;
-    }
-
-    const known = roster.cached();
-    renderSettings(known ? known.entries.map(entry => ({
-      id: entry.id,
-      label: entry.label,
-      role: entry.role || 'examinateur',
-      manage: entry.manage === true
-    })) : []);
-
-    try {
-      renderSettings(await roster.list());
-    } catch (error) {
-      setAccessStatus(`<div class="banner error">Liste des accès illisible : ${esc(error.message)}</div>`);
-    }
-  },
-
-  async createAccess() {
-    if (!auth.canManage()) return;
-
-    const form = readNewAccessForm();
-    setAccessStatus('<div class="banner">Création de l’accès…</div>');
-
-    try {
-      const created = await roster.createEntry(form);
-      await auth.loadRoster(true);
-      clearNewAccessForm();
-      renderSettings(await roster.list());
-      showGeneratedCode(created);
-    } catch (error) {
-      setAccessStatus(`<div class="banner error">${esc(error.message)}</div>`);
-    }
-  },
-
-  async setAccessManage(id, allowed) {
-    if (!auth.canManage()) return;
-
-    const entries = await roster.list();
-    const entry = entries.find(item => item.id === id);
-    if (!entry) return;
-
-    const question = allowed
-      ? `Donner à ${entry.label} l’accès à la page Paramètres ?`
-      : `Retirer à ${entry.label} l’accès à la page Paramètres ?`;
-
-    if (!window.confirm(`${question}
-
-Un nouveau code sera généré et l’ancien cessera de fonctionner.`)) return;
-
-    setAccessStatus('<div class="banner">Mise à jour de l’accès…</div>');
-    try {
-      const updated = await roster.setManage(id, allowed);
-      renderSettings(await roster.list());
-      showGeneratedCode(updated, `Nouveau code pour ${updated.label}`);
-    } catch (error) {
-      setAccessStatus(`<div class="banner error">${esc(error.message)}</div>`);
-    }
-  },
-
-  async removeAccess(id) {
-    if (!auth.canManage()) return;
-
-    const entries = await roster.list();
-    const entry = entries.find(item => item.id === id);
-    if (!entry) return;
-
-    if (!window.confirm(`Retirer l’accès de ${entry.label} ? Son code cessera de fonctionner.`)) return;
-
-    setAccessStatus('<div class="banner">Retrait en cours…</div>');
-    try {
-      const label = await roster.removeEntry(id);
-      await auth.loadRoster(true);
-      renderSettings(await roster.list());
-      setAccessStatus(`<div class="banner ok">Accès retiré : ${esc(label)}</div>`);
-    } catch (error) {
-      setAccessStatus(`<div class="banner error">${esc(error.message)}</div>`);
-    }
-  },
-
-  async copyCode() {
-    const field = byId('newCode');
-    if (!field) return;
-
-    field.focus();
-    field.select();
-
-    try {
-      await navigator.clipboard.writeText(field.value);
-      setSync('code copié', 'ok');
-    } catch (error) {
-      setSync('copie refusée — le code est sélectionné, fais Ctrl+C', 'error');
-    }
-  },
-
   async newDossier() {
     if (dirty && !window.confirm('Des modifications ne sont pas enregistrées. Démarrer un nouveau dossier ?')) return;
     if (!auth.canWrite()) {
-      window.alert('Connecte-toi avec ton code personnel pour créer un dossier.');
+      window.alert('Ton rôle ne permet pas de créer un dossier.');
       return;
     }
     openView('home');
@@ -397,12 +324,36 @@ Un nouveau code sera généré et l’ancien cessera de fonctionner.`)) return;
     document.title = previous;
   },
 
+  /**
+   * §5 et §15 : après clôture, aucune modification silencieuse. Une
+   * correction ultérieure repart du dossier clôturé, reste modifiable, et
+   * sera publiée comme version rectificative qui cite l'original.
+   */
+  async rectify() {
+    const D = state.dossier;
+    if (!D || !auth.can('write')) return;
+
+    const confirmed = window.confirm(
+      `Créer une version rectificative de ${D.id} ?\n\n`
+      + 'Le dossier d’origine ne sera pas modifié. La version rectificative '
+      + 'portera un nouveau numéro et citera le dossier corrigé.'
+    );
+    if (!confirmed) return;
+
+    state.dossier = migrate({ ...D, locked: false, rectifies: D.id, closedAt: null, closedBy: null });
+    state.readOnly = false;
+    dirty = true;
+    renderAll();
+    openStep('correct');
+    setSync(`version rectificative de ${D.id} — à clôturer de nouveau`);
+  },
+
   async closeDossier() {
     const D = state.dossier;
     if (!D || D.locked || state.readOnly) return;
 
-    if (!auth.canWrite()) {
-      window.alert('Connecte-toi avec ton code personnel pour clôturer un dossier.');
+    if (!auth.can('close')) {
+      window.alert('Ton rôle ne permet pas de clôturer un dossier.');
       return;
     }
 
@@ -420,26 +371,47 @@ Un nouveau code sera généré et l’ancien cessera de fonctionner.`)) return;
       return;
     }
 
+    const rectifying = Boolean(D.rectifies);
+
     const confirmed = window.confirm(
-      `Clôturer définitivement ${D.id} ? Après validation, aucune modification directe ne sera possible.`
+      rectifying
+        ? `Publier la version rectificative de ${D.rectifies} ? Elle sera définitive.`
+        : `Clôturer définitivement ${D.id} ? Après validation, aucune modification directe ne sera possible.`
     );
     if (!confirmed) return;
 
     const session = auth.current();
-    D.total = totals(D).total;
-    D.decision = D.decision || suggestedDecision(D);
+    const computed = totals(D);
+    D.total = computed.total;
+    D.suggestedDecision = suggestedDecision(D);
+    D.decision = D.decision || D.suggestedDecision;
     D.locked = true;
     D.closedAt = new Date().toISOString();
     D.closedBy = session.login;
 
-    setSync('clôture en cours…');
+    setSync(rectifying ? 'publication de la rectification…' : 'clôture en cours…');
     try {
-      const published = await store.publishClosed(D);
-      forgetHistory();
+      const published = rectifying
+        ? await records.publishRectified(MODULE, { id: D.rectifies }, D)
+        : await records.publish(MODULE, D);
+
       state.dossier = published;
-      await store.deleteDraft(session.login);
+      state.readOnly = true;
+      await records.deleteDraft(MODULE, session.login);
       dirty = false;
       setSync(`dossier ${published.id} clôturé`, 'ok');
+
+      const logged = await journal.record({
+        who: auth.describeOperator(),
+        role: auth.role(),
+        action: rectifying ? 'dossier.rectificatif' : 'dossier.cloture',
+        target: published.id,
+        detail: `${published.decision} — ${published.total}/1000`
+          + (D.suggestedDecision && D.suggestedDecision !== published.decision
+            ? ` (suggestion : ${D.suggestedDecision})`
+            : '')
+      });
+      if (!logged) setSync(`dossier ${published.id} clôturé — journal non écrit`, 'error');
     } catch (error) {
       D.locked = false;
       D.closedAt = null;
@@ -453,45 +425,10 @@ Un nouveau code sera généré et l’ancien cessera de fonctionner.`)) return;
     openStep('final');
   },
 
-  async openClosed(id) {
-    setSync('ouverture…');
-    try {
-      const dossier = await store.getClosed(id);
-      if (!dossier) {
-        window.alert(`Dossier ${id} introuvable.`);
-        return;
-      }
-      state.dossier = migrate(dossier);
-      state.readOnly = true;
-      dirty = false;
-      renderAll();
-      openView('home');
-      openStep('final');
-      setSync(`${id} — lecture seule`);
-    } catch (error) {
-      setSync(`échec : ${error.message}`, 'error');
-    }
-  },
-
-  async saveSettings() {
-    if (!auth.canWrite()) return;
-    const next = readSettingsForm();
-    setSettingsStatus('<div class="banner">Enregistrement…</div>');
-    try {
-      await store.saveSettings(next);
-      state.settings = next;
-      setSettingsStatus('<div class="banner ok">Paramètres enregistrés pour les prochains dossiers.</div>');
-    } catch (error) {
-      setSettingsStatus(`<div class="banner error">Échec : ${esc(error.message)}</div>`);
-    }
-  },
-
   signOut() {
-    auth.signOut();
-    store.setOperator('');
     state.dossier = null;
     dirty = false;
-    toGate('signedout');
+    portal.signOut();
   }
 };
 

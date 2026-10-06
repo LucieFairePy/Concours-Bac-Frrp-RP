@@ -1,6 +1,7 @@
 import * as gh from './github-api.js';
 import * as store from './store.js';
 import { sealPayload, generateCode, KDF } from './crypto.js';
+import { normalizeRole, roleGrantsManage, roleFromLegacy } from './roles.js';
 
 let cache = null;
 
@@ -60,9 +61,33 @@ function describe(entry) {
   return {
     id: entry.id,
     label: entry.label,
-    role: entry.role || 'examinateur',
+    grade: entry.grade || identity(entry).grade,
+    name: entry.name || identity(entry).name,
+    role: roleFromLegacy(entry.role, entry.manage === true),
     manage: entry.manage === true
   };
+}
+
+// Une seule fonction scelle : création, changement de rôle et bascule
+// `manage` passent toutes par ici, pour qu'il n'existe qu'un seul endroit
+// où un rôle est écrit dans la charge chiffrée.
+async function seal(file, entry, role) {
+  const token = gh.getToken();
+  if (!token) throw new Error('Session sans jeton : reconnecte-toi.');
+
+  const wanted = normalizeRole(role);
+  const manage = roleGrantsManage(wanted);
+  const { grade, name } = identity(entry);
+  const code = generateCode();
+
+  const sealed = await sealPayload(
+    { token, name, grade, role: wanted, manage },
+    code,
+    file.kdf || KDF
+  );
+
+  Object.assign(entry, { grade, name, role: wanted, manage, ...sealed });
+  return { code, role: wanted, manage };
 }
 
 export async function list() {
@@ -76,10 +101,7 @@ export async function find(id) {
   return entry || null;
 }
 
-export async function createEntry({ grade, name, manage }) {
-  const token = gh.getToken();
-  if (!token) throw new Error('Session sans jeton : reconnecte-toi.');
-
+export async function createEntry({ grade, name, role, manage }) {
   const cleanGrade = String(grade || '').trim();
   const cleanName = String(name || '').trim();
 
@@ -90,45 +112,28 @@ export async function createEntry({ grade, name, manage }) {
   const taken = new Set(file.entries.map(entry => entry.id));
   const id = uniqueId(slugify(cleanName), taken);
 
-  const label = `${cleanGrade} ${cleanName}`;
-  const allowed = manage === true;
-  const role = allowed ? 'directeur' : 'examinateur';
-  const code = generateCode();
+  // `manage` reste accepté pour les appels anciens : une case cochée vaut
+  // « directeur adjoint », une case décochée vaut « formateur ».
+  const wanted = role || (manage === true ? 'adjoint' : 'formateur');
 
-  const sealed = await sealPayload(
-    { token, name: cleanName, grade: cleanGrade, role, manage: allowed },
-    code,
-    file.kdf || KDF
-  );
+  const entry = { id, label: `${cleanGrade} ${cleanName}`, grade: cleanGrade, name: cleanName };
+  const out = await seal(file, entry, wanted);
 
-  file.entries.push({ id, label, grade: cleanGrade, name: cleanName, role, manage: allowed, ...sealed });
-  await commit(file, label);
+  file.entries.push(entry);
+  await commit(file, entry.label);
 
-  return { id, label, role, manage: allowed, code };
+  return { id, label: entry.label, role: out.role, manage: out.manage, code: out.code };
 }
 
-export async function setManage(id, allowed) {
-  const token = gh.getToken();
-  if (!token) throw new Error('Session sans jeton : reconnecte-toi.');
-
+export async function setRole(id, role) {
   const file = await load(true);
   const entry = file.entries.find(item => item.id === id);
   if (!entry) throw new Error('Accès introuvable.');
 
-  const { grade, name } = identity(entry);
-  const role = allowed ? 'directeur' : 'examinateur';
-  const code = generateCode();
-
-  const sealed = await sealPayload(
-    { token, name, grade, role, manage: allowed },
-    code,
-    file.kdf || KDF
-  );
-
-  Object.assign(entry, { grade, name, role, manage: allowed, ...sealed });
+  const out = await seal(file, entry, role);
   await commit(file, entry.label);
 
-  return { id, label: entry.label, role, manage: allowed, code };
+  return { id, label: entry.label, role: out.role, manage: out.manage, code: out.code };
 }
 
 export async function removeEntry(id) {
