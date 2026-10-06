@@ -134,12 +134,12 @@
     "memory": "",
     "memoryAsked": "",
     "memoryGood": "",
-    "memoryErrors": "",
+    "memoryErrors": "0",
     "discern": "",
     "discernAsked": "",
     "discernErrors": "",
     "analysis": "",
-    "hostage": 0,
+    "hostage": "0",
     "obs": ""
   },
   "marks": {
