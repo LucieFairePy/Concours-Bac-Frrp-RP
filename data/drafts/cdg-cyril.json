@@ -1,0 +1,435 @@
+{
+  "id": "CDG-2026-001",
+  "module": "cdg",
+  "locked": false,
+  "created": "2026-10-06T22:48:00.937Z",
+  "c": {
+    "last": "",
+    "first": "",
+    "grade": "",
+    "mat": "",
+    "date": "2026-10-06",
+    "start": "",
+    "end": ""
+  },
+  "ex": [
+    {
+      "grade": "Brigadier",
+      "name": "LAURENT Cyril"
+    }
+  ],
+  "draw": {
+    "seed": "MUX9RVE2-1KB3OKG",
+    "drawnAt": "2026-10-06T22:48:00.939Z",
+    "connaissances": [
+      {
+        "id": "co1",
+        "kind": "connaissances",
+        "theme": "effectifs",
+        "themeLabel": "Gestion des effectifs",
+        "base": "Quelles règles ne se négocient jamais dans la répartition des effectifs ?",
+        "q": "Tu es chef de groupe avec un agent qui débute dans ton groupe. Quelles règles ne se négocient jamais dans la répartition des effectifs ?",
+        "attendu": [
+          "jamais un agent seul au contact",
+          "un débutant avec un ancien",
+          "une seule mission par équipage"
+        ],
+        "max": 20
+      },
+      {
+        "id": "co2",
+        "kind": "connaissances",
+        "theme": "regles",
+        "themeLabel": "Règles du serveur",
+        "base": "Pourquoi ne précipite-t-on pas une scène pour « finir » ?",
+        "q": "Pourquoi ne précipite-t-on pas une scène pour « finir » ? Réponds en te plaçant en début de vacation.",
+        "attendu": [
+          "les autres joueurs doivent pouvoir jouer",
+          "respect du jeu de rôle",
+          "la qualité de la scène passe avant le résultat"
+        ],
+        "max": 20
+      },
+      {
+        "id": "co3",
+        "kind": "connaissances",
+        "theme": "decision",
+        "themeLabel": "Prise de décision",
+        "base": "Deux témoins se contredisent. Comment traites-tu l’information ?",
+        "q": "Deux témoins se contredisent. Comment traites-tu l’information ?",
+        "attendu": [
+          "deux versions contradictoires est le fait établi",
+          "l’hypothèse la plus défavorable sert d’hypothèse de travail",
+          "à vérifier avant action"
+        ],
+        "max": 20
+      },
+      {
+        "id": "co4",
+        "kind": "connaissances",
+        "theme": "briefing",
+        "themeLabel": "Préparation et briefing",
+        "base": "Que contient un briefing de prise de vacation ?",
+        "q": "Que contient un briefing de prise de vacation ? Réponds en te plaçant en début de vacation.",
+        "attendu": [
+          "effectifs comptés",
+          "équipages constitués",
+          "indicatifs",
+          "moyens vérifiés",
+          "deux ou trois consignes",
+          "disponibilité annoncée au TN"
+        ],
+        "max": 20
+      },
+      {
+        "id": "co5",
+        "kind": "connaissances",
+        "theme": "role",
+        "themeLabel": "Rôle du chef de groupe",
+        "base": "Pourquoi un chef de groupe qui part au contact avec le premier équipage pose-t-il un problème ?",
+        "q": "Tu es chef de groupe en pleine intervention. Pourquoi un chef de groupe qui part au contact avec le premier équipage pose-t-il un problème ?",
+        "attendu": [
+          "il perd la vue d’ensemble",
+          "plus personne ne coordonne",
+          "les autres équipages restent sans consigne"
+        ],
+        "max": 20
+      },
+      {
+        "id": "co6",
+        "kind": "connaissances",
+        "theme": "coordination",
+        "themeLabel": "Coordination",
+        "base": "Un autre service arrive sur ta scène. Que règles-tu immédiatement ?",
+        "q": "Après une intervention qui s’est mal passée : Un autre service arrive sur ta scène. Que règles-tu immédiatement ?",
+        "attendu": [
+          "qui fait quoi",
+          "qui parle à qui",
+          "annoncer ta propre organisation",
+          "une seule personne de liaison"
+        ],
+        "max": 20
+      },
+      {
+        "id": "co7",
+        "kind": "connaissances",
+        "theme": "consignes",
+        "themeLabel": "Consignes et communication",
+        "base": "Transforme « allez voir là-bas » en consigne utilisable.",
+        "q": "Transforme « allez voir là-bas » en consigne utilisable.",
+        "attendu": [
+          "nommer l’équipage",
+          "préciser l’action",
+          "préciser le lieu",
+          "demander un compte rendu"
+        ],
+        "max": 20
+      },
+      {
+        "id": "co8",
+        "kind": "connaissances",
+        "theme": "degradation",
+        "themeLabel": "Situation qui se dégrade",
+        "base": "Pourquoi demander des renforts avant d’en avoir absolument besoin ?",
+        "q": "Tu es chef de groupe avec un agent qui débute dans ton groupe. Pourquoi demander des renforts avant d’en avoir absolument besoin ?",
+        "attendu": [
+          "les délais",
+          "éviter de subir",
+          "mieux vaut annuler une demande que l’attendre"
+        ],
+        "max": 20
+      },
+      {
+        "id": "co9",
+        "kind": "connaissances",
+        "theme": "debriefing",
+        "themeLabel": "Débriefing et compte rendu",
+        "base": "Pourquoi un chef cite-t-il ses propres erreurs en débriefing ?",
+        "q": "Pourquoi un chef cite-t-il ses propres erreurs en débriefing ? Réponds en te plaçant quand la fréquence radio est chargée.",
+        "attendu": [
+          "crédibilité",
+          "le groupe ose parler",
+          "l’exercice sert à progresser"
+        ],
+        "max": 20
+      },
+      {
+        "id": "co10",
+        "kind": "connaissances",
+        "theme": "radio",
+        "themeLabel": "Gestion radio",
+        "base": "Quelle est la forme d’un message radio utilisable ?",
+        "q": "Quelle est la forme d’un message radio utilisable ?",
+        "attendu": [
+          "qui parle",
+          "à qui",
+          "message court",
+          "confirmation demandée"
+        ],
+        "max": 20
+      }
+    ],
+    "commandement": [
+      {
+        "id": "cm1",
+        "kind": "commandement",
+        "theme": "commandement",
+        "themeLabel": "Commandement / leadership",
+        "base": "Tes agents n’appliquent pas une consigne que tu as donnée deux fois. Que remets-tu en cause d’abord ?",
+        "q": "Tu es chef de groupe en pleine intervention. Tes agents n’appliquent pas une consigne que tu as donnée deux fois. Que remets-tu en cause d’abord ?",
+        "attendu": [
+          "la clarté de ma consigne",
+          "la confirmation non demandée",
+          "reformuler autrement",
+          "vérifier ensuite l’exécution"
+        ],
+        "max": 40
+      },
+      {
+        "id": "cm2",
+        "kind": "commandement",
+        "theme": "commandement",
+        "themeLabel": "Commandement / leadership",
+        "base": "Que délègues-tu quand ta vacation dure longtemps, et pourquoi ?",
+        "q": "Que délègues-tu quand ta vacation dure longtemps, et pourquoi ? Réponds en te plaçant après une intervention qui s’est mal passée.",
+        "attendu": [
+          "le suivi radio ou un secteur",
+          "le point d’effectifs",
+          "un chef qui ne délègue rien décroche",
+          "prévoir la relève"
+        ],
+        "max": 40
+      },
+      {
+        "id": "cm3",
+        "kind": "commandement",
+        "theme": "commandement",
+        "themeLabel": "Commandement / leadership",
+        "base": "Tu reprends une vacation en cours d’intervention. Quelles sont tes trois premières actions ?",
+        "q": "Tu es chef de groupe avec un agent qui débute dans ton groupe. Tu reprends une vacation en cours d’intervention. Quelles sont tes trois premières actions ?",
+        "attendu": [
+          "point d’effectifs",
+          "point de situation",
+          "annoncer la prise de commandement",
+          "reprendre les consignes"
+        ],
+        "max": 40
+      },
+      {
+        "id": "cm4",
+        "kind": "commandement",
+        "theme": "commandement",
+        "themeLabel": "Commandement / leadership",
+        "base": "Un agent te paraît dépassé par la situation. Comment le gères-tu sans l’humilier ?",
+        "q": "Quand la fréquence radio est chargée : Un agent te paraît dépassé par la situation. Comment le gères-tu sans l’humilier ?",
+        "attendu": [
+          "le changer de mission discrètement",
+          "le mettre en binôme",
+          "lui parler après",
+          "ne pas le dire sur la fréquence"
+        ],
+        "max": 40
+      },
+      {
+        "id": "cm5",
+        "kind": "commandement",
+        "theme": "commandement",
+        "themeLabel": "Commandement / leadership",
+        "base": "Deux de tes équipages se contredisent sur ce qu’ils voient. Comment arbitres-tu ?",
+        "q": "Tu es chef de groupe avec un agent qui débute dans ton groupe. Deux de tes équipages se contredisent sur ce qu’ils voient. Comment arbitres-tu ?",
+        "attendu": [
+          "faire décrire les faits",
+          "séparer ce qui est vu de ce qui est déduit",
+          "trancher et annoncer",
+          "faire vérifier"
+        ],
+        "max": 40
+      }
+    ],
+    "situations": [
+      {
+        "id": "sit1",
+        "kind": "situation1",
+        "title": "Mise en situation n°1 — Vol avec fuite : organisation",
+        "statement": "Désigné chef de groupe pour cette vacation, Tu disposes de 6 agents disponibles, trois équipages. Un appel signale que un vol vient d’être commis et l’auteur a pris la fuite sur un marché en cours d’installation. Pour l’instant, deux témoins donnent des versions qui se contredisent. Ce qui te paraît devoir passer en premier, c’est la protection des personnes présentes sur place. Contrainte du moment : la fréquence radio est déjà très chargée. Tu organises ta vacation et tu rends compte.",
+        "parts": {
+          "theme": "vol",
+          "contexte": "sur un marché en cours d’installation",
+          "effectif": 6,
+          "info": "deux témoins donnent des versions qui se contredisent",
+          "priorite": "la protection des personnes présentes sur place",
+          "contrainte": "la fréquence radio est déjà très chargée"
+        },
+        "questions": [
+          {
+            "id": "s1q1",
+            "max": 50,
+            "q": "Quelle est ton analyse avant d’engager, en séparant ce qui est établi, ce qui est supposé et ce qui reste à vérifier ?",
+            "attendu": [
+              "établi",
+              "supposé",
+              "à vérifier",
+              "ce qui manque"
+            ]
+          },
+          {
+            "id": "s1q2",
+            "max": 50,
+            "q": "Quelle priorité retiens-tu, et pourquoi celle-là avant les autres ?",
+            "attendu": [
+              "les personnes avant l’interpellation",
+              "justifier le choix",
+              "une seule priorité annoncée"
+            ]
+          },
+          {
+            "id": "s1q3",
+            "max": 50,
+            "q": "Comment répartis-tu tes effectifs ? Donne les équipages, leurs missions et ce que tu gardes en réserve.",
+            "attendu": [
+              "équipages nommés",
+              "une mission par équipage",
+              "jamais un agent seul",
+              "réserve"
+            ]
+          },
+          {
+            "id": "s1q4",
+            "max": 50,
+            "q": "Quelles consignes donnes-tu avant le départ, et comment t’assures-tu qu’elles sont comprises ?",
+            "attendu": [
+              "qui quoi où",
+              "une phrase par équipage",
+              "confirmation demandée",
+              "deux ou trois consignes"
+            ]
+          },
+          {
+            "id": "s1q5",
+            "max": 50,
+            "q": "Qu’est-ce qui te ferait modifier ce dispositif ou demander d’autres moyens ?",
+            "attendu": [
+              "information nouvelle",
+              "priorité qui change",
+              "effectif insuffisant",
+              "demander les moyens tôt"
+            ]
+          },
+          {
+            "id": "s1r1",
+            "max": 50,
+            "section": "radio",
+            "q": "Rédige tes messages radio de départ : au TN d’abord, puis une consigne à un équipage, confirmation comprise.",
+            "attendu": [
+              "qui parle à qui",
+              "nous prenons",
+              "nombre d’équipages",
+              "message court",
+              "confirmation demandée"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "sit2",
+        "kind": "situation2",
+        "title": "Mise en situation n°2 — Vol avec fuite : évolution et adaptation",
+        "statement": "Quelques minutes plus tard, la situation bouge : un témoin annonce qu’une personne est blessée à l’intérieur. Et par-dessus, un autre service arrive sans s’annoncer et commence à agir. Ton dispositif est celui que tu viens de mettre en place. Tu réévalues, tu réorganises, et tu rends compte.",
+        "parts": {
+          "evolution": "un témoin annonce qu’une personne est blessée à l’intérieur",
+          "imprevu": "un autre service arrive sans s’annoncer et commence à agir"
+        },
+        "questions": [
+          {
+            "id": "s2q1",
+            "max": 50,
+            "q": "La situation évolue : que change-tu dans ton organisation, et qu’est-ce que tu ne changes pas ?",
+            "attendu": [
+              "réévaluer",
+              "nouvelle consigne annoncée",
+              "ne pas tout changer d’un coup",
+              "garder la priorité si elle tient"
+            ]
+          },
+          {
+            "id": "s2q2",
+            "max": 50,
+            "q": "Comment annonces-tu le changement de plan pour qu’il soit compris du premier coup ?",
+            "attendu": [
+              "annoncer que le plan change",
+              "une phrase par équipage",
+              "confirmation",
+              "pas de changement silencieux"
+            ]
+          },
+          {
+            "id": "s2q3",
+            "max": 50,
+            "q": "L’imprévu arrive en plus. Comment le traites-tu sans lâcher l’intervention en cours ?",
+            "attendu": [
+              "hiérarchiser",
+              "déléguer",
+              "demander des moyens",
+              "ne pas abandonner la priorité"
+            ]
+          },
+          {
+            "id": "s2q4",
+            "max": 50,
+            "q": "Comment gardes-tu la vision d’ensemble pendant que tout bouge ?",
+            "attendu": [
+              "point d’effectifs",
+              "point de situation régulier",
+              "savoir où est chaque équipage",
+              "déléguer le suivi"
+            ]
+          },
+          {
+            "id": "s2q5",
+            "max": 50,
+            "q": "Comment conclus-tu l’intervention sur le plan du commandement et du suivi de tes agents ?",
+            "attendu": [
+              "point d’effectifs final",
+              "état de chacun",
+              "débriefing",
+              "décision pour la prochaine fois"
+            ]
+          },
+          {
+            "id": "s2r1",
+            "max": 50,
+            "section": "radio",
+            "q": "Fais ton point de situation radio au moment le plus chargé, puis ton compte rendu final au TN.",
+            "attendu": [
+              "point court",
+              "effectifs",
+              "ce qui est fait",
+              "résultat",
+              "blessés ou non",
+              "devenir du dispositif"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "ans": {},
+  "marks": {},
+  "strength": "",
+  "improve": "",
+  "general": "",
+  "decision": "",
+  "reason": "",
+  "total": null,
+  "suggestedTotal": null,
+  "suggestedDecision": "",
+  "suggestedReason": "",
+  "cmd": {
+    "dg": "Lieutenant",
+    "dn": "BOUSSERE Kevin",
+    "ag": "Brigadier",
+    "an": "LAURENT Cyril"
+  },
+  "closedAt": null,
+  "closedBy": null
+}
