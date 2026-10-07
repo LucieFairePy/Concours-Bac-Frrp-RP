@@ -1,4 +1,6 @@
-/* Coque du portail V4 — documentation technique §6.
+/* Coque du portail V4 — documentation technique §6, calée sur le kit de
+   référence PORTAIL_BAC75N_V4_V2_DESIGN_COMPLET.
+
    Barre latérale 236 px, en-tête 68 px, héros 335 px, cartes 176 px,
    tableau de bord bas à quatre panneaux. Chargée par toutes les pages du
    portail, après layout.css dont elle remplace les règles d'en-tête. */
@@ -17,7 +19,7 @@ body.booting .psidebar { display: none }
   width: var(--sidebar);
   display: flex;
   flex-direction: column;
-  background: var(--navy);
+  background: #04101a;
   border-right: 1px solid var(--line);
   z-index: 40;
   overflow-y: auto;
@@ -25,91 +27,121 @@ body.booting .psidebar { display: none }
 }
 
 .psb-head {
-  padding: 18px 14px 14px;
+  padding: 16px 14px 14px;
   text-align: center;
-  border-bottom: 1px solid var(--line);
   text-decoration: none;
   color: var(--ink);
   display: block;
 }
 
-.psb-head img {
-  width: 130px;
-  height: 130px;
+/* Médaillon rond, écusson sur fond clair comme sur la référence. */
+.psb-medal {
+  display: grid;
+  width: 96px;
+  height: 96px;
+  margin: 0 auto 11px;
+  border-radius: 50%;
+  background: #f4f7fa;
+  border: 1px solid #ffffff26;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.psb-medal img {
+  width: 78px;
+  height: 78px;
   object-fit: contain;
   display: block;
-  margin: 0 auto 10px;
 }
 
 .psb-unit {
+  display: block;
   font-family: var(--font-title);
-  font-size: 12px;
-  letter-spacing: 2px;
-  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: 1.6px;
+  color: #9fb6c8;
   text-transform: uppercase;
 }
 
 .psb-name {
+  display: block;
   font-family: var(--font-title);
-  font-size: 24px;
+  font-size: 27px;
   font-weight: 800;
-  letter-spacing: 3px;
-  margin: 2px 0 6px;
+  letter-spacing: 2px;
+  line-height: 1.05;
+  margin: 1px 0 5px;
 }
 
 .psb-devise {
-  font-size: 10px;
-  letter-spacing: 2.4px;
+  display: block;
+  font-size: 9.5px;
+  letter-spacing: 2px;
   color: var(--blue);
   text-transform: uppercase;
 }
 
 .psb-flag {
-  width: 86px;
+  display: block;
+  width: 108px;
   height: 3px;
-  margin: 9px auto 0;
+  margin: 8px auto 0;
   background: linear-gradient(90deg, #1b3a8f 33%, #e8eef5 33% 66%, var(--red) 66%);
 }
 
-.psb-nav { padding: 10px 8px; flex: 1 }
+.psb-nav { padding: 8px 0 12px; flex: 1 }
 
 .psb-item {
   display: flex;
   align-items: center;
   gap: 9px;
-  padding: 9px 11px;
-  border-radius: 8px;
+  padding: 9px 16px;
   color: #c6d8e6;
-  font: 700 13px var(--font-ui);
+  font: 600 12.5px var(--font-ui);
   text-decoration: none;
   border-left: 3px solid transparent;
 }
 
-.psb-item:hover { background: #0e2537; color: #fff }
+.psb-item:hover { background: #0b1f2e; color: #fff }
 
 .psb-item.active {
-  background: #0d2b40;
+  background: #0b2538;
   border-left-color: var(--blue);
   color: #fff;
 }
 
+.psb-item .psb-ico { font-size: 12px; opacity: .85; width: 14px; text-align: center }
+
 .psb-sub {
-  display: block;
-  padding: 7px 11px 7px 26px;
-  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px 6px 34px;
   color: #a8bfd0;
   font-size: 12px;
   text-decoration: none;
 }
 
-.psb-sub:hover { background: #0e2537; color: #fff }
+.psb-sub:before {
+  content: "●";
+  font-size: 7px;
+  color: var(--blue);
+}
+
+.psb-sub:hover { color: #fff }
 .psb-sub.active { color: var(--blue); font-weight: 700 }
 
+/* Un module annoncé mais pas encore ouvert : visible, jamais cliquable. */
+.psb-sub.soon { color: #5f7a90; cursor: default }
+.psb-sub.soon:before { content: "○"; color: #456278 }
+.psb-sub.soon em { font-style: normal; color: #456278; font-size: 11px }
+
 .psb-sep {
-  margin: 9px 11px 5px;
-  font-size: 10px;
+  margin: 10px 16px 5px;
+  font-size: 9.5px;
   letter-spacing: 1.6px;
-  color: #4d6a82;
+  color: #456278;
   text-transform: uppercase;
   font-family: var(--font-title);
 }
@@ -117,9 +149,9 @@ body.booting .psidebar { display: none }
 .psb-quote {
   position: relative;
   margin: 10px;
-  min-height: 118px;
-  border: 1px solid var(--line);
-  border-radius: 12px;
+  min-height: 108px;
+  border: 1px solid #16324a;
+  border-radius: 6px;
   overflow: hidden;
   display: flex;
   align-items: flex-end;
@@ -130,27 +162,30 @@ body.booting .psidebar { display: none }
   inset: 0;
   background-size: cover;
   background-position: center;
-  opacity: .55;
+  opacity: .35;
 }
 
 .psb-quote:after {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, #04101a33, #04101af2);
+  background: linear-gradient(180deg, #04101a66, #04101af7);
 }
 
-.psb-quote span {
-  position: relative;
-  z-index: 2;
-  padding: 11px 12px;
+.psb-quote-body { position: relative; z-index: 2; padding: 13px 14px }
+
+.psb-quote-body span {
+  display: block;
   font-family: var(--font-title);
-  font-size: 14px;
-  text-wrap: balance;
+  font-style: italic;
+  font-size: 17px;
   font-weight: 700;
-  letter-spacing: 1px;
-  line-height: 1.2;
+  line-height: 1.12;
+  letter-spacing: .4px;
+  text-transform: uppercase;
 }
+
+.psb-quote-body .psb-flag { margin: 9px 0 0; width: 54px }
 
 /* ───────────────────────── En-tête 68 px ───────────────────────── */
 
@@ -161,7 +196,7 @@ header.phead {
   display: block;
   padding: 0;
   height: var(--header);
-  background: #061520f2;
+  background: #04101af2;
   backdrop-filter: blur(6px);
   border-bottom: 1px solid var(--line);
 }
@@ -169,48 +204,91 @@ header.phead {
 .phead-main {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 22px;
   height: var(--header);
-  padding: 0 20px;
+  padding: 0 22px;
 }
 
-.phead-id { display: flex; align-items: center; gap: 9px; flex: none }
-
-.phead-id .flag { width: 34px; height: 3px; flex: none }
+.phead-id { flex: none }
 
 .phead-title {
   display: block;
   font-family: var(--font-title);
-  font-size: 15px;
+  font-size: 18px;
   font-weight: 700;
-  letter-spacing: 1.6px;
+  letter-spacing: 1.2px;
 }
 
-.phead-sub { display: block; font-size: 10.5px; color: var(--mut) }
+.phead-sub {
+  display: block;
+  font-family: var(--font-title);
+  font-size: 9.5px;
+  letter-spacing: 1.6px;
+  color: var(--mut);
+}
+
+.phead-id .flag { display: block; width: 46px; height: 3px; margin-top: 4px }
+
+/* Navigation horizontale de l'en-tête, doublant la barre latérale. */
+.phead-nav { display: flex; align-items: center; gap: 20px; flex: none }
+
+.phead-nav a {
+  font-family: var(--font-title);
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: #aebfcd;
+  text-decoration: none;
+  padding: 4px 0;
+  border-bottom: 2px solid transparent;
+}
+
+.phead-nav a:hover { color: #fff }
+.phead-nav a.active { color: #fff; border-bottom-color: var(--blue) }
 
 .psearch {
   display: flex;
   align-items: center;
   gap: 6px;
   margin-left: auto;
+  flex: 1 1 200px;
+  min-width: 0;
   max-width: 330px;
-  width: 100%;
 }
 
 .psearch input {
-  background: #061520;
-  border: 1px solid var(--line);
+  flex: 1;
+  min-width: 0;
+  background: #07192690;
+  border: 1px solid #16324a;
   border-radius: 20px;
-  padding: 8px 13px;
-  font-size: 12.5px;
+  padding: 7px 14px;
+  font-size: 11.5px;
+  color: #cfe2ef;
 }
 
+.psearch input::placeholder { color: #6f8698 }
 .psearch input:focus { outline: 2px solid var(--blue); outline-offset: 1px }
-.psearch button { padding: 8px 12px; border-radius: 20px }
+.psearch button { padding: 7px 12px; border-radius: 20px; font-size: 11.5px }
 
-.phead-state { display: flex; align-items: center; gap: 8px; flex: none }
-#who { color: #bfd0de; font-weight: 700; font-size: 12px }
-.sync { font-size: 11.5px; color: var(--mut) }
+/* État d'enregistrement des modules. `#who` répète le nom du profil
+   affiché juste à côté : il ne reste que si la place le permet. */
+.phead-state {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+}
+
+#who { color: #bfd0de; font-weight: 700; font-size: 11.5px; white-space: nowrap }
+.sync { font-size: 11px; color: var(--mut); white-space: nowrap }
+
+@media (max-width: 1500px) {
+  #who { display: none }
+}
 
 .pburger { display: none; padding: 7px 11px; font-size: 16px; flex: none }
 
@@ -218,33 +296,28 @@ header.phead {
 
 .pprofile {
   position: relative;
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  padding: 5px 10px 5px 5px;
-  border: 1px solid var(--line);
-  border-radius: 40px;
-  background: #08202f;
   flex: none;
+  text-align: right;
   cursor: default;
+  padding: 4px 0;
 }
 
-.pavatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--blue), #084c73);
-  border: 1px solid #1587c9;
-  display: grid;
-  place-items: center;
-  font-weight: 800;
-  font-size: 11.5px;
-  color: #fff;
-  flex: none;
+.pprofile-name {
+  font-family: var(--font-title);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: .6px;
+  white-space: nowrap;
 }
 
-.pprofile-name { font-size: 12.5px; font-weight: 800; white-space: nowrap }
-.pprofile-role { font-size: 10.5px; color: var(--mut); white-space: nowrap }
+.pprofile-grade,
+.pprofile-role {
+  display: block;
+  font-size: 10px;
+  color: var(--mut);
+  white-space: nowrap;
+  line-height: 1.25;
+}
 
 .pprofile-menu {
   position: absolute;
@@ -258,6 +331,7 @@ header.phead {
   padding: 7px;
   box-shadow: 0 14px 34px #0009;
   display: none;
+  text-align: left;
   z-index: 50;
 }
 
@@ -283,12 +357,15 @@ header.phead {
   gap: 8px;
   flex-wrap: wrap;
   align-items: center;
-  padding: 11px 20px;
+  padding: 11px 22px;
   border-bottom: 1px solid var(--line);
   background: #06151fc4;
 }
 
 .pmodulebar .spacer { margin-left: auto }
+
+/* L'accueil colle au bord de la zone de contenu, comme la référence. */
+main.home { padding: 12px }
 
 /* ───────────────────────── Héros accueil ───────────────────────── */
 
@@ -297,25 +374,23 @@ header.phead {
   height: var(--hero);
   display: flex;
   align-items: center;
-  border: 1px solid var(--line);
-  border-radius: 14px;
   overflow: hidden;
   background: var(--panel);
-  margin: 16px 0 20px;
+  margin: 0 0 14px;
 }
 
 .phero-img {
   position: absolute;
   inset: 0;
   background-size: cover;
-  background-position: center 32%;
+  background-position: center 30%;
 }
 
 .phero:after {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, #03080df2 0%, #03080dd9 42%, #03080d26 100%);
+  background: linear-gradient(90deg, #04101af7 0%, #04101ae6 38%, #04101a26 100%);
 }
 
 .phero-body { position: relative; z-index: 2; padding: 26px 30px; max-width: 58%; min-width: 0 }
@@ -323,39 +398,74 @@ header.phead {
 .phero-kicker {
   font-family: var(--font-title);
   font-size: 11px;
-  letter-spacing: 3px;
-  color: #9dd7f8;
+  letter-spacing: 2.4px;
+  color: #9fb6c8;
   text-transform: uppercase;
 }
 
 .phero h1 {
   font-family: var(--font-title);
-  font-size: 42px;
-  line-height: 1;
-  margin: 8px 0 6px;
+  font-size: 40px;
+  line-height: .98;
+  margin: 10px 0 0;
   font-weight: 800;
-  letter-spacing: 1px;
+  letter-spacing: .5px;
+  text-transform: uppercase;
 }
 
-.phero p { margin: 10px 0 0; max-width: 54ch; color: #c2d4e2; font-size: 13.5px }
-.phero .flag { margin: 12px 0 0; width: 150px; height: 4px }
+.phero .flag { margin: 14px 0 12px; width: 168px; height: 5px }
 
+.phero-devise {
+  font-family: var(--font-title);
+  font-size: 20px;
+  letter-spacing: 2px;
+  color: #dbe7f1;
+  text-transform: uppercase;
+}
+
+.phero-motto {
+  margin: 18px 0 0;
+  font-size: 11.5px;
+  letter-spacing: 1.2px;
+  color: #93a9ba;
+  text-transform: uppercase;
+  line-height: 1.6;
+}
+
+/* Cartouche d'information de service, à la place de la météo du kit
+   (§6.3 : « elle peut être remplacée par une information de service »). */
 .phero-aside {
   position: absolute;
-  top: 18px;
-  right: 18px;
+  top: 22px;
+  right: 22px;
   z-index: 3;
-  min-width: 158px;
-  padding: 11px 13px;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  background: #04101ac4;
+  min-width: 150px;
+  padding: 13px 18px;
+  border: 1px solid #ffffff1a;
+  background: #04101ac9;
   backdrop-filter: blur(4px);
-  font-size: 12px;
+  text-align: center;
+  font-size: 11.5px;
 }
 
-.phero-aside b { display: block; font-family: var(--font-title); font-size: 15px; letter-spacing: .6px }
-.phero-aside span { color: var(--mut); font-size: 11px }
+.phero-aside .pa-place { color: #c6d8e6; font-size: 11.5px }
+
+.phero-aside .pa-value {
+  display: block;
+  font-family: var(--font-title);
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 1.1;
+  margin: 2px 0 7px;
+}
+
+.phero-aside .pa-foot {
+  display: block;
+  padding-top: 7px;
+  border-top: 1px solid #ffffff1f;
+  color: var(--mut);
+  font-size: 10.5px;
+}
 
 /* ───────────────────────── Sections ───────────────────────── */
 
@@ -374,7 +484,7 @@ header.phead {
 
 .pcards {
   display: grid;
-  gap: 14px;
+  gap: 12px;
   grid-template-columns: repeat(4, 1fr);
 }
 
@@ -382,8 +492,7 @@ header.phead {
   position: relative;
   display: block;
   height: var(--card);
-  border: 1px solid var(--line);
-  border-radius: 12px;
+  border: 1px solid #1d4663;
   overflow: hidden;
   background: var(--panel);
   text-decoration: none;
@@ -392,72 +501,77 @@ header.phead {
 }
 
 .pcard:hover {
-  transform: translateY(-3px);
+  transform: translateY(-2px);
   border-color: var(--blue);
   box-shadow: 0 14px 30px #0008;
 }
+
+.pcard.accent-red { border: 2px solid var(--red) }
+.pcard.accent-red:hover { border-color: #ff3d55 }
 
 .pcard-img {
   position: absolute;
   inset: 0;
   background-size: cover;
   background-position: center;
-  opacity: .58;
-  transition: opacity .18s, transform .3s;
+  transition: transform .3s;
 }
 
-.pcard:hover .pcard-img { opacity: .74; transform: scale(1.04) }
+.pcard:hover .pcard-img { transform: scale(1.04) }
 
 .pcard:after {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, #04101a3d, #04101aef 74%);
+  background: linear-gradient(180deg, #04101a26 30%, #04101ae8 88%);
 }
-
-.pcard-accent {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 3px;
-  z-index: 3;
-  background: var(--blue);
-}
-
-.pcard.accent-red .pcard-accent { background: var(--red) }
-.pcard.accent-red:hover { border-color: var(--red) }
 
 .pcard-body {
   position: relative;
   z-index: 2;
-  padding: 14px 15px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
   height: 100%;
+  padding: 14px 16px;
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
 }
 
-.pcard-tag {
-  position: absolute;
-  top: 12px;
-  left: 13px;
-  z-index: 3;
-  font: 800 10px var(--font-title);
-  letter-spacing: 1.6px;
+.pcard-ico {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  font-size: 13px;
+  color: #dce9f3;
+  margin-bottom: 2px;
+}
+
+.pcard h3 {
+  flex: 1;
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.08;
+  font-weight: 800;
+  letter-spacing: .4px;
   text-transform: uppercase;
-  padding: 4px 9px;
-  border-radius: 20px;
-  background: #04101acc;
-  border: 1px solid #2f6a94;
-  color: #a9d2ee;
 }
 
-.pcard.accent-red .pcard-tag { border-color: #a0263a; color: #f3b2bc }
+.pcard-go {
+  flex: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid #7fb9dd;
+  display: grid;
+  place-items: center;
+  font-size: 13px;
+  color: #dce9f3;
+}
 
-.pcard h3 { margin: 0 0 4px; font-size: 18px; line-height: 1.1 }
-.pcard p { margin: 0; font-size: 12px; color: #b8cbd9; line-height: 1.4 }
-.pcard-go { margin-top: 8px; font-size: 11.5px; font-weight: 800; color: var(--blue) }
+.pcard:hover .pcard-go { background: var(--blue); border-color: var(--blue); color: #fff }
+.pcard.accent-red .pcard-go { border-color: #e8808f }
+.pcard.accent-red:hover .pcard-go { background: var(--red); border-color: var(--red) }
 
 /* Grille de panneaux libre, pour les pages qui alignent des cartes de
    hauteur variable (choix des formations, par exemple). */
@@ -473,27 +587,41 @@ header.phead {
 
 .pdash {
   display: grid;
-  gap: 14px;
+  gap: 12px;
   grid-template-columns: 1.25fr 1.15fr .85fr 1fr;
-  margin-bottom: 26px;
+  margin: 12px 0 26px;
 }
 
 .ptile {
-  border: 1px solid var(--line);
-  background: var(--panel);
-  border-radius: 12px;
-  padding: 14px 15px;
+  border: 1px solid #16324a;
+  background: #061520;
+  padding: 0 0 12px;
   display: flex;
   flex-direction: column;
 }
 
-.ptile-head { display: flex; align-items: baseline; gap: 8px; margin-bottom: 9px }
-.ptile h3 { margin: 0; font-size: 15px }
-.ptile-head a { margin-left: auto; font-size: 11.5px; color: var(--blue); text-decoration: none }
+.ptile-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 15px 10px;
+  border-bottom: 1px solid #16324a;
+  margin-bottom: 10px;
+}
+
+.ptile h3 {
+  margin: 0;
+  font-size: 13px;
+  letter-spacing: 1.1px;
+  text-transform: uppercase;
+}
+
+.ptile-head a { margin-left: auto; font-size: 11px; color: var(--blue); text-decoration: none }
+.ptile > *:not(.ptile-head) { padding-left: 15px; padding-right: 15px }
 .ptile .mut { margin: 0 0 9px }
 
 .pstat { display: flex; align-items: baseline; gap: 8px; margin: 2px 0 8px }
-.pstat b { font-size: 28px; font-weight: 800; color: var(--blue); line-height: 1 }
+.pstat b { font-size: 26px; font-weight: 800; color: var(--blue); line-height: 1 }
 
 .plist { list-style: none; margin: 0; padding: 0 }
 
@@ -502,7 +630,7 @@ header.phead {
   gap: 9px;
   align-items: baseline;
   padding: 7px 0;
-  border-top: 1px solid #10293b;
+  border-top: 1px solid #0f2535;
   font-size: 12.5px;
 }
 
@@ -510,31 +638,29 @@ header.phead {
 .plist .pid { font-weight: 800; color: #9dd7f8; white-space: nowrap }
 .plist .pwhen { margin-left: auto; color: var(--mut); font-size: 11px; white-space: nowrap }
 
-.pempty { color: var(--mut); font-size: 12.5px; padding: 8px 0 }
+.pempty { color: var(--mut); font-size: 12.5px; padding: 4px 0 10px }
 
 /* Actualités */
 
 .pnews { list-style: none; margin: 0; padding: 0 }
 
-.pnews li { border-top: 1px solid #10293b; padding: 9px 0 }
-.pnews li:first-child { border-top: 0; padding-top: 0 }
+.pnews li { padding: 7px 0 }
 
 .pnews a {
   display: flex;
-  gap: 10px;
+  gap: 11px;
   align-items: center;
   text-decoration: none;
   color: var(--ink);
 }
 
 .pnews-thumb {
-  width: 68px;
+  width: 72px;
   height: 46px;
   flex: none;
   display: block;
-  border-radius: 7px;
   overflow: hidden;
-  border: 1px solid var(--line);
+  border: 1px solid #16324a;
 }
 
 .pnews-thumb img {
@@ -545,55 +671,70 @@ header.phead {
 }
 
 .pnews b { display: block; font-size: 12.5px; line-height: 1.25; font-weight: 700 }
-.pnews span { font-size: 11px; color: var(--mut) }
+.pnews span { font-size: 10.5px; color: var(--mut) }
+.pnews a:hover b { color: var(--blue) }
 
 /* Dossiers en cours */
 
-.pcase { display: block; padding: 9px 0; border-top: 1px solid #10293b; text-decoration: none; color: var(--ink) }
-.pcase:first-child { border-top: 0 }
-.pcase-top { display: flex; gap: 8px; align-items: baseline; font-size: 12.5px }
-.pcase-top .pwhen { margin-left: auto; color: var(--mut); font-size: 11px }
-.pcase-step { font-size: 11px; color: var(--mut); margin: 3px 0 5px }
+.pcase { display: block; padding: 9px 0; text-decoration: none; color: var(--ink) }
 
-.pbar { height: 6px; border-radius: 20px; background: #0a2033; overflow: hidden }
+.pcase-top { display: flex; gap: 10px; align-items: center; font-size: 12.5px }
+
+.pcase-chip {
+  flex: none;
+  min-width: 78px;
+  padding: 4px 8px;
+  font: 700 9.5px var(--font-title);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  text-align: center;
+  color: #fff;
+  background: #2b4a61;
+}
+
+.pcase-chip.concours { background: var(--red) }
+.pcase-chip.negociation { background: var(--blue) }
+
+.pcase-name { flex: 1; min-width: 0 }
+.pcase-name b { display: block; font-size: 12.5px; font-weight: 700 }
+.pcase-step { display: block; font-size: 10.5px; color: var(--mut) }
+.pcase-pct { flex: none; font-weight: 800; font-size: 13px }
+
+.pbar { height: 4px; background: #0d2234; overflow: hidden; margin-top: 7px }
 .pbar span { display: block; height: 100%; background: var(--blue) }
+.pcase.concours .pbar span { background: var(--red) }
 
 /* Accès rapides */
 
 .pquick { list-style: none; margin: 0; padding: 0 }
 
-.pquick li { border-top: 1px solid #10293b }
-.pquick li:first-child { border-top: 0 }
-
 .pquick a, .pquick button {
   display: flex;
   width: 100%;
-  gap: 9px;
+  gap: 10px;
   align-items: center;
-  padding: 10px 2px;
+  padding: 9px 0;
   background: none;
   border: 0;
   border-radius: 0;
   color: #cfe2ef;
-  font: 700 12.5px var(--font-ui);
+  font: 600 11px var(--font-ui);
   text-decoration: none;
   text-align: left;
   cursor: pointer;
 }
 
 .pquick a:hover, .pquick button:hover { color: var(--blue); background: none }
-.pquick .pq-ico { color: var(--blue); font-size: 14px; flex: none; width: 18px; text-align: center }
-.pquick .pq-go { margin-left: auto; color: var(--mut) }
+.pquick .pq-ico { color: #9fb6c8; font-size: 11px; flex: none; width: 14px; text-align: center }
 
 /* Effectifs */
 
 .pstaff-img {
-  height: 74px;
-  border-radius: 9px;
+  height: 66px;
   background-size: cover;
   background-position: center;
-  border: 1px solid var(--line);
-  margin-bottom: 9px;
+  border: 1px solid #16324a;
+  margin-bottom: 10px;
 }
 
 .pstaff { list-style: none; margin: 0; padding: 0 }
@@ -603,13 +744,13 @@ header.phead {
   justify-content: space-between;
   gap: 8px;
   padding: 6px 0;
-  border-top: 1px solid #10293b;
-  font-size: 12.5px;
+  border-top: 1px solid #0f2535;
+  font-size: 12px;
 }
 
 .pstaff li:first-child { border-top: 0 }
-.pstaff li b { color: var(--blue); font-weight: 800 }
-.pstaff li.total { border-top: 1px solid var(--line); font-weight: 800 }
+.pstaff li b { font-weight: 800 }
+.pstaff li.total { border-top: 1px solid #16324a; font-weight: 800 }
 
 /* Pastilles de décision, communes aux modules */
 
@@ -628,58 +769,8 @@ header.phead {
 .pchip-no { background: #5a0f1c; color: #ffb3bd; border: 1px solid #a0263a }
 .pchip-mut { background: #0e2537; color: #9fb5c6; border: 1px solid var(--line) }
 
-/* ───────────────────────── Adaptatif ───────────────────────── */
-
-@media (max-width: 1280px) {
-  .pdash { grid-template-columns: 1.2fr 1fr }
-}
-
-@media (max-width: 1100px) {
-  .pcards { grid-template-columns: repeat(2, 1fr) }
-  .pprofile-text { display: none }
-  .pprofile { border-radius: 50%; padding: 4px }
-  .psearch { max-width: 220px }
-}
-
-@media (max-width: 900px) {
-  body.portal-shell { padding-left: 0 }
-
-  .psidebar {
-    transform: translateX(-100%);
-    transition: transform .2s;
-    box-shadow: 0 0 40px #000a;
-  }
-
-  .psidebar.open { transform: none }
-  .pburger { display: block }
-  .psearch { display: none }
-  .phero {
-    height: auto;
-    min-height: 250px;
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .phero-body { max-width: 100%; padding: 20px }
-  .phero h1 { font-size: 30px }
-
-  .phero-aside {
-    position: static;
-    margin: 0 20px 18px;
-    align-self: flex-start;
-  }
-  .pdash { grid-template-columns: 1fr }
-  .phead-main { padding: 0 14px; gap: 10px }
-  .pmodulebar { padding: 10px 14px }
-}
-
-@media (max-width: 620px) {
-  .pcards { grid-template-columns: 1fr }
-  .pcard { height: 160px }
-  .phead-id .phead-sub { display: none }
-}
-
 /* Lien d'action des barres de module, hérité de l'ancienne navigation. */
+
 .pnav-item {
   display: inline-block;
   padding: 8px 12px;
@@ -694,6 +785,7 @@ header.phead {
 .pnav-item:hover { border-color: var(--blue); color: #fff }
 
 /* Fenêtre de choix — « Créer un nouveau dossier » (§7). */
+
 .pmodal {
   position: fixed;
   inset: 0;
@@ -714,3 +806,64 @@ header.phead {
 
 .pmodal-box h3 { margin: 0 0 4px; font-size: 18px }
 .pmodal-box .pquick { margin: 12px 0 }
+
+/* ───────────────────────── Adaptatif ───────────────────────── */
+
+@media (max-width: 1240px) {
+  .phead-nav { gap: 13px }
+  .phead-nav a { font-size: 11.5px; letter-spacing: .8px }
+}
+
+@media (max-width: 1060px) {
+  .phead-nav { display: none }
+}
+
+@media (max-width: 1280px) {
+  .pdash { grid-template-columns: 1.2fr 1fr }
+}
+
+@media (max-width: 1100px) {
+  .pcards { grid-template-columns: repeat(2, 1fr) }
+  .psearch { max-width: 220px }
+}
+
+@media (max-width: 900px) {
+  body.portal-shell { padding-left: 0 }
+
+  .psidebar {
+    transform: translateX(-100%);
+    transition: transform .2s;
+    box-shadow: 0 0 40px #000a;
+  }
+
+  .psidebar.open { transform: none }
+  .pburger { display: block }
+  .psearch { display: none }
+
+  .phero {
+    height: auto;
+    min-height: 250px;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .phero-body { max-width: 100%; padding: 20px }
+  .phero h1 { font-size: 29px }
+
+  .phero-aside {
+    position: static;
+    margin: 0 20px 18px;
+    align-self: flex-start;
+  }
+
+  .pdash { grid-template-columns: 1fr }
+  .phead-main { padding: 0 14px; gap: 12px }
+  .pmodulebar { padding: 10px 14px }
+  .pprofile-grade, .pprofile-role { display: none }
+}
+
+@media (max-width: 620px) {
+  .pcards { grid-template-columns: 1fr }
+  .pcard { height: 160px }
+  .phead-id .phead-sub { display: none }
+}

@@ -50,36 +50,51 @@ export function path(routeId) {
  * sous-entrées, affichées sous leur section. `group` ouvre un intertitre.
  */
 export const NAV = [
-  { id: 'accueil', route: 'home', label: 'Accueil', icon: '⌂', href: path('home') },
-  { id: 'concours', route: 'concours-bac', label: 'Concours', icon: '◆', href: path('concours-bac') },
+  { id: 'accueil', route: 'home', label: 'Accueil', short: 'Accueil', icon: '⌂', href: path('home') },
+  {
+    id: 'concours',
+    route: 'concours-bac',
+    label: 'Concours d’intégration BAC',
+    short: 'Concours BAC',
+    icon: '▣',
+    href: path('concours-bac')
+  },
   {
     id: 'formations',
-    label: 'Formations',
+    label: 'Formations BAC',
+    short: 'Formations',
     icon: '▤',
     route: 'formations',
     href: path('formations'),
     sub: [
       { id: 'negociation', route: 'formation-negociation', label: 'Négociation BAC', href: path('formation-negociation') },
-      { id: 'formation-cdg', route: 'formation-chef-groupe', label: 'Chef de Groupe BAC', href: path('formation-chef-groupe') }
+      { id: 'formation-cdg', route: 'formation-chef-groupe', label: 'Commandement', href: path('formation-chef-groupe') },
+      // Annoncés par le kit de référence, pas encore ouverts : visibles
+      // pour que le parcours soit lisible, jamais cliquables.
+      { id: 'radio', label: 'Radio', soon: true },
+      { id: 'intervention', label: 'Intervention', soon: true }
     ]
   },
   {
     id: 'examens',
     label: 'Examens',
-    icon: '✓',
+    short: 'Examens',
+    icon: '☑',
     route: 'examen-chef-groupe',
     href: path('examen-chef-groupe'),
     sub: [
-      { id: 'cdg', route: 'examen-chef-groupe', label: 'Qualification Chef de Groupe', href: path('examen-chef-groupe') }
+      { id: 'cdg', route: 'examen-chef-groupe', label: 'Chef de Groupe', href: path('examen-chef-groupe') }
     ]
   },
-  { id: 'historique', route: 'history', label: 'Historique', icon: '≡', href: path('history') },
-  { id: 'actualites', route: 'news', label: 'Actualités', icon: '◈', href: path('news') },
-  { group: 'Direction' },
-  { id: 'administration', route: 'admin', label: 'Administration', icon: '⚑', href: path('admin'), need: 'accounts' },
-  { id: 'utilisateurs', route: 'users', label: 'Gestion utilisateurs', icon: '⚇', href: path('users'), need: 'accounts' },
-  { id: 'parametres', route: 'settings', label: 'Paramètres', icon: '⚙', href: path('settings') }
+  { id: 'historique', route: 'history', label: 'Historique', short: 'Historique', icon: '◷', href: path('history') },
+  { id: 'actualites', route: 'news', label: 'Actualités', short: 'Actualités', icon: '◈', href: path('news') },
+  { id: 'administration', route: 'admin', label: 'Administration', icon: '⚐', href: path('admin'), need: 'accounts' },
+  { id: 'utilisateurs', route: 'users', label: 'Gestion des utilisateurs', icon: '⚇', href: path('users'), need: 'accounts' },
+  { id: 'parametres', route: 'settings', label: 'Paramètres du site', icon: '⚙', href: path('settings') }
 ];
+
+/** Les entrées reprises par la nav horizontale de l'en-tête (§6.2). */
+const HEADER_NAV = ['accueil', 'concours', 'formations', 'examens', 'historique'];
 
 function visibleNav() {
   return NAV.filter(item => !item.need || auth.can(item.need));
@@ -91,13 +106,15 @@ function navEntry(item, active) {
   const on = item.id === active || (item.sub || []).some(child => child.id === active);
   const head = `
     <a class="psb-item${on ? ' active' : ''}" href="${item.href}">
-      <span aria-hidden="true">${esc(item.icon || '•')}</span>${esc(item.label)}
+      <span class="psb-ico" aria-hidden="true">${esc(item.icon || '•')}</span>${esc(item.label)}
     </a>`;
 
   if (!item.sub) return head;
 
   const children = item.sub
-    .map(child => `<a class="psb-sub${child.id === active ? ' active' : ''}" href="${child.href}">${esc(child.label)}</a>`)
+    .map(child => (child.soon
+      ? `<span class="psb-sub soon">${esc(child.label)} <em>Bientôt</em></span>`
+      : `<a class="psb-sub${child.id === active ? ' active' : ''}" href="${child.href}">${esc(child.label)}</a>`))
     .join('');
 
   return head + children;
@@ -114,22 +131,37 @@ export function renderSidebar(active) {
   }
 
   aside.innerHTML = `
-    <a class="psb-head" href="accueil.html">
-      <img src="${LOGO.file}" width="130" height="130"
-           alt="Écusson Brigade Anti-Criminalité 75 N"
-           onerror="this.onerror=null;this.src='${LOGO.fallback}'">
-      <div class="psb-unit">Brigade Anti-Criminalité</div>
-      <div class="psb-name">BAC 75 N</div>
-      <div class="psb-devise">Pro Patria Vigilant</div>
-      <div class="psb-flag"></div>
+    <a class="psb-head" href="${path('home')}">
+      <span class="psb-medal">
+        <img src="${LOGO.file}" width="78" height="78"
+             alt="Écusson Brigade Anti-Criminalité 75 N"
+             onerror="this.onerror=null;this.src='${LOGO.fallback}'">
+      </span>
+      <span class="psb-unit">Brigade Anti-Criminalité</span>
+      <span class="psb-name">BAC 75 N</span>
+      <span class="psb-devise">— Pro Patria Vigilant —</span>
+      <span class="psb-flag"></span>
     </a>
     <nav class="psb-nav">${visibleNav().map(item => navEntry(item, active)).join('')}</nav>
     <div class="psb-quote">
       <div class="psb-quote-img" style="${imageStyle('sidebar-citation')}"></div>
-      <span>« Parler pour sauver des vies »</span>
+      <div class="psb-quote-body">
+        <span>« Parler<br>pour sauver<br>des vies »</span>
+        <div class="psb-flag"></div>
+      </div>
     </div>`;
 
   document.body.classList.add('portal-shell');
+}
+
+function headerNav(active) {
+  return visibleNav()
+    .filter(item => HEADER_NAV.includes(item.id))
+    .map(item => {
+      const on = item.id === active || (item.sub || []).some(child => child.id === active);
+      return `<a class="${on ? 'active' : ''}" href="${item.href}">${esc(item.short || item.label)}</a>`;
+    })
+    .join('');
 }
 
 function profileBox() {
@@ -137,18 +169,15 @@ function profileBox() {
   if (!session) return '';
 
   const name = session.name || session.login;
-  const line2 = [session.grade, auth.describeRole()].filter(Boolean).join(' — ');
 
   return `
-    <div class="pprofile">
-      <div class="pavatar" aria-hidden="true">${esc(initials(name))}</div>
-      <div class="pprofile-text">
-        <div class="pprofile-name">${esc(name)}</div>
-        <div class="pprofile-role">${esc(line2)}</div>
-      </div>
+    <div class="pprofile" tabindex="0">
+      <div class="pprofile-name">${esc(name)}</div>
+      ${session.grade ? `<span class="pprofile-grade">${esc(session.grade)}</span>` : ''}
+      <span class="pprofile-role">${esc(auth.describeRole())}</span>
       <div class="pprofile-menu">
-        <a href="parametres.html">Mon profil</a>
-        <a href="historique.html">Mes dossiers</a>
+        <a href="${path('settings')}">Mon profil</a>
+        <a href="${path('history')}">Mes dossiers</a>
         <button class="danger" onclick="portal.signOut()">Se déconnecter</button>
       </div>
     </div>`;
@@ -165,16 +194,15 @@ export function renderHeader(active) {
     <div class="phead-main">
       <button class="pburger no-print" onclick="portal.toggleNav()" aria-label="Ouvrir le menu">☰</button>
       <span class="phead-id">
+        <span class="phead-title">Police Nationale</span>
+        <span class="phead-sub">France Roleplay</span>
         <span class="flag"></span>
-        <span>
-          <span class="phead-title">Police Nationale</span>
-          <span class="phead-sub">France Roleplay • outil fictif</span>
-        </span>
       </span>
+      <nav class="phead-nav no-print">${headerNav(active)}</nav>
       <form class="psearch no-print" onsubmit="return portal.search(event)">
         <label class="sr-only" for="portalSearch">Recherche globale</label>
         <input id="portalSearch" name="q" type="search"
-               placeholder="Rechercher un dossier, un candidat, un matricule…">
+               placeholder="Rechercher un dossier, un agent, une formation…">
         <button type="submit">Chercher</button>
       </form>
       <span class="phead-state">

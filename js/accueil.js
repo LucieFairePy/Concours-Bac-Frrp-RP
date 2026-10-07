@@ -24,86 +24,84 @@ const CARDS = [
   {
     slot: 'concours',
     accent: 'red',
-    tag: 'Évaluation',
-    title: 'Concours d’intégration BAC',
-    text: 'Identité, théorie, radio, situations, physique, tir RP, correction et fiche finale sur 1000 points.',
-    href: 'app.html',
-    go: 'Ouvrir un dossier →'
+    icon: '▤',
+    title: 'Concours<br>d’intégration BAC',
+    label: 'Concours d’intégration BAC',
+    href: portal.path('concours-bac')
   },
   {
     slot: 'negociation',
-    tag: 'Formation',
-    title: 'Formation Négociation BAC',
-    text: 'Vingt chapitres, exercices, mise en situation finale et évaluation notée sur 100.',
-    href: 'negociation.html',
-    go: 'Entrer en formation →'
+    icon: '◉',
+    title: 'Formation<br>Négociation BAC',
+    label: 'Formation Négociation BAC',
+    href: portal.path('formation-negociation')
   },
   {
     slot: 'formation-cdg',
-    tag: 'Formation',
-    title: 'Formation Chef de Groupe',
-    text: 'Seize modules : préparation, commandement, radio, coordination, débriefing.',
-    href: 'chef-de-groupe.html',
-    go: 'Ouvrir le support →'
+    icon: '▣',
+    title: 'Formation<br>Chef de Groupe',
+    label: 'Formation Chef de Groupe',
+    href: portal.path('formation-chef-groupe')
   },
   {
     slot: 'cdg',
-    tag: 'Qualification',
-    title: 'Examen Chef de Groupe',
-    text: 'Examen de 45 min à 1 h, noté sur 1000, variantes générées puis figées par dossier.',
-    href: 'examen-cdg.html',
-    go: 'Créer ou reprendre →'
+    icon: '☑',
+    title: 'Examen<br>Chef de Groupe',
+    label: 'Examen Chef de Groupe',
+    href: portal.path('examen-chef-groupe')
   }
 ];
 
 /** §18.3 — cinq actions, chacune conditionnée par les permissions. */
 const QUICK = [
-  { icon: '＋', label: 'Créer un nouveau dossier', action: 'app.newRecord()', need: 'write' },
-  { icon: '≡', label: 'Consulter l’historique', href: 'historique.html' },
-  { icon: '⚇', label: 'Gérer les utilisateurs', href: 'utilisateurs.html', need: 'accounts' },
-  { icon: '⚙', label: 'Paramètres de la direction', href: 'parametres.html', need: 'settings' },
-  { icon: '⤓', label: 'Exporter un rapport', href: 'historique.html?export=1' }
+  { icon: '▣', label: 'Créer un nouveau dossier', action: 'app.newRecord()', need: 'write' },
+  { icon: '◷', label: 'Consulter l’historique', href: portal.path('history') },
+  { icon: '⚇', label: 'Gérer les utilisateurs', href: portal.path('users'), need: 'accounts' },
+  { icon: '⚙', label: 'Paramètres de la direction', href: portal.path('settings'), need: 'settings' },
+  { icon: '⤓', label: 'Exporter un rapport', href: `${portal.path('history')}?export=1` }
 ];
 
 function card(item) {
   return `
-    <a class="pcard${item.accent === 'red' ? ' accent-red' : ''}" href="${item.href}">
+    <a class="pcard${item.accent === 'red' ? ' accent-red' : ''}" href="${item.href}"
+       aria-label="${esc(item.label)}">
       <span class="pcard-img" style="${imageStyle(item.slot)}"></span>
-      <span class="pcard-tag">${esc(item.tag)}</span>
       <span class="pcard-body">
-        <h3>${esc(item.title)}</h3>
-        <p>${esc(item.text)}</p>
-        <span class="pcard-go">${esc(item.go)}</span>
+        <span class="pcard-ico" aria-hidden="true">${esc(item.icon)}</span>
+        <h3>${item.title}</h3>
+        <span class="pcard-go" aria-hidden="true">→</span>
       </span>
-      <span class="pcard-accent"></span>
     </a>`;
 }
 
+/**
+ * §6.3 — le héros montre d'abord la scène ; le texte tient la partie
+ * gauche. Le cartouche de droite remplace la météo de démonstration du
+ * kit par une information de service, comme le §6.3 l'autorise
+ * explicitement : pas d'API extérieure pour afficher une température.
+ */
 function hero() {
-  const session = auth.current();
-  const hour = new Date().getHours();
-  const greeting = hour < 5 ? 'Bonne nuit' : hour < 18 ? 'Bonjour' : 'Bonsoir';
-  const now = new Date().toLocaleDateString('fr-FR', {
-    weekday: 'long', day: 'numeric', month: 'long'
-  });
+  const now = new Date();
+  const heure = now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+  const jour = now.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
 
   setHTML('hero', `
     <section class="phero">
       <div class="phero-img" style="${imageStyle('accueil-hero')}"></div>
       <div class="phero-body">
-        <div class="phero-kicker">Police Nationale • Brigade Anti-Criminalité • Paris</div>
-        <h1>BAC 75 N</h1>
+        <div class="phero-kicker">Bienvenue sur le portail officiel</div>
+        <h1>Brigade<br>Anti-Criminalité<br>BAC 75 N</h1>
         <div class="flag"></div>
-        <p>
-          ${esc(greeting)} ${esc(session ? session.name : '')}. Portail interne de la brigade :
-          concours d’intégration, formations, qualification Chef de Groupe et historique
-          centralisé des dossiers.
+        <div class="phero-devise">Pro Patria Vigilant</div>
+        <p class="phero-motto">
+          « Engagement · Réactivité · Discrétion<br>
+          au service des citoyens »
         </p>
       </div>
       <div class="phero-aside">
-        <b>Service en cours</b>
-        <span>${esc(now)}</span><br>
-        <span>${esc(auth.describeRole())}</span>
+        <span class="pa-place">${esc(jour)}</span>
+        <span class="pa-value">${esc(heure)}</span>
+        <span class="pa-foot">Portail FRRP</span>
       </div>
     </section>`);
 }
@@ -136,10 +134,10 @@ const LOADING = '<p class="pempty">Lecture du dépôt…</p>';
 
 function skeleton() {
   setHTML('dash', [
-    tile('tileNews', 'Actualités BAC 75 N', { href: 'actualites.html', label: 'Voir tout' }, LOADING),
-    tile('tileCases', 'Dossiers en cours', { href: 'historique.html', label: 'Historique' }, LOADING),
+    tile('tileNews', 'Actualités BAC 75 N', { href: portal.path('news'), label: 'Voir tout ›' }, LOADING),
+    tile('tileCases', 'Dossiers en cours', { href: portal.path('history'), label: 'Voir tous ›' }, LOADING),
     tile('tileQuick', 'Accès rapides', null, LOADING),
-    tile('tileStaff', 'Effectifs BAC 75 N', { href: 'utilisateurs.html', label: 'Voir plus' }, LOADING)
+    tile('tileStaff', 'Effectifs BAC 75 N', { href: portal.path('users'), label: 'Voir plus ›' }, LOADING)
   ].join(''));
 }
 
@@ -165,7 +163,7 @@ function thumb(slot) {
   return `
     <span class="pnews-thumb">
       <img src="${sources.src}" alt="" loading="lazy" decoding="async"
-           width="68" height="46"
+           width="72" height="46"
            onerror="this.onerror=null;this.src='${sources.fallback}'">
     </span>`;
 }
@@ -174,15 +172,15 @@ function newsLine(item) {
   const date = new Date(item.publishedAt);
   const stamp = Number.isNaN(date.getTime())
     ? ''
-    : date.toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' });
+    : date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
 
   return `
     <li>
-      <a href="actualites.html?actu=${encodeURIComponent(item.id)}">
+      <a href="${portal.path('news')}?actu=${encodeURIComponent(item.id)}">
         ${thumb(item.imageAsset)}
         <span>
           <b>${esc(item.title)}</b>
-          <span>${esc([item.sector, stamp].filter(Boolean).join(' • '))}</span>
+          <span>${esc([item.sector, stamp].filter(Boolean).join(' · '))}</span>
         </span>
       </a>
     </li>`;
@@ -209,18 +207,19 @@ function caseLine(draft) {
   const advance = lifecycle.progress(draft.module, draft.record);
   const name = records.fullName(draft.record.c || {});
 
+  const pct = Math.round(advance.ratio * 100);
+
   return `
-    <a class="pcase" href="${mod.page}">
+    <a class="pcase ${esc(draft.module)}" href="${mod.page}">
       <span class="pcase-top">
-        <span class="pid">${esc(draft.record.id || mod.prefix)}</span>
-        <span>${esc(name || 'sans candidat')}</span>
-        <span class="pwhen">${esc(mod.short)}</span>
+        <span class="pcase-chip ${esc(draft.module)}">${esc(mod.short)}</span>
+        <span class="pcase-name">
+          <b>${esc(name || 'À attribuer')}</b>
+          <span class="pcase-step">Étape : ${esc(advance.label)}</span>
+        </span>
+        <span class="pcase-pct">${pct}%</span>
       </span>
-      <span class="pcase-step">
-        ${esc(lifecycle.statusLabel(lifecycle.status(draft.module, draft.record)))}
-        • ${esc(advance.label)} (${advance.done}/${advance.count})
-      </span>
-      <span class="pbar"><span style="width:${Math.round(advance.ratio * 100)}%"></span></span>
+      <span class="pbar"><span style="width:${pct}%"></span></span>
     </a>`;
 }
 
@@ -233,7 +232,7 @@ function closedLine(entry) {
         ${esc(records.fullName(entry) || '—')}
         ${decisionChip(entry.decision)}
       </span>
-      <a class="pwhen" href="historique.html?dossier=${encodeURIComponent(entry.id)}">${esc(when(entry.closedAt || entry.date))}</a>
+      <a class="pwhen" href="${portal.path('history')}?dossier=${encodeURIComponent(entry.id)}">${esc(when(entry.closedAt || entry.date))}</a>
     </li>`;
 }
 
@@ -282,8 +281,8 @@ function paintQuick() {
     .map(item => `
       <li>
         ${item.href
-          ? `<a href="${item.href}"><span class="pq-ico" aria-hidden="true">${esc(item.icon)}</span>${esc(item.label)}<span class="pq-go">→</span></a>`
-          : `<button type="button" onclick="${item.action}"><span class="pq-ico" aria-hidden="true">${esc(item.icon)}</span>${esc(item.label)}<span class="pq-go">→</span></button>`}
+          ? `<a href="${item.href}"><span class="pq-ico" aria-hidden="true">${esc(item.icon)}</span>${esc(item.label)}</a>`
+          : `<button type="button" onclick="${item.action}"><span class="pq-ico" aria-hidden="true">${esc(item.icon)}</span>${esc(item.label)}</button>`}
       </li>`)
     .join('');
 

@@ -510,8 +510,10 @@ await group('HOME — accueil V4 : quatre cartes, quatre panneaux, proportions',
   const base = readRoot('css/base.css');
 
   // HOME-001 : les quatre cartes, dans l'ordre du §6.4, vers les bons modules.
-  for (const target of ['app.html', 'negociation.html', 'chef-de-groupe.html', 'examen-cdg.html']) {
-    assert.ok(home.includes(`href: '${target}'`), `carte manquante vers ${target}`);
+  for (const route of [
+    'concours-bac', 'formation-negociation', 'formation-chef-groupe', 'examen-chef-groupe'
+  ]) {
+    assert.ok(home.includes(`portal.path('${route}')`), `carte manquante vers ${route}`);
   }
   assert.ok(/accent: 'red'/.test(home), 'le concours doit garder son accent rouge (§6.4)');
 
@@ -810,8 +812,8 @@ await group('§22 — poids des images, dimensions et chargement différé', () 
   // Les images sous la ligne de flottaison sont différées et dimensionnées.
   const home = readRoot('js/accueil.js');
   assert.ok(home.includes('loading="lazy"'), 'miniatures d’actualité différées');
-  assert.ok(home.includes('width="68" height="46"'), 'miniatures dimensionnées');
-  assert.ok(readRoot('js/core/portal.js').includes('width="130" height="130"'),
+  assert.ok(home.includes('width="72" height="46"'), 'miniatures dimensionnées');
+  assert.ok(readRoot('js/core/portal.js').includes('width="78" height="78"'),
     'le logo de la barre latérale porte ses dimensions');
 });
 
