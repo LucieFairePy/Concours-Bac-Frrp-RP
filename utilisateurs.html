@@ -3,14 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Historique — Brigade Anti-Criminalité 75 N</title>
+  <title>Gestion utilisateurs — Portail BAC 75 N</title>
+  <meta name="description" content="Accès, rôles et effectifs de la Brigade Anti-Criminalité 75 N — France Roleplay.">
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
   <link rel="apple-touch-icon" href="assets/favicon.svg">
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/layout.css">
   <link rel="stylesheet" href="css/components.css">
   <link rel="stylesheet" href="css/portal.css">
-  <link rel="stylesheet" href="css/historique.css">
 </head>
 <body class="booting">
   <aside id="portalSidebar" class="psidebar no-print"></aside>
@@ -19,12 +19,14 @@
 
   <main>
     <div id="banner"></div>
-    <div id="hero"></div>
-    <div id="categories"></div>
-    <div id="filters"></div>
-    <div id="results"></div>
+    <div class="hero">
+      <div class="flag"></div>
+      <h2>Gestion des utilisateurs</h2>
+      <div class="mut">Accès et rôles • effectifs BAC 75 N • ce que chaque rôle permet</div>
+    </div>
+    <div id="usersBox"></div>
   </main>
 
-  <script type="module" src="js/historique.js"></script>
+  <script type="module" src="js/utilisateurs.js"></script>
 </body>
 </html>

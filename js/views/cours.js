@@ -7,7 +7,7 @@
 // page est ici. Ajouter une formation n'ajoute pas une vue.
 
 import { esc } from '../core/dom.js';
-import { imageStack } from '../data/images.js';
+import { imageStyle } from '../data/images.js';
 
 export { reflexeCard } from './reflexe.js';
 
@@ -135,7 +135,7 @@ export function chapterPanel(course, record, chapter, index, disabled) {
 
   return `
     <article class="co-main">
-      <div class="co-banner" style="background-image:${imageStack(course.image)}">
+      <div class="co-banner" style="${imageStyle(course.image)}">
         <div class="co-banner-body">
           <div class="co-kicker">${esc(course.title)}</div>
           <h2>${esc(chapter.num)} — ${esc(chapter.title)}</h2>

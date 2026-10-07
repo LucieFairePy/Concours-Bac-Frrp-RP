@@ -8,8 +8,9 @@
 // Et la règle du §10 vaut ici aussi : le moteur suggère, l'examinateur
 // retient. Rien dans ce fichier ne décide.
 
-import { suggest, retained, thresholdLevel } from './assist.js';
+import { suggest, retained } from './assist.js';
 import { SECTIONS } from '../data/cdg-generator.js';
+import * as thresholds from '../core/thresholds.js';
 
 export const DECISIONS = ['QUALIFIE', 'QUALIFIE_RESERVE', 'AJOURNE', 'REFUSE'];
 
@@ -98,9 +99,15 @@ export function totals(record, draw) {
  * §10 : recommandation motivée, jamais une décision. L'examinateur peut
  * qualifier malgré un avis négatif et refuser malgré un avis positif.
  */
-export function recommendation(record, draw) {
+export function recommendation(record, draw, bands = thresholds.cdg()) {
   const t = totals(record, draw);
-  const level = thresholdLevel(t.total, t.max);
+
+  // §11.3 — quatre paliers, rapportés au barème réel du tirage pour que
+  // les seuils gardent leur sens même si une section manque.
+  const scaled = t.max ? (t.total * 1000) / t.max : 0;
+  const level = scaled >= bands.qualifie ? 'haut'
+    : scaled >= bands.reserve ? 'moyen'
+      : scaled >= bands.ajourne ? 'bas' : 'insuffisant';
 
   const unanswered = t.questions
     .filter(question => !String(record.ans[question.id] || '').trim()).length;
@@ -108,10 +115,11 @@ export function recommendation(record, draw) {
   // Une épreuve largement non répondue ne peut pas valoir une
   // qualification franche, quel que soit le total.
   const decision = unanswered > t.questions.length / 3
-    ? (level === 'bas' ? 'REFUSE' : 'AJOURNE')
+    ? (level === 'haut' || level === 'moyen' ? 'AJOURNE' : 'REFUSE')
     : level === 'haut' ? 'QUALIFIE'
       : level === 'moyen' ? 'QUALIFIE_RESERVE'
-        : 'REFUSE';
+        : level === 'bas' ? 'AJOURNE'
+          : 'REFUSE';
 
   const weakest = [...t.sections]
     .filter(section => section.max)

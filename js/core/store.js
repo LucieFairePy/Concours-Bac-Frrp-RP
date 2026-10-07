@@ -11,6 +11,11 @@ const DRAFT_PATH = login => `${CONFIG.dataDir}/drafts/${login}.json`;
 
 let operator = '';
 
+/** Qui agit, pour la piste d'audit et les messages de commit (§14). */
+export function operatorName() {
+  return operator;
+}
+
 export function setOperator(name) {
   operator = name || '';
 }

@@ -179,7 +179,7 @@ export const NEGOCIATION = {
     {
       id: 'ecoute',
       num: '05',
-      title: 'Écoute active',
+      title: 'Écoute active et communication',
       blocks: [
         { t: 'p', text: 'L’écoute active est l’outil principal de la formation. Elle consiste à montrer, par ce que tu dis, que tu as réellement entendu. Ce n’est pas de la politesse : c’est ce qui fait baisser la tension.' },
         {
@@ -343,7 +343,7 @@ export const NEGOCIATION = {
     {
       id: 'priorites',
       num: '10',
-      title: 'Priorités en jeu de rôle',
+      title: 'Personnes vulnérables et priorités RP',
       blocks: [
         { t: 'p', text: 'Quand plusieurs choses sont urgentes en même temps, l’ordre est toujours le même. Il ne se discute pas et il se récite.' },
         {
@@ -402,7 +402,7 @@ export const NEGOCIATION = {
     {
       id: 'temps',
       num: '12',
-      title: 'Le temps et la pression',
+      title: 'Temps, pression et maîtrise émotionnelle',
       blocks: [
         { t: 'p', text: 'Le temps travaille presque toujours pour toi. Plus la situation dure, plus la tension baisse, plus la personne fatigue, plus le dispositif est prêt. Temporiser n’est pas perdre du temps : c’est travailler.' },
         {
@@ -598,8 +598,38 @@ export const NEGOCIATION = {
     },
 
     {
-      id: 'reflexe',
+      id: 'evaluation',
       num: '18',
+      title: 'Évaluation finale /100',
+      blocks: [
+        { t: 'p', text: 'La formation se termine par une évaluation notée sur 100, en dix questions, pour environ trente minutes. Elle ne porte sur rien d’autre que ce qui a été vu dans les chapitres précédents.' },
+        { t: 'p', text: 'Le portail propose une note et dit sur quoi il s’appuie : éléments attendus retrouvés dans ta réponse, éléments manquants. Cette note est une suggestion. Le formateur garde la note retenue et peut s’en écarter dans les deux sens.' },
+        {
+          t: 'table',
+          head: ['Ce qui est évalué', 'Ce qui est regardé'],
+          rows: [
+            ['Rôle et limites', 'Tu sais ce que le négociateur fait, et ce qu’il ne décide pas'],
+            ['Méthode', 'Les étapes de la fiche réflexe, dans l’ordre, et ce qu’elles produisent'],
+            ['Communication', 'Écoute active, reformulation, rythme, silences'],
+            ['Transmission', 'Confirmé, supposé, à vérifier — en une phrase courte'],
+            ['Règles RP', 'Les règles FRRP / GTRP, citées comme règles de serveur']
+          ]
+        },
+        {
+          t: 'retenir',
+          items: [
+            'Dix questions, 100 points, environ 30 minutes.',
+            'Réponds par des phrases : une réponse en trois mots ne montre rien.',
+            'La note du portail est une suggestion ; la décision est celle du formateur.'
+          ]
+        },
+        { t: 'p', text: 'À l’issue de l’évaluation, la fiche de formation est produite : identité, chapitres parcourus, réponses, notes retenues, appréciation et signatures. Une fois la fiche clôturée, elle n’est plus modifiable.' }
+      ]
+    },
+
+    {
+      id: 'reflexe',
+      num: '19',
       title: 'Fiche réflexe négociation',
       blocks: [
         { t: 'p', text: 'À retenir par cœur. C’est l’ordre dans lequel on avance, et celui dans lequel on revient quand on est perdu en pleine scène.' },
@@ -627,6 +657,26 @@ export const NEGOCIATION = {
             'L’issue se décrit avant d’être exécutée.'
           ]
         }
+      ]
+    },
+
+    {
+      id: 'conclusion',
+      num: '20',
+      title: 'Conclusion',
+      blocks: [
+        { t: 'p', text: 'La négociation n’est pas un talent : c’est une méthode, et une méthode s’entretient. Ce que tu as appris ici tient en peu de choses — parler calmement, écouter vraiment, reformuler, transmettre juste, tenir le temps.' },
+        { t: 'p', text: 'Sur le terrain, tu n’es jamais seul : le chef de groupe organise, le périmètre est tenu, le commandement décide. Ton travail est de faire baisser la tension et de donner une information fiable à ceux qui décident.' },
+        {
+          t: 'retenir',
+          items: [
+            'On ne négocie pas pour gagner : on négocie pour que personne ne soit blessé.',
+            'Une information transmise sans tri vaut une information fausse.',
+            'Quand tu ne sais plus quoi faire : écouter, puis reformuler.',
+            'Le temps est un allié tant qu’il est employé à quelque chose.'
+          ]
+        },
+        { t: 'p', text: 'Tout ce qui est écrit ici relève du jeu de rôle France Roleplay. Les règles citées sont des règles de serveur, pas une doctrine policière réelle, et cette formation n’a aucune valeur administrative.' }
       ]
     }
   ],

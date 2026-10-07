@@ -74,6 +74,20 @@ import { state as concoursState, blankDossier } from '../js/core/state.js';
 import { totals as concoursTotals } from '../js/scoring/totals.js';
 import { renderDossier } from '../js/views/dossier.js';
 import { checkPages } from './check-pages.mjs';
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import * as lifecycle from '../js/core/lifecycle.js';
+import * as thresholds from '../js/core/thresholds.js';
+import * as effectifs from '../js/core/effectifs.js';
+import * as newsService from '../js/core/news.js';
+import { IMAGE_SLOTS, LOGO, imageStyle } from '../js/data/images.js';
+import { suggestedDecision, suggestionSnapshot } from '../js/scoring/totals.js';
+import { physicalAuto } from '../js/scoring/auto.js';
+import { ROUTES as portalRoutes } from '../js/core/portal.js';
+
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const readRoot = file => fs.readFileSync(path.join(ROOT, file), 'utf8');
 
 const SETTINGS = { dg: 'Lieutenant', dn: 'BOUSSERE Kevin', ag: 'Brigadier', an: 'LAURENT Cyril' };
 
@@ -393,6 +407,17 @@ await group('§5 — le concours ne régresse pas', async () => {
   const html = sheet();
   noHoles(html, 'fiche concours');
   assert.ok(html.includes('8/8'), 'la fiche du concours fait 8 pages');
+
+  // §13 : la fiche porte la note suggérée à côté de la note retenue, et
+  // §16 : elle lit l'instantané archivé quand il existe.
+  assert.ok(html.includes('Suggérée'), 'la fiche doit montrer la note suggérée');
+  assert.ok(html.includes('Note retenue'), 'la fiche doit montrer la note retenue');
+  assert.ok(html.includes('Suggestion du système'), 'la fiche doit porter le résultat suggéré');
+
+  const archive = await records.get('concours', id);
+  assert.equal(archive.version, lifecycle.RECORD_VERSION, 'version du modèle (§14)');
+  assert.ok(archive.auditTrail.some(line => line.action === 'dossier.cloture'),
+    'la clôture entre dans la piste d’audit du dossier (§14)');
   assert.ok(html.includes('75N-3311'));
 
   assert.match(await records.nextId('concours'), /-002$/);
@@ -435,7 +460,7 @@ await group('§15 — aucune modification silencieuse après clôture', async ()
   const fixed = { ...exam, decision: 'QUALIFIE', reason: 'Après réécoute, la radio était conforme.' };
   const rect = await records.publishRectified('cdg', exam, fixed);
 
-  assert.equal(rect.id, `${exam.id}-R2`);
+  assert.equal(rect.id, `${exam.id}-R01`, 'numérotation du rectificatif — §4.2');
   assert.equal(rect.rectifies, exam.id);
   assert.equal(rect.locked, true);
 
@@ -447,7 +472,7 @@ await group('§15 — aucune modification silencieuse après clôture', async ()
 
   // une deuxième rectification s'empile sans écraser la première
   const again = await records.publishRectified('cdg', exam, fixed);
-  assert.equal(again.id, `${exam.id}-R3`);
+  assert.equal(again.id, `${exam.id}-R02`);
 
   // et la numérotation ignore les suffixes
   assert.match(await records.nextId('cdg'), /-002$/);
@@ -474,6 +499,320 @@ await group('câblage — handlers, points de montage, liens et styles', () => {
   const { problems, pages } = checkPages();
   const detail = problems.map(problem => `\n         ${problem}`).join('');
   assert.equal(problems.length, 0, `${pages} pages contrôlées :${detail}`);
+});
+
+// ───────────── Recette V4 — documentation technique §21 ─────────────────
+
+await group('HOME — accueil V4 : quatre cartes, quatre panneaux, proportions', () => {
+  const home = readRoot('js/accueil.js');
+  const html = readRoot('accueil.html');
+  const css = readRoot('css/portal.css');
+  const base = readRoot('css/base.css');
+
+  // HOME-001 : les quatre cartes, dans l'ordre du §6.4, vers les bons modules.
+  for (const target of ['app.html', 'negociation.html', 'chef-de-groupe.html', 'examen-cdg.html']) {
+    assert.ok(home.includes(`href: '${target}'`), `carte manquante vers ${target}`);
+  }
+  assert.ok(/accent: 'red'/.test(home), 'le concours doit garder son accent rouge (§6.4)');
+
+  // HOME-002 : les quatre panneaux du bas, que le §1 interdit de supprimer.
+  for (const tile of ['tileNews', 'tileCases', 'tileQuick', 'tileStaff']) {
+    assert.ok(home.includes(tile), `panneau ${tile} absent de l’accueil`);
+  }
+  assert.ok(html.includes('id="dash"'), 'le tableau de bord bas n’a plus de point de montage');
+  assert.ok(html.includes('id="portalSidebar"'), 'la barre latérale n’a plus de point de montage');
+
+  // HOME-003 : les mesures et les jetons de l'annexe C.
+  for (const token of ['#0b9ff5', '#ee1834', '#06121d', '#081723', '#18354a', '#8197a8']) {
+    assert.ok(base.includes(token), `jeton V4 ${token} absent de base.css`);
+  }
+  assert.ok(base.includes('--sidebar: 236px'), 'barre latérale : 236 px (§6)');
+  assert.ok(base.includes('--header: 68px'), 'en-tête : 68 px (§6)');
+  assert.ok(base.includes('--hero: 335px'), 'héros : 335 px (§6)');
+  assert.ok(base.includes('--card: 176px'), 'cartes modules : 176 px (§6)');
+  assert.ok(base.includes('Barlow Condensed') && base.includes('Inter'), 'polices V4');
+  assert.ok(css.includes('grid-template-columns: 1.25fr 1.15fr .85fr 1fr'),
+    'le tableau de bord garde ses quatre colonnes 1.25 / 1.15 / .85 / 1 (§6)');
+  assert.ok(css.includes('background-size: cover'), 'les images du portail restent en cover (§21.1)');
+});
+
+await group('§8.5 — règles bloquantes du tir RP', () => {
+  const dossier = blankDossier('BAC-2026-900', SETTINGS);
+  dossier.marks.phys = 200;
+  dossier.marks.shoot = 300;
+  for (const question of dossier.qs) dossier.marks.theory[question.id] = 10;
+
+  // BAC-004 : une cible otage interdit le RETENU simple, même avec un bon total.
+  dossier.shoot.hostage = 1;
+  assert.equal(suggestedDecision(dossier), 'RESERVE');
+
+  // BAC-005 : deux cibles otage, c'est RECALÉ, quel que soit le total.
+  dossier.shoot.hostage = 2;
+  assert.equal(suggestedDecision(dossier), 'RECALE');
+
+  // et la triche, le refus ou l'abandon injustifiés aussi.
+  dossier.shoot.hostage = 0;
+  for (const faute of ['cheat', 'refusal', 'abandon']) {
+    const copie = { ...dossier, el: { ...dossier.el, [faute]: true } };
+    assert.equal(suggestedDecision(copie), 'RECALE', `${faute} doit recaler`);
+  }
+});
+
+await group('§8.6 et §11.3 — les seuils vivent dans la configuration', () => {
+  const base = thresholds.defaults();
+  assert.deepEqual(base.bac, { retenu: 800, reserve: 650 });
+  assert.deepEqual(base.cdg, { qualifie: 800, reserve: 650, ajourne: 500 });
+
+  const dossier = blankDossier('BAC-2026-901', SETTINGS);
+  dossier.marks.phys = 140;
+  dossier.marks.shoot = 210;
+  for (const question of dossier.qs) dossier.marks.theory[question.id] = 7;
+  const atteint = concoursTotals(dossier).total;
+
+  // Un seuil abaissé change la suggestion sans qu'aucun module soit retouché.
+  thresholds.apply({ bacRetenu: atteint, bacReserve: atteint - 100 });
+  assert.equal(suggestedDecision(dossier), 'RETENU');
+
+  thresholds.apply({ bacRetenu: 1000, bacReserve: 999 });
+  assert.equal(suggestedDecision(dossier), 'RECALE');
+
+  // Une réserve plus haute que la réussite est remise dans l'ordre.
+  const remis = thresholds.apply({ bacRetenu: 700, bacReserve: 900 });
+  assert.ok(remis.bac.reserve <= remis.bac.retenu, 'réserve au-dessus de la réussite');
+
+  // Une valeur illisible retombe sur celle du kit.
+  const repli = thresholds.apply({ cdgQualifie: 'huit cents' });
+  assert.equal(repli.cdg.qualifie, 800);
+
+  thresholds.apply(thresholds.toSettings(thresholds.defaults()));
+});
+
+await group('annexe B — cycle de vie et avancement d’un dossier', () => {
+  const dossier = blankDossier('BAC-2026-902', SETTINGS);
+  assert.equal(lifecycle.status('concours', dossier), 'draft');
+
+  const avance = lifecycle.progress('concours', dossier);
+  assert.equal(avance.count, 9, 'le concours compte neuf étapes (§18.2)');
+  assert.equal(avance.done, 0);
+
+  dossier.c.last = 'MARTIN';
+  dossier.c.first = 'Léa';
+  assert.equal(lifecycle.status('concours', dossier), 'in_progress');
+
+  dossier.marks.phys = 150;
+  assert.equal(lifecycle.status('concours', dossier), 'correction');
+
+  dossier.decision = 'RETENU';
+  assert.equal(lifecycle.status('concours', dossier), 'decision');
+
+  dossier.locked = true;
+  assert.equal(lifecycle.status('concours', dossier), 'closed');
+  assert.equal(lifecycle.progress('concours', dossier).ratio, 1);
+
+  assert.equal(lifecycle.status('concours', { ...dossier, rectifies: 'BAC-2026-902' }), 'rectified');
+
+  // L'examen Chef de Groupe compte huit étapes (§18.2).
+  const exam = cdgState.blankExam('CDG-2026-900', SETTINGS);
+  assert.equal(lifecycle.progress('cdg', exam).count, 8);
+
+  // Le statut est écrit dans le dossier au moment de l'enregistrer.
+  lifecycle.stamp('cdg', exam);
+  assert.equal(exam.status, 'draft');
+});
+
+await group('§18.1 et §18.4 — actualités et effectifs tiennent sur des données', () => {
+  const propre = newsService.normalize({ title: 'Essai', visibility: 'secret' }, 0);
+  assert.equal(propre.visibility, 'portail', 'une visibilité inconnue retombe sur le portail');
+  assert.ok(propre.id && propre.publishedAt, 'identifiant et date toujours présents');
+  assert.ok(propre.imageAsset in IMAGE_SLOTS, 'l’image par défaut doit exister dans la banque');
+
+  assert.equal(effectifs.corpsOf('Lieutenant'), 'officiers');
+  assert.equal(effectifs.corpsOf('Brigadier-chef'), 'brigadiers');
+  assert.equal(effectifs.corpsOf('Gardien de la paix'), 'gardiens');
+  assert.equal(effectifs.corpsOf('Policier adjoint'), 'adjoints');
+  assert.equal(effectifs.corpsOf('Stagiaire'), 'autres', 'un grade inconnu reste visible');
+});
+
+await group('§5 — la banque d’images suit la nomenclature du kit', () => {
+  const noms = Object.values(IMAGE_SLOTS).map(slot => slot.file);
+  for (const attendu of [
+    '02_HOME_HERO_BAC_CONTROLE_NUIT.jpg',
+    '03_HOME_CARD_CONCOURS_INTEGRATION_BAC.jpg',
+    '04_HOME_CARD_FORMATION_NEGOCIATION.jpg',
+    '05_HOME_CARD_FORMATION_CHEF_GROUPE.jpg',
+    '06_HOME_CARD_EXAMEN_CHEF_GROUPE_CASQUE_MICRO.jpg',
+    '12_SIDEBAR_CITATION_BAC75N_NUIT.jpg'
+  ]) {
+    assert.ok(noms.includes(attendu), `place ${attendu} absente de la banque`);
+  }
+
+  for (const [id, slot] of Object.entries(IMAGE_SLOTS)) {
+    assert.ok(/^\d{2}_[A-Z0-9_]+\.(jpg|png)$/.test(slot.file), `${id} : nom hors nomenclature §4`);
+    assert.ok(fs.existsSync(path.join(ROOT, 'assets', 'img', slot.fallback)),
+      `${id} : repli ${slot.fallback} absent du dépôt`);
+  }
+  assert.ok(fs.existsSync(path.join(ROOT, LOGO.fallback)), 'le repli du logo doit exister');
+});
+
+await group('SEC-001 et GHP-001 — aucun secret livré, routes servies sous un sous-chemin', () => {
+  const livres = fs.readdirSync(ROOT)
+    .filter(name => name.endsWith('.html'))
+    .concat(
+      fs.readdirSync(path.join(ROOT, 'js')).filter(n => n.endsWith('.js')).map(n => `js/${n}`),
+      ['js/config.js']
+    );
+
+  for (const file of livres) {
+    const source = readRoot(file);
+    // §19.1 : aucun jeton GitHub écrit dans ce qui part sur Pages.
+    assert.ok(!/gh[pousr]_[A-Za-z0-9]{16,}/.test(source), `${file} : jeton GitHub en clair`);
+    assert.ok(!/github_pat_[A-Za-z0-9_]{20,}/.test(source), `${file} : jeton GitHub en clair`);
+    // §19.3 : pas de chemin absolu, qui casserait sous /repository/.
+    assert.ok(!/(?:href|src)="\/[a-z]/.test(source), `${file} : chemin absolu incompatible avec Pages`);
+  }
+
+  assert.ok(fs.existsSync(path.join(ROOT, '404.html')), '404.html attendu pour GitHub Pages (§19.4)');
+  assert.ok(fs.existsSync(path.join(ROOT, '.nojekyll')), '.nojekyll attendu (§19.4)');
+});
+
+await group('§4.1 — chaque route du kit a son identifiant et sa page', () => {
+  for (const id of [
+    'home', 'concours-bac', 'formation-negociation', 'formation-chef-groupe',
+    'examen-chef-groupe', 'history', 'admin', 'users', 'settings'
+  ]) {
+    const route = portalRoutes[id];
+    assert.ok(route, `identifiant de route manquant : ${id}`);
+    assert.ok(fs.existsSync(path.join(ROOT, route.path)), `${id} : ${route.path} absent`);
+  }
+
+  assert.equal(portalRoutes['concours-bac'].route, '/concours-bac');
+  assert.equal(portalRoutes.users.route, '/administration/utilisateurs');
+});
+
+await group('§8.4 — le barème physique se règle, il n’est plus en dur', () => {
+  const dossier = blankDossier('BAC-2026-903', SETTINGS);
+  dossier.phys = { run: '320', push: '40', abs: '62', plank: '160', pursuit: '', cog: '', obs: '' };
+
+  // Avec le barème du kit : 320 s → palier « bon », 40 pompes → « bon »…
+  thresholds.apply(thresholds.toSettings(thresholds.defaults()));
+  const parDefaut = physicalAuto(dossier);
+
+  // La direction durcit le 1200 m et les pompes : la suggestion baisse,
+  // sans qu'une ligne de js/scoring/auto.js ait changé.
+  const durci = thresholds.apply({
+    ...thresholds.toSettings(),
+    physRunFort: 280, physRunBon: 300, physRunBase: 330,
+    physPushFort: 60, physPushBon: 50, physPushBase: 45
+  });
+  assert.ok(physicalAuto(dossier) < parDefaut, 'un barème plus dur doit faire baisser la suggestion');
+  assert.equal(durci.physical.run.bon, 300);
+
+  // Les paliers restent ordonnés, même saisis à l'envers : un temps se lit
+  // à l'endroit inverse d'un nombre de répétitions.
+  const remis = thresholds.apply({
+    ...thresholds.toSettings(),
+    physRunFort: 400, physRunBon: 310, physRunBase: 290,
+    physAbsFort: 10, physAbsBon: 80, physAbsBase: 40
+  });
+  assert.ok(remis.physical.run.fort <= remis.physical.run.bon);
+  assert.ok(remis.physical.run.bon <= remis.physical.run.base);
+  assert.ok(remis.physical.abs.fort >= remis.physical.abs.bon);
+  assert.ok(remis.physical.abs.bon >= remis.physical.abs.base);
+
+  thresholds.apply(thresholds.toSettings(thresholds.defaults()));
+});
+
+await group('§11.2 — suggestion : 35 % complétude + 65 % critères', () => {
+  assert.deepEqual(assist.WEIGHTS, { completeness: 0.35, criteria: 0.65 });
+
+  const attendus = ['périmètre tenu', 'compte rendu radio', 'effectifs répartis'];
+  const long = 'Je fais tenir le périmètre par deux équipages, je donne un compte rendu '
+    + 'radio stabilisé au chef de groupe, puis je répartis les effectifs sur les deux axes.';
+
+  const complet = assist.suggest(long, attendus, 100);
+  assert.equal(complet.criteriaRatio, 1);
+  assert.ok(complet.completeness >= 0.9, 'réponse développée : complétude pleine');
+  assert.ok(complet.note >= 95, `copie complète : ${complet.note}/100`);
+
+  // Hors sujet mais bavard : la part complétude seule, jamais plus de 35 %.
+  const horsSujet = assist.suggest(
+    'Je pense que la situation est compliquée et qu’il faut vraiment faire très attention '
+    + 'à tout ce qui se passe autour de nous pendant toute la durée de l’intervention.',
+    attendus,
+    100
+  );
+  assert.equal(horsSujet.criteriaRatio, 0);
+  assert.ok(horsSujet.note <= 35, `réponse hors sujet : ${horsSujet.note}/100`);
+
+  // Juste mais télégraphique : les critères portent, la complétude manque.
+  const telegraphique = assist.suggest('périmètre, compte rendu, effectifs', attendus, 100);
+  assert.ok(telegraphique.note >= 60 && telegraphique.note < 95,
+    `réponse juste mais courte : ${telegraphique.note}/100`);
+});
+
+await group('§12 et §14 — la suggestion est archivée, le dossier porte son histoire', () => {
+  const dossier = blankDossier('BAC-2026-904', SETTINGS);
+
+  // §14 : version du modèle et piste d'audit dès la création.
+  assert.equal(dossier.version, lifecycle.RECORD_VERSION);
+  assert.ok(Array.isArray(dossier.auditTrail));
+  assert.equal(dossier.status, 'draft');
+
+  dossier.c = { ...dossier.c, last: 'noel', first: 'Marc' };
+  for (const question of dossier.qs) dossier.ans[question.id] = 'Réponse construite en plusieurs mots.';
+  dossier.phys = { run: '305', push: '42', abs: '64', plank: '175', pursuit: 'oui', cog: 'oui', obs: '' };
+
+  const snapshot = suggestionSnapshot(dossier);
+  assert.ok(snapshot.total > 0);
+  assert.equal(Object.keys(snapshot.theory).length, dossier.qs.length,
+    'chaque question garde sa note suggérée');
+  assert.ok(snapshot.reason.includes('/1000'), 'la justification accompagne la suggestion');
+  assert.ok(snapshot.decision, 'le résultat suggéré est archivé');
+  assert.equal(snapshot.thresholds.retenu, thresholds.bac().retenu);
+
+  // Et les modules écrivent bien cet instantané au moment de clôturer :
+  // c'est là que la pièce est scellée.
+  assert.ok(readRoot('js/app.js').includes('suggestionSnapshot(D)'),
+    'le concours doit archiver sa suggestion à la clôture');
+  assert.ok(readRoot('js/examen-cdg.js').includes('R.suggestedReason'),
+    'l’examen Chef de Groupe doit archiver sa suggestion à la clôture');
+
+  // §16 : une suggestion archivée ne bouge pas quand les seuils changent.
+  const gelee = JSON.parse(JSON.stringify(snapshot));
+  thresholds.apply({ bacRetenu: 100, bacReserve: 50 });
+  assert.deepEqual(JSON.parse(JSON.stringify(gelee)), gelee);
+  thresholds.apply(thresholds.toSettings(thresholds.defaults()));
+
+  // §14 : la piste d'audit se remplit à la clôture.
+  lifecycle.trace(dossier, 'dossier.cloture', 'Brigadier LAURENT Cyril', 'RETENU');
+  assert.equal(dossier.auditTrail.length, 1);
+  assert.ok(dossier.auditTrail[0].at && dossier.auditTrail[0].action);
+});
+
+await group('§22 — poids des images, dimensions et chargement différé', () => {
+  // Les photos du dépôt existent aussi en WebP, sans que les originaux
+  // aient disparu.
+  for (const slot of Object.values(IMAGE_SLOTS)) {
+    const jpeg = path.join(ROOT, 'assets', 'img', slot.fallback);
+    const webp = jpeg.replace(/\.jpe?g$/i, '.webp');
+    assert.ok(fs.existsSync(jpeg), `original manquant : ${slot.fallback}`);
+    assert.ok(fs.existsSync(webp), `WebP manquant : ${slot.fallback}`);
+    assert.ok(fs.statSync(webp).size < fs.statSync(jpeg).size,
+      `${slot.fallback} : le WebP doit être plus léger`);
+  }
+
+  // La déclaration de fond garde une version comprise partout.
+  const style = imageStyle('accueil-hero');
+  assert.ok(style.includes('image-set('), 'WebP servi via image-set()');
+  assert.ok(style.split('background-image:').length === 3,
+    'une déclaration de repli précède image-set()');
+
+  // Les images sous la ligne de flottaison sont différées et dimensionnées.
+  const home = readRoot('js/accueil.js');
+  assert.ok(home.includes('loading="lazy"'), 'miniatures d’actualité différées');
+  assert.ok(home.includes('width="68" height="46"'), 'miniatures dimensionnées');
+  assert.ok(readRoot('js/core/portal.js').includes('width="130" height="130"'),
+    'le logo de la barre latérale porte ses dimensions');
 });
 
 // ───────────────────────── Résultat ─────────────────────────────────────

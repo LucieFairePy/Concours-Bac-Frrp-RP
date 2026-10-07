@@ -1,6 +1,7 @@
 import { QUESTION_BANK } from '../data/questions.js';
 import { RADIO_EXERCISE } from '../data/radio.js';
 import { SCENARIOS } from '../data/scenarios.js';
+import { RECORD_VERSION } from './lifecycle.js';
 import { CONFIG } from '../config.js';
 
 export const state = {
@@ -17,8 +18,14 @@ export function blankDossier(id, settings) {
   const today = new Date().toISOString().slice(0, 10);
   return {
     id,
+    // §14 : version du modèle de dossier, et piste d'audit portée par le
+    // dossier lui-même — le journal central (§17.1) reste la trace de
+    // service, celle-ci voyage avec la pièce.
+    version: RECORD_VERSION,
+    status: 'draft',
     locked: false,
     created: new Date().toISOString(),
+    auditTrail: [],
     c: { last: '', first: '', grade: '', mat: '', date: today, start: '' },
     ex: [{ grade: settings.ag || '', name: settings.an || '' }],
     qs: pickQuestions(),

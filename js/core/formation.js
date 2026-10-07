@@ -6,6 +6,7 @@
 // ce qui lui permet d'entrer dans l'historique central sans traitement
 // particulier.
 
+import { RECORD_VERSION } from './lifecycle.js';
 import { CONFIG } from '../config.js';
 import { suggest, retained, totalOf, thresholdLevel } from '../scoring/assist.js';
 
@@ -18,8 +19,11 @@ export function blankFormation(id, course, settings) {
   return {
     id,
     course: course.module,
+    version: RECORD_VERSION,
+    status: 'draft',
     locked: false,
     created: new Date().toISOString(),
+    auditTrail: [],
     c: { last: '', first: '', grade: '', mat: '', date: today, start: '' },
     ex: [{ grade: command.ag || '', name: command.an || '' }],
     read: {},

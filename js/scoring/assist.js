@@ -69,17 +69,63 @@ export function hits(answer, expected) {
  * Renvoie la note suggérée, les éléments retrouvés et ceux qui manquent —
  * c'est cet ensemble que la page de correction affiche.
  */
+/** §11.2 — les deux poids de la suggestion, et rien d'autre. */
+export const WEIGHTS = { completeness: 0.35, criteria: 0.65 };
+
+/**
+ * Longueur à partir de laquelle une réponse est tenue pour complète :
+ * une demi-douzaine de mots par élément attendu — de quoi formuler
+ * chacun d'eux en une proposition. Bornée pour qu'une question à un seul
+ * attendu ne se contente pas de trois mots, et qu'une question à dix
+ * attendus ne réclame pas une dissertation.
+ */
+export function completeAt(count) {
+  if (!count) return 45;
+  return Math.max(15, Math.min(50, count * 6));
+}
+
+/**
+ * Complétude d'une réponse — la part « a-t-on répondu, et jusqu'où ».
+ * Au-delà de la cible, écrire plus ne rapporte plus rien.
+ */
+export function completeness(answer, count) {
+  return Math.min(1, wordCount(answer) / completeAt(count));
+}
+
+/**
+ * Suggestion pour une réponse ouverte adossée à des éléments attendus.
+ *
+ * §11.2 — la formule est volontairement simple et explicable :
+ *
+ *     note = max × (0,35 × complétude + 0,65 × critères retrouvés)
+ *
+ * Elle renvoie aussi les éléments retrouvés et ceux qui manquent : c'est
+ * ce que la page de correction affiche, pour que l'examinateur comprenne
+ * d'où vient la note avant de la contredire.
+ */
 export function suggest(answer, expected, max) {
   const list = Array.isArray(expected) ? expected : [];
   const words = wordCount(answer);
 
   if (!words) {
-    return { note: 0, max, found: [], missing: list, words, reason: 'aucune réponse' };
+    return {
+      note: 0,
+      max,
+      found: [],
+      missing: list,
+      words,
+      completeness: 0,
+      criteriaRatio: 0,
+      reason: 'aucune réponse'
+    };
   }
 
+  const full = completeness(answer, list.length);
+
   if (!list.length) {
-    // Pas d'éléments attendus déclarés : on ne juge que la consistance,
-    // et on le dit, pour que l'examinateur ne s'y fie pas.
+    // Pas d'éléments attendus déclarés : la part « critères » n'a rien à
+    // mesurer. On ne juge alors que la consistance, et on le dit, pour que
+    // l'examinateur ne s'y fie pas.
     const note = Math.min(max, Math.round(max * Math.min(1, 0.35 + words / 70)));
     return {
       note,
@@ -87,6 +133,8 @@ export function suggest(answer, expected, max) {
       found: [],
       missing: [],
       words,
+      completeness: full,
+      criteriaRatio: null,
       reason: 'aucun élément attendu déclaré — suggestion fondée sur la seule consistance'
     };
   }
@@ -95,11 +143,10 @@ export function suggest(answer, expected, max) {
   const missing = list.filter(item => !found.includes(item));
   const ratio = found.length / list.length;
 
-  // Le fond pèse l'essentiel ; une réponse étoffée mais hors sujet ne peut
-  // pas dépasser la moitié du barème.
-  const substance = ratio * 0.8;
-  const effort = Math.min(1, words / 45) * 0.2;
-  const note = Math.round(max * Math.min(1, substance + effort));
+  const note = Math.round(max * Math.min(
+    1,
+    WEIGHTS.completeness * full + WEIGHTS.criteria * ratio
+  ));
 
   return {
     note,
@@ -107,7 +154,10 @@ export function suggest(answer, expected, max) {
     found,
     missing,
     words,
+    completeness: full,
+    criteriaRatio: ratio,
     reason: `${found.length} élément(s) attendu(s) sur ${list.length} retrouvé(s)`
+      + ` • complétude ${Math.round(full * 100)} %`
   };
 }
 

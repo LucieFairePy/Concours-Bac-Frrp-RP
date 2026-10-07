@@ -5,6 +5,7 @@
 // et le resteront même si la banque de fragments évolue ensuite. La graine
 // est conservée à côté pour que le tirage soit vérifiable après coup.
 
+import { RECORD_VERSION } from './lifecycle.js';
 import { CONFIG } from '../config.js';
 import { drawExam } from '../data/cdg-generator.js';
 
@@ -15,8 +16,11 @@ export function blankExam(id, settings) {
   return {
     id,
     module: 'cdg',
+    version: RECORD_VERSION,
+    status: 'draft',
     locked: false,
     created: new Date().toISOString(),
+    auditTrail: [],
     c: { last: '', first: '', grade: '', mat: '', date: today, start: '', end: '' },
     ex: [{ grade: command.ag || '', name: command.an || '' }],
     draw: drawExam(),

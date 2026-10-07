@@ -1,65 +1,135 @@
-// Shell du portail BAC 75 N — cahier des charges §3 (navigation) et §14
-// (rôles). Toutes les pages du portail démarrent par portal.boot() : même
-// garde de session, même en-tête, même barre de navigation, même profil en
-// haut à droite. Une seule source de vérité pour la navigation.
+// Coque du portail BAC 75 N — documentation technique V4 §6 (barre
+// latérale, en-tête) et §17 (rôles). Toutes les pages du portail démarrent
+// par portal.boot() : même garde de session, même barre latérale, même
+// en-tête, même profil en haut à droite. Une seule source de vérité pour
+// la navigation.
 
-import { isConfigured } from '../config.js';
+import { CONFIG, isConfigured } from '../config.js';
 import { byId, esc, initials, setHTML } from './dom.js';
+import { imageStyle, LOGO } from '../data/images.js';
 import * as store from './store.js';
 import * as auth from './auth.js';
+import * as thresholds from './thresholds.js';
+import { state } from './state.js';
 
 const GATE = 'index.html';
 
 /**
- * La barre principale. `need` est la permission requise : un rôle qui ne
- * l'a pas ne voit pas l'entrée. `sub` ouvre un panneau déroulant.
+ * Les routes du §4.1. `id` est l'identifiant de route du kit, `path` le
+ * fichier qui la sert dans ce dépôt, `route` l'adresse logique du kit.
+ *
+ * Le dépôt sert des fichiers `.html` à plat plutôt que des adresses
+ * propres : sur GitHub Pages, `/concours-bac` demanderait un routeur et un
+ * repli 404, et l'annexe E dit de conserver l'architecture du dépôt en
+ * reproduisant le contrat fonctionnel. Les identifiants, eux, sont ceux du
+ * kit, et cette table est le seul endroit où une adresse est écrite.
+ */
+export const ROUTES = {
+  home: { route: '/', path: 'accueil.html' },
+  'concours-bac': { route: '/concours-bac', path: 'app.html' },
+  'formation-negociation': { route: '/formations/negociation', path: 'negociation.html' },
+  'formation-chef-groupe': { route: '/formations/chef-de-groupe', path: 'chef-de-groupe.html' },
+  'examen-chef-groupe': { route: '/examens/chef-de-groupe', path: 'examen-cdg.html' },
+  formations: { route: '/formations', path: 'formations.html' },
+  history: { route: '/historique', path: 'historique.html' },
+  news: { route: '/actualites', path: 'actualites.html' },
+  admin: { route: '/administration', path: 'administration.html' },
+  users: { route: '/administration/utilisateurs', path: 'utilisateurs.html' },
+  settings: { route: '/administration/parametres', path: 'parametres.html' }
+};
+
+export function path(routeId) {
+  const found = ROUTES[routeId];
+  if (!found) throw new Error(`Route inconnue : ${routeId}`);
+  return found.path;
+}
+
+/**
+ * La navigation de la barre latérale — §6.1. `need` est la permission
+ * requise : un rôle qui ne l'a pas ne voit pas l'entrée. `sub` liste les
+ * sous-entrées, affichées sous leur section. `group` ouvre un intertitre.
  */
 export const NAV = [
-  { id: 'accueil', label: 'Accueil', href: 'accueil.html' },
-  { id: 'concours', label: 'Concours BAC', href: 'app.html' },
+  { id: 'accueil', route: 'home', label: 'Accueil', icon: '⌂', href: path('home') },
+  { id: 'concours', route: 'concours-bac', label: 'Concours', icon: '◆', href: path('concours-bac') },
   {
     id: 'formations',
     label: 'Formations',
-    href: 'formations.html',
+    icon: '▤',
+    route: 'formations',
+    href: path('formations'),
     sub: [
-      { id: 'negociation', label: 'Formation Négociation BAC', href: 'negociation.html' },
-      { id: 'formation-cdg', label: 'Formation Chef de Groupe BAC', href: 'chef-de-groupe.html' }
+      { id: 'negociation', route: 'formation-negociation', label: 'Négociation BAC', href: path('formation-negociation') },
+      { id: 'formation-cdg', route: 'formation-chef-groupe', label: 'Chef de Groupe BAC', href: path('formation-chef-groupe') }
     ]
   },
   {
     id: 'examens',
     label: 'Examens',
-    href: 'examen-cdg.html',
+    icon: '✓',
+    route: 'examen-chef-groupe',
+    href: path('examen-chef-groupe'),
     sub: [
-      { id: 'cdg', label: 'Examen de qualification Chef de Groupe', href: 'examen-cdg.html' }
+      { id: 'cdg', route: 'examen-chef-groupe', label: 'Qualification Chef de Groupe', href: path('examen-chef-groupe') }
     ]
   },
-  { id: 'historique', label: 'Historique', href: 'historique.html' },
-  { id: 'administration', label: 'Administration', href: 'administration.html', need: 'accounts' },
-  { id: 'parametres', label: 'Paramètres', href: 'parametres.html' }
+  { id: 'historique', route: 'history', label: 'Historique', icon: '≡', href: path('history') },
+  { id: 'actualites', route: 'news', label: 'Actualités', icon: '◈', href: path('news') },
+  { group: 'Direction' },
+  { id: 'administration', route: 'admin', label: 'Administration', icon: '⚑', href: path('admin'), need: 'accounts' },
+  { id: 'utilisateurs', route: 'users', label: 'Gestion utilisateurs', icon: '⚇', href: path('users'), need: 'accounts' },
+  { id: 'parametres', route: 'settings', label: 'Paramètres', icon: '⚙', href: path('settings') }
 ];
 
 function visibleNav() {
   return NAV.filter(item => !item.need || auth.can(item.need));
 }
 
-function navButton(item, active) {
-  const on = item.id === active || (item.sub || []).some(child => child.id === active);
-  const classes = `pnav-item${on ? ' active' : ''}`;
+function navEntry(item, active) {
+  if (item.group) return `<div class="psb-sep">${esc(item.group)}</div>`;
 
-  if (!item.sub) {
-    return `<a class="${classes}" href="${item.href}">${esc(item.label)}</a>`;
-  }
+  const on = item.id === active || (item.sub || []).some(child => child.id === active);
+  const head = `
+    <a class="psb-item${on ? ' active' : ''}" href="${item.href}">
+      <span aria-hidden="true">${esc(item.icon || '•')}</span>${esc(item.label)}
+    </a>`;
+
+  if (!item.sub) return head;
 
   const children = item.sub
-    .map(child => `<a href="${child.href}" class="${child.id === active ? 'active' : ''}">${esc(child.label)}</a>`)
+    .map(child => `<a class="psb-sub${child.id === active ? ' active' : ''}" href="${child.href}">${esc(child.label)}</a>`)
     .join('');
 
-  return `
-    <div class="pnav-group">
-      <a class="${classes}" href="${item.href}">${esc(item.label)} <span class="pnav-caret">▾</span></a>
-      <div class="pnav-drop">${children}</div>
+  return head + children;
+}
+
+/** §6.1 — logo, identité, devise, navigation, cartouche citation. */
+export function renderSidebar(active) {
+  let aside = byId('portalSidebar');
+  if (!aside) {
+    aside = document.createElement('aside');
+    aside.id = 'portalSidebar';
+    aside.className = 'psidebar no-print';
+    document.body.prepend(aside);
+  }
+
+  aside.innerHTML = `
+    <a class="psb-head" href="accueil.html">
+      <img src="${LOGO.file}" width="130" height="130"
+           alt="Écusson Brigade Anti-Criminalité 75 N"
+           onerror="this.onerror=null;this.src='${LOGO.fallback}'">
+      <div class="psb-unit">Brigade Anti-Criminalité</div>
+      <div class="psb-name">BAC 75 N</div>
+      <div class="psb-devise">Pro Patria Vigilant</div>
+      <div class="psb-flag"></div>
+    </a>
+    <nav class="psb-nav">${visibleNav().map(item => navEntry(item, active)).join('')}</nav>
+    <div class="psb-quote">
+      <div class="psb-quote-img" style="${imageStyle('sidebar-citation')}"></div>
+      <span>« Parler pour sauver des vies »</span>
     </div>`;
+
+  document.body.classList.add('portal-shell');
 }
 
 function profileBox() {
@@ -84,28 +154,34 @@ function profileBox() {
     </div>`;
 }
 
+/**
+ * §6.2 — identité Police Nationale / France Roleplay, recherche globale,
+ * état de session puis profil connecté, sur une seule rangée de 68 px.
+ */
 export function renderHeader(active) {
-  const nav = visibleNav().map(item => navButton(item, active)).join('');
+  renderSidebar(active);
 
   setHTML('portalHeader', `
     <div class="phead-main">
-      <a class="phead-brand" href="accueil.html">
-        <img class="logo" src="assets/logo-bac.svg" width="50" height="56"
-             alt="Écusson Brigade Anti-Criminalité">
+      <button class="pburger no-print" onclick="portal.toggleNav()" aria-label="Ouvrir le menu">☰</button>
+      <span class="phead-id">
+        <span class="flag"></span>
         <span>
-          <span class="phead-title">BAC 75 N</span>
-          <span class="phead-sub">Brigade Anti-Criminalité — Paris</span>
+          <span class="phead-title">Police Nationale</span>
+          <span class="phead-sub">France Roleplay • outil fictif</span>
         </span>
-      </a>
-      <button class="pburger no-print" onclick="portal.toggleNav()" aria-label="Menu">☰</button>
-      <nav class="pnav no-print" id="portalNav">${nav}</nav>
+      </span>
+      <form class="psearch no-print" onsubmit="return portal.search(event)">
+        <label class="sr-only" for="portalSearch">Recherche globale</label>
+        <input id="portalSearch" name="q" type="search"
+               placeholder="Rechercher un dossier, un candidat, un matricule…">
+        <button type="submit">Chercher</button>
+      </form>
+      <span class="phead-state">
+        <span id="who" class="mut"></span>
+        <span id="sync" class="sync"></span>
+      </span>
       ${profileBox()}
-    </div>
-    <div class="phead-status">
-      <span class="flag"></span>
-      <span class="mut">Police Nationale • France Roleplay • outil fictif</span>
-      <span id="who" class="mut"></span>
-      <span id="sync" class="sync"></span>
     </div>`);
 }
 
@@ -168,6 +244,18 @@ export async function boot({ active, requires } = {}) {
   renderHeader(active);
   document.body.classList.remove('booting');
 
+  // Les réglages partagés — direction et seuils de suggestion — sont lus
+  // une fois par page, ici, pour que tous les modules travaillent avec les
+  // mêmes valeurs. Illisibles, ils retombent sur celles du kit sans
+  // empêcher la page de s'ouvrir.
+  try {
+    const stored = await store.loadSettings();
+    if (stored) state.settings = { ...CONFIG.defaultCommand, ...stored };
+    thresholds.apply(state.settings);
+  } catch (error) {
+    setBanner(errorBanner(`Paramètres illisibles : ${error.message} — valeurs du kit utilisées.`));
+  }
+
   if (!isConfigured()) {
     setBanner(`
       <div class="banner">
@@ -189,13 +277,32 @@ export function signOut() {
 }
 
 export function toggleNav() {
-  byId('portalNav')?.classList.toggle('open');
+  byId('portalSidebar')?.classList.toggle('open');
+}
+
+/**
+ * Recherche globale de l'en-tête — §6.2. Elle n'invente pas de moteur :
+ * elle ouvre l'historique central, qui sait déjà chercher par nom,
+ * matricule, numéro de dossier et examinateur.
+ */
+export function search(event) {
+  if (event) event.preventDefault();
+  const field = byId('portalSearch');
+  const value = String(field && field.value ? field.value : '').trim();
+  window.location.href = value
+    ? `historique.html?q=${encodeURIComponent(value)}`
+    : 'historique.html';
+  return false;
 }
 
 /** Handlers partagés par toutes les pages du portail. */
 export const portal = {
   signOut,
-  toggleNav
+  toggleNav,
+  search
 };
 
-window.portal = portal;
+// Le navigateur appelle ces handlers depuis les gabarits ; hors
+// navigateur — suite de tests, contrôle statique — le module se charge
+// quand même, pour que ses routes et sa navigation restent lisibles.
+if (typeof window !== 'undefined') window.portal = portal;

@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="css/portal.css">
 </head>
 <body class="booting">
+  <aside id="portalSidebar" class="psidebar no-print"></aside>
   <header id="portalHeader" class="phead"></header>
   <div id="moduleBar"></div>
 
@@ -22,26 +23,22 @@
 
     <div class="psection-title">
       <h2>Accès principaux</h2>
-      <p class="mut">Les deux parcours ouverts en permanence</p>
+      <p class="mut">Concours, formations et qualification</p>
     </div>
-    <div id="primary" class="pcards"></div>
-
-    <div class="psection-title">
-      <h2>Accès secondaires</h2>
-      <p class="mut">Formations, qualification, archives et administration</p>
-    </div>
-    <div id="secondary" class="pcards compact"></div>
+    <div id="cards" class="pcards"></div>
 
     <div class="psection-title">
       <h2>Activité de la brigade</h2>
-      <p class="mut">Dossiers en cours, dernières clôtures, corrections en attente</p>
+      <p class="mut">Actualités, dossiers en cours, accès rapides et effectifs</p>
     </div>
-    <div id="live" class="plive"></div>
+    <div id="dash" class="pdash"></div>
 
-    <p class="mut" style="text-align:center;margin:32px 0 10px">
+    <p class="mut" style="text-align:center;margin:0 0 20px">
       Document fictif — France Roleplay — sans valeur administrative réelle.
     </p>
   </main>
+
+  <div id="modal"></div>
 
   <script type="module" src="js/accueil.js"></script>
 </body>

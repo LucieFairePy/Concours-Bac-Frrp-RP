@@ -19,7 +19,7 @@ import * as auth from './core/auth.js';
 import * as portal from './core/portal.js';
 import * as records from './core/records.js';
 import * as journal from './core/journal.js';
-import { totals, suggestedDecision } from './scoring/totals.js';
+import { totals, suggestedDecision, suggestionSnapshot } from './scoring/totals.js';
 import { renderPassage } from './views/passage.js';
 import { renderCorrection } from './views/correction.js';
 import { refreshResults } from './views/results.js';
@@ -383,7 +383,13 @@ const app = {
     const session = auth.current();
     const computed = totals(D);
     D.total = computed.total;
-    D.suggestedDecision = suggestedDecision(D);
+
+    // §12 et §14 : ce que le système a proposé est archivé à côté de ce
+    // que l'examinateur a retenu — note, justification et résultat.
+    D.systemSuggestions = suggestionSnapshot(D);
+    D.suggestedTotal = D.systemSuggestions.total;
+    D.suggestedDecision = D.systemSuggestions.decision;
+    D.suggestedReason = D.systemSuggestions.reason;
     D.decision = D.decision || D.suggestedDecision;
     D.locked = true;
     D.closedAt = new Date().toISOString();

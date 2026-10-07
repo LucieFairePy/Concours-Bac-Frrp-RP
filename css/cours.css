@@ -55,8 +55,8 @@
 .co-nav-item:hover { background: #14304a }
 
 .co-nav-item.active {
-  background: #1d6598;
-  border-color: #4d8cb8;
+  background: #0a6ca8;
+  border-color: var(--blue);
   color: #fff;
   font-weight: 800;
 }
@@ -70,7 +70,7 @@
 
 .co-main {
   border: 1px solid var(--line);
-  background: #0d1924;
+  background: var(--panel);
   border-radius: 14px;
   overflow: hidden;
 }
@@ -88,7 +88,7 @@
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, #04101a55, #0d1924f5 88%);
+  background: linear-gradient(180deg, #04101a55, var(--panel)f5 88%);
 }
 
 .co-banner-body { position: relative; z-index: 2; padding: 16px 22px }
@@ -186,7 +186,7 @@
 .co-exercice {
   background: #221c0f;
   border: 1px solid #7a6327;
-  border-left: 4px solid #d7b46a;
+  border-left: 4px solid var(--blue);
 }
 
 .co-exercice .co-tag { color: #f0d79a }
@@ -194,7 +194,7 @@
 .co-hint { font-size: 12.5px !important; color: #b9a677 !important; font-style: italic }
 
 .co-reflexe {
-  background: linear-gradient(135deg, #10283c, #091722);
+  background: linear-gradient(135deg, #0d2b40, var(--panel));
   border: 1px solid #3a688c;
   max-width: none;
 }

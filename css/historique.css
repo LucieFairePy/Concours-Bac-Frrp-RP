@@ -26,7 +26,7 @@
   overflow: hidden;
   border: 1px solid var(--line);
   border-radius: 14px;
-  background: #0d1924;
+  background: var(--panel);
   text-align: left;
   cursor: pointer;
   transition: transform .18s, border-color .18s, box-shadow .18s;
@@ -34,7 +34,7 @@
 
 .hcat:hover {
   transform: translateY(-3px);
-  border-color: #4d8cb8;
+  border-color: var(--blue);
   box-shadow: 0 14px 30px #0008;
 }
 

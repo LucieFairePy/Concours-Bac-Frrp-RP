@@ -1,51 +1,38 @@
-// Page Paramètres — cahier des charges §13 et §14.
+// Page Paramètres — documentation technique V4 §13 (direction), §8.6 et
+// §11.3 (seuils de suggestion), §17.1 (journal).
 //
-// Direction BAC, accès et rôles, profil. Chaque action sensible passe au
-// journal : qui, quand, sur qui.
+// Deux réglages partagés, et rien d'autre : la direction BAC et les seuils.
+// Les accès et les rôles vivent maintenant sur utilisateurs.html. Chaque
+// enregistrement passe au journal : qui, quand, quoi.
 
-import { byId, esc, setHTML } from './core/dom.js';
+import { esc, setHTML } from './core/dom.js';
 import { CONFIG } from './config.js';
 import { state } from './core/state.js';
 import * as store from './core/store.js';
 import * as auth from './core/auth.js';
-import * as roster from './core/roster.js';
 import * as portal from './core/portal.js';
 import * as journal from './core/journal.js';
-import { roleLabel } from './core/roles.js';
+import * as thresholds from './core/thresholds.js';
 import {
   renderSettings,
   readSettingsForm,
+  readThresholdForm,
+  readPhysicalForm,
   setSettingsStatus,
-  readNewAccessForm,
-  clearNewAccessForm,
-  setAccessStatus,
-  showGeneratedCode
+  setThresholdStatus,
+  setPhysicalStatus
 } from './views/settings.js';
 
-async function paintRoster() {
-  // Première passe avec le cache, pour que la page ne reste pas vide
-  // pendant la lecture du dépôt.
-  const known = roster.cached();
-  renderSettings(known ? known.entries.map(entry => ({
-    id: entry.id,
-    label: entry.label,
-    role: entry.role || 'formateur'
-  })) : []);
-
-  if (!auth.can('settings')) return;
-
-  try {
-    renderSettings(await roster.list());
-  } catch (error) {
-    setAccessStatus(portal.errorBanner(`Liste des accès illisible : ${error.message}`));
-  }
+/** Les paramètres partagés, direction et seuils mêlés dans un seul fichier. */
+function storedSettings() {
+  return { ...CONFIG.defaultCommand, ...thresholds.toSettings(), ...state.settings };
 }
 
 const app = {
   async saveSettings() {
     if (!auth.can('settings')) return;
 
-    const next = readSettingsForm();
+    const next = { ...storedSettings(), ...readSettingsForm() };
     setSettingsStatus('<div class="banner">Enregistrement…</div>');
     try {
       await store.saveSettings(next);
@@ -63,105 +50,74 @@ const app = {
     }
   },
 
-  async createAccess() {
+  async saveThresholds() {
     if (!auth.can('settings')) return;
 
-    const form = readNewAccessForm();
-    setAccessStatus('<div class="banner">Création de l’accès…</div>');
+    const asked = readThresholdForm();
+    // apply() remet les valeurs dans l'ordre (une réserve ne peut pas
+    // dépasser la réussite) : on enregistre ce qui sera réellement appliqué.
+    const applied = thresholds.apply(asked);
+    const next = { ...storedSettings(), ...thresholds.toSettings(applied) };
 
+    setThresholdStatus('<div class="banner">Enregistrement…</div>');
     try {
-      const created = await roster.createEntry(form);
-      await auth.loadRoster(true);
-      clearNewAccessForm();
-      renderSettings(await roster.list());
-      showGeneratedCode(created);
+      await store.saveSettings(next);
+      state.settings = next;
+      renderSettings();
+      setThresholdStatus(portal.okBanner(
+        `Seuils enregistrés — concours ${applied.bac.retenu}/${applied.bac.reserve}, `
+        + `Chef de Groupe ${applied.cdg.qualifie}/${applied.cdg.reserve}/${applied.cdg.ajourne}.`));
       await journal.record({
         who: auth.describeOperator(),
         role: auth.role(),
-        action: 'acces.creation',
-        target: created.label,
-        detail: `rôle ${roleLabel(created.role)}`
+        action: 'direction.seuils',
+        target: 'seuils de suggestion',
+        detail: `concours ${applied.bac.retenu}/${applied.bac.reserve} • `
+          + `CDG ${applied.cdg.qualifie}/${applied.cdg.reserve}/${applied.cdg.ajourne}`
       });
     } catch (error) {
-      setAccessStatus(portal.errorBanner(error.message));
+      setThresholdStatus(portal.errorBanner(`Échec : ${error.message}`));
     }
   },
 
-  async setAccessRole(id, role) {
+  async savePhysical() {
     if (!auth.can('settings')) return;
 
-    const entries = await roster.list();
-    const entry = entries.find(item => item.id === id);
-    if (!entry) return;
-    if (entry.role === role) return;
+    const applied = thresholds.apply({ ...thresholds.toSettings(), ...readPhysicalForm() });
+    const next = { ...storedSettings(), ...thresholds.toSettings(applied) };
 
-    const confirmed = window.confirm(
-      `Donner à ${entry.label} le rôle « ${roleLabel(role)} » ?\n\n`
-      + 'Un nouveau code sera généré et l’ancien cessera de fonctionner.'
-    );
-
-    if (!confirmed) {
-      renderSettings(entries);
-      return;
-    }
-
-    setAccessStatus('<div class="banner">Mise à jour de l’accès…</div>');
+    setPhysicalStatus('<div class="banner">Enregistrement…</div>');
     try {
-      const updated = await roster.setRole(id, role);
-      renderSettings(await roster.list());
-      showGeneratedCode(updated, `Nouveau code pour ${updated.label}`);
+      await store.saveSettings(next);
+      state.settings = next;
+      renderSettings();
+      setPhysicalStatus(portal.okBanner('Barème physique enregistré pour les prochaines corrections.'));
       await journal.record({
         who: auth.describeOperator(),
         role: auth.role(),
-        action: 'acces.role',
-        target: updated.label,
-        detail: `${roleLabel(entry.role)} → ${roleLabel(updated.role)}`
+        action: 'direction.bareme',
+        target: 'barème physique',
+        detail: thresholds.PHYSICAL_MEASURES
+          .map(measure => `${measure.id} ${applied.physical[measure.id].fort}/`
+            + `${applied.physical[measure.id].bon}/${applied.physical[measure.id].base}`)
+          .join(' • ')
       });
     } catch (error) {
-      setAccessStatus(portal.errorBanner(error.message));
+      setPhysicalStatus(portal.errorBanner(`Échec : ${error.message}`));
     }
   },
 
-  async removeAccess(id) {
-    if (!auth.can('settings')) return;
-
-    const entries = await roster.list();
-    const entry = entries.find(item => item.id === id);
-    if (!entry) return;
-
-    if (!window.confirm(`Retirer l’accès de ${entry.label} ? Son code cessera de fonctionner.`)) return;
-
-    setAccessStatus('<div class="banner">Retrait en cours…</div>');
-    try {
-      const label = await roster.removeEntry(id);
-      await auth.loadRoster(true);
-      renderSettings(await roster.list());
-      setAccessStatus(portal.okBanner(`Accès retiré : ${label}`));
-      await journal.record({
-        who: auth.describeOperator(),
-        role: auth.role(),
-        action: 'acces.retrait',
-        target: label,
-        detail: `rôle retiré : ${roleLabel(entry.role)}`
-      });
-    } catch (error) {
-      setAccessStatus(portal.errorBanner(error.message));
-    }
+  resetPhysical() {
+    const base = thresholds.defaults();
+    thresholds.apply(thresholds.toSettings(base));
+    renderSettings();
+    setPhysicalStatus('<div class="banner">Barème du kit rétabli — pense à enregistrer.</div>');
   },
 
-  async copyCode() {
-    const field = byId('newCode');
-    if (!field) return;
-
-    field.focus();
-    field.select();
-
-    try {
-      await navigator.clipboard.writeText(field.value);
-      portal.setSync('code copié', 'ok');
-    } catch (error) {
-      portal.setSync('copie refusée — le code est sélectionné, fais Ctrl+C', 'error');
-    }
+  resetThresholds() {
+    thresholds.apply(thresholds.toSettings(thresholds.defaults()));
+    renderSettings();
+    setThresholdStatus('<div class="banner">Valeurs du kit rétablies — pense à enregistrer.</div>');
   }
 };
 
@@ -176,16 +132,10 @@ async function boot() {
     <b>Paramètres</b>
     <span class="mut">${esc(auth.describeRole())}</span>
     <span class="spacer"></span>
+    ${auth.can('accounts') ? '<a class="pnav-item" href="utilisateurs.html">Gestion utilisateurs →</a>' : ''}
     ${auth.can('accounts') ? '<a class="pnav-item" href="administration.html">Administration →</a>' : ''}`);
 
-  try {
-    const stored = await store.loadSettings();
-    if (stored) state.settings = { ...CONFIG.defaultCommand, ...stored };
-  } catch (error) {
-    portal.setBanner(portal.errorBanner(`Paramètres illisibles : ${error.message}`));
-  }
-
-  await paintRoster();
+  renderSettings();
 }
 
 boot();

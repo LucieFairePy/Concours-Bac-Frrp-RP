@@ -1,42 +1,73 @@
+/* Jetons de design V4 — documentation technique §6 et annexe C.
+   Les six couleurs et les deux polices de la V4 sont la référence : elles
+   ne se redéfinissent nulle part ailleurs. Les noms courts (--p, --mut,
+   --gold) restent déclarés en alias parce que le reste du dépôt les
+   utilise déjà ; ils pointent sur les valeurs V4, pas sur les anciennes. */
+
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Inter:wght@400;600;700;800&display=swap');
+
 :root {
-  --bg: #050b11;
-  --p: #0d1924;
-  --p2: #102435;
+  /* Jetons V4 */
+  --blue: #0b9ff5;
+  --red: #ee1834;
+  --navy: #06121d;
+  --panel: #081723;
+  --line: #18354a;
+  --muted: #8197a8;
+
+  /* Polices V4 */
+  --font-title: 'Barlow Condensed', 'Arial Narrow', Arial, sans-serif;
+  --font-ui: 'Inter', 'Segoe UI', Arial, sans-serif;
+
+  /* Mesures V4 (§6) */
+  --sidebar: 236px;
+  --header: 68px;
+  --hero: 335px;
+  --card: 176px;
+
+  /* Alias historiques du dépôt, alignés sur les jetons V4 */
+  --bg: var(--navy);
+  --p: var(--panel);
+  --p2: #0d2435;
   --ink: #eef5fa;
-  --mut: #93a9ba;
-  --line: #29465e;
-  --blue: #1d6598;
-  --red: #e24a52;
-  --gold: #d7b46a;
-  --green: #287153;
+  --mut: var(--muted);
+  --gold: var(--blue);
+  --green: #1d7d58;
 }
 
 * { box-sizing: border-box }
 
 body {
   margin: 0;
-  background: linear-gradient(135deg, #04080d, #091723);
+  background: var(--navy);
   color: var(--ink);
-  font: 14px Arial, sans-serif;
+  font: 14px/1.5 var(--font-ui);
 }
 
-h1 { font-size: 18px; margin: 0 }
+h1, h2, h3, h4 {
+  font-family: var(--font-title);
+  letter-spacing: .4px;
+}
+
+h1 { font-size: 20px; margin: 0 }
 
 .mut { color: var(--mut); font-size: 12px }
 
 button {
-  background: #173d5b;
+  background: #10344c;
   color: white;
-  border: 1px solid #315977;
+  border: 1px solid #235878;
   border-radius: 8px;
   padding: 10px 13px;
-  font-weight: 700;
+  font: 700 13px var(--font-ui);
   cursor: pointer;
 }
 
-.primary { background: #1d6598 }
-.danger { background: #7d262d }
-.green { background: #25694e }
+button:hover { background: #164a6b }
+
+.primary { background: #0a6ca8; border-color: #1587c9 }
+.danger { background: #8b1224; border-color: #b8263b }
+.green { background: #1d7d58; border-color: #2fa174 }
 
 label {
   display: block;
@@ -47,11 +78,12 @@ label {
 
 input, textarea, select {
   width: 100%;
-  background: #07131e;
+  background: #061520;
   color: white;
-  border: 1px solid #31506a;
+  border: 1px solid #23485f;
   border-radius: 7px;
   padding: 9px;
+  font: 14px var(--font-ui);
 }
 
 textarea { min-height: 88px }
@@ -60,7 +92,7 @@ table { width: 100%; border-collapse: collapse }
 
 th, td {
   padding: 8px;
-  border-bottom: 1px solid #294156;
+  border-bottom: 1px solid var(--line);
   text-align: left;
   vertical-align: top;
 }

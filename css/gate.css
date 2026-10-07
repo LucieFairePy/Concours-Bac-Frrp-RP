@@ -16,7 +16,7 @@ body.gate {
 .gate-card {
   border: 1px solid var(--line);
   border-top: 4px solid var(--blue);
-  background: #0d1924;
+  background: var(--panel);
   border-radius: 14px;
   padding: 26px 24px 22px;
   box-shadow: 0 18px 48px #0006;

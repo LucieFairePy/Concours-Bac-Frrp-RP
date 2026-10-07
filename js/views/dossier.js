@@ -5,6 +5,7 @@ import { state } from '../core/state.js';
 import {
   totals,
   suggestedDecision,
+  suggestionSnapshot,
   theoryMark,
   radioMark,
   scenarioMark,
@@ -14,6 +15,25 @@ import {
 } from '../scoring/totals.js';
 
 const PAGES = 8;
+
+/**
+ * §13 et §16 — la fiche montre la note suggérée à côté de la note
+ * retenue. Sur un dossier clôturé, elle lit l'instantané archivé au
+ * moment de la clôture : jamais une suggestion recalculée par un
+ * algorithme qui aurait changé depuis.
+ */
+function suggestions(dossier) {
+  if (dossier.systemSuggestions) return dossier.systemSuggestions;
+  return suggestionSnapshot(dossier);
+}
+
+/** Cellule « suggéré → retenu », lisible même quand les deux coïncident. */
+function markCell(mark, suggested, max) {
+  const same = Math.round(mark) === Math.round(suggested);
+  return `<td class="${markClass(mark, max)}">${mark}/${max}`
+    + (same ? '' : `<br><span class="dp-muted">suggéré ${suggested}</span>`)
+    + '</td>';
+}
 
 const IMAGES = {
   cover: 'assets/img/cover-hero.jpg',
@@ -46,13 +66,19 @@ function pageFoot(number) {
 
 function scenarioBlock(dossier, index) {
   const scenario = SCENARIOS[index];
+  const sugg = suggestions(dossier);
+
   const questions = scenario.questions.map((question, questionIndex) => {
     const mark = scenarioMark(dossier, index, questionIndex);
+    const suggested = sugg.sc[`${index}_${questionIndex}`] ?? mark;
     return `
       <div class="dp-q">
         <b>${questionIndex + 1}. ${esc(question)}</b>
         <div class="ans">${esc(dossier.scAns[index][questionIndex] || '—')}</div>
-        <span class="${markClass(mark, 15)}">Note : ${mark}/15</span>
+        <span class="${markClass(mark, 15)}">Note retenue : ${mark}/15</span>
+        ${Math.round(mark) === Math.round(suggested)
+          ? ''
+          : `<span class="dp-muted"> — suggérée : ${suggested}/15</span>`}
       </div>`;
   }).join('');
 
@@ -153,28 +179,37 @@ function coverPage(dossier, t, decision) {
 }
 
 function summaryPage(dossier, t) {
+  const sugg = suggestions(dossier);
   const pct = (value, max) => Math.round((value / max) * 100);
-  const row = (label, value, max) =>
-    `<tr><td>${label}</td><td class="${markClass(value, max)}">${value}/${max}</td><td>${max}</td><td>${pct(value, max)}%</td></tr>`;
+  const row = (label, value, max, suggested) =>
+    `<tr><td>${label}</td>`
+    + `<td class="dp-muted">${suggested}/${max}</td>`
+    + `<td class="${markClass(value, max)}">${value}/${max}</td>`
+    + `<td>${pct(value, max)}%</td></tr>`;
 
   return `
   <article class="dossier-page">
     ${pageHead('RÉCAPITULATIF GÉNÉRAL', dossier.id)}
     <div class="dp-band">1. Récapitulatif des notes</div>
     <table class="dp-table">
-      <tr><th>Épreuve</th><th>Note</th><th>Maximum</th><th>%</th></tr>
-      ${row('Questionnaire théorique', t.th, 100)}
-      ${row('Radio &amp; coordination', t.ra, 100)}
-      ${row('Mises en situation', t.sc, 300)}
-      ${row('Épreuve physique', t.ph, 200)}
-      ${row('Épreuve de tir', t.sh, 300)}
+      <tr><th>Épreuve</th><th>Suggérée</th><th>Note retenue</th><th>%</th></tr>
+      ${row('Questionnaire théorique', t.th, 100, sugg.sections.th)}
+      ${row('Radio &amp; coordination', t.ra, 100, sugg.sections.ra)}
+      ${row('Mises en situation', t.sc, 300, sugg.sections.sc)}
+      ${row('Épreuve physique', t.ph, 200, sugg.sections.ph)}
+      ${row('Épreuve de tir', t.sh, 300, sugg.sections.sh)}
       <tr>
         <th>TOTAL GÉNÉRAL</th>
+        <th class="dp-muted">${sugg.total}/1000</th>
         <th class="${markClass(t.total, 1000)}">${t.total}/1000</th>
-        <th>1000</th>
         <th>${pct(t.total, 1000)}%</th>
       </tr>
     </table>
+    <p class="dp-muted">
+      Suggestion du système : ${esc(DECISION_LABEL[sugg.decision] || sugg.decision)}
+      — ${esc(sugg.reason)}. La note retenue et la décision finale sont celles
+      de l’examinateur.
+    </p>
     <div class="dp-band">2. Appréciation générale</div>
     <div class="dp-box">${esc(dossier.reason || dossier.general || 'Aucune appréciation générale renseignée.')}</div>
     <div class="dp-band">3. Synthèse</div>
@@ -188,13 +223,15 @@ function summaryPage(dossier, t) {
 }
 
 function theoryPage(dossier, t) {
+  const sugg = suggestions(dossier);
+
   const theoryRows = dossier.qs.map((question, index) => {
     const mark = theoryMark(dossier, question);
     return `<tr>
       <td>${index + 1}</td>
       <td>${esc(question.q)}</td>
       <td>${esc(dossier.ans[question.id] || '—')}</td>
-      <td class="${markClass(mark, 10)}">${mark}/10</td>
+      ${markCell(mark, sugg.theory[question.id] ?? mark, 10)}
     </tr>`;
   }).join('');
 
@@ -204,7 +241,7 @@ function theoryPage(dossier, t) {
       <td>${index + 1}</td>
       <td>${esc(question)}</td>
       <td>${esc(dossier.radioAns[index] || '—')}</td>
-      <td class="${markClass(mark, 25)}">${mark}/25</td>
+      ${markCell(mark, sugg.radio[index] ?? mark, 25)}
     </tr>`;
   }).join('');
 

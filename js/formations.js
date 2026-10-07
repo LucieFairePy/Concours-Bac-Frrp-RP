@@ -7,7 +7,7 @@
 import { esc, setHTML } from './core/dom.js';
 import * as portal from './core/portal.js';
 import * as records from './core/records.js';
-import { imageStack } from './data/images.js';
+import { imageStyle } from './data/images.js';
 import { NEGOCIATION } from './data/negociation.js';
 import { CHEF_DE_GROUPE } from './data/chef-de-groupe.js';
 import { reflexeCard } from './views/reflexe.js';
@@ -24,7 +24,7 @@ function card(course) {
 
   return `
     <div class="ptile">
-      <div class="co-banner" style="background-image:${imageStack(course.image)};border-radius:11px;min-height:112px">
+      <div class="co-banner" style="${imageStyle(course.image)};border-radius:11px;min-height:112px">
         <div class="co-banner-body">
           <div class="co-kicker">Formation</div>
           <h2 style="font-size:19px;margin:4px 0 0">${esc(course.title)}</h2>

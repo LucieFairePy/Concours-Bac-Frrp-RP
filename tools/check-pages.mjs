@@ -89,6 +89,16 @@ const PAGES = {
     render: ['js/administration.js'],
     handlers: ['js/administration.js'],
     css: ['base', 'layout', 'components', 'portal', 'historique']
+  },
+  'utilisateurs.html': {
+    render: ['js/utilisateurs.js', 'js/views/users.js'],
+    handlers: ['js/utilisateurs.js'],
+    css: ['base', 'layout', 'components', 'portal']
+  },
+  'actualites.html': {
+    render: ['js/actualites.js'],
+    handlers: ['js/actualites.js'],
+    css: ['base', 'layout', 'components', 'portal']
   }
 };
 

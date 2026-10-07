@@ -1,3 +1,11 @@
+// Suggestions automatiques du concours — §8.4 et §12.
+//
+// Aucun seuil n'est écrit ici : le barème physique vient de la
+// configuration centrale (js/core/thresholds.js), réglable par la
+// direction. Ce fichier ne fait qu'appliquer ce barème.
+
+import * as thresholds from '../core/thresholds.js';
+
 export function autoText(answer, max) {
   const text = String(answer || '').trim();
   if (!text) return 0;
@@ -17,7 +25,23 @@ export function scenarioAuto(dossier, scenarioIndex, questionIndex) {
   return autoText(dossier.scAns[scenarioIndex][questionIndex], 15);
 }
 
-export function physicalAuto(dossier) {
+/** Un temps : sous le palier, on prend ses points ; sinon le plancher. */
+function timeBand(value, band) {
+  if (value <= band.fort) return band.points[0];
+  if (value <= band.bon) return band.points[1];
+  if (value <= band.base) return band.points[2];
+  return band.points[3];
+}
+
+/** Un comptage : au-dessus du palier, ses points ; sinon au prorata. */
+function countBand(value, band) {
+  if (value >= band.fort) return band.points[0];
+  if (value >= band.bon) return band.points[1];
+  if (value >= band.base) return band.points[2];
+  return Math.min(band.cap, value * band.ratio);
+}
+
+export function physicalAuto(dossier, bareme = thresholds.physical()) {
   const { run, push, abs, plank, pursuit, cog } = dossier.phys;
   const r = Number(run);
   const pu = Number(push);
@@ -25,13 +49,13 @@ export function physicalAuto(dossier) {
   const pl = Number(plank);
   let points = 0;
 
-  if (r) points += r <= 300 ? 50 : r <= 330 ? 45 : r <= 390 ? 38 : 28;
-  if (pu) points += pu >= 45 ? 35 : pu >= 38 ? 32 : pu >= 30 ? 27 : Math.min(25, pu * 0.8);
-  if (ab) points += ab >= 70 ? 35 : ab >= 60 ? 32 : ab >= 50 ? 27 : Math.min(25, ab * 0.5);
-  if (pl) points += pl >= 180 ? 30 : pl >= 150 ? 27 : pl >= 110 ? 23 : Math.min(20, pl / 6);
+  if (r) points += timeBand(r, bareme.run);
+  if (pu) points += countBand(pu, bareme.push);
+  if (ab) points += countBand(ab, bareme.abs);
+  if (pl) points += countBand(pl, bareme.plank);
 
-  points += autoText(pursuit, 30) + autoText(cog, 20);
-  return Math.min(200, Math.round(points));
+  points += autoText(pursuit, bareme.pursuit) + autoText(cog, bareme.cog);
+  return Math.min(bareme.max, Math.round(points));
 }
 
 export function shootingAuto(dossier) {

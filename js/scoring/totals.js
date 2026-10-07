@@ -1,6 +1,7 @@
 import { RADIO_EXERCISE } from '../data/radio.js';
 import { SCENARIOS } from '../data/scenarios.js';
 import { theoryAuto, radioAuto, scenarioAuto, physicalAuto, shootingAuto } from './auto.js';
+import * as thresholds from '../core/thresholds.js';
 
 export const DECISIONS = ['RETENU', 'RESERVE', 'AJOURNE', 'RECALE'];
 
@@ -67,16 +68,89 @@ export function totals(dossier) {
   return { th, ra, sc, scRaw, ph, sh, total: th + ra + sc + ph + sh };
 }
 
-export function suggestedDecision(dossier) {
+/**
+ * §8.5 et §8.6 — suggestion, jamais décision. Les règles bloquantes
+ * passent avant le total ; les seuils viennent de la configuration
+ * centrale, pas d'une constante recopiée ici.
+ */
+export function suggestedDecision(dossier, bands = thresholds.bac()) {
   const { total } = totals(dossier);
   const hostage = Number(dossier.shoot.hostage);
   const el = dossier.el;
 
   if (el.cheat || el.refusal || el.abandon || hostage >= 2) return 'RECALE';
+  // Une cible otage touchée interdit le RETENU simple : la réserve est le
+  // meilleur résultat possible, quel que soit le total.
   if (hostage === 1) return 'RESERVE';
-  if (total >= 800) return 'RETENU';
-  if (total >= 650) return 'RESERVE';
+  if (total >= bands.retenu) return 'RETENU';
+  if (total >= bands.reserve) return 'RESERVE';
   return 'RECALE';
+}
+
+/**
+ * §12 et §14 — instantané de ce que le système a proposé, pris au moment
+ * de la clôture et écrit dans le dossier à côté des notes retenues.
+ *
+ * Deux raisons de l'archiver plutôt que de le recalculer : le §12 exige
+ * que la note suggérée, sa justification et le résultat suggéré soient
+ * conservés ; et le §16 interdit qu'un dossier clôturé se relise avec un
+ * algorithme qui aurait changé depuis.
+ */
+export function suggestionSnapshot(dossier, bands = thresholds.bac()) {
+  const theory = {};
+  for (const question of dossier.qs) {
+    theory[question.id] = theoryAuto(dossier, question);
+  }
+
+  const radio = RADIO_EXERCISE.questions.map((_, index) => radioAuto(dossier, index));
+
+  const sc = {};
+  SCENARIOS.forEach((scenario, scenarioIndex) => {
+    scenario.questions.forEach((_, questionIndex) => {
+      sc[`${scenarioIndex}_${questionIndex}`] = scenarioAuto(dossier, scenarioIndex, questionIndex);
+    });
+  });
+
+  const scRaw = Object.values(sc).reduce((sum, value) => sum + value, 0);
+
+  const sections = {
+    th: Object.values(theory).reduce((sum, value) => sum + value, 0),
+    ra: radio.reduce((sum, value) => sum + value, 0),
+    sc: scaleScenarios(scRaw),
+    ph: physicalAuto(dossier),
+    sh: shootingAuto(dossier)
+  };
+
+  const total = sections.th + sections.ra + sections.sc + sections.ph + sections.sh;
+  const hostage = Number(dossier.shoot.hostage);
+  const el = dossier.el || {};
+
+  const blocking = [];
+  if (el.cheat) blocking.push('triche constatée');
+  if (el.refusal) blocking.push('refus injustifié');
+  if (el.abandon) blocking.push('abandon injustifié');
+  if (hostage >= 2) blocking.push(`${hostage} cibles otage touchées`);
+  else if (hostage === 1) blocking.push('une cible otage touchée — RETENU simple interdit');
+
+  const decision = suggestedDecision(dossier, bands);
+
+  const reason = [
+    `${total}/1000`,
+    `seuils ${bands.retenu} / ${bands.reserve}`,
+    ...blocking
+  ].join(' • ');
+
+  return {
+    at: new Date().toISOString(),
+    theory,
+    radio,
+    sc,
+    sections,
+    total,
+    decision,
+    reason,
+    thresholds: { ...bands }
+  };
 }
 
 export function markClass(value, max) {

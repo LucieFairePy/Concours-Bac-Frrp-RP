@@ -8,7 +8,7 @@
 // signatures — candidat, examinateur, Directeur BAC, Directeur adjoint.
 
 import { esc, initials, setHTML } from '../core/dom.js';
-import { imageStack } from '../data/images.js';
+import { imageStyle } from '../data/images.js';
 import { decisionText } from './chips.js';
 import { duration } from '../core/cdg-state.js';
 import {
@@ -93,7 +93,7 @@ function coverPage(record, t, reco, decision) {
   return `
   <article class="dossier-page cover-v2">
     ${head(record, 'EXAMEN DE QUALIFICATION CHEF DE GROUPE')}
-    <div class="coverHero" style="background-image:${imageStack('cdg')}">
+    <div class="coverHero" style="${imageStyle('cdg')}">
       <div class="coverTitle">
         <div class="big">BRIGADE ANTI-CRIMINALITÉ 75 N</div>
         <div class="small">EXAMEN DE QUALIFICATION CHEF DE GROUPE</div>

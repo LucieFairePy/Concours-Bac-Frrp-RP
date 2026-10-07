@@ -169,7 +169,8 @@ const PAGES = [
   {
     page: 'accueil.html',
     entry: 'js/accueil.js',
-    expect: ['portalHeader', 'hero', 'primary', 'secondary', 'live']
+    expect: ['portalSidebar', 'portalHeader', 'hero', 'cards', 'dash',
+      'tileNews', 'tileCases', 'tileQuick', 'tileStaff']
   },
   {
     page: 'app.html',
@@ -227,6 +228,16 @@ const PAGES = [
     page: 'administration.html',
     entry: 'js/administration.js',
     expect: ['portalHeader', 'moduleBar', 'content']
+  },
+  {
+    page: 'utilisateurs.html',
+    entry: 'js/utilisateurs.js',
+    expect: ['portalSidebar', 'portalHeader', 'moduleBar', 'usersBox']
+  },
+  {
+    page: 'actualites.html',
+    entry: 'js/actualites.js',
+    expect: ['portalSidebar', 'portalHeader', 'moduleBar', 'hero', 'content']
   },
   {
     page: 'index.html',

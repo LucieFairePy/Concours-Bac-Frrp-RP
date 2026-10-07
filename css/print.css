@@ -3,6 +3,10 @@
 
   html, body { margin: 0; padding: 0 }
 
+  /* La coque V4 décale le contenu de 236 px à l'écran ; à l'impression,
+     la page A4 repart de la marge zéro. */
+  body.portal-shell { padding-left: 0 !important }
+
   body { background: white !important; color: #111 }
 
   header, .tabs, .no-print, .modal { display: none !important }

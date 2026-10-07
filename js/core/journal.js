@@ -19,6 +19,10 @@ export const ACTIONS = {
   'acces.role': 'Changement de rôle',
   'acces.retrait': 'Retrait d’un accès',
   'direction.maj': 'Modification de la direction BAC',
+  'direction.seuils': 'Modification des seuils de suggestion',
+  'direction.bareme': 'Modification du barème physique',
+  'actualite.publication': 'Publication d’une actualité',
+  'actualite.retrait': 'Retrait d’une actualité',
   'parametres.maj': 'Modification des paramètres'
 };
 

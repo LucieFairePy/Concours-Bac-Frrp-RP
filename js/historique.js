@@ -12,7 +12,7 @@
 import { esc, setHTML, byId } from './core/dom.js';
 import * as portal from './core/portal.js';
 import * as records from './core/records.js';
-import { imageStack } from './data/images.js';
+import { imageStyle } from './data/images.js';
 import { decisionChip, scoreChip, DECISION_TEXT } from './views/chips.js';
 
 const filters = {
@@ -27,10 +27,15 @@ const filters = {
 
 let loaded = { entries: [], errors: [] };
 
+// §18.3 — « Exporter un rapport » ouvre l'historique dans un mode où
+// chaque ligne propose son export : la fiche finale du dossier, telle
+// qu'elle a été clôturée, depuis la page de son module.
+let exportMode = false;
+
 function hero() {
   setHTML('hero', `
     <section class="phero hhero">
-      <div class="phero-img" style="background-image:${imageStack('historique')}"></div>
+      <div class="phero-img" style="${imageStyle('historique')}"></div>
       <div class="phero-body">
         <div class="phero-kicker">Archives du portail</div>
         <h1>HISTORIQUE — BRIGADE ANTI-CRIMINALITÉ 75 N</h1>
@@ -55,7 +60,7 @@ function categoryCards() {
 
     return `
       <button class="hcat${on ? ' active' : ''}" onclick="app.setCategory('${category.id}')">
-        <span class="hcat-img" style="background-image:${imageStack(category.id === 'cdg' ? 'cdg' : category.id)}"></span>
+        <span class="hcat-img" style="${imageStyle(category.id === 'cdg' ? 'cdg' : category.id)}"></span>
         <span class="hcat-body">
           <span class="hcat-count">${count}</span>
           <span class="hcat-title">${esc(category.label)}</span>
@@ -168,7 +173,7 @@ function row(entry) {
       <td>${scoreChip(entry.total, entry.max)}</td>
       <td>${decisionChip(entry.decision)}</td>
       <td>${esc(entry.examiner || '—')}</td>
-      <td class="hgo">ouvrir →</td>
+      <td class="hgo">${exportMode ? 'exporter →' : 'ouvrir →'}</td>
     </tr>`;
 }
 
@@ -195,6 +200,9 @@ function paint(pending) {
 
   setHTML('results', `
     ${errors}
+    ${exportMode
+      ? '<div class="banner"><b>Export d’un rapport.</b> Choisis le dossier à exporter : sa fiche finale s’ouvre en lecture seule, avec le bouton PDF du module.</div>'
+      : ''}
     <div class="psection-title">
       <h2>${shown.length} dossier${shown.length > 1 ? 's' : ''}</h2>
       <p class="mut">Les dossiers clôturés sont en lecture seule</p>
@@ -263,13 +271,16 @@ async function boot() {
   const params = new URLSearchParams(window.location.search);
   const wanted = params.get('categorie');
   if (wanted && records.CATEGORIES[wanted]) filters.category = wanted;
-  const text = params.get('dossier');
+  // `dossier` vient d'un lien d'activité, `q` de la recherche globale de
+  // l'en-tête (§6.2) : les deux remplissent la même recherche.
+  const text = params.get('dossier') || params.get('q');
   if (text) filters.text = text;
+  exportMode = params.get('export') === '1';
 
   hero();
   portal.setModuleBar(`
     <b>Historique centralisé</b>
-    <span class="mut">tous modules</span>
+    <span class="mut">${exportMode ? 'export d’un rapport' : 'tous modules'}</span>
     <span class="spacer"></span>
     <a class="pnav-item" href="accueil.html">← Accueil</a>`);
 

@@ -22,28 +22,35 @@ dépôt sur la branche `data`.
 | Formation Chef de Groupe BAC | `chef-de-groupe.html` | `FCG-AAAA-NNN` | /100 |
 | Examen de qualification Chef de Groupe | `examen-cdg.html` | `CDG-AAAA-NNN` | /1000 |
 
-Autour des modules : une page d'accueil terrain, un **historique central**
-commun aux quatre modules, les **paramètres** (direction BAC, accès, rôles) et
-une page **administration** (journal des actions sensibles, état du dépôt,
+Autour des modules : une page d'accueil V4 (héros, quatre cartes, quatre
+panneaux), un **historique central** commun aux quatre modules, les
+**actualités**, les **paramètres** (direction BAC, seuils de suggestion), la
+**gestion des utilisateurs** (accès, rôles, effectifs) et une page
+**administration** (actualités, journal des actions sensibles, état du dépôt,
 places d'images à livrer).
 
 ```
 index.html            accès examinateur, seule porte d'entrée
-accueil.html          page d'accueil du portail
+accueil.html          accueil V4 : héros, 4 cartes, 4 panneaux
 app.html              concours d'intégration (9 étapes, fiche 8 pages)
-formations.html        choix des formations
-negociation.html      Formation Négociation (18 chapitres)
-chef-de-groupe.html   Formation Chef de Groupe (16 chapitres)
+formations.html       choix des formations
+negociation.html      Formation Négociation (20 chapitres)
+chef-de-groupe.html   Formation Chef de Groupe (16 modules)
 examen-cdg.html       Examen de qualification (8 étapes, fiche 5 pages)
 historique.html       historique central, toutes catégories
-parametres.html       direction BAC, accès et rôles, profil
-administration.html   journal, stockage, modules, images
+actualites.html       actualités du portail, liste et détail
+parametres.html       direction BAC, seuils de suggestion, profil
+utilisateurs.html     accès, rôles et effectifs
+administration.html   actualités, journal, stockage, modules, images
 404.html              adresse inconnue
 ```
 
-La barre de navigation est unique et vit dans `js/core/portal.js` : une seule
-source de vérité pour toutes les pages. Le profil connecté s'affiche en haut à
-droite (nom, grade, fonction BAC, accès au profil et déconnexion).
+La navigation est unique et vit dans `js/core/portal.js` : une seule source de
+vérité pour toutes les pages. Elle est rendue dans la **barre latérale** de
+236 px (logo, identité, devise, entrées et sous-entrées, cartouche citation) ;
+l'**en-tête** de 68 px porte l'identité Police Nationale / France Roleplay, la
+recherche globale — qui ouvre l'historique — l'état d'enregistrement et le
+profil connecté.
 
 ---
 
@@ -53,7 +60,7 @@ droite (nom, grade, fonction BAC, accès au profil et déconnexion).
    **page d'accès**, seule porte d'entrée du portail
 2. Choisir son nom dans la liste et taper son **code personnel**
    (`BAC-XXXX-XXXX-XXXX`). La connexion mène à l'accueil du portail
-3. Choisir un module dans la barre de navigation
+3. Choisir un module dans la barre latérale ou sur une carte de l'accueil
 4. Dérouler les étapes jusqu'à la fiche finale
 5. **Télécharger en PDF** pour sortir le dossier A4, en choisissant
    « Enregistrer au format PDF » comme destination dans la fenêtre du navigateur
@@ -105,7 +112,7 @@ plafonne le tir à 210 et interdit un `RETENU` sans réserve.
 
 ### Formation Négociation BAC
 
-18 chapitres, de « rôle et principes » à la fiche réflexe, écrits selon la règle
+20 chapitres, de « rôle et principes » à la conclusion, écrits selon la règle
 du cahier des charges : **explication simple → exemple en jeu → point à retenir
 → exercice**. Encadrés `À RETENIR` et `ERREURS À ÉVITER`, échanges types,
 tableaux, exercices avec champ de réponse.
@@ -121,7 +128,7 @@ Fiche finale de 3 pages A4, quatre signatures.
 
 ### Formation Chef de Groupe BAC
 
-16 chapitres : rôle, posture, préparation de la vacation, communication,
+16 modules : rôle, posture, préparation de la vacation, communication,
 décision, effectifs, radio, commandement sur intervention, coordination,
 dégradation, situation majeure, erreurs, débriefing, exercices, fiche réflexe,
 évaluation.
@@ -330,22 +337,29 @@ est scellé avec le code.
 
 ## Banque d'images
 
-Le cahier des charges interdit de remplacer la banque d'images BAC par des
-visuels génériques, et interdit d'inventer un logo. Ni l'un ni l'autre n'a été
-fait : `js/data/images.js` est une **liste de places**. Chaque place dit quelle
-photo est attendue, à quel endroit, et sur quel sujet.
+La documentation technique V4 nomme ses quinze visuels (§5) et interdit de les
+remplacer par des visuels génériques. `js/data/images.js` est donc une **liste
+de places** qui porte exactement cette nomenclature : chaque place dit quel
+fichier est attendu, à quel endroit, et sur quel sujet.
 
 Tant qu'une photo n'est pas livrée, un repli sert : l'une des quatre photos BAC
 déjà présentes dans le dépôt, choisie pour rester cohérente avec la page.
 
-**Pour livrer une photo**, la déposer dans `assets/img/` sous le nom indiqué par
-la page **Administration**. Elle prend la place du repli au chargement suivant,
-sans toucher au code : les deux images sont empilées en CSS, et la couche du
-haut ne peint rien tant que le fichier n'existe pas.
+**Pour livrer une photo**, la déposer dans `assets/bac75n/` sous son nom de kit
+(`02_HOME_HERO_BAC_CONTROLE_NUIT.jpg`, `12_SIDEBAR_CITATION_BAC75N_NUIT.jpg`…).
+Elle prend la place du repli au chargement suivant, sans toucher au code : les
+deux images sont empilées en CSS, et la couche du haut ne peint rien tant que le
+fichier n'existe pas. La liste complète est dans `assets/bac75n/README.md` et
+sur la page **Administration**.
 
-Le logo est `assets/logo-bac.svg`. **Le véritable emblème BAC 75 N fourni par le
-commanditaire doit remplacer ce fichier** : aucun faux logo n'a été dessiné à sa
-place.
+`00_REFERENCE_DESIGN_V4_VALIDEE.png` ne se dépose pas : c'est la capture de
+référence, elle sert à comparer le rendu, pas à être affichée.
+
+Le logo est `assets/logo-bac.svg` ; il s'efface dès que
+`assets/bac75n/01_LOGO_BAC75N_PRINCIPAL.png` est déposé.
+
+**Droits d'utilisation** : à vérifier avant publication publique (§5). Le kit
+technique ne vaut pas licence d'exploitation.
 
 ---
 
@@ -641,13 +655,14 @@ serve.cmd                   serveur local pour le développement
 
 assets/favicon.svg          écusson, icône d'onglet
 assets/logo-bac.svg         écusson complet — à remplacer par l'emblème fourni
-assets/img/                 photos BAC (replis en attendant la banque fournie)
+assets/img/                 photos BAC (replis), en .jpg et en .webp
+assets/bac75n/              banque du kit V4, nommée selon le §5
 
 css/
   base.css                  variables, reset, typo, boutons, champs, tableaux
   gate.css                  page d'accès
   layout.css                grille 12 colonnes, onglets, progression
-  portal.css                en-tête, navigation, profil, accueil, cartes
+  portal.css                coque V4 : barre latérale, en-tête, accueil, cartes
   components.css            cards, questions, énoncés, scores, bannières
   cours.css                 pages de cours : menu latéral, encadrés, exercices
   correction.css            correction assistée : attendus, suggérée / retenue
@@ -673,9 +688,11 @@ js/
   negociation.js            entrée de la Formation Négociation
   chef-de-groupe.js         entrée de la Formation Chef de Groupe
   examen-cdg.js             contrôleur de l'examen de qualification
-  historique.js             historique central
-  parametres.js             direction BAC, accès et rôles
-  administration.js         journal, stockage, modules, images
+  historique.js             historique central, recherche et export
+  actualites.js             actualités : liste et détail
+  parametres.js             direction BAC et seuils de suggestion
+  utilisateurs.js           accès, rôles et effectifs
+  administration.js         actualités, journal, stockage, modules, images
   app.js                    contrôleur du concours d'intégration
 
   data/
@@ -687,7 +704,8 @@ js/
     chef-de-groupe.js       contenu de la Formation Chef de Groupe
     cdg-bank.js             fragments de l'examen de qualification
     cdg-generator.js        générateur combinatoire et barème
-    images.js               places d'images attendues et replis
+    images.js               places d'images du kit V4 et replis
+    news.js                 actualités de départ et visibilités
 
   core/
     dom.js                  helpers DOM, échappement HTML, initiales
@@ -696,7 +714,11 @@ js/
     records.js              registre des modules, modèle de dossier commun
     journal.js              journal des actions sensibles
     roles.js                rôles et permissions
-    portal.js               shell : garde de session, en-tête, navigation
+    portal.js               coque : garde de session, barre latérale, en-tête
+    lifecycle.js            statuts et avancement d'un dossier (annexe B)
+    thresholds.js           seuils de suggestion, centralisés (§8.6, §11.3)
+    news.js                 lecture et écriture des actualités
+    effectifs.js            comptage des effectifs par corps
     auth.js                 session, code personnel, rôles, expiration
     session-store.js        mémorisation de la session, avec replis
     roster.js               création, rôle et retrait des accès
@@ -724,7 +746,8 @@ js/
     formation-fiche.js      fiche finale de formation, 3 pages A4
     cdg-epreuves.js         épreuves et correction de l'examen
     cdg-fiche.js            fiche finale de qualification, 5 pages A4
-    settings.js             direction BAC, accès et rôles, profil
+    settings.js             direction BAC, seuils de suggestion, profil
+    users.js                accès et rôles, effectifs, table des permissions
     chips.js                pastilles de décision, tous vocabulaires
 ```
 
@@ -756,6 +779,18 @@ doivent pas se perdre au fil des modifications :
 | §12 | chaque ligne d'historique porte les champs exigés |
 | §14 | chaque rôle a les permissions annoncées, le journal s'écrit |
 | §15 | une correction après clôture ne réécrit pas le dossier d'origine |
+| HOME | quatre cartes, quatre panneaux, jetons et mesures V4 (§6, §21) |
+| §8.5 | cible otage, triche, abandon : les règles bloquantes passent avant le total |
+| §8.6 §11.3 | les seuils vivent dans la configuration et s'appliquent vraiment |
+| annexe B | statuts et avancement d'un dossier, neuf étapes au concours |
+| §18 | actualités et effectifs tiennent sur des données, pas sur des constantes |
+| §5 | la banque d'images suit la nomenclature du kit et garde ses replis |
+| §4.1 | chaque identifiant de route du kit mène à une page qui existe |
+| §8.4 | le barème physique se règle, et les paliers restent ordonnés |
+| §11.2 | la suggestion vaut 35 % de complétude et 65 % de critères |
+| §12 §14 | suggestion archivée, version du modèle et piste d'audit du dossier |
+| §22 | WebP plus léger que l'original, miniatures différées et dimensionnées |
+| SEC-001 GHP-001 | aucun jeton livré, aucun chemin absolu qui casserait sous Pages |
 | câblage | handlers, points de montage, imports, liens et styles de chaque page |
 
 Le contrôle de câblage attrape ce qu'aucun test d'unité ne voit sur un site sans
@@ -810,6 +845,51 @@ La branche `data` n'est pas déployée : y pousser ne reconstruit pas le site.
 
 ---
 
+## Documentation technique V4
+
+Le portail suit `DOCUMENTATION_TECHNIQUE_BAC75N_V4`. Où chaque chapitre vit dans
+le dépôt :
+
+| Chapitre | Où |
+|---|---|
+| §4 nomenclature, §4.2 numéros de dossier | `js/core/records.js` (`BAC-AAAA-NNN`, rectificatif `-R01`) |
+| §5 banque d'images | `js/data/images.js`, `assets/bac75n/` |
+| §6 design system, barre latérale, en-tête | `css/base.css` (jetons et mesures), `css/portal.css`, `js/core/portal.js` |
+| §6.4 quatre cartes, §6.5 quatre panneaux | `js/accueil.js`, `accueil.html` |
+| §7 comportement de l'accueil | `js/accueil.js` |
+| §8 concours | `js/app.js`, `js/scoring/` |
+| §8.4 barème physique | `js/config.js` → `js/core/thresholds.js`, réglable sur `parametres.html` |
+| §8.6 et §11.3 seuils | `js/core/thresholds.js`, réglables sur `parametres.html` |
+| §11.2 formule de suggestion | `js/scoring/assist.js` — 35 % complétude + 65 % critères |
+| §9 et §10 formations | `js/data/negociation.js` (20 chapitres), `js/data/chef-de-groupe.js` (16 modules) |
+| §11 examen Chef de Groupe | `js/data/cdg-generator.js`, `js/scoring/cdg.js` |
+| §12 suggestion ≠ décision | `js/scoring/assist.js`, `js/views/correction.js` |
+| §12 suggestion archivée | `suggestionSnapshot()` dans `js/scoring/totals.js`, écrite à la clôture |
+| §13 fiches finales et signatures | `js/views/dossier.js`, `cdg-fiche.js`, `formation-fiche.js` |
+| §14 modèle de données | `js/core/records.js`, `js/core/store.js` ; `version` et `auditTrail` portés par chaque dossier |
+| §15 cycle de vie, annexe B | `js/core/lifecycle.js` |
+| §16 historique centralisé | `js/historique.js` |
+| §17 rôles, §17.1 journal | `js/core/roles.js`, `js/core/journal.js`, `utilisateurs.html` |
+| §18 actualités, dossiers, accès rapides, effectifs | `js/core/news.js`, `js/core/effectifs.js`, `js/accueil.js` |
+| §19 GitHub Pages | `.github/workflows/pages.yml`, `404.html`, chemins relatifs |
+| §22 performance et accessibilité | WebP via `image-set()`, miniatures différées et dimensionnées, focus visible |
+| §21 recette | `tools/test.mjs`, `tools/smoke.mjs`, `tools/check-pages.mjs` |
+
+Un seul écart de forme, et une impossibilité :
+
+- **les routes** (§4.1) sont servies par des fichiers `.html` à plat
+  (`historique.html`, pas `/historique`). Les identifiants et les adresses
+  logiques du kit vivent dans `ROUTES`, en haut de `js/core/portal.js`, et
+  c'est le seul endroit du portail où une adresse est écrite : passer aux
+  adresses propres ne demanderait que de changer cette table. L'annexe E dit
+  de conserver l'architecture du dépôt en reproduisant le contrat
+  fonctionnel ; sur GitHub Pages, des adresses sans extension demanderaient
+  un routeur et un repli 404 pour un gain cosmétique.
+- **l'authentification et les permissions côté serveur** (§17, §19.2) sont
+  impossibles sur un hébergement statique. Voir ci-dessous.
+
+---
+
 ## Ce qui reste à faire
 
 Deux points dépendent du commanditaire, et rien n'a été inventé à leur place :
@@ -821,9 +901,11 @@ Deux points dépendent du commanditaire, et rien n'a été inventé à leur plac
 
 Un point est un choix d'architecture assumé, pas un oubli :
 
-- **authentification et permissions côté serveur (§14, §15)** — impossibles sur
-  un hébergement statique. Ce qui tient leur place est décrit plus haut, avec
-  ses limites. Le passage à un backend ne touche que `js/core/store.js`.
+- **authentification et permissions côté serveur (§17, §19.2)** — impossibles
+  sur un hébergement statique. Ce qui tient leur place est décrit plus haut,
+  avec ses limites : codes personnels chiffrés, rôles scellés dans la charge,
+  journal des actions sensibles, branches protégées et restauration. Le passage
+  à un backend ne touche que `js/core/store.js`.
 
 ---
 

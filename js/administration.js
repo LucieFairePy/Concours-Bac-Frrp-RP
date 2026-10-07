@@ -6,17 +6,20 @@
 //   2. l'état réel du stockage : où vont les dossiers, qui peut écrire ;
 //   3. l'inventaire des modules et des places d'images encore à livrer.
 
-import { esc, setHTML } from './core/dom.js';
+import { byId, esc, setHTML } from './core/dom.js';
 import { CONFIG, isConfigured } from './config.js';
 import * as portal from './core/portal.js';
 import * as auth from './core/auth.js';
 import * as store from './core/store.js';
 import * as records from './core/records.js';
 import * as journal from './core/journal.js';
-import { slots } from './data/images.js';
+import * as news from './core/news.js';
+import { slots, IMAGE_SLOTS } from './data/images.js';
+import { NEWS_VISIBILITY } from './data/news.js';
 
 let selectedMonth = '';
 let availableMonths = [];
+let newsState = { items: [], seeded: true };
 
 function storageCard(counts) {
   const rows = records.MODULE_ORDER.map(id => {
@@ -134,6 +137,106 @@ function imagesCard() {
     </div>`;
 }
 
+/** §18.1 — le panneau Actualités de l'accueil lit ce que cette carte écrit. */
+function newsCard() {
+  const allowed = auth.can('settings');
+
+  const rows = newsState.items.length
+    ? newsState.items.map(item => `
+        <tr>
+          <td class="hid">${esc(String(item.publishedAt).slice(0, 10))}</td>
+          <td>
+            <b>${esc(item.title)}</b><br>
+            <span class="mut">${esc(item.sector || '—')} • ${esc(item.author || '—')}</span>
+          </td>
+          <td>${esc(NEWS_VISIBILITY[item.visibility].label)}</td>
+          <td class="row-actions">
+            <a class="pnav-item" href="actualites.html?actu=${encodeURIComponent(item.id)}">Lire</a>
+            ${allowed ? `<button class="danger" onclick="app.removeNews('${esc(item.id)}')">Retirer</button>` : ''}
+          </td>
+        </tr>`).join('')
+    : '<tr><td colspan="4" class="pempty">Aucune actualité publiée.</td></tr>';
+
+  const assets = Object.keys(IMAGE_SLOTS)
+    .map(id => `<option value="${esc(id)}" ${id === 'actualite-nuit' ? 'selected' : ''}>${esc(id)}</option>`)
+    .join('');
+
+  const visibilities = Object.values(NEWS_VISIBILITY)
+    .map(item => `<option value="${esc(item.id)}">${esc(item.label)}</option>`)
+    .join('');
+
+  const form = allowed
+    ? `
+      <h3>Publier une actualité</h3>
+      <div class="row">
+        <div class="c6">
+          <label for="naTitle">Titre</label>
+          <input id="naTitle" placeholder="Dispositif de contrôle renforcé">
+        </div>
+        <div class="c3">
+          <label for="naSector">Secteur</label>
+          <input id="naSector" placeholder="Secteur Nord — nuit">
+        </div>
+        <div class="c3">
+          <label for="naImage">Image</label>
+          <select id="naImage">${assets}</select>
+        </div>
+        <div class="c12">
+          <label for="naExcerpt">Résumé affiché sur l’accueil</label>
+          <input id="naExcerpt" placeholder="Une phrase, pas plus.">
+        </div>
+        <div class="c12">
+          <label for="naBody">Contenu</label>
+          <textarea id="naBody" placeholder="Le texte complet de l’actualité."></textarea>
+        </div>
+        <div class="c6">
+          <label for="naAuthor">Signée par</label>
+          <input id="naAuthor" value="Direction BAC 75 N">
+        </div>
+        <div class="c6">
+          <label for="naVisibility">Visibilité</label>
+          <select id="naVisibility">${visibilities}</select>
+        </div>
+      </div>
+      <button class="primary" onclick="app.publishNews()">Publier</button>`
+    : '<p class="mut">Publier une actualité demande le droit « paramètres ».</p>';
+
+  return `
+    <div class="card">
+      <h2>Actualités BAC 75 N</h2>
+      <p class="mut">
+        Les trois plus récentes alimentent le panneau Actualités de l’accueil.
+        Une actualité « direction » n’est visible que des rôles portant le droit
+        « paramètres ».
+        ${newsState.seeded ? 'Pour l’instant, ce sont les actualités de départ du kit.' : ''}
+      </p>
+      <div class="htable-wrap">
+        <table class="htable">
+          <tr><th>Date</th><th>Titre</th><th>Visibilité</th><th></th></tr>
+          ${rows}
+        </table>
+      </div>
+      ${form}
+      <div id="newsStatus"></div>
+    </div>`;
+}
+
+async function paintNews(pending) {
+  if (pending) {
+    setHTML('newsBox', '<div class="card"><h2>Actualités BAC 75 N</h2><p class="pempty">Lecture…</p></div>');
+    return;
+  }
+
+  try {
+    newsState = await news.load();
+  } catch (error) {
+    setHTML('newsBox', portal.errorBanner(`Actualités illisibles : ${error.message}`));
+    return;
+  }
+
+  setHTML('newsBox', newsCard());
+}
+
 async function counts() {
   const out = {};
   await Promise.all(records.MODULE_ORDER.map(async id => {
@@ -163,6 +266,66 @@ const app = {
   async month(value) {
     selectedMonth = value;
     await paintJournal(false);
+  },
+
+  async publishNews() {
+    if (!auth.can('settings')) return;
+
+    const item = {
+      title: byId('naTitle')?.value.trim() || '',
+      sector: byId('naSector')?.value.trim() || '',
+      imageAsset: byId('naImage')?.value || 'actualite-nuit',
+      excerpt: byId('naExcerpt')?.value.trim() || '',
+      body: byId('naBody')?.value.trim() || '',
+      author: byId('naAuthor')?.value.trim() || '',
+      visibility: byId('naVisibility')?.value || 'portail',
+      publishedAt: new Date().toISOString()
+    };
+
+    if (!item.title) {
+      setHTML('newsStatus', portal.errorBanner('Une actualité sans titre ne part pas.'));
+      return;
+    }
+
+    setHTML('newsStatus', '<div class="banner">Publication…</div>');
+    try {
+      await news.publish(item);
+      await paintNews(false);
+      setHTML('newsStatus', portal.okBanner(`Actualité publiée : ${item.title}`));
+      await journal.record({
+        who: auth.describeOperator(),
+        role: auth.role(),
+        action: 'actualite.publication',
+        target: item.title,
+        detail: `${item.sector || 'sans secteur'} • ${item.visibility}`
+      });
+    } catch (error) {
+      setHTML('newsStatus', portal.errorBanner(`Échec : ${error.message}`));
+    }
+  },
+
+  async removeNews(id) {
+    if (!auth.can('settings')) return;
+
+    const item = newsState.items.find(entry => entry.id === id);
+    if (!item) return;
+    if (!window.confirm(`Retirer l’actualité « ${item.title} » ?`)) return;
+
+    setHTML('newsStatus', '<div class="banner">Retrait…</div>');
+    try {
+      await news.remove(id);
+      await paintNews(false);
+      setHTML('newsStatus', portal.okBanner('Actualité retirée.'));
+      await journal.record({
+        who: auth.describeOperator(),
+        role: auth.role(),
+        action: 'actualite.retrait',
+        target: item.title,
+        detail: ''
+      });
+    } catch (error) {
+      setHTML('newsStatus', portal.errorBanner(`Échec : ${error.message}`));
+    }
   }
 };
 
@@ -185,16 +348,20 @@ async function boot() {
     <a class="pnav-item" href="parametres.html">Paramètres →</a>`);
 
   setHTML('content', `
+    <div id="newsBox"></div>
     <div id="storageBox"></div>
     <div id="journalBox"></div>
     <div id="imagesBox"></div>`);
 
   setHTML('imagesBox', imagesCard());
+  await paintNews(true);
   await paintJournal(true);
   setHTML('storageBox', storageCard(
     Object.fromEntries(records.MODULE_ORDER.map(id => [id, null]))));
 
   setHTML('storageBox', storageCard(await counts()));
+
+  await paintNews(false);
 
   availableMonths = await journal.months();
   selectedMonth = availableMonths[0] || new Date().toISOString().slice(0, 7);

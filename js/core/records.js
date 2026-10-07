@@ -11,6 +11,7 @@
 // cours restent lisibles tels quels.
 
 import * as store from './store.js';
+import * as lifecycle from './lifecycle.js';
 
 export const CATEGORIES = {
   concours: {
@@ -110,6 +111,7 @@ export function normalize(entry, moduleId) {
     max: entry.max || mod.max,
     decision: entry.decision || '',
     examiner: entry.examiner || entry.closedBy || '',
+    status: entry.status || (entry.closedAt ? 'closed' : 'in_progress'),
     closedAt: entry.closedAt || null,
     closedBy: entry.closedBy || null,
     rectifies: entry.rectifies || null,
@@ -139,6 +141,7 @@ export function summarize(record, moduleId) {
     max: mod.max,
     decision: record.decision || '',
     examiner,
+    status: lifecycle.status(moduleId, record),
     closedAt: record.closedAt || null,
     closedBy: record.closedBy || null,
     rectifies: record.rectifies || null
@@ -219,6 +222,13 @@ export async function get(moduleId, id) {
 
 export async function publish(moduleId, record) {
   const mod = module(moduleId);
+  lifecycle.trace(
+    record,
+    record.rectifies ? 'dossier.rectificatif' : 'dossier.cloture',
+    store.operatorName(),
+    record.decision || ''
+  );
+  lifecycle.stamp(moduleId, record);
   if (mod.legacy) return store.publishClosed(record);
 
   await store.writeData(
@@ -249,12 +259,12 @@ export async function publishRectified(moduleId, original, corrected) {
   const mod = module(moduleId);
   const base = String(original.id).replace(/-R\d+$/, '');
 
-  let version = 2;
-  while (await get(moduleId, `${base}-R${version}`)) version += 1;
+  let version = 1;
+  while (await get(moduleId, `${base}-R${String(version).padStart(2, '0')}`)) version += 1;
 
   const record = {
     ...corrected,
-    id: `${base}-R${version}`,
+    id: `${base}-R${String(version).padStart(2, '0')}`,
     rectifies: original.id,
     locked: true,
     closedAt: new Date().toISOString()
@@ -286,6 +296,12 @@ export function loadDraft(moduleId, login) {
 
 export function saveDraft(moduleId, login, record) {
   const mod = module(moduleId);
+  // Une sauvegarde de brouillon n'entre dans la piste qu'à la première,
+  // sinon l'autosauvegarde la remplirait toutes les trente secondes.
+  if (!Array.isArray(record.auditTrail) || !record.auditTrail.length) {
+    lifecycle.trace(record, 'dossier.creation', store.operatorName(), record.id);
+  }
+  lifecycle.stamp(moduleId, record);
   if (mod.legacy) return store.saveDraft(login, record);
   return store.writeData(mod.draft(login), record, `chore(data): brouillon ${record.id}`);
 }

@@ -20,7 +20,7 @@
 }
 
 .ca-expected {
-  border: 1px solid #294156;
+  border: 1px solid var(--line);
   background: #0a1825;
   border-radius: 9px;
   padding: 11px 13px;
@@ -76,7 +76,7 @@
 }
 
 .ca-bareme span {
-  border: 1px solid #294156;
+  border: 1px solid var(--line);
   background: #0a1825;
   border-radius: 20px;
   padding: 5px 11px;
