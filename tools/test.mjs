@@ -1039,6 +1039,24 @@ await group('V4 — formations Radio et Antiterrorisme : cours complets, évalua
   assert.deepEqual(COURSES.map(entry => entry.course.module), ['negociation', 'formation-cdg', 'radio', 'antiterrorisme']);
 });
 
+await group('Archive — Formation Chef de Groupe : 16 chapitres, cours seul', async () => {
+  const { LECONS, A_RETENIR } = await import('../js/data/formations/chef-de-groupe-lecons.js');
+  assert.equal(LECONS.length, 16);
+  assert.deepEqual(LECONS.map(l => l.number), LECONS.map((l, i) => String(i + 1).padStart(2, '0')));
+  assert.ok(A_RETENIR.startsWith('Le chef donne des priorités claires'));
+  for (const l of LECONS) {
+    assert.ok(l.title && l.intro && l.example && l.exercise && l.points.length, `chapitre ${l.number}`);
+    assert.ok(fs.existsSync(path.join(ROOT, 'assets/bac75n', l.photo)), `photo ${l.photo}`);
+  }
+  assert.equal(LECONS[0].title, 'Rôle du chef de groupe');
+  assert.equal(LECONS[15].title, 'Évaluation finale');
+
+  // L'archive n'enregistre rien : la page ne passe pas par le moteur commun.
+  const source = fs.readFileSync(path.join(ROOT, 'js/pages/formations/chef-de-groupe.js'), 'utf8');
+  assert.ok(!/from '\.\/engine\.js'/.test(source), 'la page Chef de Groupe ne doit plus monter le parcours commun');
+  assert.ok(source.includes("params.get('dossier')"), 'un ancien dossier doit rester lisible');
+});
+
 // ───────────────────────── Résultat ─────────────────────────────────────
 
 stdout.write(`\n${passed} groupe(s) réussi(s), ${failures.length} échec(s).\n`);

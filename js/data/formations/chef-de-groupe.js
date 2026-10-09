@@ -1,4 +1,9 @@
-// Formation Chef de Groupe BAC — cahier des charges §7.
+// Formation Chef de Groupe BAC — ancien parcours (cahier des charges §7).
+//
+// La page affiche désormais le cours de l'archive V4
+// (chef-de-groupe-lecons.js), sans évaluation ni dossier. Ce contenu
+// reste pour relire les dossiers FCG clôturés avec l'ancien parcours
+// (fiche finale en lecture seule) et pour le catalogue des formations.
 //
 // Objectif : préparer un agent BAC expérimenté à organiser et diriger un
 // groupe en jeu de rôle. Même règle de rédaction que la formation
