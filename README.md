@@ -786,12 +786,14 @@ unmount()   la page est quittée : arrêter ses minuteries
 Comme dans la maquette V4, les **six modules** (concours, quatre formations,
 examen Chef de Groupe) s'ouvrent **en plein écran**, chacun avec sa propre mise
 en page : la route porte `layout: 'module'`, la coque du portail s'efface, et
-la page affiche sa barre (retour au portail, état d'enregistrement `#sync`,
-actions `#pageActions`). Chaque formation donne sa mise en page au moteur
-commun par `js/pages/formations/layouts/<formation>.js` ; chaque module a sa
-feuille `css/pages/<module>.css`, dont toutes les règles sont rangées sous la
-classe racine du module et réservées à l'écran : la fiche finale A4 et
-l'impression ne changent pas.
+la page affiche sa barre de retour au portail. Chaque module reprend à
+l'identique le fichier `modules/*.html` de l'archive V4 : mêmes textes, mêmes
+couleurs, même parcours. Les quatre formations ne sont donc plus qu'un cours
+à lire, sans dossier ; un ancien dossier de formation ouvert depuis
+l'historique (`?dossier=`) s'affiche en lecture seule avec sa fiche finale
+(`js/pages/formations/fiche.js`). Chaque module a sa feuille
+`css/pages/<module>.css`, dont toutes les règles sont rangées sous la classe
+racine du module.
 
 ```
 index.html                  la seule page : accès examinateur et portail
@@ -812,11 +814,8 @@ css/
   components.css            panneaux, bannières, étapes, questions, pastilles
   pages/
     acces.css               page d'accès (sert aussi au 404.html)
-    accueil.css             accueil : héros, quatre cartes, quatre panneaux
-    cours.css               pages de cours et catalogue des formations
-    correction.css          correction assistée : attendus, suggérée / retenue
-    historique.css          historique : familles, types, filtres, tableau
-    portail.css             catalogue des formations, administration, utilisateurs…
+    portail.css             pages du portail (style.css de l'archive) : accueil,
+                            formations, historique, administration, utilisateurs…
     concours.css            module Concours (plein écran)
     examen-cdg.css          module Examen Chef de Groupe (plein écran)
     formation-*.css         une feuille par formation (plein écran)
@@ -846,28 +845,29 @@ js/
     sidebar.js              barre latérale
     header.js               en-tête et recherche globale
     feedback.js             bandeaux, état d'enregistrement, refus d'accès
+    modal.js                fenêtre modale du portail
+    asset.js                chemin des images posées en variable CSS
 
   pages/
     acces/                  page d'accès : entrée et formulaire
-    accueil/                accueil et zone dynamique
+    accueil/                accueil et actualités tirées au hasard (news-pool.js)
     concours/               concours : index, navigation, passage, correction,
                             résultats, fiche finale 8 pages (dossier.js)
     formations/
       index.js              catalogue des formations
-      engine.js             moteur commun aux quatre formations
-      sections.js           gabarits : identité, cours, évaluation, correction
-      cours.js              vue de cours : menu, chapitres, blocs
-      fiche.js              fiche finale de formation, 3 pages A4
-      reflexe.js            fiche réflexe, sans gestionnaire
-      negociation.js        une page par formation : le moteur avec son
-      chef-de-groupe.js     contenu
+      fiche.js              fiche finale d'un ancien dossier, 3 pages A4
+      negociation.js        une page par formation : le cours de l'archive,
+      chef-de-groupe.js     plus la lecture d'un ancien dossier
       radio.js
       antiterrorisme.js
+      layouts/              gabarits HTML de la négociation, du Chef de Groupe
+                            et de l'antiterrorisme
     examen-cdg/
-      index.js              contrôleur de l'examen de qualification
-      sections.js           gabarits : identité et tirage, sections
-      epreuves.js           épreuves et correction de l'examen
-      fiche.js              fiche finale de qualification, 5 pages A4
+      index.js              contrôleur de l'examen (huit onglets de l'archive)
+      dossier.js            dossier au format de l'archive, migration
+      vues.js               gabarits des onglets
+      bareme.js             barème /1000 et suggestion
+      fiche.js              fiche des dossiers d'avant la V4, 5 pages A4
     historique/             historique central, recherche et export
     actualites/             actualités : liste et détail
     administration/         index et cartes : actualités, journal, stockage,
@@ -881,19 +881,22 @@ js/
     autosave.js             enregistrement automatique commun des brouillons
 
   data/
-    questions.js            255 questions du questionnaire théorique
+    questions.js            30 questions de l'archive (questionnaire théorique)
     radio.js                exercice radio du concours (V4 et d'origine)
     scenarios.js            5 mises en situation du concours (V4 et d'origine)
     content-set.js          version du contenu d'épreuve d'un dossier
     steps.js                les 9 étapes du concours
     formations/
       index.js              registre des formations (COURSES)
-      negociation.js        contenu de la Formation Négociation
-      chef-de-groupe.js     contenu de la Formation Chef de Groupe
-      radio.js              contenu de la Formation Radio
-      antiterrorisme.js     contenu de la Formation Antiterrorisme
-    cdg-bank.js             fragments de l'examen de qualification
-    cdg-generator.js        générateur combinatoire et barème
+      negociation-cours.js  cours de l'archive : Négociation (20 chapitres)
+      chef-de-groupe-lecons.js  cours de l'archive : Chef de Groupe (16 chapitres)
+      radio-cours.js        cours de l'archive : Radio (9 chapitres)
+      antiterrorisme.js     cours de l'archive : Antiterrorisme (13 chapitres)
+      negociation.js, chef-de-groupe.js, radio.js, antiterrorisme-dossiers.js
+                            anciens contenus, gardés pour relire les anciens dossiers
+    cdg-examen.js           examen Chef de Groupe de l'archive : thèmes, situations
+    cdg-bank.js             anciens fragments de l'examen (anciens dossiers)
+    cdg-generator.js        ancien générateur et barème (anciens dossiers)
     images.js               places d'images du kit V4 et replis
     news.js                 actualités de départ et visibilités
 
@@ -1041,14 +1044,14 @@ le dépôt :
 | §4.1 routes | `js/routes.js` (une adresse `#/…` par écran), `js/router.js`, `404.html` pour les anciennes pages |
 | §5 banque d'images | `js/data/images.js`, `assets/bac75n/` |
 | §6 design system, barre latérale, en-tête | `css/tokens.css` (jetons et mesures), `css/shell.css`, `js/shell/` |
-| §6.4 quatre cartes, §6.5 quatre panneaux | `js/pages/accueil/index.js`, `css/pages/accueil.css` |
+| §6.4 quatre cartes, §6.5 quatre panneaux | `js/pages/accueil/index.js`, `css/pages/portail.css` |
 | §7 comportement de l'accueil | `js/pages/accueil/index.js` |
 | §8 concours | `js/pages/concours/`, `js/scoring/` |
 | §8.4 barème physique | `js/config.js` → `js/core/thresholds.js`, réglable sur `#/administration/parametres` |
 | §8.6 et §11.3 seuils | `js/core/thresholds.js`, réglables sur `#/administration/parametres` |
 | §11.2 formule de suggestion | `js/scoring/assist.js` — 35 % complétude + 65 % critères |
-| §9 et §10 formations | `js/data/formations/` (Négociation 25 chapitres, Chef de Groupe 16 modules, Radio, Antiterrorisme), `js/pages/formations/engine.js` |
-| §11 examen Chef de Groupe | `js/data/cdg-generator.js`, `js/scoring/cdg.js`, `js/pages/examen-cdg/` |
+| §9 et §10 formations | `js/data/formations/` (cours de l'archive : Négociation 20 chapitres, Chef de Groupe 16, Radio 9, Antiterrorisme 13), `js/pages/formations/` |
+| §11 examen Chef de Groupe | `js/data/cdg-examen.js`, `js/pages/examen-cdg/` |
 | §12 suggestion ≠ décision | `js/scoring/assist.js`, `js/pages/concours/correction.js` |
 | §12 suggestion archivée | `suggestionSnapshot()` dans `js/scoring/totals.js`, écrite à la clôture |
 | §13 fiches finales et signatures | `js/pages/concours/dossier.js`, `js/pages/examen-cdg/fiche.js`, `js/pages/formations/fiche.js` |
