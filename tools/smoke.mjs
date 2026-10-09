@@ -215,7 +215,8 @@ const ROUTE_SPECS = {
   'formation-negociation': { expect: ['toc', 'lesson'], lessons: 20 },
   // Chef de Groupe : le cours de l'archive, sans étapes ni dossier.
   'formation-chef-groupe': { expect: ['chapters', 'lesson'] },
-  'formation-radio': { expect: ['tabs', 'sections'], ...COURSE_STEPS, chapters: true },
+  // La radio n'a que le cours de l'archive : sommaire et chapitre, sans étapes.
+  'formation-radio': { expect: ['mrNav', 'mrChapter'] },
   'formation-antiterrorisme': { expect: ['tabs', 'sections'], ...COURSE_STEPS, chapters: true },
   // Les huit onglets de modules/examen-chef-groupe.html (archive V4).
   'examen-chef-groupe': {
