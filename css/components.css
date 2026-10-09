@@ -22,67 +22,6 @@
 .card h2 { font-size: 24px; margin: 2px 0 12px }
 .card h3 { font-size: 19px }
 
-.psection-title {
-  display: flex;
-  align-items: baseline;
-  gap: 12px;
-  margin: 22px 0 11px;
-}
-
-.psection-title h2 { font-size: 18px; margin: 0 }
-.psection-title .mut { margin: 0 }
-.psection-title a { margin-left: auto; font-size: 12px; color: var(--blue); text-decoration: none }
-
-/* Grille de panneaux libre : cartes de hauteur variable (formations…). */
-.ptiles {
-  display: grid;
-  gap: 10px;
-  grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
-  align-items: start;
-}
-
-.ptile {
-  display: flex;
-  flex-direction: column;
-  padding: 11px 11px 8px;
-  border: 1px solid #183349;
-  border-radius: 5px;
-  background: linear-gradient(145deg, #071522, #050d15);
-}
-
-.ptile-head {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 0 0 7px;
-  margin-bottom: 8px;
-  border-bottom: 1px solid #173247;
-}
-
-.ptile > *:not(.ptile-head) { padding-left: 0; padding-right: 0 }
-
-.ptile h3 { margin: 0; font: 700 16px var(--font-title); letter-spacing: 0; text-transform: uppercase }
-.ptile-head a { margin-left: auto; color: #12a8ff; font: 500 16px var(--font-title); text-decoration: none }
-.ptile .mut { margin: 0 0 9px }
-
-.plist { list-style: none; margin: 0; padding: 0 }
-
-.plist li {
-  display: flex;
-  align-items: baseline;
-  gap: 9px;
-  padding: 7px 0;
-  border-top: 1px solid #142c3e;
-  font-family: var(--font-title);
-  font-size: 14px;
-}
-
-.plist li:first-child { border-top: 0 }
-.plist .pid { font-weight: 800; color: #9dd7f8; white-space: nowrap }
-.plist .pwhen { margin-left: auto; color: var(--mut); font-size: 11px; white-space: nowrap }
-
-.pempty { color: var(--mut); font-size: 12.5px; padding: 4px 0 10px }
-
 /* ─────────────── Bannière photo des modules ─────────────── */
 
 /* À l'écran, la carte `.hero` d'un module est la bannière `sectionHero` de
@@ -140,14 +79,6 @@
 
   .hero .flag { display: none }
 
-  .hero-kicker {
-    display: block;
-    color: var(--blue-light);
-    font: 700 14px var(--font-title);
-    letter-spacing: 1px;
-    text-transform: uppercase;
-  }
-
   .hero h1 {
     margin: 5px 0;
     font: 800 45px/.9 var(--font-title);
@@ -184,57 +115,6 @@
     background-image: url('../assets/bac75n/14_RESERVE_BAC_UNITE_BOUCLIERS.jpg'), url('../assets/img/recap-general.jpg');
   }
 }
-
-/* Bannières construites en JS (historique, actualités) : même gabarit que
-   la bannière des modules, image dans `.phero-img`. L'accueil a la sienne,
-   plus haute (pages/accueil.css). */
-
-.phero {
-  position: relative;
-  display: flex;
-  align-items: flex-end;
-  min-height: var(--banner);
-  margin: 0 -12px 12px;
-  overflow: hidden;
-  background: var(--panel);
-  border-bottom: 1px solid #1a3b52;
-}
-
-.phero-img {
-  position: absolute;
-  inset: 0;
-  background-size: cover;
-  background-position: center 30%;
-}
-
-.phero:after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, #02070df3, #02070d82);
-}
-
-.phero-body { position: relative; z-index: 2; min-width: 0; max-width: 760px; padding: 26px 28px 27px }
-
-.phero-kicker {
-  color: var(--blue-light);
-  font: 700 14px var(--font-title);
-  letter-spacing: 1px;
-  text-transform: uppercase;
-}
-
-.phero h1 {
-  margin: 5px 0;
-  font-family: var(--font-title);
-  font-size: 45px;
-  font-weight: 800;
-  line-height: .9;
-  letter-spacing: .5px;
-  text-transform: uppercase;
-}
-
-.phero .flag { display: none }
-.phero p { max-width: 650px; color: #b0c0cc; font-size: 12px }
 
 /* ───────────────────────── Étapes ───────────────────────── */
 
@@ -385,7 +265,6 @@
 
 /* ───────────────────────── Liens d'action ───────────────────────── */
 
-.pnav-item,
 .gate-link {
   display: inline-block;
   border: 1px solid #28485e;
@@ -396,30 +275,15 @@
   letter-spacing: .6px;
   text-transform: uppercase;
   text-decoration: none;
-}
-
-.pnav-item { padding: 8px 12px }
-
-.gate-link {
-  display: inline-block;
   margin-top: 18px;
   padding: 10px 14px;
   text-align: center;
 }
 
-.pnav-item:hover,
 .gate-link:hover { background: #0b2234; filter: brightness(1.12) }
-
-.row-actions {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  gap: 6px;
-}
 
 /* ───────────────────────── Fenêtres ───────────────────────── */
 
-.pmodal,
 .modal {
   position: fixed;
   inset: 0;
@@ -427,52 +291,12 @@
   place-items: center;
   padding: 20px;
 }
-
-.pmodal { z-index: 60; background: #020a11cc }
 .modal { z-index: 100; background: #030810e8 }
-
-.pmodal-box,
-.modal-box {
-  width: 100%;
-  padding: 20px;
-  border: 1px solid #315a76;
-  border-radius: 6px;
-  background: var(--surface);
-}
-
-.pmodal-box { width: min(420px, 100%); padding: 18px }
-.modal-box { max-width: 520px }
-
-.pmodal-box h3,
-.modal-box h2 { font: 800 24px var(--font-title); text-transform: uppercase }
-
-.pmodal-box h3 { margin: 0 0 4px }
-.modal-box h2 { margin-top: 0 }
-.pmodal-box .pquick { margin: 12px 0 }
 .modal-actions { display: flex; gap: 10px; margin-top: 14px }
-
-/* Code d'accès généré, à recopier une seule fois. */
-.code-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin: 10px 0 4px;
-}
-
-.code-field {
-  border-color: #2c6a4e;
-  background: #061520;
-  color: #55e8a0;
-  font: 700 18px ui-monospace, "Cascadia Mono", Consolas, monospace;
-  letter-spacing: 1px;
-  text-align: center;
-}
 
 /* ───────────────────────── Adaptatif ───────────────────────── */
 
 @media screen and (max-width: 900px) {
   .hero { height: auto; min-height: 200px; padding-top: 30px }
-  .phero { flex-direction: column }
-  .hero h1,
-  .phero h1 { font-size: 34px }
+  .hero h1 { font-size: 34px }
 }
