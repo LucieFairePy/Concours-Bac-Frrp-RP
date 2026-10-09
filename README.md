@@ -940,7 +940,6 @@ js/
     parametres/             direction BAC, seuils de suggestion, profil
 
   ui/
-    stepper.js              étapes, générique
     chips.js                pastilles de décision, tous vocabulaires
     autosave.js             enregistrement automatique commun des brouillons
 
