@@ -516,7 +516,7 @@ await group('câblage — handlers, points de montage, liens et styles', () => {
 await group('HOME — accueil V4 : quatre cartes, quatre panneaux, proportions', () => {
   const home = readRoot('js/pages/accueil/index.js');
   const html = readRoot('index.html');
-  const css = readRoot('css/pages/accueil.css');
+  const css = readRoot('css/pages/portail.css');
   const base = readRoot('css/tokens.css');
 
   // HOME-001 : les quatre cartes, dans l'ordre du §6.4, vers les bons modules.
@@ -544,8 +544,8 @@ await group('HOME — accueil V4 : quatre cartes, quatre panneaux, proportions',
   assert.ok(base.includes('--card: 176px'), 'cartes modules : 176 px (§6)');
   assert.ok(base.includes('Barlow Condensed') && base.includes('Inter'), 'polices V4');
   assert.ok(css.includes('grid-template-columns: 1.25fr 1.15fr .85fr 1fr'),
-    'le tableau de bord garde ses quatre colonnes 1.25 / 1.15 / .85 / 1 (§6)');
-  assert.ok(css.includes('background-size: cover'), 'les images du portail restent en cover (§21.1)');
+    'le tableau de bord garde ses quatre colonnes 1.25 / 1.15 / .85 / 1 (archive)');
+  assert.ok(css.includes('center/cover'), 'les images du portail restent en cover (archive)');
 });
 
 await group('§8.5 — règles bloquantes du tir RP', () => {
@@ -856,8 +856,8 @@ await group('§22 — poids des images, dimensions et chargement différé', () 
   // Les images sous la ligne de flottaison sont différées et dimensionnées.
   const home = readRoot('js/pages/accueil/index.js');
   assert.ok(home.includes('loading="lazy"'), 'miniatures d’actualité différées');
-  assert.ok(home.includes('width="72" height="46"'), 'miniatures dimensionnées');
-  assert.ok(readRoot('js/shell/sidebar.js').includes('width="78" height="78"'),
+  assert.ok(home.includes('width="105" height="50"'), 'miniatures dimensionnées (archive : 105 × 50)');
+  assert.ok(readRoot('js/shell/sidebar.js').includes('width="130" height="130"'),
     'le logo de la barre latérale porte ses dimensions');
 });
 

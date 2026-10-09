@@ -224,9 +224,9 @@ const ROUTE_SPECS = {
       correct: 'correctBox', result: 'resultBox', final: 'sheet'
     }
   },
-  historique: { expect: ['families', 'filters', 'results'] },
+  historique: { expect: ['families', 'historyStage'] },
   actualites: { expect: ['content'] },
-  administration: { expect: ['newsBox', 'storageBox', 'journalBox', 'imagesBox'] },
+  administration: { expect: ['metricsBox', 'recentBox'] },
   utilisateurs: { expect: ['usersBox'] },
   parametres: { expect: ['settingsBox'] }
 };

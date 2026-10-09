@@ -1,8 +1,9 @@
 // Page Paramètres — documentation technique V4 §13 (direction), §8.6 et
 // §11.3 (seuils de suggestion), §17.1 (journal).
 //
-// Deux réglages partagés, et rien d'autre : la direction BAC et les seuils.
-// Les accès et les rôles vivent sur la page Gestion des utilisateurs. Chaque
+// La page a la forme de l'archive V4 (la carte Direction BAC) ; seuils,
+// barème physique et session s'ouvrent dans la fenêtre modale. Les accès
+// et les rôles vivent sur la page Gestion des utilisateurs. Chaque
 // enregistrement passe au journal : qui, quand, quoi.
 
 import { CONFIG } from '../../config.js';
@@ -12,8 +13,12 @@ import * as auth from '../../core/auth.js';
 import * as portal from '../../shell/index.js';
 import * as journal from '../../core/journal.js';
 import * as thresholds from '../../core/thresholds.js';
+import { kitVar } from '../../shell/asset.js';
 import {
   renderSettings,
+  thresholdView,
+  physicalView,
+  sessionView,
   readSettingsForm,
   readThresholdForm,
   readPhysicalForm,
@@ -62,7 +67,7 @@ const handlers = {
     try {
       await store.saveSettings(next);
       state.settings = next;
-      renderSettings();
+      portal.openModal(thresholdView());
       setThresholdStatus(portal.okBanner(
         `Seuils enregistrés — concours ${applied.bac.retenu}/${applied.bac.reserve}, `
         + `Chef de Groupe ${applied.cdg.qualifie}/${applied.cdg.reserve}/${applied.cdg.ajourne}.`));
@@ -89,7 +94,7 @@ const handlers = {
     try {
       await store.saveSettings(next);
       state.settings = next;
-      renderSettings();
+      portal.openModal(physicalView());
       setPhysicalStatus(portal.okBanner('Barème physique enregistré pour les prochaines corrections.'));
       await journal.record({
         who: auth.describeOperator(),
@@ -109,30 +114,33 @@ const handlers = {
   resetPhysical() {
     const base = thresholds.defaults();
     thresholds.apply(thresholds.toSettings(base));
-    renderSettings();
+    portal.openModal(physicalView());
     setPhysicalStatus('<div class="banner">Barème du kit rétabli — pense à enregistrer.</div>');
+  },
+
+  openThresholds() {
+    portal.openModal(thresholdView());
+  },
+
+  openPhysical() {
+    portal.openModal(physicalView());
+  },
+
+  openSession() {
+    portal.openModal(sessionView());
   },
 
   resetThresholds() {
     thresholds.apply(thresholds.toSettings(thresholds.defaults()));
-    renderSettings();
+    portal.openModal(thresholdView());
     setThresholdStatus('<div class="banner">Valeurs du kit rétablies — pense à enregistrer.</div>');
   }
 };
 
 export default {
   handlers,
-  mainClass: 'pportal',
-
   template() {
-    return `
-      <div class="hero" data-img="logo">
-        <div class="flag"></div>
-        <small class="hero-kicker no-print">Direction BAC 75 N</small>
-        <h1>Paramètres du site</h1>
-        <div class="mut">Les informations de direction alimentent automatiquement les dossiers et signatures.</div>
-      </div>
-      <div id="settingsBox"></div>`;
+    return `<div class="page"><div class="sectionHero" style="${kitVar('bg', '01_LOGO_BAC75N_PRINCIPAL.png')}"><div><small>DIRECTION BAC 75 N</small><h1>PARAMÈTRES DU SITE</h1><p>Les informations de direction alimentent automatiquement les dossiers et signatures.</p></div></div><div id="settingsBox"></div></div>`;
   },
 
   mount() {

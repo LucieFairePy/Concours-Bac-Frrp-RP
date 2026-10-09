@@ -38,14 +38,16 @@ export function setModuleBar(html) {
 
 export function deniedCard(permission) {
   return `
-    <div class="card">
-      <h2>Accès non autorisé</h2>
-      <p>
-        Ton rôle (<b>${esc(auth.describeRole())}</b>) ne donne pas accès à cette page.
-        Demande au Directeur BAC ou à son adjoint de faire évoluer ton accès
-        depuis la page Gestion des utilisateurs.
-      </p>
-      <p class="mut">Permission requise : <code>${esc(permission)}</code>.</p>
-      <a class="gate-link" href="${href('accueil')}">Retour à l’accueil</a>
+    <div class="page">
+      <div class="contentCard" style="margin-top:12px">
+        <h3>ACCÈS NON AUTORISÉ</h3>
+        <p>
+          Ton rôle (<b>${esc(auth.describeRole())}</b>) ne donne pas accès à cette page.
+          Demande au Directeur BAC ou à son adjoint de faire évoluer ton accès
+          depuis la page Gestion des utilisateurs.
+        </p>
+        <p class="hint">Permission requise : ${esc(permission)}.</p>
+        <div class="actions"><a class="btn dark" href="${href('accueil')}">RETOUR À L’ACCUEIL</a></div>
+      </div>
     </div>`;
 }
