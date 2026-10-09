@@ -18,18 +18,23 @@ stockés dans ce dépôt sur la branche `data`.
 | Module | Route | Dossiers | Barème |
 |---|---|---|---|
 | Concours d'intégration BAC | `#/concours` | `BAC-AAAA-NNN` | /1000 |
-| Formation Négociation BAC | `#/formations/negociation` | `NEG-AAAA-NNN` | /100 |
-| Formation Chef de Groupe BAC | `#/formations/chef-de-groupe` | `FCG-AAAA-NNN` | /100 |
-| Formation Radio BAC | `#/formations/radio` | `RAD-AAAA-NNN` | /100 |
-| Formation Antiterrorisme BAC | `#/formations/antiterrorisme` | `ANT-AAAA-NNN` | /100 |
+| Formation Négociation BAC | `#/formations/negociation` | anciens `NEG-AAAA-NNN`, lecture seule | — |
+| Formation Chef de Groupe BAC | `#/formations/chef-de-groupe` | anciens `FCG-AAAA-NNN`, lecture seule | — |
+| Formation Radio BAC | `#/formations/radio` | anciens `RAD-AAAA-NNN`, lecture seule | — |
+| Formation Antiterrorisme BAC | `#/formations/antiterrorisme` | anciens `ANT-AAAA-NNN`, lecture seule | — |
 | Examen de qualification Chef de Groupe | `#/examens/chef-de-groupe` | `CDG-AAAA-NNN` | /1000 |
+
+Comme dans l'archive V4, les quatre formations sont des **cours à lire** :
+elles ne créent plus de dossier. Les dossiers de formation clôturés avant
+l'alignement sur l'archive restent dans l'historique et s'ouvrent en lecture
+seule, sur leur fiche finale /100.
 
 Autour des modules : une page d'accueil V4 (héros, quatre cartes, quatre
 panneaux), un **historique central** commun aux six modules, les
-**actualités**, les **paramètres** (direction BAC, seuils de suggestion), la
-**gestion des utilisateurs** (accès, rôles, effectifs) et une page
-**administration** (actualités, journal des actions sensibles, état du dépôt,
-places d'images à livrer).
+**actualités**, les **paramètres** (direction BAC, seuils de suggestion,
+barème physique, session), la **gestion des utilisateurs** (accès, rôles,
+effectifs) et une page **administration** (tuiles chiffrées, journal récent,
+gestion des actualités, journal des actions sensibles, modules et stockage).
 
 Le portail est **une seule page**, `index.html` : elle porte l'écran d'accès
 examinateur et, une fois la session ouverte, le portail lui-même. Chaque écran
@@ -40,16 +45,16 @@ index.html                       seule page : accès examinateur, puis portail
   #/accueil                      accueil V4 : héros, 4 cartes, 4 panneaux
   #/concours                     concours d'intégration (9 étapes, fiche 8 pages)
   #/formations                   catalogue des formations
-  #/formations/negociation       Formation Négociation (25 chapitres)
-  #/formations/chef-de-groupe    Formation Chef de Groupe (16 modules)
-  #/formations/radio             Formation Radio (10 chapitres)
-  #/formations/antiterrorisme    Formation Antiterrorisme (14 chapitres)
-  #/examens/chef-de-groupe       Examen de qualification (8 étapes, fiche 5 pages)
+  #/formations/negociation       Formation Négociation (20 chapitres)
+  #/formations/chef-de-groupe    Formation Chef de Groupe (16 chapitres)
+  #/formations/radio             Formation Radio (9 chapitres)
+  #/formations/antiterrorisme    Formation Antiterrorisme (13 chapitres)
+  #/examens/chef-de-groupe       Examen de qualification (8 onglets)
   #/historique                   historique central : formations, concours, examens
-  #/actualites                   actualités du portail, liste et détail
-  #/administration               actualités, journal, stockage, modules, images
+  #/actualites                   actualités du portail, liste et détail (hors menu)
+  #/administration               tuiles, journal récent, actualités, stockage
   #/administration/utilisateurs  accès, rôles et effectifs
-  #/administration/parametres    direction BAC, seuils de suggestion, profil
+  #/administration/parametres    direction BAC, seuils, barème physique, session
 404.html                         redirige les anciennes adresses, sinon page introuvable
 ```
 
@@ -70,13 +75,19 @@ Rien ne casse pour les anciens liens :
 Un lien vers un dossier clôturé s'écrit donc `#/concours?dossier=BAC-2026-001`.
 
 La navigation est unique et vit dans `js/shell/nav.js` : une seule liste pour
-la barre latérale et la nav de l'en-tête. Elle est rendue dans la **barre
-latérale** de 236 px (logo, identité, devise, entrées et sous-entrées,
-cartouche citation) ; l'**en-tête** de 68 px porte l'identité Police Nationale
-/ France Roleplay, la recherche globale — qui ouvre l'historique — l'état
-d'enregistrement et le profil connecté. La sous-entrée *Intervention* des
-formations, annoncée par la maquette, est affichée « Bientôt » et n'est pas
-cliquable.
+la barre latérale et la nav de l'en-tête, dans l'ordre de l'archive. Elle est
+rendue dans la **barre latérale** de 236 px (logo, identité, devise, entrées
+et sous-entrées, cartouche citation) ; l'**en-tête** de 68 px porte l'identité
+Police Nationale / France Roleplay, une nav courte (accueil, concours,
+formations, examens, historique), la recherche globale — qui ouvre
+l'historique — l'état d'enregistrement et le profil connecté. Les entrées
+Administration et Gestion des utilisateurs n'apparaissent qu'aux rôles qui
+portent `accounts`.
+
+Deux écarts volontaires avec le menu de l'archive : la sous-entrée
+*Intervention — Bientôt* est retirée, et les **Actualités** n'ont pas
+d'entrée — l'archive n'en a pas. Elles s'ouvrent depuis le panneau
+Actualités de l'accueil et depuis l'Administration.
 
 ---
 
@@ -86,22 +97,26 @@ cliquable.
    **page d'accès**, seule porte d'entrée du portail
 2. Choisir son nom dans la liste et taper son **code personnel**
    (`BAC-XXXX-XXXX-XXXX`). La connexion mène à l'accueil du portail
-3. Choisir un module dans la barre latérale ou sur une carte de l'accueil
-4. Dérouler les étapes jusqu'à la fiche finale
-5. **Télécharger en PDF** pour sortir le dossier A4, en choisissant
-   « Enregistrer au format PDF » comme destination dans la fenêtre du navigateur
+3. Choisir un module dans la barre latérale ou sur une carte de l'accueil.
+   Les modules s'ouvrent en plein écran ; « ← Portail BAC 75 N » ramène au
+   portail
+4. Concours et examen Chef de Groupe : dérouler les étapes jusqu'à la fiche
+   finale. Formations : lire les chapitres, il n'y a rien à saisir
+5. **Imprimer / Enregistrer en PDF** (concours) ou **Imprimer / PDF**
+   (examen) pour sortir la fiche, en choisissant « Enregistrer au format
+   PDF » comme destination dans la fenêtre du navigateur
 6. **CLÔTURER DÉFINITIVEMENT** écrit le dossier dans le dépôt et le verrouille
 
 Le brouillon en cours est enregistré automatiquement 30 secondes après la
 dernière saisie, à chaque changement d'étape, quand l'onglet passe en
-arrière-plan et quand on quitte la page. L'état de l'enregistrement s'affiche
-dans l'en-tête. Le bouton **Enregistrer** force la sauvegarde. Quitter un
-écran avec des modifications non enregistrées demande confirmation.
+arrière-plan et quand on quitte l'écran du module. L'état de l'enregistrement
+s'affiche dans la barre du module. Quitter l'écran ou fermer l'onglet avec des
+modifications non enregistrées demande confirmation.
 
 Un dossier commencé sur un ordinateur se reprend sur un autre : le brouillon
-suit le code personnel, pas la machine. Chaque module a son propre brouillon,
-donc un concours en cours et un examen Chef de Groupe en cours coexistent sans
-se marcher dessus.
+suit le code personnel, pas la machine. Le concours et l'examen Chef de
+Groupe ont chacun leur brouillon, donc un concours en cours et un examen en
+cours coexistent sans se marcher dessus.
 
 ---
 
@@ -109,12 +124,16 @@ se marcher dessus.
 
 ### Concours d'intégration BAC
 
-Flux inchangé : Identité → Théorie → Radio → Situations → Physique → Tir →
-Correction → Résultats → Fiche finale.
+Module de l'archive V4 (`modules/concours-bac.html`), en plein écran : barre
+du haut (+ NOUVEAU DOSSIER, Dossier, Historique, Paramètres), puis Identité →
+Théorie → Radio → Situations → Physique → Tir → Correction → Résultats →
+Fiche finale.
 
-Questions préchargées puis **figées pour la session**. À la correction, chaque
-réponse s'affiche avec une suggestion automatique ; l'examinateur garde la note
-retenue. Décision : `RETENU` / `RETENU SOUS RÉSERVE` / `AJOURNÉ` / `RECALÉ`.
+Les dix questions théoriques sont tirées à la création du dossier puis
+**figées dans le dossier**. À la correction, chaque réponse s'affiche avec une
+suggestion automatique ; l'examinateur garde la note retenue. Décision :
+`RETENU` / `RETENU SOUS RÉSERVE` / `AJOURNE` / `RECALE`, libellés de
+l'archive.
 
 Total sur **1000 points**, plafond atteignable exactement.
 
@@ -129,26 +148,30 @@ Total sur **1000 points**, plafond atteignable exactement.
 Les mises en situation comptent **27 questions notées sur 15**, soit 405 points
 bruts, ramenés proportionnellement aux 300 points de la section :
 `note = round(brut × 300 / 405)`. Le classement entre candidats est conservé et
-le total maximum vaut exactement 1000. La page de correction affiche les deux
-chiffres.
+le total maximum vaut exactement 1000.
 
 Propositions automatiques : ≥ 800 `RETENU`, ≥ 650 `RETENU SOUS RÉSERVE`, en
-dessous `RECALÉ`. Éliminatoires : triche, refus injustifié d'une consigne,
+dessous `RECALE`. Éliminatoires : triche, refus injustifié d'une consigne,
 abandon injustifié, 2 cibles otage touchées ou plus. Une cible otage touchée
-plafonne le tir à 210 et interdit un `RETENU` sans réserve. Un `RECALÉ`
-s'affiche **en rouge** sur la fiche finale, quel que soit le total.
+plafonne la suggestion de tir à 210 et interdit un `RETENU` sans réserve, à
+la clôture comme dans la proposition. Un `RECALE` s'affiche **en rouge** sur
+la fiche finale, quel que soit le total. La fiche finale est celle de
+l'archive : **8 pages A4**, couverture comprise.
 
-**Contenu repris de la maquette V4** :
+**Contenu de l'archive** :
 
-- **épreuve physique** — 1200 m après un tour d'échauffement, 30 pompes,
-  50 abdos et **20 jumping jacks, qui remplacent le gainage** : 20 répétitions
-  et plus valent 30 points, en dessous 1,5 point par répétition. Le barème vit
-  dans `js/config.js` et se règle dans Paramètres. Un dossier saisi avant la
-  V4 porte un gainage et pas de jumping jacks : il reste noté sur le gainage
-  (`usesPlank()`, `js/scoring/auto.js`), sa note ne bouge pas ;
-- **questionnaire théorique** — la banque compte 255 questions : les 225
-  d'origine plus 30 de la maquette (identifiants `v4-…`) ;
-- **exercice radio et cinq mises en situation** — ceux de la maquette, pour
+- **épreuve physique** — 400 m d'échauffement non noté puis 1200 m
+  chronométrés, 30 pompes, 50 abdos et **20 jumping jacks, qui remplacent le
+  gainage** : 20 répétitions et plus valent 30 points, en dessous 1,5 point
+  par répétition. Le barème vit dans `js/config.js` et se règle dans
+  Paramètres. Un dossier saisi avant la V4 porte un gainage et pas de jumping
+  jacks : il reste noté sur le gainage (`usesPlank()`,
+  `js/scoring/auto.js`), sa note ne bouge pas ;
+- **questionnaire théorique** — la banque compte les **30 questions de
+  l'archive** (identifiants `v4-…`), mot pour mot ; dix sont tirées pour
+  chaque nouveau dossier. Un dossier plus ancien garde les questions qu'il a
+  reçues ;
+- **exercice radio et cinq mises en situation** — ceux de l'archive, pour
   tout nouveau dossier, estampillé `contentSet: 'v4'`
   (`js/data/content-set.js`). Un dossier sans estampille garde les textes
   d'origine : ses réponses sont rangées sous ces questions-là, il continue de
@@ -156,46 +179,41 @@ s'affiche **en rouge** sur la fiche finale, quel que soit le total.
 
 ### Formation Négociation BAC
 
-25 chapitres, de « rôle et principes » à la conclusion, écrits selon la règle
-du cahier des charges : **explication simple → exemple en jeu → point à retenir
-→ exercice**. Encadrés `À RETENIR` et `ERREURS À ÉVITER`, échanges types,
-tableaux, exercices avec champ de réponse. La maquette V4 a ajouté le cadre
-général et les priorités, les questions ouvertes et fermées, la relation de
-confiance, le compte rendu de négociation, les motivations et blocages, et un
-chapitre sur les personnes retenues et les vulnérabilités (urgence médicale
-comprise).
+Module de l'archive (`modules/formation-negociation.html`) : bannière, quatre
+accès rapides (Fondamentaux, Écoute active, Coordination, Mise en situation),
+sommaire des **20 chapitres** et barre de progression. Chaque chapitre, mot
+pour mot : photo, « Comprendre », « Points essentiels », « À retenir », et
+les encadrés « Méthode générale » et « Réflexe ». Cinq chapitres ajoutent un
+encadré d'exemple. Navigation Précédent / Suivant / Imprimer.
 
 ```
 CONTACT → ÉCOUTER → COMPRENDRE → REFORMULER → IDENTIFIER
-  → INFORMER / TRANSMETTRE → ADAPTER → TEMPORISER → RECHERCHER UNE ISSUE
+  → TRANSMETTRE → ADAPTER → TEMPORISER → RECHERCHER UNE ISSUE
 ```
 
-Parcours : Identité → Cours → Évaluation → Correction → Fiche finale.
-Évaluation sur 100 suivant la grille de la maquette :
+Le chapitre 20 affiche la grille d'évaluation /100 de l'archive :
 
 | Axe | Points |
 |---|---|
-| Théorie et connaissances | 20 |
-| Communication et écoute | 20 |
+| Théorie | 20 |
+| Communication | 20 |
 | Analyse | 15 |
-| Maîtrise émotionnelle | 10 |
-| Collecte et restitution | 10 |
-| Mise en situation finale | 25 |
+| Maîtrise | 10 |
+| Collecte | 10 |
+| Mise en situation | 25 |
 
-Décision `ACQUIS` / `ACQUIS SOUS RÉSERVE` / `À REVOIR`. Fiche finale de 3 pages
-A4, quatre signatures.
-
-Chaque nouveau dossier note la version de l'évaluation qu'il a passée
-(`evalVersion`). Un dossier plus ancien, sans cette marque, garde l'ancien
-questionnaire : `evaluationOf()` (`js/core/formation.js`) le lui sert, et sa
-note ne change pas.
+Les champs se remplissent à l'écran, mais **rien n'est enregistré** : comme
+dans l'archive, la grille n'est ni totalisée ni conservée.
 
 ### Formation Chef de Groupe BAC
 
-16 modules : rôle, posture, préparation de la vacation, communication,
-décision, effectifs, radio, commandement sur intervention, coordination,
-dégradation, situation majeure, erreurs, débriefing, exercices, fiche réflexe,
-évaluation.
+Module de l'archive (`modules/formation-chef-groupe.html`) : sommaire et
+**16 chapitres** mot pour mot — rôle, responsabilités et posture,
+préparation de la vacation, communication et leadership, décision, effectifs,
+radio, commandement sur intervention, coordination interservices, situation
+qui se dégrade, situation majeure, erreurs de commandement, débriefing,
+exercices pratiques, fiche réflexe, évaluation finale. Chaque chapitre porte
+sa photo, ses points, un exemple et un exercice.
 
 ```
 ANALYSER → PRIORISER → ORGANISER → DONNER LES CONSIGNES
@@ -204,10 +222,11 @@ ANALYSER → PRIORISER → ORGANISER → DONNER LES CONSIGNES
 
 ### Formation Radio BAC
 
-Reprise de la maquette V4. 10 chapitres : fondamentaux radio, discipline du
-réseau, prise d'écoute et prise de vacation, indicatifs et appel, structure
-d'une transmission, raccourcis interventions, situations spécifiques,
-exercices pratiques, évaluation finale, fiche réflexe.
+Module de l'archive (`modules/formation-radio.html`) : bandeau au logo,
+sommaire interactif, un chapitre affiché à la fois. **9 chapitres** :
+fondamentaux radio, discipline du réseau, prise d'écoute et vacation,
+indicatifs et appel, structure d'une transmission, raccourcis interventions,
+situations spécifiques, exercices pratiques, fiches réflexes.
 
 ```
 ÉCOUTER → IDENTIFIER → LOCALISER → INFORMER → PRIORISER
@@ -216,70 +235,89 @@ exercices pratiques, évaluation finale, fiche réflexe.
 
 ### Formation Antiterrorisme BAC
 
-Reprise de la maquette V4. 14 chapitres : le Bataclan (13 novembre 2015),
-primo-intervention et rôle de la BAC 75 N, le plan BAC-PSIG, RAID · BRI ·
-GIGN, détection et signalement, transmission et compte rendu initial,
-protection et zonage, victimes et témoins, coordination et passage de relais,
-situations dégradées, exercices, mise en situation finale, évaluation, fiche
-réflexe.
+Module de l'archive (`modules/formation-antiterrorisme.html`). **13
+chapitres** : le Bataclan (13 novembre 2015), primo-intervention et rôle de
+la BAC 75 N, le plan BAC-PSIG, RAID · BRI · GIGN, détection et signalement,
+transmission et compte rendu initial, protection et zonage, victimes et
+témoins, coordination et passage de relais, situations dégradées, exercices,
+mise en situation finale, évaluation /100 et fiche réflexe. Le dernier
+chapitre présente le barème /100 sous forme de tableau ; le module ne
+comporte aucun champ de saisie.
 
 ```
 OBSERVER → LOCALISER → QUALIFIER → TRANSMETTRE → PROTÉGER
   → ACTUALISER → COORDONNER → PASSER LE RELAIS
 ```
 
-Les quatre formations partagent le même moteur et le même parcours : Identité →
-Cours → Évaluation /100 → Correction → Fiche finale de 3 pages A4, puis
-l'historique. Seul le contenu change.
+Les quatre formations sont des cours seuls, comme dans l'archive : pas
+d'identité, pas d'évaluation saisie, pas de dossier ni de brouillon. Chaque
+page est écrite à part, sans moteur commun. Un **ancien dossier** de
+formation, créé quand les formations avaient un parcours évalué, s'ouvre
+depuis l'historique (`?dossier=`) en lecture seule : sa fiche finale de 3
+pages A4, imprimable, est peinte par `js/pages/formations/fiche.js` avec le
+contenu de l'époque, conservé dans `js/data/formations/negociation.js`,
+`chef-de-groupe.js`, `radio.js` et `antiterrorisme-dossiers.js`. Un ancien
+dossier de négociation sans marque `evalVersion` garde son questionnaire
+d'origine (`evaluationOf()`, `js/core/formation.js`).
 
 ### Examen de qualification Chef de Groupe
 
-Format compact voulu : **environ 45 minutes, une heure au maximum**. La page
-suit la durée à partir des heures de début et de fin saisies et signale un
-dépassement.
+Module de l'archive (`modules/examen-chef-groupe.html`), en plein écran :
+bannière « 45 minutes cible · maximum 1 heure », puis **huit onglets** —
+Identité → 10 questions → Commandement → Situation 1 → Situation 2 →
+Correction → Résultat → Fiche finale. Le contenu vit dans
+`js/data/cdg-examen.js`, le barème dans `js/pages/examen-cdg/bareme.js`.
 
 | Épreuve | Contenu | Barème |
 |---|---|---|
-| Connaissances essentielles | 10 questions simples et aléatoires | /200 |
-| Commandement / leadership | 5 questions courtes | /200 |
-| Mise en situation n°1 | Organisation d'une intervention | /250 |
-| Mise en situation n°2 | Situation évolutive / adaptation | /250 |
-| Radio & compte rendu | Intégré aux situations | /100 |
+| Connaissances essentielles | 10 questions générées, 20 points chacune | /200 |
+| Commandement / leadership | 5 questions, 40 points chacune | /200 |
+| Mise en situation n°1 | Organiser le groupe, fixer les priorités | /250 |
+| Mise en situation n°2 | Intervention qui se dégrade, réorganiser | /250 |
+| Radio & compte rendu | Suggérée à partir des deux situations | /100 |
 | **TOTAL** | | **/1000** |
 
-Les deux questions radio sont **posées pendant** les mises en situation mais
-**comptées** dans la section radio : elles portent `section: 'radio'` et ne
-pèsent pas sur les 250 points de leur situation. Sans ce marquage, la radio
-serait comptée deux fois. `node tools/test.mjs` vérifie sur 50 tirages que le
-brut vaut exactement 1000.
+Chaque mise en situation reçoit une **évolution à injecter**, tirée parmi
+cinq, affichée au milieu de l'énoncé (« ÉVOLUTION À INJECTER »). Questions et
+évolutions sont tirées à la création du dossier puis figées dedans.
 
-Repris de la maquette V4 : trois questions de commandement de plus dans la
-banque, et **une évolution à injecter par situation**, différente pour chacune.
-Elle est tirée avec la session puis figée comme le reste, s'affiche au milieu
-des questions de la situation et figure sur la fiche finale (« ÉVOLUTION
-INJECTÉE »). Son tirage a son propre flux : les énoncés qu'une graine
-produisait déjà n'ont pas changé.
+Décisions : `QUALIFIÉ` / `QUALIFIÉ SOUS RÉSERVE` / `AJOURNÉ` / `REFUSÉ`. La
+suggestion suit les seuils de Paramètres (800 / 650 / 500 par défaut). La
+fiche finale est celle de l'archive : identité, notes par catégorie, total
+/1000, suggestion du système, décision humaine, motif, et quatre
+signatures — candidat, examinateur, Directeur BAC, Directeur adjoint.
 
-Décisions : `QUALIFIÉ` / `QUALIFIÉ SOUS RÉSERVE` / `AJOURNÉ` / `REFUSÉ`.
-Fiche finale de 5 pages A4, quatre signatures : candidat, examinateur,
-Directeur BAC, Directeur adjoint BAC.
+Le dossier passe par `js/core/records.js` (brouillon automatique, clôture,
+version rectificative), jamais par le `localStorage` de l'archive. Un
+dossier d'avant l'alignement sur l'archive (tirage par graine, sans `qs`)
+s'ouvre en lecture seule sur son ancienne fiche de 5 pages A4
+(`js/pages/examen-cdg/fiche.js`).
 
 ---
 
 ## Banque de questions et de situations
 
-Le cahier des charges demande au moins **20 000 variantes exploitables**, et
-préfère un générateur combinatoire à 20 000 lignes statiques. C'est ce qui est
-fait : `js/data/cdg-bank.js` contient les fragments,
-`js/data/cdg-generator.js` les combine.
+L'examen Chef de Groupe compose ses questions comme l'archive
+(`js/data/cdg-examen.js`) :
 
-Les neuf dimensions demandées sont là : thème, contexte, effectif, information
-disponible, priorité, contrainte, évolution, événement imprévu, formulation.
-L'évolution à injecter de la maquette V4 s'y ajoute.
+- **10 questions de connaissances** — chacune croise un thème (8), un
+  contexte (5) et un effectif (2, 4, 6 ou 8 agents), soit 160 énoncés
+  possibles. Les dix tirages sont indépendants : un même thème peut revenir
+  dans un examen. Chaque thème porte ses mots-clés attendus ;
+- **5 questions de commandement**, fixes ;
+- **2 mises en situation**, fixes, chacune avec une **évolution à injecter**
+  tirée parmi cinq.
 
-**Le total affiché est calculé, pas annoncé.** `countVariants()` multiplie les
-fragments réellement présents ; si quelqu'un en retire, le chiffre baisse.
-`npm test` l'imprime à chaque passage. Au dernier contrôle :
+Le tirage est fait à la création du dossier et **écrit dedans** : il ne
+change plus, même si le contenu évolue.
+
+Le cahier des charges demandait au moins **20 000 variantes exploitables**.
+L'ancien générateur combinatoire qui les produisait, `js/data/cdg-bank.js` et
+`js/data/cdg-generator.js`, n'est plus utilisé pour les nouveaux examens ; il
+reste dans le dépôt pour relire les dossiers d'avant l'alignement sur
+l'archive, et la suite de tests en contrôle toujours le compte, l'équilibre
+des thèmes et la reproductibilité par graine. `npm test` imprime ce compte à
+chaque passage. Au dernier contrôle :
 
 ```
 connaissances           800
@@ -290,14 +328,6 @@ situation n°2    38 880 000
 total            39 961 100
 ```
 
-Deux garanties, vérifiées par la suite de tests sur 200 tirages :
-
-- **équilibre** — les dix questions de connaissances sortent de dix thèmes
-  différents, jamais toutes du même, et aucune n'est répétée ;
-- **gel** — une fois la session créée, le tirage est écrit dans le dossier. Il
-  ne changera plus, même si la banque évolue. La graine est conservée à côté
-  pour que le tirage reste vérifiable après coup.
-
 ---
 
 ## Correction assistée
@@ -305,35 +335,42 @@ Deux garanties, vérifiées par la suite de tests sur 200 tirages :
 > **Règle absolue.** Le site aide à noter et aide à décider. Il ne remplace
 > jamais l'examinateur.
 
-Pour chaque réponse, la page de correction affiche : la réponse, les **éléments
-attendus** avec ceux qui ont été retrouvés et ceux qui manquent, la **note
-suggérée** et sa justification — puis, à côté, la **note retenue par
-l'examinateur**, librement modifiable.
+**Concours.** Chaque réponse s'affiche avec sa « Suggestion automatique »,
+puis le champ de note de l'examinateur. La suggestion ne mesure que la
+complétude de la réponse, d'après son nombre de mots (`autoText()`,
+`js/scoring/auto.js`) ; la physique et le tir suivent le barème et les cibles
+otage. La page le dit : « La note en rouge est une aide automatique fondée sur
+la complétude de la réponse. »
 
-La suggestion repose sur deux choses mesurables : la présence des éléments
-attendus (comparaison par radical, donc « reformule » vaut « reformuler ») et
-la consistance de la réponse. Une réponse étoffée mais hors sujet ne peut pas
-dépasser la moitié du barème. **La suggestion ne comprend pas le sens d'une
-phrase**, et c'est pour cela qu'elle reste une suggestion.
+**Examen Chef de Groupe.** La suggestion de l'archive vaut 35 % de longueur
+de la réponse et 65 % de mots-clés retrouvés (`analyze()`,
+`js/pages/examen-cdg/bareme.js`). Pour les dix questions de connaissances, la
+correction affiche aussi les mots-clés **repérés** et ceux **à vérifier /
+manquants** ; pour le commandement et les situations, la note suggérée seule.
+La radio est suggérée à partir des réponses aux deux situations.
 
-Champ de note vide : la suggestion est utilisée dans le calcul. Note saisie,
-zéro compris : c'est elle qui compte. **Les deux sont conservées dans le
-dossier final**, pour que la correction reste vérifiable.
+**La suggestion ne comprend pas le sens d'une phrase**, et c'est pour cela
+qu'elle reste une suggestion. Champ de note vide : la suggestion est utilisée
+dans le calcul. Note saisie, zéro compris : c'est elle qui compte, bornée au
+barème.
 
-Même logique pour le résultat : le moteur affiche « qualification
-recommandée » ou « non recommandée » avec une courte justification.
-L'examinateur peut qualifier malgré un avis négatif et refuser malgré un avis
-positif. Une décision qui s'écarte de la recommandation, comme tout refus,
-réserve ou ajournement, **exige une motivation avant la clôture**.
+Même logique pour le résultat : le concours affiche une « Proposition
+automatique », l'examen une « Suggestion du système ». L'examinateur choisit
+librement la décision finale et la motive dans un champ prévu ; la clôture
+exige seulement qu'une décision soit choisie (et, au concours, respecte la
+règle des cibles otage). À la clôture, ce que le système a proposé est écrit
+dans le dossier à côté de ce que l'examinateur a retenu : au concours, toutes
+les notes suggérées, les totaux et la décision proposée
+(`suggestionSnapshot()`, `js/scoring/totals.js`) ; à l'examen, le total et la
+décision suggérée.
 
 ---
 
 ## Historique centralisé
 
 Un seul historique pour tout le portail, pas six historiques isolés. Page
-d'entrée « HISTORIQUE — BRIGADE ANTI-CRIMINALITÉ 75 N », recherche libre et,
-comme dans la maquette V4, **trois familles** numérotées (`CATEGORIES`, dans
-`js/core/records.js`) :
+« HISTORIQUE BAC 75 N », comme dans l'archive V4, avec **trois familles**
+numérotées (`GROUPS`, dans `js/pages/historique/index.js`) :
 
 - **Formations** — Négociation, Chef de Groupe, Radio, Antiterrorisme
 - **Concours** — Concours d'intégration BAC
@@ -341,25 +378,31 @@ comme dans la maquette V4, **trois familles** numérotées (`CATEGORIES`, dans
 
 Une famille ouvre ses **types** de dossier, un type ouvre son tableau. Les
 anciens liens `?categorie=negociation` et `?categorie=cdg` mènent encore au
-bon type.
+bon type. La recherche globale de l'en-tête et le `?dossier=` ouvrent le
+tableau de tous les dossiers.
 
-Chaque ligne porte le numéro de dossier, le nom et le prénom, le matricule, la
-date, le type, la note, le résultat et l'examinateur. Filtres : type, résultat,
-période, examinateur, plus la recherche sur nom, prénom, matricule et numéro.
-Un clic ouvre la fiche complète dans la page de son module, en lecture seule
-(`#/concours?dossier=BAC-2026-001`).
+Les lignes sont les dossiers clôturés de tous les modules. Chacune porte le
+numéro de dossier, l'agent, le matricule, la date, le type, la note, le
+résultat et l'examinateur. Un champ de recherche filtre sur l'ensemble de ces
+colonnes ; il n'y a pas d'autre filtre. Un clic ouvre la fiche résumée de
+l'archive dans une fenêtre, avec la mention d'une version rectificative le
+cas échéant, puis **OUVRIR LE DOSSIER** ouvre le dossier complet dans la page
+de son module, en lecture seule (`#/concours?dossier=BAC-2026-001`).
+L'accès rapide « Exporter un rapport » de l'accueil (`?export=1`) suit le
+même chemin, pour imprimer une fiche finale.
 
 **Ajouter un type de dossier au portail** = ajouter une entrée dans
-`MODULES`, dans `js/core/records.js`. L'historique, la numérotation, les
-brouillons et la lecture seule suivent sans être retouchés. Un module illisible
-n'empêche pas les autres de s'afficher : son erreur apparaît à côté des lignes
-lues.
+`MODULES`, dans `js/core/records.js`, et son type dans `GROUPS`
+(`js/pages/historique/index.js`). La numérotation, les brouillons et la
+lecture seule suivent sans être retouchés. Un module illisible n'empêche pas
+les autres de s'afficher : son erreur apparaît au-dessus des lignes lues.
 
-**Ajouter une formation** = écrire son contenu dans `js/data/formations/`, la
-déclarer dans `COURSES` (`js/data/formations/index.js`), lui donner une route
-dans `js/routes.js` et une page de trois lignes dans `js/pages/formations/`,
-son entrée dans `js/shell/nav.js` et son module dans `MODULES`. Le moteur de
-formation et le catalogue suivent sans être retouchés.
+**Ajouter une formation** = écrire son cours dans `js/data/formations/` et sa
+page dans `js/pages/formations/` (au contrat du routeur, `layout: 'module'`,
+avec sa feuille `css/pages/formation-<nom>.css`), lui donner une route dans
+`js/routes.js`, son entrée dans `js/shell/nav.js` et sa carte dans le
+catalogue (`js/pages/formations/index.js`). Il n'y a plus de moteur commun :
+chaque formation reprend son module de l'archive.
 
 ---
 
@@ -422,26 +465,35 @@ pas une modification : c'est une **version rectificative**.
 Le bouton « Créer une version rectificative » repart du dossier clôturé, le
 rend modifiable, et à la clôture publie une pièce nouvelle :
 
-- elle porte un numéro propre, `CDG-2026-001-R2` ;
+- elle porte un numéro propre, `CDG-2026-001-R01` ;
 - elle cite le dossier d'origine dans son champ `rectifies` ;
 - l'index note sur la ligne d'origine quelle version la corrige
   (`rectifiedBy`), et l'historique l'affiche ;
 - **le dossier d'origine n'est jamais réécrit.**
 
-Une deuxième rectification s'empile en `-R3` sans écraser la première, et la
+Une deuxième rectification s'empile en `-R02` sans écraser la première, et la
 numérotation des nouveaux dossiers ignore les suffixes.
 
 ---
 
 ## Paramètres et direction BAC
 
-La page **Paramètres** contient la Direction BAC. Valeurs initiales :
-Directeur BAC — Lieutenant BOUSSERE Kevin ; Directeur adjoint BAC — Brigadier
-LAURENT Cyril. Ces valeurs sont modifiables et reprises automatiquement dans
-les fiches finales et les signatures de **tous** les modules.
+La page **Paramètres** reprend la carte de l'archive : Directeur BAC et son
+grade, Directeur adjoint BAC et son grade, **ENREGISTRER**. Valeurs
+initiales : Directeur BAC — Lieutenant BOUSSERE Kevin ; Directeur adjoint
+BAC — Brigadier LAURENT Cyril. Chaque nouveau dossier de concours ou d'examen
+Chef de Groupe les copie à sa création, et elles figurent dans sa fiche finale
+et ses signatures. Les formations, qui ne créent plus de dossier, ne les
+emploient pas.
+
+Sous la carte, trois boutons ouvrent ce que l'archive n'avait pas, dans une
+fenêtre : **SEUILS DE SUGGESTION** (concours 800 / 650, Chef de Groupe
+800 / 650 / 500), **BARÈME PHYSIQUE** (les trois paliers de chaque mesure) et
+**MA SESSION** (rôle, permissions, échéance de la session, déconnexion).
 
 Modification réservée aux rôles portant `settings` : administrateur, Directeur
-BAC, Directeur adjoint BAC.
+BAC, Directeur adjoint BAC. Pour les autres, les champs sont grisés et les
+boutons d'enregistrement absents.
 
 Changer le rôle d'une personne **régénère son code** : l'ancien cesse de
 fonctionner et le nouveau s'affiche une seule fois. C'est inévitable — le rôle
@@ -454,19 +506,26 @@ est scellé avec le code.
 La documentation technique V4 nomme ses quinze visuels (§5) et interdit de les
 remplacer par des visuels génériques. `js/data/images.js` est donc une **liste
 de places** qui porte exactement cette nomenclature : chaque place dit quel
-fichier est attendu, à quel endroit, et sur quel sujet. Les bannières des
-formations Radio et Antiterrorisme reprennent, comme la maquette, la scène de
-nuit de la citation (`12_…`) et l'unité aux boucliers (`14_…`).
+fichier est attendu, à quel endroit, et sur quel sujet.
 
-Tant qu'une photo n'est pas livrée, un repli sert : l'une des quatre photos BAC
-déjà présentes dans le dépôt, choisie pour rester cohérente avec la page.
+Les pages reprises de l'archive — coque, accueil, catalogue des formations,
+historique, modules — appellent directement les fichiers du kit, comme
+l'archive. Dans le catalogue, les cartes Radio et Antiterrorisme reprennent
+la scène de nuit de la citation (`12_…`) et l'unité aux boucliers (`14_…`) ;
+les bandeaux des modules Radio et Antiterrorisme, eux, reprennent les
+visuels de leur module d'archive (`14_…` et `13_…`).
+
+Là où le portail passe par `js/data/images.js` (actualités, Formation
+Négociation, fiches des anciens dossiers), un repli sert tant qu'une photo
+n'est pas livrée : l'une des photos BAC déjà présentes dans `assets/img/`,
+choisie pour rester cohérente avec la page.
 
 **Pour livrer une photo**, la déposer dans `assets/bac75n/` sous son nom de kit
 (`02_HOME_HERO_BAC_CONTROLE_NUIT.jpg`, `12_SIDEBAR_CITATION_BAC75N_NUIT.jpg`…).
 Elle prend la place du repli au chargement suivant, sans toucher au code : les
 deux images sont empilées en CSS, et la couche du haut ne peint rien tant que le
 fichier n'existe pas. La liste complète est dans `assets/bac75n/README.md` et
-sur la page **Administration**.
+dans `js/data/images.js`.
 
 `00_REFERENCE_DESIGN_V4_VALIDEE.png` ne se dépose pas : c'est la capture de
 référence, elle sert à comparer le rendu, pas à être affichée.
@@ -680,10 +739,12 @@ renseigner son nom dans `js/config.js`.
 
 ## Export PDF
 
-Le bouton **Télécharger en PDF** précharge les photos, nomme le document d'après
-le dossier et le candidat — le navigateur propose donc
-`BAC-2026-001 — DURAND Léa.pdf` — puis ouvre la fenêtre d'impression. Il faut y
-choisir **Enregistrer au format PDF** comme destination.
+Au concours, le bouton **Imprimer / Enregistrer en PDF** précharge les photos,
+nomme le document d'après le dossier et le candidat — le navigateur propose
+donc `BAC-2026-001 — DURAND Léa.pdf` — puis ouvre la fenêtre d'impression. Le
+bouton **Imprimer / PDF** de l'examen Chef de Groupe nomme le document de la
+même façon. Il faut y choisir **Enregistrer au format PDF** comme
+destination.
 
 C'est le moteur d'impression du navigateur qui produit le fichier, et non une
 bibliothèque JavaScript : les pages sont de vraies A4, le texte reste
@@ -751,6 +812,9 @@ data/
 |---|---|---|
 | Lire les dossiers, les index, les paramètres | `GET /contents/...?ref=data` | non |
 | Écrire un brouillon, clôturer, modifier les paramètres | `PUT /contents/...` | oui |
+
+Les formations n'écrivent plus rien : leurs index, dossiers et brouillons
+sont ceux d'avant l'alignement sur l'archive, gardés pour l'historique.
 
 Un fichier par dossier et un brouillon par personne et par module : aucun
 conflit d'écriture possible. Les fichiers partagés (`settings.json`, les
@@ -940,7 +1004,7 @@ node tools/smoke.mjs         # démarrage du portail et chaque route
 ```
 
 Tout tourne en mémoire : aucun réseau, aucun jeton, aucune écriture dans le
-dépôt. Au dernier passage : **33 groupes** de règles métier,
+dépôt. Au dernier passage : **36 groupes** de règles métier,
 **16 contrôles** de démarrage, **13 routes** sans problème de câblage. Ce qui
 est vérifié, ce sont les règles du cahier des charges qui ne doivent pas se
 perdre au fil des modifications :
@@ -948,11 +1012,11 @@ perdre au fil des modifications :
 | Groupe | Ce qui est tenu |
 |---|---|
 | §5 | le concours ne régresse pas, sa fiche fait toujours 8 pages |
-| §6 §7 | chaque formation a ses chapitres, ses exercices, son évaluation |
-| §8 | le barème de l'examen vaut exactement 1000, vérifié sur 50 tirages |
-| §9 | au moins 20 000 variantes, dix thèmes par tirage, tirage reproductible |
+| §6 §7 | les anciens contenus Négociation et Chef de Groupe relisent leurs dossiers : évaluation, fiche de 3 pages |
+| §8 | l'ancien barème de l'examen vaut exactement 1000, vérifié sur 50 tirages |
+| §9 | ancien générateur : au moins 20 000 variantes, dix thèmes par tirage, tirage reproductible |
 | §10 | la note de l'examinateur prime toujours, dans les deux sens |
-| §11 | la fiche de qualification porte ses quatre signatures et ses champs |
+| §11 | l'ancienne fiche de qualification porte ses quatre signatures et ses champs |
 | §12 | chaque ligne d'historique porte les champs exigés |
 | §14 | chaque rôle a les permissions annoncées, le journal s'écrit |
 | §15 | une correction après clôture ne réécrit pas le dossier d'origine |
@@ -968,10 +1032,12 @@ perdre au fil des modifications :
 | §12 §14 | suggestion archivée, version du modèle et piste d'audit du dossier |
 | §22 | WebP plus léger que l'original, miniatures différées et dimensionnées |
 | SEC-001 GHP-001 | aucun jeton livré, routes servies sous un sous-chemin |
-| V4 concours | jumping jacks à la place du gainage, anciens dossiers intacts ; banque fusionnée, radio et situations de la maquette |
-| V4 examen | évolution à injecter, questions de commandement |
-| V4 négociation | grille /100 de la maquette, questionnaire hérité pour les anciens dossiers |
-| V4 formations | Radio et Antiterrorisme : cours complets, évaluation /100 |
+| V4 concours | jumping jacks à la place du gainage, anciens dossiers intacts ; les 30 questions de l'archive, radio et situations de l'archive |
+| V4 examen | huit onglets, barème /1000 et seuils de l'archive, aucun dossier dans le `localStorage` ; dans l'ancien générateur, évolution à injecter et questions de commandement |
+| V4 négociation | vingt chapitres et grille /100 de l'archive, plus de parcours à étapes, questionnaire hérité pour les anciens dossiers |
+| V4 formations | registre des quatre formations : route, module de dossier, image |
+| Archive Chef de Groupe | seize chapitres de l'archive, cours seul, anciens dossiers lisibles |
+| V4 antiterrorisme | treize chapitres de l'archive, aucune saisie, anciens dossiers lisibles |
 | câblage | handlers, points de montage, routes, ressources, styles et imports |
 
 `npm run check` (`tools/check-pages.mjs`) attrape ce qu'aucun test d'unité ne
@@ -1046,19 +1112,19 @@ le dépôt :
 | §6 design system, barre latérale, en-tête | `css/tokens.css` (jetons et mesures), `css/shell.css`, `js/shell/` |
 | §6.4 quatre cartes, §6.5 quatre panneaux | `js/pages/accueil/index.js`, `css/pages/portail.css` |
 | §7 comportement de l'accueil | `js/pages/accueil/index.js` |
-| §8 concours | `js/pages/concours/`, `js/scoring/` |
+| §8 concours | `js/pages/concours/`, `js/scoring/auto.js`, `js/scoring/totals.js` |
 | §8.4 barème physique | `js/config.js` → `js/core/thresholds.js`, réglable sur `#/administration/parametres` |
 | §8.6 et §11.3 seuils | `js/core/thresholds.js`, réglables sur `#/administration/parametres` |
-| §11.2 formule de suggestion | `js/scoring/assist.js` — 35 % complétude + 65 % critères |
+| §11.2 formule de suggestion | examen Chef de Groupe : `analyze()` dans `js/pages/examen-cdg/bareme.js` — 35 % longueur + 65 % mots-clés ; anciens dossiers : `js/scoring/assist.js` |
 | §9 et §10 formations | `js/data/formations/` (cours de l'archive : Négociation 20 chapitres, Chef de Groupe 16, Radio 9, Antiterrorisme 13), `js/pages/formations/` |
-| §11 examen Chef de Groupe | `js/data/cdg-examen.js`, `js/pages/examen-cdg/` |
-| §12 suggestion ≠ décision | `js/scoring/assist.js`, `js/pages/concours/correction.js` |
-| §12 suggestion archivée | `suggestionSnapshot()` dans `js/scoring/totals.js`, écrite à la clôture |
-| §13 fiches finales et signatures | `js/pages/concours/dossier.js`, `js/pages/examen-cdg/fiche.js`, `js/pages/formations/fiche.js` |
+| §11 examen Chef de Groupe | `js/data/cdg-examen.js`, `js/pages/examen-cdg/` (barème : `bareme.js`) ; anciens dossiers : `js/data/cdg-generator.js`, `js/scoring/cdg.js` |
+| §12 suggestion ≠ décision | `js/pages/concours/correction.js`, `js/pages/concours/results.js`, `js/pages/examen-cdg/vues.js` |
+| §12 suggestion archivée | concours : `suggestionSnapshot()` dans `js/scoring/totals.js` ; examen : total et décision suggérée, dans `close()` de `js/pages/examen-cdg/index.js` ; écrits à la clôture |
+| §13 fiches finales et signatures | `js/pages/concours/dossier.js`, `js/pages/examen-cdg/vues.js` ; anciens dossiers : `js/pages/examen-cdg/fiche.js`, `js/pages/formations/fiche.js` |
 | §14 modèle de données | `js/core/records.js`, `js/core/store.js` ; `version` et `auditTrail` portés par chaque dossier |
 | §15 cycle de vie, annexe B | `js/core/lifecycle.js` |
-| §16 historique centralisé | `js/pages/historique/index.js`, familles dans `js/core/records.js` |
-| §17 rôles, §17.1 journal | `js/core/roles.js`, `js/core/journal.js`, `js/pages/utilisateurs/` |
+| §16 historique centralisé | `js/pages/historique/index.js` (familles et types), modules dans `js/core/records.js` |
+| §17 rôles, §17.1 journal | `js/core/roles.js`, `js/core/journal.js`, `js/pages/utilisateurs/`, `js/pages/administration/` |
 | §18 actualités, dossiers, accès rapides, effectifs | `js/core/news.js`, `js/core/effectifs.js`, `js/pages/accueil/index.js` |
 | §19 GitHub Pages | `.github/workflows/pages.yml`, `404.html`, chemins relatifs |
 | §22 performance et accessibilité | WebP via `image-set()`, miniatures différées et dimensionnées, focus visible, pages chargées à la demande |
@@ -1079,18 +1145,25 @@ Ce qui dépend du commanditaire, et rien n'a été inventé à sa place :
 
 - **la banque d'images BAC** — quatorze visuels du kit sont déposés dans
   `assets/bac75n/` ; il manque `15_HOME_CARD_HISTORIQUE_BAC75N.jpg`, que le
-  kit ne contient pas. Sa place est prête (repli en attendant) : déposer le
-  fichier sous ce nom suffit ;
+  kit ne contient pas. Sa place existe dans `js/data/images.js`, mais aucune
+  page ne l'affiche aujourd'hui : l'historique de l'archive emploie d'autres
+  visuels ;
 - **les droits d'utilisation des photos** — à vérifier avant toute
   publication publique (§5) ;
-- **la Formation Intervention** — annoncée par la maquette, elle figure dans
-  la barre latérale avec la mention « Bientôt » ; son contenu reste à écrire.
+- **la Formation Intervention** — annoncée par l'archive avec la mention
+  « Bientôt », elle a été retirée du menu ; aucun contenu n'existe.
 
 Ce que les contrôles automatiques ne voient pas, et qui se vérifie à l'œil
 une fois le site servi : la mise en page, l'impression PDF et les écritures
 réelles vers GitHub.
 
-Un point est un choix d'architecture assumé, pas un oubli :
+Deux points sont des choix assumés, pas des oublis :
+
+- **le contenu de l'archive plutôt que celui du cahier des charges** — les
+  modules reprennent l'archive V4 à l'identique. Les formations sont donc des
+  cours sans évaluation enregistrée, et l'examen Chef de Groupe compose ses
+  questions comme l'archive, loin des 20 000 variantes demandées ;
+  l'ancien générateur ne sert plus qu'aux anciens dossiers ;
 
 - **authentification et permissions côté serveur (§17, §19.2)** — impossibles
   sur un hébergement statique. Ce qui tient leur place est décrit plus haut,
