@@ -196,6 +196,9 @@ function situationPage(record, t, index, page) {
     ${head(record, 'MISE EN SITUATION')}
     <div class="dp-band">${esc(situation.title)} — ${section.total}/${section.max}</div>
     <div class="dp-box dp-muted">${esc(situation.statement)}</div>
+    ${situation.injection
+      ? `<div class="dp-box"><b>ÉVOLUTION INJECTÉE :</b> ${esc(situation.injection)}</div>`
+      : ''}
     <table class="dp-table">
       <tr><th>N°</th><th>Question</th><th>Réponse</th><th>Suggérée</th><th>Retenue</th></tr>
       ${questionRows(record, own)}

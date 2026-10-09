@@ -60,14 +60,30 @@ export function renderCommandement(record, disabled, hostId = 'commandementBox')
     </div>`);
 }
 
+/**
+ * Évolution à injecter : lue par l'examinateur au milieu de la situation.
+ * Un dossier créé avant son ajout n'en a pas, et rien ne s'affiche.
+ */
+function injectionBlock(situation) {
+  if (!situation.injection) return '';
+  const text = String(situation.injection);
+  return `
+    <div class="banner">
+      <b>ÉVOLUTION À INJECTER</b> — à lire au candidat maintenant, avant la
+      question suivante<br>${esc(text.charAt(0).toUpperCase() + text.slice(1))}.
+    </div>`;
+}
+
 export function renderSituation(record, index, disabled, hostId) {
   const situation = record.draw.situations[index];
+  const middle = Math.floor(situation.questions.length / 2);
 
   const questions = situation.questions.map((question, position) => {
     const label = question.section === 'radio'
       ? `${position + 1}. Radio & compte rendu`
       : `${position + 1}.`;
-    return answerField(question, record, disabled, label);
+    const field = answerField(question, record, disabled, label);
+    return position === middle ? injectionBlock(situation) + field : field;
   }).join('');
 
   setHTML(hostId, `
