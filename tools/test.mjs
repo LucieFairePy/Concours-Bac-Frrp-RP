@@ -85,6 +85,14 @@ import { IMAGE_SLOTS, LOGO, imageStyle } from '../js/data/images.js';
 import { suggestedDecision, suggestionSnapshot } from '../js/scoring/totals.js';
 import { physicalAuto } from '../js/scoring/auto.js';
 import { ROUTES as portalRoutes, LEGACY_PAGES, resolve as resolveRoute, href as routeHref } from '../js/routes.js';
+import * as bank from '../js/data/cdg-bank.js';
+import { QUESTION_BANK } from '../js/data/questions.js';
+import { RADIO_EXERCISE, RADIO_EXERCISE_LEGACY, radioOf } from '../js/data/radio.js';
+import { SCENARIOS, SCENARIOS_LEGACY, scenariosOf } from '../js/data/scenarios.js';
+import { migrate as migrateDossier, pickQuestions } from '../js/core/state.js';
+import { finalScoreClass } from '../js/scoring/totals.js';
+import { EVALUATION_NEGOCIATION_V1 } from '../js/data/formations/negociation.js';
+import { COURSES } from '../js/data/formations/index.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const readRoot = file => fs.readFileSync(path.join(ROOT, file), 'utf8');
@@ -851,6 +859,101 @@ await group('§22 — poids des images, dimensions et chargement différé', () 
   assert.ok(home.includes('width="72" height="46"'), 'miniatures dimensionnées');
   assert.ok(readRoot('js/shell/sidebar.js').includes('width="78" height="78"'),
     'le logo de la barre latérale porte ses dimensions');
+});
+
+// ───────────── Contenu repris de la maquette V4 ─────────────────────────
+
+await group('V4 — concours : banque fusionnée, radio et situations de la maquette', () => {
+  // Banque : 225 questions + 30 de la maquette, identifiants uniques.
+  assert.equal(QUESTION_BANK.length, 255);
+  assert.equal(new Set(QUESTION_BANK.map(q => String(q.id))).size, QUESTION_BANK.length);
+  assert.equal(QUESTION_BANK.filter(q => String(q.id).startsWith('v4-')).length, 30);
+  let drawn = false;
+  for (let i = 0; i < 400 && !drawn; i += 1) drawn = pickQuestions().some(q => String(q.id).startsWith('v4-'));
+  assert.ok(drawn, 'une question de la maquette peut être tirée');
+
+  // Un nouveau dossier passe la radio et les situations de la maquette.
+  const fresh = blankDossier('BAC-2026-950', SETTINGS);
+  assert.equal(fresh.contentSet, 'v4');
+  assert.equal(radioOf(fresh), RADIO_EXERCISE);
+  assert.equal(radioOf(migrateDossier(JSON.parse(JSON.stringify(fresh)))), RADIO_EXERCISE);
+  assert.deepEqual(SCENARIOS.map(s => s.questions.length), [5, 5, 5, 5, 7]);
+
+  // Un dossier d'avant garde ses propres questions : migrate ne le tamponne pas.
+  const old = JSON.parse(JSON.stringify(fresh));
+  delete old.contentSet;
+  old.radioAns = ['a', 'b', 'c', 'd'];
+  const migrated = migrateDossier(old);
+  assert.equal(migrated.contentSet, undefined);
+  assert.equal(radioOf(migrated), RADIO_EXERCISE_LEGACY);
+  assert.equal(scenariosOf(migrated), SCENARIOS_LEGACY);
+  assert.deepEqual(migrated.radioAns, ['a', 'b', 'c', 'd']);
+  assert.ok(Number.isFinite(concoursTotals(migrated).total));
+  assert.equal(Object.keys(suggestionSnapshot(migrated).sc).length, 27);
+
+  // Un RECALÉ s'affiche en rouge sur la fiche finale, quel que soit le total.
+  assert.equal(finalScoreClass(950, 'RECALE'), 'note-rouge');
+  assert.equal(finalScoreClass(950, 'RETENU'), 'note-verte');
+});
+
+await group('V4 — examen Chef de Groupe : évolution à injecter, questions de commandement', () => {
+  for (let i = 0; i < 200; i += 1) {
+    const draw = gen.drawExam(`graine-${i}`);
+    const injections = draw.situations.map(situation => situation.injection);
+    assert.equal(injections.length, 2);
+    injections.forEach(item => assert.ok(bank.SIT_INJECTIONS.includes(item), `graine ${i} : ${item}`));
+    assert.notEqual(injections[0], injections[1], `graine ${i} : même évolution deux fois`);
+  }
+  const a = gen.drawExam('MEME-GRAINE');
+  const b = gen.drawExam('MEME-GRAINE');
+  assert.deepEqual(a.situations.map(s => s.injection), b.situations.map(s => s.injection));
+  assert.equal(gen.countVariants().detail['évolutions à injecter'], bank.SIT_INJECTIONS.length);
+
+  for (const start of ['Deux équipages te parlent en même temps', 'Un agent n’a pas compris sa mission', 'Après l’intervention, que doit contenir ton débriefing']) {
+    const item = bank.COMMANDEMENT.find(question => question.q.startsWith(start));
+    assert.ok(item && item.attendu.length >= 3, start);
+  }
+});
+
+await group('V4 — négociation : grille /100 de la maquette, questionnaire hérité', () => {
+  const evaluation = NEGOCIATION.evaluation;
+  assert.equal(evaluation.questions.reduce((sum, q) => sum + q.max, 0), 100);
+  for (const axis of evaluation.grid) {
+    const points = evaluation.questions.filter(q => q.axe === axis.axe).reduce((sum, q) => sum + q.max, 0);
+    assert.equal(points, axis.max, axis.axe);
+  }
+  for (const id of ['cadre', 'questions', 'confiance', 'compte-rendu', 'motivations', 'otages', 'evaluation']) {
+    assert.ok(NEGOCIATION.chapters.some(chapter => chapter.id === id), id);
+  }
+
+  const fresh = formation.blankFormation('N-T', NEGOCIATION, SETTINGS);
+  assert.equal(fresh.evalVersion, evaluation.version);
+  assert.equal(formation.evaluationOf(fresh, NEGOCIATION), evaluation);
+
+  const old = { ...fresh, ans: { 'ev-1': 'faire baisser la tension' } };
+  delete old.evalVersion;
+  const migrated = formation.migrateFormation(old, NEGOCIATION, SETTINGS);
+  assert.ok(!('evalVersion' in migrated));
+  assert.equal(formation.evaluationOf(migrated, NEGOCIATION), EVALUATION_NEGOCIATION_V1);
+  assert.ok(formation.formationTotals(migrated, NEGOCIATION).total > 0);
+
+  const cdgRecord = formation.blankFormation('C-T', CHEF_DE_GROUPE, SETTINGS);
+  assert.ok(!('evalVersion' in cdgRecord));
+  assert.equal(formation.evaluationOf(cdgRecord, CHEF_DE_GROUPE), CHEF_DE_GROUPE.evaluation);
+});
+
+await group('V4 — formations Radio et Antiterrorisme : cours complets, évaluation /100', () => {
+  for (const { course, route } of COURSES) {
+    assert.ok(portalRoutes[route], `${course.id} : route ${route}`);
+    assert.ok(records.MODULES[course.module], `${course.id} : module de dossier`);
+    assert.ok(IMAGE_SLOTS[course.image], `${course.id} : image ${course.image}`);
+    assert.equal(course.evaluation.questions.reduce((sum, q) => sum + q.max, 0), 100, course.id);
+    assert.equal(new Set(course.chapters.map(c => c.id)).size, course.chapters.length, `${course.id} : chapitres uniques`);
+    for (const question of course.evaluation.questions) {
+      assert.ok(question.q && question.attendu && question.attendu.length, `${course.id} ${question.id}`);
+    }
+  }
+  assert.deepEqual(COURSES.map(entry => entry.course.module), ['negociation', 'formation-cdg', 'radio', 'antiterrorisme']);
 });
 
 // ───────────────────────── Résultat ─────────────────────────────────────
