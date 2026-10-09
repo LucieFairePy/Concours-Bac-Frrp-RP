@@ -125,7 +125,12 @@ export const COMMANDEMENT = [
   { q: 'Ta hiérarchie te demande un point alors que tu es en pleine réorganisation. Comment t’en sors-tu ?', attendu: ['point court en synthèse', 'annoncer que la situation évolue', 'rappeler dès que stabilisé', 'déléguer le suivi pendant ce temps'] },
   { q: 'Qu’est-ce qui, concrètement, fait qu’un groupe suit son chef ?', attendu: ['clarté', 'constance', 'protection des agents', 'assumer les décisions', 'être compris sans répéter'] },
   { q: 'Deux de tes équipages se contredisent sur ce qu’ils voient. Comment arbitres-tu ?', attendu: ['faire décrire les faits', 'séparer ce qui est vu de ce qui est déduit', 'trancher et annoncer', 'faire vérifier'] },
-  { q: 'Tu reprends une vacation en cours d’intervention. Quelles sont tes trois premières actions ?', attendu: ['point d’effectifs', 'point de situation', 'annoncer la prise de commandement', 'reprendre les consignes'] }
+  { q: 'Tu reprends une vacation en cours d’intervention. Quelles sont tes trois premières actions ?', attendu: ['point d’effectifs', 'point de situation', 'annoncer la prise de commandement', 'reprendre les consignes'] },
+  // Les trois suivantes viennent de l'examen d'origine (V4), qui les posait
+  // à tous les candidats ; ici elles rejoignent le tirage.
+  { q: 'Deux équipages te parlent en même temps à la radio. Comment reprends-tu la situation ?', attendu: ['garder son calme', 'imposer un ordre de parole', 'traiter la priorité d’abord', 'messages courts', 'faire confirmer chaque équipage'] },
+  { q: 'Un agent n’a pas compris sa mission. Que fais-tu ?', attendu: ['reformuler clairement', 'qui quoi où', 'lui faire répéter la mission', 'vérifier la compréhension avant le départ'] },
+  { q: 'Après l’intervention, que doit contenir ton débriefing ?', attendu: ['le résultat de l’intervention', 'les difficultés rencontrées', 'les points positifs', 'les améliorations pour la prochaine fois'] }
 ];
 
 // ──────────────────── Mises en situation (§8 et §9) ─────────────────────
@@ -208,6 +213,18 @@ export const SIT_IMPREVUS = [
   'un équipage tombe en panne radio',
   'une personne âgée a besoin d’aide au milieu du dispositif',
   'un deuxième appel urgent arrive sur ton secteur'
+];
+
+// Évolution à injecter : l'examinateur la lit en cours de situation, après
+// les premières réponses, pour voir si le candidat s'adapte. Reprise de
+// l'examen d'origine (V4). Une par situation, tirée à la création du
+// dossier et figée avec le reste.
+export const SIT_INJECTIONS = [
+  'une information importante change',
+  'un collègue demande de l’aide',
+  'les informations deviennent contradictoires',
+  'un moyen prévu devient indisponible',
+  'un autre service arrive sur place'
 ];
 
 export const SIT_FORMULATIONS = [

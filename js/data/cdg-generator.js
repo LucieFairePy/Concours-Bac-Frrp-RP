@@ -28,6 +28,7 @@ import {
   SIT_CONTRAINTES,
   SIT_EVOLUTIONS,
   SIT_IMPREVUS,
+  SIT_INJECTIONS,
   SIT_FORMULATIONS,
   QUESTIONS_SITUATION_1,
   QUESTIONS_SITUATION_2
@@ -94,8 +95,10 @@ export function countVariants() {
     * SIT_CONTRAINTES.length
     * SIT_FORMULATIONS.length;
 
-  const situation1 = situation;
-  const situation2 = situation * SIT_EVOLUTIONS.length * SIT_IMPREVUS.length;
+  // Chaque situation reçoit en plus une évolution à injecter.
+  const situation1 = situation * SIT_INJECTIONS.length;
+  const situation2 = situation * SIT_EVOLUTIONS.length * SIT_IMPREVUS.length
+    * SIT_INJECTIONS.length;
 
   return {
     connaissances,
@@ -116,6 +119,7 @@ export function countVariants() {
       contraintes: SIT_CONTRAINTES.length,
       évolutions: SIT_EVOLUTIONS.length,
       imprévus: SIT_IMPREVUS.length,
+      'évolutions à injecter': SIT_INJECTIONS.length,
       formulations: SIT_FORMULATIONS.length
     }
   };
@@ -197,6 +201,16 @@ function statement2(parts) {
     + 'Tu réévalues, tu réorganises, et tu rends compte.';
 }
 
+/**
+ * Une évolution à injecter par situation, deux différentes. Le flux de
+ * tirage est séparé de celui des situations : ajouter cette dimension n'a
+ * pas changé les énoncés qu'une graine produisait déjà.
+ */
+export function drawInjections(seed, count = 2) {
+  const next = rng(`${seed}-injections`);
+  return shuffled(next, SIT_INJECTIONS).slice(0, count);
+}
+
 export function drawSituations(seed) {
   const next = rng(`${seed}-situations`);
 
@@ -211,6 +225,7 @@ export function drawSituations(seed) {
     evolution: pick(next, SIT_EVOLUTIONS),
     imprevu: pick(next, SIT_IMPREVUS)
   };
+  const injections = drawInjections(seed);
 
   return [
     {
@@ -218,6 +233,7 @@ export function drawSituations(seed) {
       kind: 'situation1',
       title: `Mise en situation n°1 — ${parts.theme.label} : organisation`,
       statement: statement1(parts),
+      injection: injections[0],
       parts: {
         theme: parts.theme.id,
         contexte: parts.contexte,
@@ -233,6 +249,7 @@ export function drawSituations(seed) {
       kind: 'situation2',
       title: `Mise en situation n°2 — ${parts.theme.label} : évolution et adaptation`,
       statement: statement2(parts),
+      injection: injections[1],
       parts: {
         evolution: parts.evolution,
         imprevu: parts.imprevu
