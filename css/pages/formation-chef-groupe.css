@@ -1,15 +1,20 @@
-/* Module formation-chef-groupe — mise en page de la maquette V4 (plein écran).
+/* Module formation-chef-groupe — modules/formation-chef-groupe.html de
+   l'archive V4, à l'identique (plein écran).
 
-   Reprise de modules/formation-chef-groupe.html de l'archive : fond
+   Les règles de la feuille <style> de l'archive, une à une, rangées sous
+   `.m-fcdg` (js/pages/formations/layouts/chef-de-groupe.js) : fond
    #081420, barre de retour et logo, bandeau photo, sommaire « LES 16
-   CHAPITRES », carte de module bleu nuit à coins arrondis, sous-titres
-   bleu clair, encadrés teintés (à retenir bleu, exemple vert, mise en
-   pratique ocre), boutons bleus. Les étapes du portail (identité,
-   évaluation, correction, fiche finale) prennent le même habit.
+   CHAPITRES », carte bleu nuit, sous-titres bleu clair, encadrés à retenir
+   (bleu), exemple (vert) et mise en pratique (ocre), boutons bleus.
 
-   Tout est rangé sous `.m-fcdg` (js/pages/formations/layouts/chef-de-groupe.js).
+   L'archive ne charge aucune police : « Inter, Arial » s'y affiche en
+   Arial. Le portail, lui, charge Inter ; la page déclare donc Arial pour
+   rester identique à l'écran. Les règles du socle (titres en Barlow,
+   boutons du portail) sont remises aux valeurs du navigateur, celles que
+   l'archive affiche.
+
    L'impression n'est pas touchée : tout ce qui suit est réservé à l'écran,
-   et la fiche A4 garde css/fiche/. */
+   et la fiche A4 d'un ancien dossier garde css/fiche/. */
 
 @media screen {
 
@@ -33,29 +38,34 @@
   main:has(> .m-fcdg) > #banner:empty { display: none }
   main:has(> .m-fcdg) > #banner .banner { margin: 18px 0 0; border-radius: 10px }
   main:has(> .m-fcdg) > .m-fcdg { order: 1; display: contents }
-  main:has(> .m-fcdg) > .m-fcdg > .fcdg-head { order: 0 }
-  main:has(> .m-fcdg) > .m-fcdg > .fcdg-hero { order: 1 }
-  main:has(> .m-fcdg) > .m-fcdg > .fcdg-wrap { order: 3 }
+  main:has(> .m-fcdg) > .m-fcdg > .cdg-head { order: 0 }
+  main:has(> .m-fcdg) > .m-fcdg > .cdg-hero { order: 1 }
+  main:has(> .m-fcdg) > .m-fcdg > .cdg-wrap { order: 3 }
 
   .m-fcdg {
-    --fcdg-bg: #081420;
-    --fcdg-card: #102331;
-    --fcdg-card-line: #294456;
-    --fcdg-nav: #102434;
-    --fcdg-nav-line: #244057;
-    --fcdg-blue: #1479bc;
-    --fcdg-sky: #9ed0f6;
-    --fcdg-pill: #9ad3fc;
-    --fcdg-text: #e6edf3;
-    --fcdg-soft: #c9d6e1;
-    --fcdg-mut: #9aafc0;
-    color: var(--fcdg-text);
-    font-family: Inter, Arial, sans-serif;
+    color: #e6edf3;
+    font: 16px/normal Arial, sans-serif;
   }
 
-  /* ───────────────────────── Barre de retour ───────────────────────── */
+  /* Socle du portail → valeurs du navigateur, comme dans l'archive. */
+  .m-fcdg h1,
+  .m-fcdg h2,
+  .m-fcdg h3 { font-family: Arial, sans-serif; font-weight: 700; letter-spacing: normal }
 
-  .m-fcdg .fcdg-head {
+  .m-fcdg button {
+    padding: 1px 6px;
+    border: 0;
+    border-radius: 0;
+    font: 13.333px/normal Arial, sans-serif;
+    letter-spacing: normal;
+    text-transform: none;
+  }
+
+  .m-fcdg button:hover { filter: none }
+
+  /* ───────────────────────── Archive ───────────────────────── */
+
+  .m-fcdg .cdg-head {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -65,404 +75,114 @@
     border-bottom: 1px solid #254057;
   }
 
-  .m-fcdg .fcdg-back { color: #b9d9f0; font-size: 16px; text-decoration: none }
-  .m-fcdg .fcdg-back:hover { color: #fff }
+  .m-fcdg .cdg-head img { width: 55px; height: 55px; object-fit: contain }
+  .m-fcdg .cdg-head a { color: #b9d9f0; text-decoration: none }
 
-  .m-fcdg .fcdg-tools {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    min-width: 0;
-  }
-
-  .m-fcdg .fcdg-logo { width: 55px; height: 55px; object-fit: contain; flex: none }
-  .m-fcdg .fcdg-sync { font-size: 12px; white-space: nowrap }
-  .m-fcdg .fcdg-sync:empty { display: none }
-
-  /* Actions du module (enregistrer, nouveau dossier) : discrètes, à
-     gauche du logo, comme un outil de la barre. */
-  .m-fcdg .fcdg-actions {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    min-width: 0;
-  }
-
-  .m-fcdg .fcdg-actions:empty { display: none }
-  .m-fcdg .fcdg-actions b { display: none }
-  .m-fcdg .fcdg-actions .mut { color: #7f98ab; font-size: 12px; white-space: nowrap }
-  .m-fcdg .fcdg-actions .spacer { display: none }
-
-  /* ───────────────────────── Bandeau ───────────────────────── */
-
-  .m-fcdg .fcdg-hero {
-    position: relative;
-    display: flex;
-    align-items: flex-end;
+  .m-fcdg .cdg-hero {
     min-height: 250px;
+    background:
+      linear-gradient(90deg, #06121df0, #06121d55),
+      url('../../assets/bac75n/09_FORMATION_CHEF_GROUPE_BANNER.jpg') center 38% / cover;
+    display: flex;
+    align-items: end;
     padding: 38px 5%;
-    background-position: center 38%;
-    background-size: cover;
-    background-repeat: no-repeat;
   }
 
-  .m-fcdg .fcdg-hero:before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(90deg, #06121df0, #06121d55);
-  }
+  .m-fcdg .cdg-hero h1 { font-size: clamp(27px, 4vw, 49px); margin: 0 }
+  .m-fcdg .cdg-hero p { max-width: 680px; margin: 16px 0; color: #c6d5e2 }
 
-  .m-fcdg .fcdg-hero-body { position: relative; z-index: 1 }
-
-  .m-fcdg .fcdg-hero h1 {
-    margin: 0;
-    color: #e6edf3;
-    font: 700 clamp(27px, 4vw, 49px)/1.15 Inter, Arial, sans-serif;
-    letter-spacing: 0;
-  }
-
-  .m-fcdg .fcdg-hero p { max-width: 760px; margin: 16px 0 0; color: #c6d5e2; font-size: 16px }
-
-  .m-fcdg .fcdg-dossier { margin-top: 8px; color: #8fb3cc; font-size: 13px; font-weight: 600 }
-
-  .m-fcdg .fcdg-pill {
-    color: var(--fcdg-pill);
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 1px;
-  }
-
-  /* ───────────────────────── Contenu ───────────────────────── */
-
-  .m-fcdg .fcdg-wrap {
-    width: 100%;
-    max-width: 1360px;
-    margin: 0 auto;
-    padding: 24px;
-  }
-
-  /* Étapes du parcours : la rangée de boutons de la maquette. */
-  .m-fcdg .fcdg-steps {
-    display: flex;
-    align-items: center;
-    gap: 18px;
-    flex-wrap: wrap;
-    margin-bottom: 20px;
-  }
-
-  .m-fcdg .tabs { margin: 0; gap: 6px; counter-reset: etape }
-
-  .m-fcdg .tabs .tab {
-    padding: 10px 14px;
-    border: 1px solid var(--fcdg-nav-line);
-    border-radius: 8px;
-    background: var(--fcdg-nav);
-    color: var(--fcdg-soft);
-    font: 600 13px Inter, Arial, sans-serif;
-    letter-spacing: 0;
-    text-transform: none;
-  }
-
-  .m-fcdg .tabs .tab:before { content: counter(etape, decimal-leading-zero) " — "; color: #6f8ba0 }
-  .m-fcdg .tabs .tab:hover { background: #17374d; color: #fff; filter: none }
-  .m-fcdg .tabs .tab.active { background: var(--fcdg-blue); border-color: #2a97dd; color: #fff }
-  .m-fcdg .tabs .tab.active:before { color: #cde8fb }
-
-  .m-fcdg .fcdg-stepline { flex: 1; min-width: 200px }
-  .m-fcdg .fcdg-stepline .progress { height: 5px; background: #1b3346 }
-  .m-fcdg .fcdg-stepline .progress span { background: #299af0 }
-  .m-fcdg .steptext { margin-top: 6px; color: var(--fcdg-mut); font-size: 12px }
-
-  /* Panneaux des étapes : la carte de module. */
-  .m-fcdg .card {
-    margin: 0 0 16px;
-    padding: 24px;
-    border: 1px solid var(--fcdg-card-line);
-    border-radius: 12px;
-    background: var(--fcdg-card);
-  }
-
-  .m-fcdg .card h2,
-  .m-fcdg .card h3 {
-    font-family: Inter, Arial, sans-serif;
-    letter-spacing: 0;
-    text-transform: none;
-  }
-
-  .m-fcdg .card h2 { margin: 0 0 12px; color: #fff; font-size: 27px; font-weight: 700 }
-  .m-fcdg .card h3 { margin: 0 0 12px; color: var(--fcdg-sky); font-size: 19px; font-weight: 700 }
-  .m-fcdg .card p { color: #d6e1ea; line-height: 1.7 }
-
-  .m-fcdg label { color: #9fb6c8; font: 700 11px Inter, Arial, sans-serif; letter-spacing: .6px }
-
-  .m-fcdg input,
-  .m-fcdg textarea,
-  .m-fcdg select {
-    border: 1px solid #2c4b61;
-    border-radius: 8px;
-    background: #0a1a26;
-    font-family: Inter, Arial, sans-serif;
-  }
-
-  .m-fcdg input:focus,
-  .m-fcdg textarea:focus,
-  .m-fcdg select:focus { border-color: #299af0; box-shadow: 0 0 0 2px #299af033 }
-
-  /* Boutons : les boutons bleus arrondis de la maquette. */
-  .m-fcdg button {
-    padding: 11px 18px;
-    border: 0;
-    border-radius: 8px;
-    background: var(--fcdg-blue);
-    color: #fff;
-    font: 600 14px/1.2 Inter, Arial, sans-serif;
-    letter-spacing: 0;
-    text-transform: none;
-  }
-
-  .m-fcdg button:hover { background: #1a8bd6; filter: none }
-  .m-fcdg button:disabled { opacity: .4; cursor: not-allowed }
-  .m-fcdg button.green { background: #21754f }
-  .m-fcdg button.green:hover { background: #288a5e }
-  .m-fcdg button.danger { background: #c91631 }
-  .m-fcdg button.danger:hover { background: #dd1f3c }
-
-  .m-fcdg .fcdg-actions button { padding: 8px 13px; font-size: 13px }
-  .m-fcdg .fcdg-actions button:not(.primary) { background: #13324a; box-shadow: inset 0 0 0 1px #2c4b61 }
-  .m-fcdg .fcdg-actions button:not(.primary):hover { background: #17374d }
-
-  .m-fcdg .stepnav {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-    margin: 4px 0 16px;
-    padding: 0;
-    border: 0;
-    background: transparent;
-  }
-
-  .m-fcdg .stepnav button:not(.primary) { background: #13324a; box-shadow: inset 0 0 0 1px #2c4b61 }
-
-  /* Questions, corrections, tableau : panneaux de la carte. */
-  .m-fcdg .q,
-  .m-fcdg .correction {
-    margin: 12px 0;
-    padding: 16px;
-    border: 1px solid #23435a;
-    border-left: 4px solid #2397e5;
-    border-radius: 8px;
-    background: #0d1e2b;
-  }
-
-  .m-fcdg .q b:first-child,
-  .m-fcdg .q h4,
-  .m-fcdg .corrhead {
-    font: 700 16px/1.45 Inter, Arial, sans-serif;
-    letter-spacing: 0;
-  }
-
-  .m-fcdg .mut { color: var(--fcdg-mut) }
-
-  /* ───────────────────────── Cours ───────────────────────── */
-
-  .m-fcdg .co-progress { margin: 0 0 14px }
-  .m-fcdg .co-progress .progress { height: 5px; background: #1b3346 }
-  .m-fcdg .co-progress .progress span { background: #4ca889 }
-  .m-fcdg .co-progress b { color: #8fd8bb; font: 600 13px Inter, Arial, sans-serif }
-
-  .m-fcdg .co-wrap {
+  .m-fcdg .cdg-wrap {
+    display: grid;
     grid-template-columns: 260px minmax(0, 1fr);
     gap: 24px;
-    margin: 0 0 8px;
+    width: 100%;
+    max-width: 1360px;
+    margin: auto;
+    padding: 24px;
   }
 
-  .m-fcdg .fcdg-nav {
+  .m-fcdg .cdg-nav {
+    background: #102434;
+    padding: 16px;
+    border: 1px solid #244057;
+    border-radius: 12px;
+    align-self: start;
     position: sticky;
     top: 12px;
-    align-self: start;
     max-height: 85vh;
     overflow: auto;
-    padding: 16px;
-    border: 1px solid var(--fcdg-nav-line);
-    border-radius: 12px;
-    background: var(--fcdg-nav);
   }
 
-  .m-fcdg .fcdg-nav > b { display: block; margin-bottom: 2px; color: #fff; font-size: 16px; font-weight: 700 }
-
-  .m-fcdg .fcdg-nav button {
+  .m-fcdg .cdg-nav button {
     display: block;
     width: 100%;
-    padding: 10px;
+    text-align: left;
+    background: transparent;
     border: 0;
     border-left: 3px solid transparent;
-    border-radius: 0;
-    background: transparent;
-    color: var(--fcdg-soft);
-    font: 400 13px/1.2 Inter, Arial, sans-serif;
-    text-align: left;
-  }
-
-  .m-fcdg .fcdg-nav button:hover { background: #13304a; color: #fff }
-  .m-fcdg .fcdg-nav button.active { background: #17374d; border-left-color: #299af0; color: #fff }
-  .m-fcdg .fcdg-tick { color: #5ed3a0; font-weight: 700 }
-
-  .m-fcdg .fcdg-lesson { min-width: 0 }
-  .m-fcdg .fcdg-progress { margin-bottom: 12px; color: var(--fcdg-mut); font-size: 16px }
-
-  .m-fcdg .fcdg-card {
-    margin-bottom: 16px;
-    padding: 24px;
-    border: 1px solid var(--fcdg-card-line);
-    border-radius: 12px;
-    background: var(--fcdg-card);
-  }
-
-  .m-fcdg .fcdg-card h2 {
-    margin: 8px 0 12px;
-    color: #e6edf3;
-    font: 700 27px/1.2 Inter, Arial, sans-serif;
-    letter-spacing: 0;
-  }
-
-  .m-fcdg .fcdg-card h3 {
-    margin: 22px 0 12px;
-    color: var(--fcdg-sky);
-    font: 700 19px/1.3 Inter, Arial, sans-serif;
-    letter-spacing: 0;
-  }
-
-  .m-fcdg .fcdg-intro { margin: 0; color: var(--fcdg-text); font-size: 16px; line-height: 1.7 }
-
-  .m-fcdg .fcdg-img {
-    display: block;
-    width: 100%;
-    height: 285px;
-    margin: 30px 0 14px;
-    object-fit: cover;
-    object-position: center 36%;
-    border-radius: 10px;
-  }
-
-  /* Blocs du cours (js/pages/formations/cours.js) dans les teintes de la carte. */
-  .m-fcdg .co-p { max-width: none; margin: 0 0 14px; color: var(--fcdg-text); font-size: 16px; line-height: 1.7 }
-  .m-fcdg .co-list { max-width: none; padding-left: 40px }
-  .m-fcdg .co-list li { color: var(--fcdg-text); font-size: 16px; line-height: 1.7; margin: 0 }
-
-  .m-fcdg .co-tag {
-    margin-bottom: 10px;
-    color: #fff;
-    font: 700 16px Inter, Arial, sans-serif;
-    letter-spacing: 0;
-    text-transform: uppercase;
-  }
-
-  .m-fcdg .co-rp,
-  .m-fcdg .co-dialogue,
-  .m-fcdg .co-retenir,
-  .m-fcdg .co-erreurs,
-  .m-fcdg .co-exercice,
-  .m-fcdg .co-reflexe {
-    max-width: none;
-    margin: 14px 0;
-    padding: 16px 19px;
-    border-radius: 0;
-  }
-
-  .m-fcdg .co-retenir { background: #173346; border-left: 4px solid #2397e5 }
-  .m-fcdg .co-rp,
-  .m-fcdg .co-dialogue { background: #142e2a; border: 0; border-left: 4px solid #4ca889 }
-  .m-fcdg .co-exercice { background: #302722; border-left: 4px solid #d09b54 }
-  .m-fcdg .co-erreurs { background: #33181e; border-left: 4px solid #d9263c }
-  .m-fcdg .co-reflexe { background: #10293b; border-left: 4px solid #2397e5 }
-
-  .m-fcdg .co-retenir .co-tag,
-  .m-fcdg .co-rp .co-tag,
-  .m-fcdg .co-dialogue .co-tag,
-  .m-fcdg .co-exercice .co-tag,
-  .m-fcdg .co-erreurs .co-tag,
-  .m-fcdg .co-reflexe .co-tag { color: #fff }
-
-  .m-fcdg .co-rp p,
-  .m-fcdg .co-exercice p,
-  .m-fcdg .co-dialogue span:not(.co-tag),
-  .m-fcdg .co-retenir li,
-  .m-fcdg .co-erreurs li { color: var(--fcdg-text); font-size: 16px; line-height: 1.7 }
-
-  .m-fcdg .co-hint { color: #d8b98d !important; font-size: 14px !important }
-  .m-fcdg .co-exercice textarea { margin-top: 4px; background: #1d1714; border-color: #5a4630 }
-  .m-fcdg .co-exercice label { color: #d8b98d }
-
-  .m-fcdg .co-step { border-radius: 6px; background: #13324a; border-color: #2c4b61; color: #e6edf3; font-family: Inter, Arial, sans-serif }
-  .m-fcdg .co-arrow { color: #299af0 }
-
-  .m-fcdg .co-tablewrap { margin: 14px 0 }
-  .m-fcdg .co-table th { background: #17374d; color: var(--fcdg-sky); font: 700 12px Inter, Arial, sans-serif }
-  .m-fcdg .co-table td { color: var(--fcdg-text); font-size: 14px; border-bottom-color: #23435a }
-  .m-fcdg .co-table tr:nth-child(even) td { background: #0d1e2b }
-
-  .m-fcdg .fcdg-read {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin: 20px 0 0;
-    padding: 14px 16px;
-    border: 1px solid #2d5a48;
-    border-radius: 8px;
-    background: #10261f;
-    color: #cbeedd;
-    font: 600 14px Inter, Arial, sans-serif;
-    letter-spacing: 0;
-    text-transform: none;
+    color: #c9d6e1;
+    padding: 10px;
     cursor: pointer;
   }
 
-  .m-fcdg .fcdg-read input { width: 17px; height: 17px; margin: 0; accent-color: #4ca889 }
+  .m-fcdg .cdg-nav button.active { background: #17374d; border-left-color: #299af0; color: white }
 
-  .m-fcdg .fcdg-actions-row { display: flex; gap: 12px; flex-wrap: wrap }
-  .m-fcdg .fcdg-actions-row .fcdg-link { font-size: 16px; font-weight: 400 }
+  .m-fcdg .cdg-card {
+    background: #102331;
+    border: 1px solid #294456;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
 
-  /* Les boutons de fin d'étape du cours restent sous la grille. */
-  .m-fcdg #s-cours > .stepnav { margin-top: 18px; padding-left: 284px }
+  .m-fcdg .cdg-card h2 { font-size: 27px; margin: 8px 0 12px }
+  .m-fcdg .cdg-card h3 { color: #9ed0f6; font-size: 1.17em; margin: 1em 0 }
+  .m-fcdg .cdg-card p { margin: 16px 0 }
+  .m-fcdg .cdg-card ul { margin: 16px 0; padding-left: 40px }
+  .m-fcdg .cdg-card p,
+  .m-fcdg .cdg-card li { line-height: 1.7 }
 
-  /* ───────────────────────── Téléphone ───────────────────────── */
+  .m-fcdg .cdg-img {
+    width: 100%;
+    max-height: 285px;
+    object-fit: cover;
+    object-position: center 36%;
+    border-radius: 10px;
+    margin: 14px 0;
+  }
+
+  .m-fcdg .cdg-pill { color: #9ad3fc; font-weight: 700; font-size: 12px; letter-spacing: 1px }
+  .m-fcdg .cdg-note { background: #173346; border-left: 4px solid #2397e5; padding: 16px; margin: 14px 0 }
+  .m-fcdg .cdg-example { background: #142e2a; border-left: 4px solid #4ca889; padding: 16px; margin: 14px 0 }
+  .m-fcdg .cdg-exercise { background: #302722; border-left: 4px solid #d09b54; padding: 16px; margin: 14px 0 }
+
+  .m-fcdg .cdg-actions { display: flex; gap: 12px; flex-wrap: wrap }
+
+  .m-fcdg .cdg-actions button,
+  .m-fcdg .cdg-actions a {
+    background: #1479bc;
+    color: white;
+    border: 0;
+    padding: 12px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  .m-fcdg .cdg-actions button:disabled { opacity: .4; cursor: not-allowed }
+  .m-fcdg .cdg-progress { color: #9aafc0; margin-bottom: 12px }
+
+  /* Ancien dossier ouvert depuis l'historique : la fiche prend toute la largeur. */
+  .m-fcdg .cdg-wrap:has(> .cdg-dossier) { display: block }
 
   @media (max-width: 760px) {
-    .m-fcdg .fcdg-head { padding: 12px 16px }
-    .m-fcdg .fcdg-back { font-size: 14px }
-    .m-fcdg .fcdg-logo { width: 42px; height: 42px }
-    .m-fcdg .fcdg-actions .mut { display: none }
-    .m-fcdg .fcdg-hero { min-height: 190px; padding: 26px 16px }
-    .m-fcdg .fcdg-hero p { font-size: 14px }
-    .m-fcdg .fcdg-wrap { padding: 16px }
+    .m-fcdg .cdg-wrap { grid-template-columns: 1fr }
+    .m-fcdg .cdg-nav { position: static; max-height: 220px }
+    .m-fcdg .cdg-hero { min-height: 190px }
     main:has(> .m-fcdg) > #banner { padding: 0 16px }
-    .m-fcdg .tabs { flex-wrap: nowrap; overflow-x: auto; width: 100% }
-    .m-fcdg .tabs .tab { flex: none }
-    .m-fcdg .co-wrap { grid-template-columns: 1fr; gap: 16px }
-    .m-fcdg .fcdg-nav { position: static; max-height: 220px }
-    .m-fcdg .fcdg-card,
-    .m-fcdg .card { padding: 18px }
-    .m-fcdg .fcdg-card h2 { font-size: 23px }
-    .m-fcdg .fcdg-img { height: 200px; margin-top: 20px }
-    .m-fcdg .co-list { padding-left: 22px }
-    .m-fcdg #s-cours > .stepnav { padding-left: 0 }
-    .m-fcdg .stepnav button { width: 100% }
   }
+}
 
-  /* Barre du téléphone : retour et logo sur la première ligne, comme la
-     maquette ; actions du dossier et état d'enregistrement en dessous. */
-  @media (max-width: 620px) {
-    .m-fcdg .fcdg-head {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      gap: 10px 12px;
-    }
-    .m-fcdg .fcdg-tools { display: contents }
-    .m-fcdg .fcdg-logo { grid-column: 2; grid-row: 1 }
-    .m-fcdg .fcdg-back { grid-column: 1; grid-row: 1 }
-    .m-fcdg .fcdg-actions { grid-column: 1 / -1; grid-row: 2; flex-wrap: wrap }
-    .m-fcdg .fcdg-actions button { flex: 1 }
-    .m-fcdg .fcdg-sync { grid-column: 1 / -1; grid-row: 3 }
-  }
+@media print {
+  .m-fcdg .cdg-wrap { display: block; padding: 0 }
 }

@@ -1,115 +1,89 @@
-// Mise en page du module chef-de-groupe — reprise de la maquette V4
-// (modules/formation-chef-groupe.html de l'archive).
-// Exporte `page()` et `cours()` : voir l'en-tête de engine.js.
+// Gabarits de la Formation Chef de Groupe — modules/formation-chef-groupe.html
+// de l'archive V4, à l'identique.
 //
-// La maquette : barre « ← Retour au portail BAC 75 N » et logo, bandeau
+// L'archive : barre « ← Retour au portail BAC 75 N » et logo, bandeau
 // photo « FORMATION • COMMANDEMENT », sommaire « LES 16 CHAPITRES » à
-// gauche, et à droite « Chapitre n sur 16 » puis une carte de module
-// (MODULE 01, titre, introduction, grande photo, « Ce qu'il faut
-// comprendre »). Le parcours du portail (identité, cours, évaluation,
-// correction, fiche finale) garde ses étapes, habillées de la même façon.
-// Toute la feuille de style vit sous `.m-fcdg`
-// (css/pages/formation-chef-groupe.css).
+// gauche, et à droite « Chapitre n sur 16 », la carte du chapitre (MODULE
+// 01, titre, introduction, photo, « Ce qu'il faut comprendre », encadrés
+// À RETENIR, EXEMPLE CONCRET, MISE EN PRATIQUE) puis Précédent, Suivant et
+// le lien vers l'examen. Pas d'identité, pas d'évaluation, pas de fiche :
+// l'archive n'en a pas.
+//
+// Seul ajout : un dossier clôturé avant ce retour à l'archive, ouvert depuis
+// l'historique, s'affiche en lecture seule à la place du cours (dossier()).
+//
+// La feuille de style vit sous `.m-fcdg` (css/pages/formation-chef-groupe.css).
 
 import { esc } from '../../../core/dom.js';
 import { href } from '../../../routes.js';
-import { imageStyle, imageSources, LOGO } from '../../../data/images.js';
-import { renderBlocks } from '../cours.js';
+import { LOGO } from '../../../data/images.js';
+import { A_RETENIR } from '../../../data/formations/chef-de-groupe-lecons.js';
 
-/** La maquette fait tourner quatre photos d'un chapitre à l'autre. */
-const CHAPTER_PHOTOS = ['formation-cdg', 'cours-cdg', 'effectifs', 'administration'];
+const KIT = 'assets/bac75n';
 
-function photo(slot, alt, className) {
-  const { src, fallback } = imageSources(slot);
-  return `<img class="${className}" src="${src}" alt="${esc(alt)}" loading="lazy"
-               onerror="this.onerror=null;this.src='${fallback}'">`;
-}
-
-export function page({ course }) {
-  const count = course.chapters.length;
+export function page(count) {
   return `
-    <section id="home" class="view m-fcdg">
-      <header class="fcdg-head no-print">
-        <a class="fcdg-back" href="${href('accueil')}">← Retour au portail BAC 75 N</a>
-        <div class="fcdg-tools">
-          <span id="sync" class="fcdg-sync"></span>
-          <div id="pageActions" class="fcdg-actions"></div>
-          <img class="fcdg-logo" src="${LOGO.file}" alt="Logo BAC 75 N" width="55" height="55"
-               onerror="this.onerror=null;this.src='${LOGO.fallback}'">
-        </div>
+    <section class="m-fcdg">
+      <header class="cdg-head no-print">
+        <a href="${href('accueil')}">← Retour au portail BAC 75 N</a>
+        <img src="${LOGO.file}" alt="Logo BAC 75 N"
+             onerror="this.onerror=null;this.src='${LOGO.fallback}'">
       </header>
-
-      <div class="fcdg-hero no-print" style="${imageStyle('cours-cdg')}">
-        <div class="fcdg-hero-body">
-          <div class="fcdg-pill">FORMATION • COMMANDEMENT</div>
+      <div class="cdg-hero no-print">
+        <div>
+          <div class="cdg-pill">FORMATION • COMMANDEMENT</div>
           <h1>CHEF DE GROUPE BAC 75 N</h1>
           <p>${count} chapitres complets : comprendre, organiser, communiquer et coordonner une vacation.</p>
-          <div class="fcdg-dossier" id="hero">${esc(course.title)}</div>
         </div>
       </div>
-
-      <div class="fcdg-wrap">
-        <div class="fcdg-steps no-print">
-          <div id="tabs" class="tabs"></div>
-          <div class="fcdg-stepline">
-            <div class="progress"><span id="prog"></span></div>
-            <div id="stepText" class="steptext"></div>
-          </div>
-        </div>
-        <div id="sections"></div>
+      <div class="cdg-wrap" id="fcdgBody">
+        <nav class="cdg-nav" id="chapters" aria-label="Sommaire interactif"><b>LES ${count} CHAPITRES</b></nav>
+        <div class="cdg-lesson" id="lesson" aria-live="polite"></div>
       </div>
     </section>`;
 }
 
-function chapterNav(course, record, activeId) {
-  const items = course.chapters.map(chapter => {
-    const done = Boolean(record.read[chapter.id]);
-    const on = chapter.id === activeId;
-    return `
-      <button class="${on ? 'active' : ''}${done ? ' done' : ''}"
-              onclick="app.openChapter('${esc(chapter.id)}')">
-        ${esc(chapter.num)} — ${esc(chapter.title)}${done ? ' <span class="fcdg-tick">✓</span>' : ''}
-      </button>`;
-  }).join('');
-
-  return `
-    <nav class="fcdg-nav no-print" aria-label="Sommaire interactif">
-      <b>LES ${course.chapters.length} CHAPITRES</b>
-      ${items}
-    </nav>`;
+export function sommaire(lecons, index) {
+  return `<b>LES ${lecons.length} CHAPITRES</b>` + lecons.map((l, i) =>
+    `<button class="${i === index ? 'active' : ''}" onclick="app.go(${i})">${esc(l.number)} — ${esc(l.title)}</button>`
+  ).join('');
 }
 
-export function cours({ course, record, chapter, index, dis }) {
-  const total = course.chapters.length;
-  const done = Boolean(record.read[chapter.id]);
-  const [first, ...rest] = chapter.blocks;
-  const intro = first && first.t === 'p' ? first : null;
-  const body = intro ? rest : chapter.blocks;
-  const previous = index > 0 ? course.chapters[index - 1] : null;
-  const slot = CHAPTER_PHOTOS[index % CHAPTER_PHOTOS.length];
-
+export function lecon(lecons, index) {
+  const l = lecons[index];
   return `
-    ${chapterNav(course, record, chapter.id)}
-    <div class="fcdg-lesson" aria-live="polite">
-      <div class="fcdg-progress">Chapitre ${index + 1} sur ${total}</div>
-      <article class="fcdg-card">
-        <span class="fcdg-pill">MODULE ${esc(chapter.num)}</span>
-        <h2>${esc(chapter.title)}</h2>
-        ${intro ? `<p class="fcdg-intro">${esc(intro.text)}</p>` : ''}
-        ${photo(slot, 'Photographie illustrative de la BAC 75 N', 'fcdg-img')}
-        <h3>Ce qu'il faut comprendre</h3>
-        <div class="fcdg-blocks">${renderBlocks(body, record, dis)}</div>
-        <label class="fcdg-read no-print">
-          <input class="inline-check" type="checkbox" ${done ? 'checked' : ''} ${dis}
-                 onchange="app.setRead('${esc(chapter.id)}',this.checked)">
-          J’ai lu et compris ce chapitre
-        </label>
-      </article>
-      <div class="fcdg-actions-row no-print">
-        <button ${previous ? '' : 'disabled'}
-                onclick="app.openChapter('${esc(previous ? previous.id : chapter.id)}')">← Précédent</button>
-        <button ${index < total - 1 ? '' : 'disabled'} onclick="app.nextChapter()">Suivant →</button>
-        <button class="fcdg-link" onclick="app.openStep('eval')">Passer à l’évaluation</button>
-      </div>
+    <div class="cdg-progress">Chapitre ${index + 1} sur ${lecons.length}</div>
+    <article class="cdg-card">
+      <span class="cdg-pill">MODULE ${esc(l.number)}</span>
+      <h2>${esc(l.title)}</h2>
+      <p>${esc(l.intro)}</p>
+      <img class="cdg-img" src="${KIT}/${esc(l.photo)}" alt="Photographie illustrative de la BAC 75 N">
+      <h3>Ce qu'il faut comprendre</h3>
+      <ul>${l.points.map(p => `<li>${esc(p)}</li>`).join('')}</ul>
+      <div class="cdg-note"><b>À RETENIR</b><p>${esc(A_RETENIR)}</p></div>
+      <div class="cdg-example"><b>EXEMPLE CONCRET</b><p>${esc(l.example)}</p></div>
+      <div class="cdg-exercise"><b>MISE EN PRATIQUE</b><p>${esc(l.exercise)}</p></div>
+    </article>
+    <div class="cdg-actions">
+      <button ${index === 0 ? 'disabled' : ''} onclick="app.go(${index - 1})">← Précédent</button>
+      <button ${index === lecons.length - 1 ? 'disabled' : ''} onclick="app.go(${index + 1})">Suivant →</button>
+      <a href="${href('examen-chef-groupe')}">Examen Chef de Groupe</a>
     </div>`;
+}
+
+/** Un dossier clôturé de l'ancien parcours : sa fiche finale, en lecture seule. */
+export function dossier(id) {
+  return `
+    <section id="s-final" class="section active printme cdg-dossier">
+      <div class="cdg-card no-print">
+        <span class="cdg-pill">DOSSIER ${esc(id)}</span>
+        <h2>Fiche finale — lecture seule</h2>
+        <p>Dossier clôturé avant le retour au cours de l’archive. Il se consulte tel qu’il a été clôturé.</p>
+        <div class="cdg-actions">
+          <button onclick="app.print()">Télécharger en PDF</button>
+          <a href="${href('formation-chef-groupe')}">Ouvrir le cours</a>
+        </div>
+      </div>
+      <div id="sheet"></div>
+    </section>`;
 }
