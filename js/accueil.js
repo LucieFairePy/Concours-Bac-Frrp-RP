@@ -86,7 +86,7 @@ function hero() {
   const jour = now.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
 
   setHTML('hero', `
-    <section class="phero">
+    <section class="phero home-hero">
       <div class="phero-img" style="${imageStyle('accueil-hero')}"></div>
       <div class="phero-body">
         <div class="phero-kicker">Bienvenue sur le portail officiel</div>

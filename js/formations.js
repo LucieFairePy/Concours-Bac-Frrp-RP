@@ -24,10 +24,10 @@ function card(course) {
 
   return `
     <div class="ptile">
-      <div class="co-banner" style="${imageStyle(course.image)};border-radius:11px;min-height:112px">
+      <div class="co-banner" style="${imageStyle(course.image)}">
         <div class="co-banner-body">
           <div class="co-kicker">Formation</div>
-          <h2 style="font-size:19px;margin:4px 0 0">${esc(course.title)}</h2>
+          <h2>${esc(course.title)}</h2>
         </div>
       </div>
       <p class="mut" style="margin:11px 0">${esc(course.intro)}</p>
