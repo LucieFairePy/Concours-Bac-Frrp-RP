@@ -1,6 +1,7 @@
-/* Pages de cours des formations — sommaire sombre à gauche, page claire
-   « papier » à droite, comme la maquette V4. Cartes du catalogue des
-   formations en fin de fichier. */
+/* Pages de cours des formations — sommaire à gauche, page de cours à
+   droite, tout en thème sombre : panneaux bleu nuit, encadrés teintés,
+   accents bleus de la maquette V4. Cartes du catalogue des formations en
+   fin de fichier. */
 
 .co-wrap {
   display: grid;
@@ -68,9 +69,10 @@
 
 .co-main {
   overflow: hidden;
+  border: 1px solid #19364b;
   border-radius: 5px;
-  background: #edf2f5;
-  color: #12202b;
+  background: var(--surface);
+  color: #dbe8f2;
 }
 
 .co-banner {
@@ -108,12 +110,12 @@
 .co-body { padding: 8px 26px 22px }
 
 .co-body h3,
-.co-body h4 { color: #0a3150; font: 700 23px var(--font-title) }
+.co-body h4 { color: #e9f1f7; font: 700 23px var(--font-title) }
 
 .co-p {
   max-width: 76ch;
   margin: 14px 0;
-  color: #12202b;
+  color: #d3e2ed;
   font-size: 15px;
   line-height: 1.68;
 }
@@ -124,7 +126,7 @@
   padding-left: 20px;
 }
 
-.co-list li { margin: 7px 0; color: #1c2c38; font-size: 14px; line-height: 1.6 }
+.co-list li { margin: 7px 0; color: #c9d7e1; font-size: 14px; line-height: 1.6 }
 
 .co-tag {
   margin-bottom: 7px;
@@ -133,7 +135,7 @@
   text-transform: uppercase;
 }
 
-/* Encadrés pédagogiques : bandeau coloré à gauche, fond clair. */
+/* Encadrés pédagogiques : bandeau coloré à gauche, fond teinté sombre. */
 
 .co-rp, .co-dialogue, .co-retenir, .co-erreurs, .co-exercice, .co-reflexe {
   max-width: 80ch;
@@ -141,40 +143,40 @@
   padding: 13px 16px;
 }
 
-.co-rp { background: #e3ecf2; border-left: 4px solid #0a3150 }
-.co-rp .co-tag { color: #0a3150 }
-.co-rp p { margin: 0; color: #12202b; font-size: 14px; line-height: 1.6 }
+.co-rp { background: #0b2133; border-left: 4px solid #2f86c4 }
+.co-rp .co-tag { color: #7fc0ec }
+.co-rp p { margin: 0; color: #d6e8f5; font-size: 14px; line-height: 1.6 }
 
 .co-dialogue {
   display: flex;
   flex-direction: column;
   gap: 5px;
-  background: #f7fafc;
-  border: 1px solid #cdd9e2;
+  background: #0a1c2b;
+  border: 1px solid #1f4560;
   border-left: 4px solid #5e8fb3;
 }
 
-.co-dialogue .co-tag { color: #0a3150 }
-.co-dialogue span:not(.co-tag) { color: #12202b; font-size: 14px; line-height: 1.55 }
+.co-dialogue .co-tag { color: #9dbdd4 }
+.co-dialogue span:not(.co-tag) { color: #e2eef7; font-size: 14px; line-height: 1.55 }
 
 /* À retenir : bleu. */
-.co-retenir { background: #dcebf4; border-left: 4px solid #087ab9 }
-.co-retenir .co-tag { color: #0a3150 }
+.co-retenir { background: #0b2438; border-left: 4px solid var(--blue) }
+.co-retenir .co-tag { color: #6ccaff }
 
 /* Erreurs à éviter : rouge. */
-.co-erreurs { background: #f4e2e5; border-left: 4px solid #d01c35 }
-.co-erreurs .co-tag { color: #8d0f22 }
+.co-erreurs { background: #2a1218; border-left: 4px solid var(--red) }
+.co-erreurs .co-tag { color: #ff8a99 }
 
 .co-retenir ul,
 .co-erreurs ul { margin: 0; padding-left: 19px }
 
 .co-retenir li,
-.co-erreurs li { margin: 5px 0; color: #12202b; font-size: 14px; line-height: 1.55 }
+.co-erreurs li { margin: 5px 0; color: #e4ecf2; font-size: 14px; line-height: 1.55 }
 
-.co-exercice { background: #fbf3df; border-left: 4px solid #c98a12 }
-.co-exercice .co-tag { color: #7a5106 }
-.co-exercice p { margin: 0 0 7px; color: #12202b; font-size: 14px; line-height: 1.6 }
-.co-hint { color: #7a6a45 !important; font-size: 12.5px !important; font-style: italic }
+.co-exercice { background: #241c0b; border-left: 4px solid #c98a12 }
+.co-exercice .co-tag { color: #f0c46a }
+.co-exercice p { margin: 0 0 7px; color: #eee2c8; font-size: 14px; line-height: 1.6 }
+.co-hint { color: #b9a677 !important; font-size: 12.5px !important; font-style: italic }
 
 .co-reflexe { max-width: none; background: #0a3150; color: #fff }
 .co-reflexe .co-tag { color: #6ccaff; font-size: 11px }
@@ -192,16 +194,16 @@
 .co-step {
   display: inline-block;
   padding: 7px 12px;
-  border: 1px solid #b9cbd8;
-  background: #fff;
-  color: #0a3150;
+  border: 1px solid #2c5a7a;
+  background: #0d2a40;
+  color: #d8ecfb;
   font: 700 13px var(--font-title);
   letter-spacing: .4px;
 }
 
 .co-reflexe .co-step { background: #0d4069; border-color: #2c6a98; color: #fff }
 
-.co-arrow { color: #087ab9; font-weight: 900; font-size: 14px }
+.co-arrow { color: #19a9ff; font-weight: 900; font-size: 14px }
 
 /* Tableaux de cours. */
 
@@ -218,32 +220,30 @@
   text-transform: uppercase;
 }
 
-.co-table td { border-bottom: 1px solid #cdd9e2; color: #12202b; line-height: 1.5 }
-.co-table tr:nth-child(even) td { background: #e3ecf2 }
+.co-table td { border-bottom: 1px solid #1d3a50; color: #d3e2ed; line-height: 1.5 }
+.co-table tr:nth-child(even) td { background: #0a1b29 }
 
 /* Case « j'ai lu ce chapitre ». */
 
 .co-read {
   margin: 0 24px;
   padding: 12px 14px;
-  border: 1px solid #9fd2b6;
-  background: #dff1e7;
+  border: 1px solid #2c6a4e;
+  background: #0f2a1f;
 }
 
-.co-read label { margin: 0; color: #12402a; font-size: 13.5px; letter-spacing: 0; text-transform: none }
+.co-read label { margin: 0; color: #bfe9d2; font-size: 13.5px; letter-spacing: 0; text-transform: none }
 
 .co-main .stepnav {
   margin: 18px 26px 0;
   padding: 14px 0 20px;
   border: 0;
-  border-top: 1px solid #cdd9e2;
+  border-top: 1px solid #1d3a50;
   border-radius: 0;
   background: transparent;
 }
 
-.co-main .stepnav button:not(.primary) { background: #fff; color: #0a3150; border-color: #b9cbd8 }
-
-.co-main .mut { color: #50687a }
+.co-main .mut { color: #8ca3b4 }
 
 /* Progression du cours. */
 
