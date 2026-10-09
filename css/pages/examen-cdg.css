@@ -1,419 +1,244 @@
-/* Module examen-cdg — mise en page de la maquette V4 (plein écran).
-
-   Reprend modules/module.css de la maquette : barre du haut collante,
-   bannière photo à bandeau tricolore, onglets d'étapes, cartes, questions,
-   boutons. Tout est rangé sous `.m-examen` et sous `@media screen` : la
-   fiche finale A4 (#sheet) et l'impression ne sont pas touchées. */
-
-@media screen {
-  .m-examen {
-    --mx-line: #234158;
-    --mx-mut: #94aabd;
-    min-height: 100vh;
-    background: linear-gradient(135deg, #03070c, #081621);
-    color: #f3f7fb;
-  }
-
-  /* Police Arial de la maquette partout, sauf dans la fiche finale. */
-  .m-examen .mx-top,
-  .m-examen .mx-hero,
-  .m-examen .tabs,
-  .m-examen .mx-progress,
-  .m-examen .section:not(#s-final),
-  .m-examen #s-final > .card {
-    font-family: Arial, sans-serif;
-  }
-
-  /* ───────────── Barre du haut ───────────── */
-
-  .m-examen .mx-top {
-    position: sticky;
-    top: 0;
-    z-index: 20;
-    display: flex;
-    align-items: center;
-    gap: 18px;
-    height: 66px;
-    padding: 0 22px;
-    background: #04101bea;
-    border-bottom: 1px solid #254158;
-    backdrop-filter: blur(12px);
-  }
-
-  .m-examen .mx-back {
-    flex: none;
-    padding: 9px 13px;
-    border: 1px solid #31506a;
-    border-radius: 5px;
-    background: #0c2233;
-    color: #fff;
-    font-size: 16px;
-    text-decoration: none;
-    white-space: nowrap;
-  }
-
-  .m-examen .mx-back:hover { background: #12304a }
-
-  .m-examen .mx-brand {
-    min-width: 0;
-    font-size: 20px;
-    font-weight: 900;
-    line-height: 1.15;
-  }
-
-  .m-examen .mx-brand small {
-    display: block;
-    color: #7d96a8;
-    font-size: 10px;
-  }
-
-  .m-examen .mx-actions {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-left: auto;
-  }
-
-  .m-examen .mx-actions:empty { display: none }
-
-  .m-examen .mx-file { color: #7d96a8; font-size: 11px; white-space: nowrap }
-
-  .m-examen .mx-top .sync { margin-left: 0 }
-  .m-examen .mx-top .sync:empty { display: none }
-
-  .m-examen .mx-id { flex: none; margin-left: 0; text-align: right; line-height: 1.2 }
-  .m-examen .mx-actions:empty ~ .mx-id { margin-left: auto }
-  .m-examen .mx-id b { font-size: 16px }
-  .m-examen .mx-id small { display: block; color: #91a7b8; font-size: 13px }
-
-  /* ───────────── Bannière ───────────── */
-
-  .m-examen .mx-hero {
-    display: flex;
-    align-items: flex-end;
-    min-height: 265px;
-    padding: 35px;
-    background:
-      linear-gradient(90deg, #03080deb, #03080d75),
-      url('../../assets/bac75n/06_HOME_CARD_EXAMEN_CHEF_GROUPE_CASQUE_MICRO.jpg') center / cover,
-      url('../../assets/img/epreuve-tir.jpg') center / cover;
-    border-bottom: 1px solid #24445c;
-  }
-
-  .m-examen .mx-tri {
-    width: 170px;
-    height: 5px;
-    background: linear-gradient(90deg, #138bea 33%, #fff 33% 66%, #e6233c 66%);
-  }
-
-  .m-examen .mx-hero h1 {
-    margin: 6px 0;
-    font: 700 48px/.9 Arial, sans-serif;
-    letter-spacing: 0;
-    text-transform: none;
-  }
-
-  .m-examen .mx-hero p { max-width: 700px; margin: 16px 0 0; color: #b1c1ce; font-size: 16px }
-  .m-examen .mx-hero .mx-dossier { margin-top: 6px; color: #7d96a8; font-size: 12px }
-  .m-examen .mx-hero .mx-dossier:empty { display: none }
-
-  /* L'en-tête imprimé de la fiche ne s'affiche pas à l'écran. */
-  .m-examen .mx-printhead { display: none }
-
-  /* ───────────── Contenu ───────────── */
-
-  .m-examen .mx-wrap { max-width: 1400px; margin: auto; padding: 18px }
-
-  .m-examen #banner .banner:first-child { margin-top: 0 }
-
-  /* Onglets d'étapes : la rangée `.steps` de la maquette. */
-  .m-examen .tabs {
-    flex-wrap: nowrap;
-    gap: 4px;
-    margin: 0 0 12px;
-    overflow-x: auto;
-    scrollbar-width: thin;
-  }
-
-  .m-examen .tabs .tab {
-    flex: none;
-    padding: 9px 11px;
-    border: 1px solid #244159;
-    border-radius: 0;
-    background: #071521;
-    color: #9eb2c1;
-    font: 400 13.33px Arial, sans-serif;
-    letter-spacing: 0;
-    text-transform: none;
-  }
-
-  .m-examen .tabs .tab:before { content: none }
-  .m-examen .tabs .tab:hover { background: #0c2b42; color: #fff; filter: none }
-  .m-examen .tabs .tab.active { background: #0b78b5; border-color: #244159; color: #fff }
-
-  /* Progression : un simple filet sous les onglets. */
-  .m-examen .mx-progress { display: flex; align-items: center; gap: 10px; margin: -6px 0 12px }
-  .m-examen .mx-progress .progress { flex: 1; height: 3px; border-radius: 0; background: #142a3a }
-  .m-examen .mx-progress .progress span { background: #139fe8 }
-  .m-examen .mx-progress .steptext { margin: 0; color: #6f899c; font-size: 11px; white-space: nowrap }
-
-  /* Cartes */
-  .m-examen .card {
-    margin: 0 0 12px;
-    padding: 18px;
-    border: 1px solid var(--mx-line);
-    border-radius: 7px;
-    background: linear-gradient(145deg, #081723, #06111a);
-  }
-
-  .m-examen .section .card h2,
-  .m-examen .section .card h3 {
-    font-family: Arial, sans-serif;
-    font-weight: 700;
-    letter-spacing: 0;
-    text-transform: none;
-  }
-
-  .m-examen .section .card h2 { margin: 0 0 14px; font-size: 24px; line-height: 1.2 }
-  .m-examen .section .card h3 { margin: 18px 0 8px; font-size: 18.7px }
-  .m-examen .section .card > h3:first-child { margin-top: 0 }
-
-  .m-examen .card p,
-  .m-examen .card .mut { color: #b6c7d2; font-size: 14px }
-
-  .m-examen .card .mut { color: var(--mx-mut); font-size: 13px }
-
-  /* Champs : `.field` de la maquette. */
-  .m-examen .card label {
-    margin: 10px 0 5px;
-    color: #8ea5b7;
-    font: 700 11px Arial, sans-serif;
-    letter-spacing: 0;
-    text-transform: none;
-  }
-
-  .m-examen .card input,
-  .m-examen .card textarea,
-  .m-examen .card select {
-    padding: 10px;
-    border: 1px solid #315069;
-    border-radius: 4px;
-    background: #06111a;
-    color: #fff;
-    font: 14px Arial, sans-serif;
-  }
-
-  .m-examen .card textarea { min-height: 100px }
-
-  .m-examen .card input:focus,
-  .m-examen .card textarea:focus,
-  .m-examen .card select:focus { border-color: #139fe8; box-shadow: 0 0 0 2px #139fe833 }
-
-  .m-examen .card input:disabled,
-  .m-examen .card textarea:disabled,
-  .m-examen .card select:disabled { opacity: .75 }
-
-  .m-examen .card .row { gap: 0 10px }
-
-  /* Tableaux */
-  .m-examen .card th,
-  .m-examen .card td {
-    padding: 10px;
-    border-bottom: 1px solid #213a4e;
-    font: 12px Arial, sans-serif;
-    letter-spacing: 0;
-    text-transform: none;
-  }
-
-  .m-examen .card th { color: #8fa5b5; font-weight: 700 }
-  .m-examen .card code { color: #67c8ff }
-
-  /* Boutons : `.btn` de la maquette. */
-  .m-examen button {
-    padding: 10px 14px;
-    border: 1px solid #2c4b61;
-    border-radius: 4px;
-    background: #0a1925;
-    color: #fff;
-    font: 700 13.33px Arial, sans-serif;
-    letter-spacing: 0;
-    text-transform: none;
-  }
-
-  .m-examen button:hover { filter: brightness(1.18) }
-  .m-examen button:disabled { opacity: .5; cursor: not-allowed; filter: none }
-  .m-examen button.primary { background: #0d7fc0; border-color: #28a9ec }
-  .m-examen button.danger { background: #c91631; border-color: #ef2947 }
-  .m-examen button.green { background: #21754f; border-color: #38a974 }
-
-  .m-examen .mx-top button { padding: 8px 12px; white-space: nowrap }
-
-  .m-examen .stepnav {
-    margin: 0 0 12px;
-    padding: 0;
-    border: 0;
-    background: none;
-  }
-
-  /* La fiche A4 garde sa largeur ; sur téléphone, elle défile dans son cadre. */
-  .m-examen #s-final { overflow-x: auto }
-
-  .m-examen #s-final > .card { display: flex; flex-wrap: wrap; align-items: center; gap: 8px }
-  .m-examen #s-final > .card p { flex-basis: 100%; margin: 6px 0 0 }
-
-  /* Pastilles : `.tag` de la maquette. */
-  .m-examen .tag {
-    display: inline-block;
-    padding: 4px 8px;
-    border-radius: 14px;
-    background: #123d59;
-    color: #67c8ff;
-    font: 800 10px Arial, sans-serif;
-    letter-spacing: .3px;
-    text-transform: uppercase;
-  }
-
-  .m-examen .tag.mx-max { background: #0d2333; color: #8fa5b5 }
-
-  /* Questions */
-  .m-examen .q {
-    margin: 10px 0;
-    padding: 14px;
-    border: 1px solid #27475e;
-    border-radius: 6px;
-    background: #091a28;
-  }
-
-  .m-examen .section .q h3 { margin: 8px 0 7px; font-size: 18.7px; line-height: 1.25 }
-
-  .m-examen .section .card > .tag + h2 { margin-top: 6px }
-
-  /* Énoncé et évolution : bandeaux `.remember` et `.rp` de la maquette,
-     en teintes sombres (le portail reste en thème sombre). */
-  .m-examen .statement {
-    margin: 12px 0;
-    padding: 13px;
-    border: 0;
-    border-left: 4px solid #0b87ca;
-    border-radius: 0;
-    background: #0b2438;
-    color: #dbe8f2;
-    font-size: 15px;
-  }
-
-  .m-examen .statement b { color: #6ccaff }
-
-  .m-examen .rp {
-    margin: 12px 0;
-    padding: 13px;
-    border-left: 4px solid #d7a62d;
-    background: #241c0b;
-    color: #eee2c8;
-    font-size: 14px;
-  }
-
-  .m-examen .rp b { color: #f0c46a }
-
-  .m-examen .card .warn {
-    margin: 12px 0;
-    padding: 13px;
-    border: 0;
-    border-left: 4px solid #d9263c;
-    border-radius: 0;
-    background: #2a1218;
-    color: #f3dcde;
-    font-size: 14px;
-  }
-
-  .m-examen .card .warn b { color: #ff8a99 }
-
-  .m-examen .section .banner { border-radius: 4px }
-
-  /* Correction : questions `.q`, suggestions `.suggest` en pointillés. */
-  .m-examen .correction {
-    margin: 10px 0;
-    padding: 14px;
-    border: 1px solid #27475e;
-    border-radius: 6px;
-    background: #091a28;
-  }
-
-  .m-examen .corrhead { margin-bottom: 8px; font: 700 18.7px/1.25 Arial, sans-serif; letter-spacing: 0 }
-  .m-examen .correction .answer { color: #d9e4ec; font-size: 14px }
-
-  .m-examen .ca-expected,
-  .m-examen .ca-notes {
-    border: 1px dashed #38607b;
-    border-radius: 0;
-    background: #07121b;
-    color: #b6c7d2;
-  }
-
-  .m-examen .ca-label,
-  .m-examen .ca-notes label { color: #8ea5b7; font: 700 11px Arial, sans-serif; letter-spacing: 0 }
-
-  .m-examen .ca-notes .auto { color: #fff; font-size: 15px }
-
-  .m-examen .ca-notes input {
-    border-color: #36536a;
-    background: #07121b;
-    color: #fff;
-    font: 700 16px Arial, sans-serif;
-    text-align: left;
-  }
-
-  .m-examen .ca-notes input::placeholder { color: #6f899c }
-
-  .m-examen .ca-bareme span { border-color: #27475e; background: #0a1a27; font-family: Arial, sans-serif }
-  .m-examen .ca-bareme b { color: #67c8ff }
-
-  /* Résultat */
-  .m-examen .score { margin: 16px 0; color: #fff; font: 900 34px Arial, sans-serif }
-
-  .m-examen .locked { border-radius: 4px; flex-basis: 100% }
+/* Module examen-cdg — modules/module.css de l'archive V4, à l'identique.
+
+   Tout est rangé sous `.m-examen`. Les éléments du module repartent des
+   styles du navigateur (comme dans l'archive, qui n'avait pas le socle du
+   portail) : seuls le bandeau du portail (#banner) et l'ancienne fiche
+   finale des dossiers d'avant la V4 (.printme) gardent les styles du
+   portail. Les classes sont préfixées `mx-` pour ne croiser aucune classe
+   commune (.card, .q, .warn, .row, .sig…). */
+
+.m-examen :where(*:not(#banner, #banner *, .printme, .printme *)) { all: revert }
+.m-examen, .m-examen * { box-sizing: border-box }
+
+.m-examen {
+  --mx-ink: #f3f7fb;
+  --mx-line: #234158;
+  background: linear-gradient(135deg, #03070c, #081621);
+  color: var(--mx-ink);
+  font: 16px/normal Arial, sans-serif;
+  letter-spacing: normal;
 }
 
-/* ───────────── Téléphone ───────────── */
+/* ───────────── Barre du haut ───────────── */
 
-@media screen and (max-width: 850px) {
+.m-examen .mx-top {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  height: 66px;
+  padding: 0 22px;
+  background: #04101bea;
+  border-bottom: 1px solid #254158;
+  backdrop-filter: blur(12px);
+}
+
+.m-examen .mx-back {
+  padding: 9px 13px;
+  border: 1px solid #31506a;
+  border-radius: 5px;
+  background: #0c2233;
+  color: white;
+  text-decoration: none;
+}
+
+.m-examen .mx-brand { font-size: 20px; font-weight: 900 }
+.m-examen .mx-brand small { display: block; color: #7d96a8; font-size: 10px }
+
+/* État d'enregistrement du dépôt (absent de l'archive) : en petit, sous
+   le nom de l'examinateur, hors du flux pour ne rien décaler. */
+.m-examen .mx-sync { position: absolute; right: 22px; bottom: 1px; font-size: 9px; white-space: nowrap }
+.m-examen .mx-sync:empty { display: none }
+
+.m-examen .mx-id { margin-left: auto; text-align: right }
+.m-examen .mx-id small { display: block; color: #91a7b8 }
+
+/* ───────────── Bannière ───────────── */
+
+.m-examen .mx-hero {
+  display: flex;
+  align-items: end;
+  min-height: 265px;
+  padding: 35px;
+  background:
+    linear-gradient(90deg, #03080deb, #03080d75),
+    url('../../assets/bac75n/06_HOME_CARD_EXAMEN_CHEF_GROUPE_CASQUE_MICRO.jpg') center / cover;
+  border-bottom: 1px solid #24445c;
+}
+
+.m-examen .mx-hero h1 { margin: 6px 0; font-size: 48px; line-height: .9 }
+.m-examen .mx-hero p { max-width: 700px; color: #b1c1ce }
+
+.m-examen .mx-tri {
+  width: 170px;
+  height: 5px;
+  background: linear-gradient(90deg, #138bea 33%, #fff 33% 66%, #e6233c 66%);
+}
+
+/* ───────────── Contenu ───────────── */
+
+.m-examen .mx-wrap { max-width: 1400px; margin: auto; padding: 18px }
+.m-examen #banner .banner:first-child { margin-top: 0 }
+
+.m-examen .mx-card {
+  margin-bottom: 12px;
+  padding: 18px;
+  border: 1px solid var(--mx-line);
+  border-radius: 7px;
+  background: linear-gradient(145deg, #081723, #06111a);
+}
+
+.m-examen .mx-card h2 { margin-top: 0 }
+
+/* La fiche des autres modules habille #s-final (css/fiche/dossier.css) :
+   pas celle-ci, qui reste une carte comme les autres onglets. */
+.m-examen #s-final.mx-step { padding: 0; background: none }
+
+/* Encadrés clairs de l'archive (texte hérité de la carte). */
+.m-examen .mx-warn { margin: 12px 0; padding: 13px; background: #f6e3e6; border-left: 4px solid #d9263c }
+.m-examen .mx-rp { margin: 12px 0; padding: 13px; background: #fff1d6; border-left: 4px solid #d7a62d }
+
+.m-examen .mx-btn {
+  padding: 10px 14px;
+  border: 1px solid #28a9ec;
+  border-radius: 4px;
+  background: #0d7fc0;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.m-examen .mx-btn.red { background: #c91631; border-color: #ef2947 }
+.m-examen .mx-btn.ghost { background: #0a1925; border-color: #2c4b61 }
+
+.m-examen .mx-row { display: flex; flex-wrap: wrap; gap: 8px }
+
+.m-examen .mx-field { margin: 8px 0 }
+
+.m-examen .mx-field label {
+  display: block;
+  margin-bottom: 5px;
+  color: #8ea5b7;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.m-examen .mx-field input,
+.m-examen .mx-field textarea,
+.m-examen .mx-field select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #315069;
+  border-radius: 4px;
+  background: #06111a;
+  color: white;
+}
+
+.m-examen .mx-field textarea { min-height: 100px }
+
+.m-examen .mx-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px }
+
+.m-examen .mx-q {
+  margin: 10px 0;
+  padding: 14px;
+  border: 1px solid #27475e;
+  border-radius: 6px;
+  background: #091a28;
+}
+
+.m-examen .mx-q h3 { margin: 0 0 7px }
+
+.m-examen .mx-tag {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 14px;
+  background: #123d59;
+  color: #67c8ff;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.m-examen .mx-suggest {
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px dashed #38607b;
+  background: #07121b;
+  color: #b6c7d2;
+}
+
+.m-examen .mx-scoreline {
+  display: grid;
+  grid-template-columns: 1fr 130px;
+  gap: 10px;
+  align-items: end;
+  margin-top: 8px;
+}
+
+.m-examen .mx-scoreline input {
+  width: 100%;
+  padding: 9px;
+  border: 1px solid #36536a;
+  background: #07121b;
+  color: #fff;
+}
+
+/* Onglets d'étapes. */
+.m-examen .mx-steps { display: flex; gap: 4px; overflow: auto; margin-bottom: 12px }
+
+.m-examen .mx-steps button {
+  padding: 9px 11px;
+  border: 1px solid #244159;
+  background: #071521;
+  color: #9eb2c1;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.m-examen .mx-steps button.on { background: #0b78b5; color: white }
+
+.m-examen table { width: 100%; border-collapse: collapse }
+
+.m-examen th,
+.m-examen td {
+  padding: 10px;
+  border-bottom: 1px solid #213a4e;
+  font-size: 12px;
+  text-align: left;
+}
+
+.m-examen th { color: #8fa5b5 }
+
+.m-examen .mx-result { font-size: 34px; font-weight: 900 }
+
+.m-examen .mx-signature { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px }
+.m-examen .mx-sig { min-height: 100px; padding: 10px; border: 1px solid #315069 }
+.m-examen .mx-sig span { display: block; margin-top: 30px; font-size: 22px }
+
+/* Dossier clôturé : rappel sous la fiche (absent de l'archive). */
+.m-examen .mx-locked { color: #8ea5b7; font-size: 12px }
+
+@media (max-width: 850px) {
+  .m-examen .mx-grid2,
+  .m-examen .mx-signature { grid-template-columns: 1fr }
   .m-examen .mx-hero h1 { font-size: 38px }
 }
 
-@media screen and (max-width: 700px) {
-  .m-examen .mx-top {
-    flex-wrap: wrap;
-    gap: 6px 10px;
-    height: auto;
-    padding: 8px 12px;
-  }
+/* ───────────── Impression : la fiche finale seule, sur fond blanc ───────────── */
 
-  .m-examen .mx-back { padding: 7px 10px; font-size: 13px }
-  .m-examen .mx-brand { flex: 1; font-size: 12px }
-  .m-examen .mx-id b { font-size: 13px }
-  .m-examen .mx-id small { font-size: 11px }
-
-  .m-examen .mx-brand small,
-  .m-examen .mx-file { display: none }
-
-  .m-examen .mx-actions {
-    order: 5;
-    flex-wrap: wrap;
-    margin-left: 0;
-  }
-
-  .m-examen .mx-actions button { padding: 7px 10px; font-size: 12px }
-  .m-examen .mx-top .sync { order: 6 }
-
-  .m-examen .mx-hero { min-height: 230px; padding: 24px 16px }
-  .m-examen .mx-hero h1 { font-size: 34px }
-  .m-examen .mx-hero p { font-size: 14px }
-
-  .m-examen .mx-wrap { padding: 14px 16px }
-  .m-examen .card { padding: 14px }
-  .m-examen .section .card h2 { font-size: 21px }
-  .m-examen .section .q h3,
-  .m-examen .corrhead { font-size: 16px }
-  .m-examen .mx-progress .steptext { display: none }
-  .m-examen .stepnav { flex-wrap: wrap }
-  .m-examen .stepnav button { flex: 1 1 100%; margin: 0 }
+@media print {
+  .m-examen { min-height: 0; background: white; color: #111 }
+  .m-examen .mx-top,
+  .m-examen .mx-hero,
+  .m-examen .mx-steps,
+  .m-examen #banner,
+  .m-examen .noPrint { display: none !important }
+  .m-examen .mx-wrap { max-width: none; padding: 0 }
+  .m-examen .mx-card { margin: 0; padding: 12mm; border: 0; background: white; break-inside: avoid }
+  .m-examen th { color: #444 }
+  .m-examen th, .m-examen td { border-bottom-color: #999 }
+  .m-examen .mx-sig { border-color: #999 }
+  /* Les quatre signatures restent côte à côte sur la page A4. */
+  .m-examen .mx-signature { grid-template-columns: repeat(4, 1fr) }
 }
