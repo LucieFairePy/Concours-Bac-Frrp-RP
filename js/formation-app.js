@@ -27,6 +27,7 @@ import {
   questionSuggestion,
   questionMark,
   formationTotals,
+  evaluationOf,
   suggestedDecision,
   decisionReason,
   isEditableFormation,
@@ -255,7 +256,8 @@ export function startFormation(course) {
 
   function renderEval() {
     const R = state.record;
-    const questions = course.evaluation.questions.map((question, index) => `
+    const evaluation = evaluationOf(R, course);
+    const questions = evaluation.questions.map((question, index) => `
       <div class="q">
         <b>${index + 1}. ${esc(question.q)}</b>
         <span class="mut"> /${question.max}</span>
@@ -273,9 +275,9 @@ export function startFormation(course) {
 
     setHTML('evalBox', `
       <div class="card">
-        <h2>Évaluation — ${course.evaluation.max} points</h2>
+        <h2>Évaluation — ${evaluation.max} points</h2>
         <p class="mut">
-          ${esc(course.evaluation.duration)} • aucune note n’est affichée pendant
+          ${esc(evaluation.duration)} • aucune note n’est affichée pendant
           la saisie des réponses.
         </p>
         ${warn}
@@ -327,7 +329,7 @@ export function startFormation(course) {
     const t = formationTotals(R, course);
     const suggestion = suggestedDecision(R, course);
 
-    const blocks = course.evaluation.questions.map(correctionBlock).join('');
+    const blocks = evaluationOf(R, course).questions.map(correctionBlock).join('');
 
     const options = DECISIONS.map(value =>
       `<option value="${value}" ${R.decision === value ? 'selected' : ''}>${esc(decisionText(value))}</option>`

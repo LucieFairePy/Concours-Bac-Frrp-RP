@@ -16,6 +16,7 @@ import {
   questionSuggestion,
   questionMark,
   formationTotals,
+  evaluationOf,
   suggestedDecision,
   decisionReason,
   readCount
@@ -107,7 +108,7 @@ function coverPage(course, record, t, decision) {
 }
 
 function evaluationPage(course, record, t) {
-  const rows = course.evaluation.questions.map((question, index) => {
+  const rows = evaluationOf(record, course).questions.map((question, index) => {
     const suggestion = questionSuggestion(record, question);
     const mark = questionMark(record, question);
 

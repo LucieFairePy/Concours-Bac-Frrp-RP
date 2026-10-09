@@ -16,7 +16,7 @@ export function blankFormation(id, course, settings) {
   const today = new Date().toISOString().slice(0, 10);
   const command = settings || CONFIG.defaultCommand;
 
-  return {
+  const record = {
     id,
     course: course.module,
     version: RECORD_VERSION,
@@ -42,11 +42,18 @@ export function blankFormation(id, course, settings) {
     closedAt: null,
     closedBy: null
   };
+
+  // Tampon du questionnaire servi à ce dossier. Seules les formations dont
+  // l'évaluation porte une version en écrivent un : les dossiers des autres
+  // formations restent identiques à ce qu'ils étaient.
+  const version = course.evaluation && course.evaluation.version;
+  if (version) record.evalVersion = version;
+  return record;
 }
 
 export function migrateFormation(record, course, settings) {
   const base = blankFormation(record.id, course, record.cmd || settings);
-  return {
+  const migrated = {
     ...base,
     ...record,
     c: { ...base.c, ...record.c },
@@ -57,6 +64,26 @@ export function migrateFormation(record, course, settings) {
     marks: record.marks || {},
     cmd: { ...base.cmd, ...record.cmd }
   };
+  // Un dossier antérieur au tampon garde son questionnaire d'origine : on ne
+  // lui prête pas celui du jour, sinon ses réponses deviendraient orphelines.
+  if (record.evalVersion === undefined) delete migrated.evalVersion;
+  return migrated;
+}
+
+/**
+ * Questionnaire d'évaluation d'un dossier. Réponses et notes sont rangées
+ * par identifiant de question : un dossier se relit toujours avec le
+ * questionnaire sur lequel il a été passé.
+ *
+ *   - formation sans évaluation versionnée : course.evaluation, comme avant ;
+ *   - dossier tamponné à la version courante : course.evaluation ;
+ *   - dossier sans tampon : course.evaluationLegacy (ancien questionnaire).
+ */
+export function evaluationOf(record, course) {
+  const current = course.evaluation;
+  if (!current.version || !course.evaluationLegacy) return current;
+  if (!record || record.evalVersion === current.version) return current;
+  return course.evaluationLegacy;
 }
 
 export function readCount(record, course) {
@@ -77,7 +104,7 @@ export function questionMark(record, question) {
 }
 
 export function formationTotals(record, course) {
-  return totalOf(course.evaluation.questions, record.ans, record.marks);
+  return totalOf(evaluationOf(record, course).questions, record.ans, record.marks);
 }
 
 /**
@@ -101,7 +128,7 @@ export function decisionReason(record, course) {
   const { total, max } = formationTotals(record, course);
   const read = readCount(record, course);
   const chapters = course.chapters.length;
-  const unanswered = course.evaluation.questions
+  const unanswered = evaluationOf(record, course).questions
     .filter(question => !String(record.ans[question.id] || '').trim()).length;
 
   const parts = [
