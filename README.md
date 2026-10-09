@@ -783,6 +783,16 @@ onHide()    l'onglet passe en arrière-plan : enregistrer ce qui traîne
 unmount()   la page est quittée : arrêter ses minuteries
 ```
 
+Comme dans la maquette V4, les **six modules** (concours, quatre formations,
+examen Chef de Groupe) s'ouvrent **en plein écran**, chacun avec sa propre mise
+en page : la route porte `layout: 'module'`, la coque du portail s'efface, et
+la page affiche sa barre (retour au portail, état d'enregistrement `#sync`,
+actions `#pageActions`). Chaque formation donne sa mise en page au moteur
+commun par `js/pages/formations/layouts/<formation>.js` ; chaque module a sa
+feuille `css/pages/<module>.css`, dont toutes les règles sont rangées sous la
+classe racine du module et réservées à l'écran : la fiche finale A4 et
+l'impression ne changent pas.
+
 ```
 index.html                  la seule page : accès examinateur et portail
 404.html                    redirige les anciennes pages à plat, sinon introuvable
@@ -806,6 +816,10 @@ css/
     cours.css               pages de cours et catalogue des formations
     correction.css          correction assistée : attendus, suggérée / retenue
     historique.css          historique : familles, types, filtres, tableau
+    portail.css             catalogue des formations, administration, utilisateurs…
+    concours.css            module Concours (plein écran)
+    examen-cdg.css          module Examen Chef de Groupe (plein écran)
+    formation-*.css         une feuille par formation (plein écran)
   fiche/
     dossier.css             pages A4 des fiches finales (.dossier-page, .dp-*)
     cover.css               couvertures de dossier (.cover-v2)
