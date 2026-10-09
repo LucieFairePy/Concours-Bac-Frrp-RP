@@ -6,8 +6,8 @@
 
 Portail interne fictif de la Brigade Anti-Criminalité 75 N : concours
 d'intégration, formations, qualification Chef de Groupe et historique
-centralisé. Site statique hébergé sur GitHub Pages, dossiers stockés dans ce
-dépôt sur la branche `data`.
+centralisé. Site statique d'une seule page hébergé sur GitHub Pages, dossiers
+stockés dans ce dépôt sur la branche `data`.
 
 > Document fictif — France Roleplay — sans valeur administrative réelle.
 
@@ -15,42 +15,68 @@ dépôt sur la branche `data`.
 
 ## Ce que contient le portail
 
-| Module | Page | Dossiers | Barème |
+| Module | Route | Dossiers | Barème |
 |---|---|---|---|
-| Concours d'intégration BAC | `app.html` | `BAC-AAAA-NNN` | /1000 |
-| Formation Négociation BAC | `negociation.html` | `NEG-AAAA-NNN` | /100 |
-| Formation Chef de Groupe BAC | `chef-de-groupe.html` | `FCG-AAAA-NNN` | /100 |
-| Examen de qualification Chef de Groupe | `examen-cdg.html` | `CDG-AAAA-NNN` | /1000 |
+| Concours d'intégration BAC | `#/concours` | `BAC-AAAA-NNN` | /1000 |
+| Formation Négociation BAC | `#/formations/negociation` | `NEG-AAAA-NNN` | /100 |
+| Formation Chef de Groupe BAC | `#/formations/chef-de-groupe` | `FCG-AAAA-NNN` | /100 |
+| Formation Radio BAC | `#/formations/radio` | `RAD-AAAA-NNN` | /100 |
+| Formation Antiterrorisme BAC | `#/formations/antiterrorisme` | `ANT-AAAA-NNN` | /100 |
+| Examen de qualification Chef de Groupe | `#/examens/chef-de-groupe` | `CDG-AAAA-NNN` | /1000 |
 
 Autour des modules : une page d'accueil V4 (héros, quatre cartes, quatre
-panneaux), un **historique central** commun aux quatre modules, les
+panneaux), un **historique central** commun aux six modules, les
 **actualités**, les **paramètres** (direction BAC, seuils de suggestion), la
 **gestion des utilisateurs** (accès, rôles, effectifs) et une page
 **administration** (actualités, journal des actions sensibles, état du dépôt,
 places d'images à livrer).
 
+Le portail est **une seule page**, `index.html` : elle porte l'écran d'accès
+examinateur et, une fois la session ouverte, le portail lui-même. Chaque écran
+a son adresse `#/…`, comme dans la maquette V4 :
+
 ```
-index.html            accès examinateur, seule porte d'entrée
-accueil.html          accueil V4 : héros, 4 cartes, 4 panneaux
-app.html              concours d'intégration (9 étapes, fiche 8 pages)
-formations.html       choix des formations
-negociation.html      Formation Négociation (20 chapitres)
-chef-de-groupe.html   Formation Chef de Groupe (16 modules)
-examen-cdg.html       Examen de qualification (8 étapes, fiche 5 pages)
-historique.html       historique central, toutes catégories
-actualites.html       actualités du portail, liste et détail
-parametres.html       direction BAC, seuils de suggestion, profil
-utilisateurs.html     accès, rôles et effectifs
-administration.html   actualités, journal, stockage, modules, images
-404.html              adresse inconnue
+index.html                       seule page : accès examinateur, puis portail
+  #/accueil                      accueil V4 : héros, 4 cartes, 4 panneaux
+  #/concours                     concours d'intégration (9 étapes, fiche 8 pages)
+  #/formations                   catalogue des formations
+  #/formations/negociation       Formation Négociation (25 chapitres)
+  #/formations/chef-de-groupe    Formation Chef de Groupe (16 modules)
+  #/formations/radio             Formation Radio (10 chapitres)
+  #/formations/antiterrorisme    Formation Antiterrorisme (14 chapitres)
+  #/examens/chef-de-groupe       Examen de qualification (8 étapes, fiche 5 pages)
+  #/historique                   historique central : formations, concours, examens
+  #/actualites                   actualités du portail, liste et détail
+  #/administration               actualités, journal, stockage, modules, images
+  #/administration/utilisateurs  accès, rôles et effectifs
+  #/administration/parametres    direction BAC, seuils de suggestion, profil
+404.html                         redirige les anciennes adresses, sinon page introuvable
 ```
 
-La navigation est unique et vit dans `js/core/portal.js` : une seule source de
-vérité pour toutes les pages. Elle est rendue dans la **barre latérale** de
-236 px (logo, identité, devise, entrées et sous-entrées, cartouche citation) ;
-l'**en-tête** de 68 px porte l'identité Police Nationale / France Roleplay, la
-recherche globale — qui ouvre l'historique — l'état d'enregistrement et le
-profil connecté.
+Les routes sont déclarées dans `js/routes.js`, **seul endroit du portail où
+une adresse est écrite** : le reste du code passe par `href('<route>')`, et le
+code d'une page n'est chargé que lorsqu'on l'ouvre.
+
+Rien ne casse pour les anciens liens :
+
+- les anciennes pages à plat (`app.html?dossier=…`, `historique.html`,
+  `negociation.html`…) n'existent plus. GitHub Pages sert `404.html` à leur
+  place, qui redirige vers la route correspondante **requête comprise**
+  (table `LEGACY_PAGES` de `js/routes.js`) : `app.html?dossier=BAC-2026-001`
+  mène à `#/concours?dossier=BAC-2026-001` ;
+- les adresses de la maquette (`#/chef-groupe`, `#/examens`, `#/negociation`,
+  `#/radio`…) restent valides et mènent à la route actuelle.
+
+Un lien vers un dossier clôturé s'écrit donc `#/concours?dossier=BAC-2026-001`.
+
+La navigation est unique et vit dans `js/shell/nav.js` : une seule liste pour
+la barre latérale et la nav de l'en-tête. Elle est rendue dans la **barre
+latérale** de 236 px (logo, identité, devise, entrées et sous-entrées,
+cartouche citation) ; l'**en-tête** de 68 px porte l'identité Police Nationale
+/ France Roleplay, la recherche globale — qui ouvre l'historique — l'état
+d'enregistrement et le profil connecté. La sous-entrée *Intervention* des
+formations, annoncée par la maquette, est affichée « Bientôt » et n'est pas
+cliquable.
 
 ---
 
@@ -66,10 +92,11 @@ profil connecté.
    « Enregistrer au format PDF » comme destination dans la fenêtre du navigateur
 6. **CLÔTURER DÉFINITIVEMENT** écrit le dossier dans le dépôt et le verrouille
 
-Le brouillon en cours est enregistré automatiquement toutes les 30 secondes, à
-chaque changement d'étape, et quand l'onglet passe en arrière-plan. L'état de
-l'enregistrement s'affiche dans l'en-tête. Le bouton **Enregistrer** force la
-sauvegarde.
+Le brouillon en cours est enregistré automatiquement 30 secondes après la
+dernière saisie, à chaque changement d'étape, quand l'onglet passe en
+arrière-plan et quand on quitte la page. L'état de l'enregistrement s'affiche
+dans l'en-tête. Le bouton **Enregistrer** force la sauvegarde. Quitter un
+écran avec des modifications non enregistrées demande confirmation.
 
 Un dossier commencé sur un ordinateur se reprend sur un autre : le brouillon
 suit le code personnel, pas la machine. Chaque module a son propre brouillon,
@@ -108,14 +135,35 @@ chiffres.
 Propositions automatiques : ≥ 800 `RETENU`, ≥ 650 `RETENU SOUS RÉSERVE`, en
 dessous `RECALÉ`. Éliminatoires : triche, refus injustifié d'une consigne,
 abandon injustifié, 2 cibles otage touchées ou plus. Une cible otage touchée
-plafonne le tir à 210 et interdit un `RETENU` sans réserve.
+plafonne le tir à 210 et interdit un `RETENU` sans réserve. Un `RECALÉ`
+s'affiche **en rouge** sur la fiche finale, quel que soit le total.
+
+**Contenu repris de la maquette V4** :
+
+- **épreuve physique** — 1200 m après un tour d'échauffement, 30 pompes,
+  50 abdos et **20 jumping jacks, qui remplacent le gainage** : 20 répétitions
+  et plus valent 30 points, en dessous 1,5 point par répétition. Le barème vit
+  dans `js/config.js` et se règle dans Paramètres. Un dossier saisi avant la
+  V4 porte un gainage et pas de jumping jacks : il reste noté sur le gainage
+  (`usesPlank()`, `js/scoring/auto.js`), sa note ne bouge pas ;
+- **questionnaire théorique** — la banque compte 255 questions : les 225
+  d'origine plus 30 de la maquette (identifiants `v4-…`) ;
+- **exercice radio et cinq mises en situation** — ceux de la maquette, pour
+  tout nouveau dossier, estampillé `contentSet: 'v4'`
+  (`js/data/content-set.js`). Un dossier sans estampille garde les textes
+  d'origine : ses réponses sont rangées sous ces questions-là, il continue de
+  s'afficher et de se noter avec elles.
 
 ### Formation Négociation BAC
 
-20 chapitres, de « rôle et principes » à la conclusion, écrits selon la règle
+25 chapitres, de « rôle et principes » à la conclusion, écrits selon la règle
 du cahier des charges : **explication simple → exemple en jeu → point à retenir
 → exercice**. Encadrés `À RETENIR` et `ERREURS À ÉVITER`, échanges types,
-tableaux, exercices avec champ de réponse.
+tableaux, exercices avec champ de réponse. La maquette V4 a ajouté le cadre
+général et les priorités, les questions ouvertes et fermées, la relation de
+confiance, le compte rendu de négociation, les motivations et blocages, et un
+chapitre sur les personnes retenues et les vulnérabilités (urgence médicale
+comprise).
 
 ```
 CONTACT → ÉCOUTER → COMPRENDRE → REFORMULER → IDENTIFIER
@@ -123,8 +171,24 @@ CONTACT → ÉCOUTER → COMPRENDRE → REFORMULER → IDENTIFIER
 ```
 
 Parcours : Identité → Cours → Évaluation → Correction → Fiche finale.
-Évaluation sur 100, décision `ACQUIS` / `ACQUIS SOUS RÉSERVE` / `À REVOIR`.
-Fiche finale de 3 pages A4, quatre signatures.
+Évaluation sur 100 suivant la grille de la maquette :
+
+| Axe | Points |
+|---|---|
+| Théorie et connaissances | 20 |
+| Communication et écoute | 20 |
+| Analyse | 15 |
+| Maîtrise émotionnelle | 10 |
+| Collecte et restitution | 10 |
+| Mise en situation finale | 25 |
+
+Décision `ACQUIS` / `ACQUIS SOUS RÉSERVE` / `À REVOIR`. Fiche finale de 3 pages
+A4, quatre signatures.
+
+Chaque nouveau dossier note la version de l'évaluation qu'il a passée
+(`evalVersion`). Un dossier plus ancien, sans cette marque, garde l'ancien
+questionnaire : `evaluationOf()` (`js/core/formation.js`) le lui sert, et sa
+note ne change pas.
 
 ### Formation Chef de Groupe BAC
 
@@ -137,6 +201,36 @@ dégradation, situation majeure, erreurs, débriefing, exercices, fiche réflexe
 ANALYSER → PRIORISER → ORGANISER → DONNER LES CONSIGNES
   → COORDONNER → CONTRÔLER → ADAPTER → RENDRE COMPTE
 ```
+
+### Formation Radio BAC
+
+Reprise de la maquette V4. 10 chapitres : fondamentaux radio, discipline du
+réseau, prise d'écoute et prise de vacation, indicatifs et appel, structure
+d'une transmission, raccourcis interventions, situations spécifiques,
+exercices pratiques, évaluation finale, fiche réflexe.
+
+```
+ÉCOUTER → IDENTIFIER → LOCALISER → INFORMER → PRIORISER
+  → DEMANDER → ACTUALISER → RENDRE COMPTE
+```
+
+### Formation Antiterrorisme BAC
+
+Reprise de la maquette V4. 14 chapitres : le Bataclan (13 novembre 2015),
+primo-intervention et rôle de la BAC 75 N, le plan BAC-PSIG, RAID · BRI ·
+GIGN, détection et signalement, transmission et compte rendu initial,
+protection et zonage, victimes et témoins, coordination et passage de relais,
+situations dégradées, exercices, mise en situation finale, évaluation, fiche
+réflexe.
+
+```
+OBSERVER → LOCALISER → QUALIFIER → TRANSMETTRE → PROTÉGER
+  → ACTUALISER → COORDONNER → PASSER LE RELAIS
+```
+
+Les quatre formations partagent le même moteur et le même parcours : Identité →
+Cours → Évaluation /100 → Correction → Fiche finale de 3 pages A4, puis
+l'historique. Seul le contenu change.
 
 ### Examen de qualification Chef de Groupe
 
@@ -159,6 +253,13 @@ pèsent pas sur les 250 points de leur situation. Sans ce marquage, la radio
 serait comptée deux fois. `node tools/test.mjs` vérifie sur 50 tirages que le
 brut vaut exactement 1000.
 
+Repris de la maquette V4 : trois questions de commandement de plus dans la
+banque, et **une évolution à injecter par situation**, différente pour chacune.
+Elle est tirée avec la session puis figée comme le reste, s'affiche au milieu
+des questions de la situation et figure sur la fiche finale (« ÉVOLUTION
+INJECTÉE »). Son tirage a son propre flux : les énoncés qu'une graine
+produisait déjà n'ont pas changé.
+
 Décisions : `QUALIFIÉ` / `QUALIFIÉ SOUS RÉSERVE` / `AJOURNÉ` / `REFUSÉ`.
 Fiche finale de 5 pages A4, quatre signatures : candidat, examinateur,
 Directeur BAC, Directeur adjoint BAC.
@@ -174,18 +275,19 @@ fait : `js/data/cdg-bank.js` contient les fragments,
 
 Les neuf dimensions demandées sont là : thème, contexte, effectif, information
 disponible, priorité, contrainte, évolution, événement imprévu, formulation.
+L'évolution à injecter de la maquette V4 s'y ajoute.
 
 **Le total affiché est calculé, pas annoncé.** `countVariants()` multiplie les
 fragments réellement présents ; si quelqu'un en retire, le chiffre baisse.
-Au dernier contrôle :
+`npm test` l'imprime à chaque passage. Au dernier contrôle :
 
 ```
-connaissances      800
-commandement       240
-situation n°1  216 000
-situation n°2  7 776 000
-─────────────────────────
-total          7 993 040
+connaissances           800
+commandement            300
+situation n°1     1 080 000
+situation n°2    38 880 000
+──────────────────────────
+total            39 961 100
 ```
 
 Deux garanties, vérifiées par la suite de tests sur 200 tirages :
@@ -228,24 +330,36 @@ réserve ou ajournement, **exige une motivation avant la clôture**.
 
 ## Historique centralisé
 
-Un seul historique pour tout le portail, pas quatre historiques isolés. Page
-d'entrée « HISTORIQUE — BRIGADE ANTI-CRIMINALITÉ 75 N », recherche libre et
-trois grandes catégories cliquables :
+Un seul historique pour tout le portail, pas six historiques isolés. Page
+d'entrée « HISTORIQUE — BRIGADE ANTI-CRIMINALITÉ 75 N », recherche libre et,
+comme dans la maquette V4, **trois familles** numérotées (`CATEGORIES`, dans
+`js/core/records.js`) :
 
-- Concours d'intégration BAC
-- Formation Négociation BAC
-- Chef de Groupe / Qualification
+- **Formations** — Négociation, Chef de Groupe, Radio, Antiterrorisme
+- **Concours** — Concours d'intégration BAC
+- **Examens** — Examen de qualification Chef de Groupe
+
+Une famille ouvre ses **types** de dossier, un type ouvre son tableau. Les
+anciens liens `?categorie=negociation` et `?categorie=cdg` mènent encore au
+bon type.
 
 Chaque ligne porte le numéro de dossier, le nom et le prénom, le matricule, la
 date, le type, la note, le résultat et l'examinateur. Filtres : type, résultat,
 période, examinateur, plus la recherche sur nom, prénom, matricule et numéro.
-Un clic ouvre la fiche complète dans la page de son module, en lecture seule.
+Un clic ouvre la fiche complète dans la page de son module, en lecture seule
+(`#/concours?dossier=BAC-2026-001`).
 
-**Ajouter une formation au portail** = ajouter une entrée dans
+**Ajouter un type de dossier au portail** = ajouter une entrée dans
 `MODULES`, dans `js/core/records.js`. L'historique, la numérotation, les
 brouillons et la lecture seule suivent sans être retouchés. Un module illisible
 n'empêche pas les autres de s'afficher : son erreur apparaît à côté des lignes
 lues.
+
+**Ajouter une formation** = écrire son contenu dans `js/data/formations/`, la
+déclarer dans `COURSES` (`js/data/formations/index.js`), lui donner une route
+dans `js/routes.js` et une page de trois lignes dans `js/pages/formations/`,
+son entrée dans `js/shell/nav.js` et son module dans `MODULES`. Le moteur de
+formation et le catalogue suivent sans être retouchés.
 
 ---
 
@@ -267,7 +381,7 @@ lues.
 | `train` | valider une formation suivie par un agent |
 | `settings` | modifier la direction BAC et les accès |
 | `journal` | lire le journal des actions sensibles |
-| `accounts` | ouvrir la page Administration |
+| `accounts` | ouvrir les pages Administration et Gestion des utilisateurs |
 
 Le rôle et le drapeau `manage` viennent tous deux de la charge **chiffrée** de
 `data/access.json` : ils ont la même valeur de preuve, et la partie publique du
@@ -340,7 +454,9 @@ est scellé avec le code.
 La documentation technique V4 nomme ses quinze visuels (§5) et interdit de les
 remplacer par des visuels génériques. `js/data/images.js` est donc une **liste
 de places** qui porte exactement cette nomenclature : chaque place dit quel
-fichier est attendu, à quel endroit, et sur quel sujet.
+fichier est attendu, à quel endroit, et sur quel sujet. Les bannières des
+formations Radio et Antiterrorisme reprennent, comme la maquette, la scène de
+nuit de la citation (`12_…`) et l'unité aux boucliers (`14_…`).
 
 Tant qu'une photo n'est pas livrée, un repli sert : l'une des quatre photos BAC
 déjà présentes dans le dépôt, choisie pour rester cohérente avec la page.
@@ -355,8 +471,8 @@ sur la page **Administration**.
 `00_REFERENCE_DESIGN_V4_VALIDEE.png` ne se dépose pas : c'est la capture de
 référence, elle sert à comparer le rendu, pas à être affichée.
 
-Le logo est `assets/logo-bac.svg` ; il s'efface dès que
-`assets/bac75n/01_LOGO_BAC75N_PRINCIPAL.png` est déposé.
+Le logo est `assets/bac75n/01_LOGO_BAC75N_PRINCIPAL.png` ;
+`assets/logo-bac.svg` ne sert plus que de repli s'il manque.
 
 **Droits d'utilisation** : à vérifier avant publication publique (§5). Le kit
 technique ne vaut pas licence d'exploitation.
@@ -418,9 +534,10 @@ alors le temps de l'onglet.
 
 ### Gérer les accès depuis le site
 
-Dans **Paramètres**, une personne portant la permission `settings` voit la carte
-*Accès et rôles* : la liste des accès, un sélecteur de rôle par ligne, un bouton
-pour retirer un accès, et un formulaire d'ajout (grade, nom, rôle).
+Dans **Gestion des utilisateurs** (`#/administration/utilisateurs`), une
+personne portant la permission `settings` voit la carte *Accès et rôles* : la
+liste des accès, un sélecteur de rôle par ligne, un bouton pour retirer un
+accès, et un formulaire d'ajout (grade, nom, rôle).
 
 À la création, le code est généré aléatoirement, affiché **une seule fois** dans
 un champ avec un bouton **Copier**. Il n'est stocké nulle part en clair : en cas
@@ -589,7 +706,7 @@ Le CSS d'impression garantit que rien ne manque :
 > d'indiquer la section (`3/8`). Le contenu complet est privilégié sur le nombre
 > de feuilles. Pour imposer un nombre exact de feuilles, remettre
 > `height: 297mm` et `overflow: hidden` sur `.dossier-page` dans
-> `css/print.css` — mais le texte en excès sera alors perdu.
+> `css/fiche/print.css` — mais le texte en excès sera alors perdu.
 
 ---
 
@@ -616,11 +733,17 @@ data/
   negociation/<ID>.json         un fichier par formation clôturée
   formation-cdg/index.json      index de la formation chef de groupe
   formation-cdg/<ID>.json       un fichier par formation clôturée
+  radio/index.json              index de la formation radio
+  radio/<ID>.json               un fichier par formation clôturée
+  antiterrorisme/index.json     index de la formation antiterrorisme
+  antiterrorisme/<ID>.json      un fichier par formation clôturée
   cdg/index.json                index des examens de qualification
   cdg/<ID>.json                 un fichier par examen clôturé
   drafts/<login>.json           brouillon de concours en cours
   drafts/negociation-<login>.json
   drafts/formation-cdg-<login>.json
+  drafts/radio-<login>.json
+  drafts/antiterrorisme-<login>.json
   drafts/cdg-<login>.json
 ```
 
@@ -646,62 +769,115 @@ aucun dossier, aucune note, aucun candidat.
 
 ## Architecture
 
+Le code est rangé **par page** : chaque écran a son dossier sous
+`js/pages/`, qui exporte une page au contrat du routeur. Ce contrat est écrit
+en tête de `js/router.js` :
+
 ```
-*.html                      une page par module, plus accueil, historique,
-                            paramètres, administration et accès
+mainClass   classe posée sur <main> (facultatif)
+template()  le HTML de la page, peint dans <main> avant mount()
+mount(ctx)  remplit la page ; ctx = { params, session, alive() }
+handlers    l'objet exposé sur window.app pour les gabarits
+canLeave()  faux s'il reste des modifications non enregistrées
+onHide()    l'onglet passe en arrière-plan : enregistrer ce qui traîne
+unmount()   la page est quittée : arrêter ses minuteries
+```
+
+```
+index.html                  la seule page : accès examinateur et portail
+404.html                    redirige les anciennes pages à plat, sinon introuvable
 .nojekyll                   désactive Jekyll
 serve.cmd                   serveur local pour le développement
 .github/workflows/pages.yml déploiement GitHub Pages
 
 assets/favicon.svg          écusson, icône d'onglet
-assets/logo-bac.svg         écusson complet — à remplacer par l'emblème fourni
+assets/logo-bac.svg         écusson complet, repli du logo du kit
 assets/img/                 photos BAC (replis), en .jpg et en .webp
 assets/bac75n/              banque du kit V4, nommée selon le §5
 
 css/
-  base.css                  variables, reset, typo, boutons, champs, tableaux
-  gate.css                  page d'accès
-  layout.css                grille 12 colonnes, onglets, progression
-  portal.css                coque V4 : barre latérale, en-tête, accueil, cartes
-  components.css            cards, questions, énoncés, scores, bannières
-  cours.css                 pages de cours : menu latéral, encadrés, exercices
-  correction.css            correction assistée : attendus, suggérée / retenue
-  historique.css            historique central : catégories, filtres, tableau
-  dossier.css               pages A4 des fiches finales (.dossier-page, .dp-*)
-  cover.css                 couvertures de dossier (.cover-v2)
-  print.css                 toutes les règles @media print
+  tokens.css                jetons V4 : couleurs, polices, mesures
+  base.css                  éléments HTML, commandes, champs, tableaux, grille
+  shell.css                 coque : barre latérale, en-tête, barre du module
+  components.css            panneaux, bannières, étapes, questions, pastilles
+  pages/
+    acces.css               page d'accès (sert aussi au 404.html)
+    accueil.css             accueil : héros, quatre cartes, quatre panneaux
+    cours.css               pages de cours et catalogue des formations
+    correction.css          correction assistée : attendus, suggérée / retenue
+    historique.css          historique : familles, types, filtres, tableau
+  fiche/
+    dossier.css             pages A4 des fiches finales (.dossier-page, .dp-*)
+    cover.css               couvertures de dossier (.cover-v2)
+    print.css               toutes les règles @media print
 
 tools/
   prompt.mjs                saisie masquée, lecture des jetons, confirmations
   access.mjs                codes et rôles : add, recode, remove, rotate
   guard.mjs                 protection des branches : status, apply, test
   restore.mjs               retour arrière sur les données : log, diff, rollback
-  check-pages.mjs           contrôle statique du câblage HTML ↔ JavaScript
+  check-pages.mjs           contrôle statique du câblage gabarits ↔ JavaScript
   test.mjs                  suite de tests du portail
+  smoke.mjs                 démarrage du portail et ouverture de chaque route
 
 js/
-  config.js                 dépôt GitHub, branche de données, autosave, session
-  gate.js                   entrée de la page d'accès
-  accueil.js                page d'accueil et zone dynamique
-  formations.js             choix des formations
-  formation-app.js          contrôleur commun aux deux formations
-  negociation.js            entrée de la Formation Négociation
-  chef-de-groupe.js         entrée de la Formation Chef de Groupe
-  examen-cdg.js             contrôleur de l'examen de qualification
-  historique.js             historique central, recherche et export
-  actualites.js             actualités : liste et détail
-  parametres.js             direction BAC et seuils de suggestion
-  utilisateurs.js           accès, rôles et effectifs
-  administration.js         actualités, journal, stockage, modules, images
-  app.js                    contrôleur du concours d'intégration
+  main.js                   entrée unique : stockage, session, accès ou portail
+  routes.js                 table des routes #/…, alias, anciennes pages
+  router.js                 une adresse → une page, contrat de page
+  config.js                 dépôt GitHub, branche de données, autosave, barèmes
+
+  shell/
+    index.js                coque : réglages partagés, peinture, recherche
+    nav.js                  liste unique de navigation
+    sidebar.js              barre latérale
+    header.js               en-tête et recherche globale
+    feedback.js             bandeaux, état d'enregistrement, refus d'accès
+
+  pages/
+    acces/                  page d'accès : entrée et formulaire
+    accueil/                accueil et zone dynamique
+    concours/               concours : index, navigation, passage, correction,
+                            résultats, fiche finale 8 pages (dossier.js)
+    formations/
+      index.js              catalogue des formations
+      engine.js             moteur commun aux quatre formations
+      sections.js           gabarits : identité, cours, évaluation, correction
+      cours.js              vue de cours : menu, chapitres, blocs
+      fiche.js              fiche finale de formation, 3 pages A4
+      reflexe.js            fiche réflexe, sans gestionnaire
+      negociation.js        une page par formation : le moteur avec son
+      chef-de-groupe.js     contenu
+      radio.js
+      antiterrorisme.js
+    examen-cdg/
+      index.js              contrôleur de l'examen de qualification
+      sections.js           gabarits : identité et tirage, sections
+      epreuves.js           épreuves et correction de l'examen
+      fiche.js              fiche finale de qualification, 5 pages A4
+    historique/             historique central, recherche et export
+    actualites/             actualités : liste et détail
+    administration/         index et cartes : actualités, journal, stockage,
+                            modules, images
+    utilisateurs/           accès, rôles et effectifs
+    parametres/             direction BAC, seuils de suggestion, profil
+
+  ui/
+    stepper.js              étapes, générique
+    chips.js                pastilles de décision, tous vocabulaires
+    autosave.js             enregistrement automatique commun des brouillons
 
   data/
-    questions.js            225 questions du questionnaire théorique
-    radio.js                exercice radio du concours
-    scenarios.js            5 mises en situation du concours
+    questions.js            255 questions du questionnaire théorique
+    radio.js                exercice radio du concours (V4 et d'origine)
+    scenarios.js            5 mises en situation du concours (V4 et d'origine)
+    content-set.js          version du contenu d'épreuve d'un dossier
     steps.js                les 9 étapes du concours
-    negociation.js          contenu de la Formation Négociation
-    chef-de-groupe.js       contenu de la Formation Chef de Groupe
+    formations/
+      index.js              registre des formations (COURSES)
+      negociation.js        contenu de la Formation Négociation
+      chef-de-groupe.js     contenu de la Formation Chef de Groupe
+      radio.js              contenu de la Formation Radio
+      antiterrorisme.js     contenu de la Formation Antiterrorisme
     cdg-bank.js             fragments de l'examen de qualification
     cdg-generator.js        générateur combinatoire et barème
     images.js               places d'images du kit V4 et replis
@@ -711,10 +887,9 @@ js/
     dom.js                  helpers DOM, échappement HTML, initiales
     github-api.js           client API Contents GitHub (lecture/écriture/retry)
     store.js                persistance : driver github ou mémoire
-    records.js              registre des modules, modèle de dossier commun
+    records.js              registre des modules et des familles, dossier commun
     journal.js              journal des actions sensibles
     roles.js                rôles et permissions
-    portal.js               coque : garde de session, barre latérale, en-tête
     lifecycle.js            statuts et avancement d'un dossier (annexe B)
     thresholds.js           seuils de suggestion, centralisés (§8.6, §11.3)
     news.js                 lecture et écriture des actualités
@@ -724,7 +899,7 @@ js/
     roster.js               création, rôle et retrait des accès
     crypto.js               AES-GCM + PBKDF2, génération et format des codes
     state.js                modèle du dossier de concours
-    formation.js            modèle du dossier de formation
+    formation.js            modèle du dossier de formation, version d'évaluation
     cdg-state.js            modèle du dossier d'examen, durée de l'épreuve
 
   scoring/
@@ -732,23 +907,6 @@ js/
     totals.js               notes finales du concours, total /1000, décision
     assist.js               correction assistée : attendus, suggérée, retenue
     cdg.js                  notation de l'examen par section, recommandation
-
-  views/
-    gate.js                 formulaire de la page d'accès
-    navigation.js           étapes du concours
-    stepper.js              étapes, générique, pour les modules ajoutés
-    passage.js              passage du concours
-    correction.js           correction du concours
-    results.js              résultats du concours
-    dossier.js              fiche finale du concours, 8 pages A4
-    cours.js                vue de cours : menu, chapitres, blocs
-    reflexe.js              fiche réflexe, sans gestionnaire
-    formation-fiche.js      fiche finale de formation, 3 pages A4
-    cdg-epreuves.js         épreuves et correction de l'examen
-    cdg-fiche.js            fiche finale de qualification, 5 pages A4
-    settings.js             direction BAC, seuils de suggestion, profil
-    users.js                accès et rôles, effectifs, table des permissions
-    chips.js                pastilles de décision, tous vocabulaires
 ```
 
 JavaScript natif, modules ES, aucune dépendance et aucune étape de build.
@@ -758,15 +916,17 @@ JavaScript natif, modules ES, aucune dépendance et aucune étape de build.
 ## Tests
 
 ```bash
-npm test                     # règles métier + chargement des pages
+npm test                     # règles métier, puis démarrage du portail
+npm run check                # contrôle du câblage seul
 node tools/test.mjs          # règles métier seules
-node tools/smoke.mjs         # chargement de chaque page, étape par étape
-node tools/check-pages.mjs   # contrôle du câblage seul
+node tools/smoke.mjs         # démarrage du portail et chaque route
 ```
 
 Tout tourne en mémoire : aucun réseau, aucun jeton, aucune écriture dans le
-dépôt. Ce qui est vérifié, ce sont les règles du cahier des charges qui ne
-doivent pas se perdre au fil des modifications :
+dépôt. Au dernier passage : **33 groupes** de règles métier,
+**16 contrôles** de démarrage, **13 routes** sans problème de câblage. Ce qui
+est vérifié, ce sont les règles du cahier des charges qui ne doivent pas se
+perdre au fil des modifications :
 
 | Groupe | Ce qui est tenu |
 |---|---|
@@ -785,25 +945,33 @@ doivent pas se perdre au fil des modifications :
 | annexe B | statuts et avancement d'un dossier, neuf étapes au concours |
 | §18 | actualités et effectifs tiennent sur des données, pas sur des constantes |
 | §5 | la banque d'images suit la nomenclature du kit et garde ses replis |
-| §4.1 | chaque identifiant de route du kit mène à une page qui existe |
+| §4.1 | une seule page, une adresse `#/…` par écran, anciennes adresses redirigées |
 | §8.4 | le barème physique se règle, et les paliers restent ordonnés |
 | §11.2 | la suggestion vaut 35 % de complétude et 65 % de critères |
 | §12 §14 | suggestion archivée, version du modèle et piste d'audit du dossier |
 | §22 | WebP plus léger que l'original, miniatures différées et dimensionnées |
-| SEC-001 GHP-001 | aucun jeton livré, aucun chemin absolu qui casserait sous Pages |
-| câblage | handlers, points de montage, imports, liens et styles de chaque page |
+| SEC-001 GHP-001 | aucun jeton livré, routes servies sous un sous-chemin |
+| V4 concours | jumping jacks à la place du gainage, anciens dossiers intacts ; banque fusionnée, radio et situations de la maquette |
+| V4 examen | évolution à injecter, questions de commandement |
+| V4 négociation | grille /100 de la maquette, questionnaire hérité pour les anciens dossiers |
+| V4 formations | Radio et Antiterrorisme : cours complets, évaluation /100 |
+| câblage | handlers, points de montage, routes, ressources, styles et imports |
 
-Le contrôle de câblage attrape ce qu'aucun test d'unité ne voit sur un site sans
-build : un `onclick="app.x()"` dont `app.x` n'existe plus, un
-`setHTML('zone', …)` dont l'élément a disparu du HTML, un import au mauvais
-chemin, un lien mort, une feuille de style oubliée.
+`npm run check` (`tools/check-pages.mjs`) attrape ce qu'aucun test d'unité ne
+voit sur un site sans build : un `onclick="app.x()"` dont la page ne déclare
+plus `x`, un `setHTML('zone', …)` dont l'élément a disparu, un
+`href('route')` vers une route que `js/routes.js` ne connaît pas, une
+ressource absente du dépôt, une feuille du dossier `css/` que `index.html` ne
+charge pas, un import au mauvais chemin. La suite de tests l'appelle aussi.
 
-`tools/smoke.mjs` va plus loin : il **charge le module d'entrée de chaque page**
-comme le ferait le navigateur, avec une session déjà ouverte, puis **ouvre
-toutes les étapes** du module — correction et fiche finale comprises — et chaque
-chapitre de chaque cours. Une page qui reste blanche, une erreur au démarrage,
-une fiche qui ne se remplit pas : le contrôle le dit. Le portail tourne en mode
-local, dans une copie temporaire de `js/` : aucun réseau, aucune écriture.
+`tools/smoke.mjs` va plus loin : il **démarre le portail par son entrée**
+(`js/main.js`) comme le ferait le navigateur, vérifie que l'accès examinateur
+s'affiche sans session, se connecte, puis **ouvre chaque route** de
+`js/routes.js`, **parcourt toutes les étapes** des modules — correction et
+fiche finale comprises — et chaque chapitre de chaque cours, et finit par la
+déconnexion. Une page qui reste blanche, une erreur au montage, une fiche qui
+ne se remplit pas : le contrôle le dit. Le portail tourne en mode local, dans
+une copie temporaire de `js/` : aucun réseau, aucune écriture.
 
 > **Ce que ces contrôles ne remplacent pas.** Ils ne lancent pas de vrai
 > navigateur : la mise en page, l'impression PDF et les écritures réelles vers
@@ -815,8 +983,8 @@ local, dans une copie temporaire de `js/` : aucun réseau, aucune écriture.
 ## Développement local
 
 Le site utilise des modules ES, que les navigateurs refusent de charger depuis
-`file://`. Ouvrir une page par double-clic donne donc une erreur CORS. Il faut
-passer par HTTP.
+`file://`. Ouvrir `index.html` par double-clic donne donc une erreur CORS. Il
+faut passer par HTTP.
 
 Double-cliquer sur **`serve.cmd`** : le serveur démarre et le navigateur s'ouvre
 sur <http://127.0.0.1:8777/>. Fermer la fenêtre arrête le serveur.
@@ -831,6 +999,9 @@ Pour travailler sans dépôt GitHub, vider `owner` et `repo` dans `js/config.js`
 le portail passe en **mode local**, la page d'accès propose « Continuer en
 local », et tout reste dans l'onglet. Pratique pour parcourir l'interface, mais
 rien n'est conservé à la fermeture.
+
+La redirection des anciennes adresses par `404.html` suppose le sous-chemin
+GitHub Pages (`/Concours-Bac-Frrp-RP/`) : en local, elle ne s'applique pas.
 
 Sur GitHub Pages la question ne se pose pas, le site est servi en HTTPS.
 
@@ -853,51 +1024,54 @@ le dépôt :
 | Chapitre | Où |
 |---|---|
 | §4 nomenclature, §4.2 numéros de dossier | `js/core/records.js` (`BAC-AAAA-NNN`, rectificatif `-R01`) |
+| §4.1 routes | `js/routes.js` (une adresse `#/…` par écran), `js/router.js`, `404.html` pour les anciennes pages |
 | §5 banque d'images | `js/data/images.js`, `assets/bac75n/` |
-| §6 design system, barre latérale, en-tête | `css/base.css` (jetons et mesures), `css/portal.css`, `js/core/portal.js` |
-| §6.4 quatre cartes, §6.5 quatre panneaux | `js/accueil.js`, `accueil.html` |
-| §7 comportement de l'accueil | `js/accueil.js` |
-| §8 concours | `js/app.js`, `js/scoring/` |
-| §8.4 barème physique | `js/config.js` → `js/core/thresholds.js`, réglable sur `parametres.html` |
-| §8.6 et §11.3 seuils | `js/core/thresholds.js`, réglables sur `parametres.html` |
+| §6 design system, barre latérale, en-tête | `css/tokens.css` (jetons et mesures), `css/shell.css`, `js/shell/` |
+| §6.4 quatre cartes, §6.5 quatre panneaux | `js/pages/accueil/index.js`, `css/pages/accueil.css` |
+| §7 comportement de l'accueil | `js/pages/accueil/index.js` |
+| §8 concours | `js/pages/concours/`, `js/scoring/` |
+| §8.4 barème physique | `js/config.js` → `js/core/thresholds.js`, réglable sur `#/administration/parametres` |
+| §8.6 et §11.3 seuils | `js/core/thresholds.js`, réglables sur `#/administration/parametres` |
 | §11.2 formule de suggestion | `js/scoring/assist.js` — 35 % complétude + 65 % critères |
-| §9 et §10 formations | `js/data/negociation.js` (20 chapitres), `js/data/chef-de-groupe.js` (16 modules) |
-| §11 examen Chef de Groupe | `js/data/cdg-generator.js`, `js/scoring/cdg.js` |
-| §12 suggestion ≠ décision | `js/scoring/assist.js`, `js/views/correction.js` |
+| §9 et §10 formations | `js/data/formations/` (Négociation 25 chapitres, Chef de Groupe 16 modules, Radio, Antiterrorisme), `js/pages/formations/engine.js` |
+| §11 examen Chef de Groupe | `js/data/cdg-generator.js`, `js/scoring/cdg.js`, `js/pages/examen-cdg/` |
+| §12 suggestion ≠ décision | `js/scoring/assist.js`, `js/pages/concours/correction.js` |
 | §12 suggestion archivée | `suggestionSnapshot()` dans `js/scoring/totals.js`, écrite à la clôture |
-| §13 fiches finales et signatures | `js/views/dossier.js`, `cdg-fiche.js`, `formation-fiche.js` |
+| §13 fiches finales et signatures | `js/pages/concours/dossier.js`, `js/pages/examen-cdg/fiche.js`, `js/pages/formations/fiche.js` |
 | §14 modèle de données | `js/core/records.js`, `js/core/store.js` ; `version` et `auditTrail` portés par chaque dossier |
 | §15 cycle de vie, annexe B | `js/core/lifecycle.js` |
-| §16 historique centralisé | `js/historique.js` |
-| §17 rôles, §17.1 journal | `js/core/roles.js`, `js/core/journal.js`, `utilisateurs.html` |
-| §18 actualités, dossiers, accès rapides, effectifs | `js/core/news.js`, `js/core/effectifs.js`, `js/accueil.js` |
+| §16 historique centralisé | `js/pages/historique/index.js`, familles dans `js/core/records.js` |
+| §17 rôles, §17.1 journal | `js/core/roles.js`, `js/core/journal.js`, `js/pages/utilisateurs/` |
+| §18 actualités, dossiers, accès rapides, effectifs | `js/core/news.js`, `js/core/effectifs.js`, `js/pages/accueil/index.js` |
 | §19 GitHub Pages | `.github/workflows/pages.yml`, `404.html`, chemins relatifs |
-| §22 performance et accessibilité | WebP via `image-set()`, miniatures différées et dimensionnées, focus visible |
+| §22 performance et accessibilité | WebP via `image-set()`, miniatures différées et dimensionnées, focus visible, pages chargées à la demande |
 | §21 recette | `tools/test.mjs`, `tools/smoke.mjs`, `tools/check-pages.mjs` |
 
-Un seul écart de forme, et une impossibilité :
+Les routes suivent désormais la maquette : une seule page et une adresse
+`#/…` par écran, sans routeur côté serveur ni repli 404 à configurer sur
+GitHub Pages. Il reste une impossibilité :
 
-- **les routes** (§4.1) sont servies par des fichiers `.html` à plat
-  (`historique.html`, pas `/historique`). Les identifiants et les adresses
-  logiques du kit vivent dans `ROUTES`, en haut de `js/core/portal.js`, et
-  c'est le seul endroit du portail où une adresse est écrite : passer aux
-  adresses propres ne demanderait que de changer cette table. L'annexe E dit
-  de conserver l'architecture du dépôt en reproduisant le contrat
-  fonctionnel ; sur GitHub Pages, des adresses sans extension demanderaient
-  un routeur et un repli 404 pour un gain cosmétique.
 - **l'authentification et les permissions côté serveur** (§17, §19.2) sont
-  impossibles sur un hébergement statique. Voir ci-dessous.
+  impossibles sur un hébergement statique. Voir ci-dessus.
 
 ---
 
 ## Ce qui reste à faire
 
-Deux points dépendent du commanditaire, et rien n'a été inventé à leur place :
+Ce qui dépend du commanditaire, et rien n'a été inventé à sa place :
 
-- **la banque d'images BAC** — les places sont prêtes et listées dans la page
-  Administration ; déposer les fichiers aux noms indiqués suffit ;
-- **le véritable emblème BAC 75 N** — il doit remplacer
-  `assets/logo-bac.svg`.
+- **la banque d'images BAC** — quatorze visuels du kit sont déposés dans
+  `assets/bac75n/` ; il manque `15_HOME_CARD_HISTORIQUE_BAC75N.jpg`, que le
+  kit ne contient pas. Sa place est prête (repli en attendant) : déposer le
+  fichier sous ce nom suffit ;
+- **les droits d'utilisation des photos** — à vérifier avant toute
+  publication publique (§5) ;
+- **la Formation Intervention** — annoncée par la maquette, elle figure dans
+  la barre latérale avec la mention « Bientôt » ; son contenu reste à écrire.
+
+Ce que les contrôles automatiques ne voient pas, et qui se vérifie à l'œil
+une fois le site servi : la mise en page, l'impression PDF et les écritures
+réelles vers GitHub.
 
 Un point est un choix d'architecture assumé, pas un oubli :
 
