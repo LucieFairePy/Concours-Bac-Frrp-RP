@@ -214,7 +214,8 @@ const ROUTE_SPECS = {
   'formation-negociation': { expect: ['tabs', 'sections'], ...COURSE_STEPS, chapters: true },
   'formation-chef-groupe': { expect: ['tabs', 'sections'], ...COURSE_STEPS, chapters: true },
   'formation-radio': { expect: ['tabs', 'sections'], ...COURSE_STEPS, chapters: true },
-  'formation-antiterrorisme': { expect: ['tabs', 'sections'], ...COURSE_STEPS, chapters: true },
+  // Le module d'archive est un cours seul : ni étapes, ni dossier à remplir.
+  'formation-antiterrorisme': { expect: ['coursWrap'], chapters: true },
   'examen-chef-groupe': {
     expect: ['tabs', 'sections'],
     steps: ['id', 'co', 'cm', 'sit1', 'sit2', 'correct', 'result', 'final'],
@@ -337,7 +338,7 @@ for (const [id, route] of Object.entries(ROUTES)) {
       const { courseByRoute } = await import(sandboxUrl('js/data/formations/index.js'));
       const { course } = courseByRoute(id);
       const app = globalThis.window.app;
-      app.openStep('cours');
+      if (typeof app.openStep === 'function') app.openStep('cours');
       for (const chapter of course.chapters) {
         app.openChapter(chapter.id);
         await settle(2);
