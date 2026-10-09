@@ -28,30 +28,30 @@ export function identitySection(R, d, stepNav) {
   return `
     <section id="s-id" class="section active">
       <div class="card">
-        <h2>Candidat</h2>
+        <h2>Identité — ${esc(R.id)}</h2>
         <p class="mut">
           Le candidat est déjà un agent BAC expérimenté. L’examen vérifie s’il peut
           désormais se voir confier un groupe.
         </p>
         <div class="row">
-          <div class="c4"><label>Nom</label><input ${d} value="${esc(R.c.last)}" oninput="app.set('c.last',this.value)"></div>
-          <div class="c4"><label>Prénom</label><input ${d} value="${esc(R.c.first)}" oninput="app.set('c.first',this.value)"></div>
-          <div class="c4"><label>Grade</label><input ${d} value="${esc(R.c.grade)}" oninput="app.set('c.grade',this.value)"></div>
-          <div class="c3"><label>Matricule</label><input ${d} value="${esc(R.c.mat)}" oninput="app.set('c.mat',this.value)"></div>
-          <div class="c3"><label>Date</label><input type="date" ${d} value="${esc(R.c.date)}" oninput="app.set('c.date',this.value)"></div>
-          <div class="c3"><label>Heure de début</label><input type="time" ${d} value="${esc(R.c.start)}" oninput="app.set('c.start',this.value)"></div>
-          <div class="c3"><label>Heure de fin</label><input type="time" ${d} value="${esc(R.c.end)}" oninput="app.set('c.end',this.value)"></div>
+          <div class="c6"><label>Nom</label><input ${d} value="${esc(R.c.last)}" oninput="app.set('c.last',this.value)"></div>
+          <div class="c6"><label>Prénom</label><input ${d} value="${esc(R.c.first)}" oninput="app.set('c.first',this.value)"></div>
+          <div class="c6"><label>Grade</label><input ${d} value="${esc(R.c.grade)}" oninput="app.set('c.grade',this.value)"></div>
+          <div class="c6"><label>Matricule</label><input ${d} value="${esc(R.c.mat)}" oninput="app.set('c.mat',this.value)"></div>
+          <div class="c6"><label>Date</label><input type="date" ${d} value="${esc(R.c.date)}" oninput="app.set('c.date',this.value)"></div>
+          <div class="c6"><label>Heure de début</label><input type="time" ${d} value="${esc(R.c.start)}" oninput="app.set('c.start',this.value)"></div>
+          <div class="c6"><label>Heure de fin</label><input type="time" ${d} value="${esc(R.c.end)}" oninput="app.set('c.end',this.value)"></div>
         </div>
       </div>
 
       <div class="card">
-        <h3>Examinateur(s)</h3>
+        <h2>Examinateur(s)</h2>
         ${examiners}
         <button ${d} onclick="app.addExaminer()">+ Ajouter un examinateur</button>
       </div>
 
       <div class="card">
-        <h3>Déroulement et barème</h3>
+        <h2>Déroulement et barème</h2>
         <p class="mut">
           Format compact voulu : environ 45 minutes, une heure au maximum.
         </p>
@@ -67,7 +67,7 @@ export function identitySection(R, d, stepNav) {
       </div>
 
       <div class="card">
-        <h3>Tirage de cette session</h3>
+        <h2>Tirage de cette session</h2>
         <table>
           <tr><th>Graine du tirage</th><td><code>${esc(R.draw.seed)}</code></td></tr>
           <tr><th>Tiré le</th><td>${esc(new Date(R.draw.drawnAt).toLocaleString('fr-FR'))}</td></tr>

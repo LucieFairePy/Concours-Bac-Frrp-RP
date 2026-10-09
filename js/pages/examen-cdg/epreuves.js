@@ -24,9 +24,9 @@ import { duration } from '../../core/cdg-state.js';
 function answerField(question, record, disabled, label) {
   return `
     <div class="q">
-      <b>${esc(label)}</b>
-      <span class="mut"> /${question.max}</span>
-      <div>${esc(question.q)}</div>
+      <span class="tag">${esc(label)}</span>
+      <span class="tag mx-max">/${question.max}</span>
+      <h3>${esc(question.q)}</h3>
       <label>Réponse du candidat — retranscription examinateur</label>
       <textarea ${disabled} oninput="app.setAnswer('${esc(question.id)}',this.value)">${esc(record.ans[question.id] || '')}</textarea>
     </div>`;
@@ -34,11 +34,11 @@ function answerField(question, record, disabled, label) {
 
 export function renderConnaissances(record, disabled, hostId = 'connaissancesBox') {
   const questions = record.draw.connaissances.map((question, index) =>
-    answerField(question, record, disabled, `${index + 1}. [${question.themeLabel}]`)).join('');
+    answerField(question, record, disabled, `Question ${index + 1} · ${question.themeLabel}`)).join('');
 
   setHTML(hostId, `
     <div class="card">
-      <h2>Connaissances essentielles — 200 points</h2>
+      <h2>Connaissances essentielles — /200</h2>
       <p class="mut">
         Dix questions courtes, tirées dans dix thèmes différents, en français
         simple et sans piège de vocabulaire. Aucune note n’est affichée pendant
@@ -50,11 +50,11 @@ export function renderConnaissances(record, disabled, hostId = 'connaissancesBox
 
 export function renderCommandement(record, disabled, hostId = 'commandementBox') {
   const questions = record.draw.commandement.map((question, index) =>
-    answerField(question, record, disabled, `${index + 1}. Commandement`)).join('');
+    answerField(question, record, disabled, `Commandement ${index + 1}`)).join('');
 
   setHTML(hostId, `
     <div class="card">
-      <h2>Commandement / leadership — 200 points</h2>
+      <h2>Commandement / leadership — /200</h2>
       <p class="mut">Cinq questions courtes sur la conduite d’un groupe.</p>
       ${questions}
     </div>`);
@@ -68,7 +68,7 @@ function injectionBlock(situation) {
   if (!situation.injection) return '';
   const text = String(situation.injection);
   return `
-    <div class="banner">
+    <div class="rp">
       <b>ÉVOLUTION À INJECTER</b> — à lire au candidat maintenant, avant la
       question suivante<br>${esc(text.charAt(0).toUpperCase() + text.slice(1))}.
     </div>`;
@@ -80,14 +80,15 @@ export function renderSituation(record, index, disabled, hostId) {
 
   const questions = situation.questions.map((question, position) => {
     const label = question.section === 'radio'
-      ? `${position + 1}. Radio & compte rendu`
-      : `${position + 1}.`;
+      ? `Question ${position + 1} · Radio & compte rendu`
+      : `Question ${position + 1}`;
     const field = answerField(question, record, disabled, label);
     return position === middle ? injectionBlock(situation) + field : field;
   }).join('');
 
   setHTML(hostId, `
     <div class="card">
+      <span class="tag">Mise en situation ${index + 1}</span>
       <h2>${esc(situation.title)}</h2>
       <div class="statement">
         <b>ÉNONCÉ À LIRE AU CANDIDAT</b><br>${esc(situation.statement)}
