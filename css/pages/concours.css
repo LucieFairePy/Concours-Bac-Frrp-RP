@@ -350,7 +350,7 @@
 
   /* Fond gris clair autour des pages A4, comme la maquette (la fiche
      elle-même n'est pas restylée). */
-  .m-concours #s-final { background: #d8dde2 }
+  .m-concours #s-final { background: #0a1520 }
   .m-concours #s-final > .card { margin-bottom: 0 }
 
   /* ─────────────── Adaptatif ─────────────── */
