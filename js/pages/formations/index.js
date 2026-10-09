@@ -1,64 +1,74 @@
 // Catalogue des formations — entrée du menu « Formations » (§3).
 //
-// Elle n'invente rien : elle lit les contenus de formation déclarés et
-// affiche, pour chacun, son sommaire, sa fiche réflexe et son état côté
-// historique.
+// Même gabarit que la maquette V4 : la bannière du pôle formation puis une
+// grande carte photo par formation, deux par ligne. Chaque carte ouvre la
+// page de la formation ; le nombre de dossiers clôturés de chaque module,
+// lu dans l'historique, s'affiche en coin de carte quand il y en a.
 
 import { esc, setHTML } from '../../core/dom.js';
-import * as portal from '../../shell/index.js';
 import * as records from '../../core/records.js';
 import { imageStyle } from '../../data/images.js';
 import { href } from '../../routes.js';
 import { COURSES } from '../../data/formations/index.js';
-import { reflexeCard } from './reflexe.js';
-import { decisionChip } from '../../ui/chips.js';
 
-function card({ course, route }) {
-  const mod = records.MODULES[course.module];
-  const summary = course.chapters
-    .slice(0, 6)
-    .map(chapter => `<li>${esc(chapter.num)} — ${esc(chapter.title)}</li>`)
-    .join('');
+/**
+ * L'ordre, les titres, les images et les accroches de la maquette V4. Une
+ * formation déclarée dans COURSES sans entrée ici garde son titre et son
+ * introduction : la page suit sans retouche.
+ */
+const CARDS = {
+  'formation-negociation': {
+    order: 1,
+    title: 'Négociation BAC',
+    image: 'cours-negociation',
+    text: 'Communication, écoute active, gestion de crise, coordination et mises en situation.'
+  },
+  'formation-radio': {
+    order: 2,
+    title: 'Radio BAC',
+    image: 'cours-radio',
+    text: 'Discipline réseau, prise d’écoute, indicatifs, transmissions, raccourcis et exercices pratiques.'
+  },
+  'formation-antiterrorisme': {
+    order: 3,
+    title: 'Antiterrorisme BAC 75 N',
+    image: 'cours-antiterrorisme',
+    text: 'Primo-intervention, Bataclan, protection, transmissions, coordination et passage de relais.'
+  },
+  'formation-chef-groupe': {
+    order: 4,
+    title: 'Chef de Groupe BAC',
+    image: 'formation-cdg',
+    text: 'Organisation, leadership, commandement, radio et adaptation.'
+  }
+};
 
-  return `
-    <div class="ptile">
-      <div class="co-banner" style="${imageStyle(course.image)}">
-        <div class="co-banner-body">
-          <div class="co-kicker">Formation</div>
-          <h2>${esc(course.title)}</h2>
-        </div>
-      </div>
-      <p class="mut" style="margin:11px 0">${esc(course.intro)}</p>
-      <ul class="plist">${summary}</ul>
-      ${course.chapters.length > 6 ? `<p class="mut">… et ${course.chapters.length - 6} autres chapitres • évaluation /${course.evaluation.max}</p>` : ''}
-      ${reflexeCard(course)}
-      <div class="row">
-        <div class="c6"><a class="gate-link" href="${href(route)}">Ouvrir la formation</a></div>
-        <div class="c6"><a class="gate-link" style="background:#173d5b"
-          href="${href('historique', { module: mod.id })}">Dossiers clôturés</a></div>
-      </div>
-      <div id="state-${esc(course.module)}"></div>
-    </div>`;
+function entries() {
+  return COURSES
+    .map((entry, index) => ({ ...entry, card: CARDS[entry.route] || { order: 10 + index } }))
+    .sort((a, b) => a.card.order - b.card.order);
 }
 
+function card({ course, route, card: look }) {
+  return `
+    <a class="pfeature" href="${href(route)}" style="${imageStyle(look.image || course.image)}">
+      <span class="pfeature-more" id="state-${esc(course.module)}"></span>
+      <div class="pfeature-body">
+        <span class="ptag">Formation</span>
+        <h3>${esc(look.title || course.title)}</h3>
+        <p>${esc(look.text || course.intro)}</p>
+      </div>
+    </a>`;
+}
+
+/** Le nombre de dossiers clôturés, en coin de carte ; rien s'il n'y en a pas. */
 async function states() {
-  await Promise.all(COURSES.map(async ({ course, route }) => {
-    const host = `state-${course.module}`;
+  await Promise.all(COURSES.map(async ({ course }) => {
     try {
-      const entries = await records.listModule(course.module);
-      if (!entries.length) {
-        setHTML(host, '<p class="pempty">Aucun dossier de formation clôturé.</p>');
-        return;
-      }
-      const lines = entries.slice(0, 4).map(entry => `
-        <li>
-          <span class="pid">${esc(entry.id)}</span>
-          <span>${esc(records.fullName(entry) || '—')} ${decisionChip(entry.decision)}</span>
-          <a class="pwhen" href="${href(route, { dossier: entry.id })}">ouvrir →</a>
-        </li>`).join('');
-      setHTML(host, `<p class="mut">${entries.length} dossier(s) clôturé(s)</p><ul class="plist">${lines}</ul>`);
+      const count = (await records.listModule(course.module)).length;
+      if (count) setHTML(`state-${course.module}`, `${count} dossier${count > 1 ? 's' : ''} clôturé${count > 1 ? 's' : ''}`);
     } catch (error) {
-      setHTML(host, portal.errorBanner(`Historique illisible : ${error.message}`));
+      setHTML(`state-${course.module}`, 'historique illisible');
     }
   }));
 }
@@ -70,18 +80,16 @@ export default {
         <div class="flag"></div>
         <small class="hero-kicker no-print">Pôle formation</small>
         <h1>Formations BAC</h1>
-        <div class="mut">Des modules complets, progressifs et intégrés au même portail</div>
+        <div class="mut">Des modules complets, progressifs et intégrés au même portail.</div>
       </div>
-      <div id="cards" class="ptiles">${COURSES.map(card).join('')}</div>`;
+      <div id="cards" class="pfeatures">${entries().map(card).join('')}</div>
+      <p class="pfoot">
+        <a href="${href('historique', { famille: 'formations' })}">Dossiers de formation clôturés →</a>
+        <a href="${href('examen-chef-groupe')}">Examen de qualification Chef de Groupe →</a>
+      </p>`;
   },
 
   async mount() {
-    portal.setModuleBar(`
-      <b>Formations</b>
-      <span class="mut">${COURSES.length} formations disponibles</span>
-      <span class="spacer"></span>
-      <a class="pnav-item" href="${href('examen-chef-groupe')}">Examen de qualification →</a>`);
-
     await states();
   }
 };

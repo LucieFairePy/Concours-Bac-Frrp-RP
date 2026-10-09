@@ -5,13 +5,11 @@
 // Les accès et les rôles vivent sur la page Gestion des utilisateurs. Chaque
 // enregistrement passe au journal : qui, quand, quoi.
 
-import { esc } from '../../core/dom.js';
 import { CONFIG } from '../../config.js';
 import { state } from '../../core/state.js';
 import * as store from '../../core/store.js';
 import * as auth from '../../core/auth.js';
 import * as portal from '../../shell/index.js';
-import { href } from '../../routes.js';
 import * as journal from '../../core/journal.js';
 import * as thresholds from '../../core/thresholds.js';
 import {
@@ -124,26 +122,20 @@ const handlers = {
 
 export default {
   handlers,
+  mainClass: 'pportal',
 
   template() {
     return `
-      <div class="hero" data-img="administration">
+      <div class="hero" data-img="logo">
         <div class="flag"></div>
         <small class="hero-kicker no-print">Direction BAC 75 N</small>
         <h1>Paramètres du site</h1>
-        <div class="mut">Direction BAC • seuils de suggestion • profil et session</div>
+        <div class="mut">Les informations de direction alimentent automatiquement les dossiers et signatures.</div>
       </div>
       <div id="settingsBox"></div>`;
   },
 
   mount() {
-    portal.setModuleBar(`
-      <b>Paramètres</b>
-      <span class="mut">${esc(auth.describeRole())}</span>
-      <span class="spacer"></span>
-      ${auth.can('accounts') ? `<a class="pnav-item" href="${href('utilisateurs')}">Gestion utilisateurs →</a>` : ''}
-      ${auth.can('accounts') ? `<a class="pnav-item" href="${href('administration')}">Administration →</a>` : ''}`);
-
     renderSettings();
   }
 };

@@ -8,9 +8,8 @@
 // Le comptage des effectifs vit sur la même page : il est calculé sur les
 // accès affichés juste au-dessus, et pas sur une liste écrite à la main.
 
-import { byId, esc } from '../../core/dom.js';
+import { byId } from '../../core/dom.js';
 import * as portal from '../../shell/index.js';
-import { href } from '../../routes.js';
 import * as auth from '../../core/auth.js';
 import * as roster from '../../core/roster.js';
 import * as journal from '../../core/journal.js';
@@ -152,26 +151,21 @@ const handlers = {
 
 export default {
   handlers,
+  mainClass: 'pportal',
 
   template() {
     return `
       <div class="hero" data-img="unite">
         <div class="flag"></div>
-        <small class="hero-kicker no-print">Gestion du portail</small>
+        <small class="hero-kicker no-print">Comptes &amp; permissions</small>
         <h1>Gestion des utilisateurs</h1>
-        <div class="mut">Accès et rôles • effectifs BAC 75 N • ce que chaque rôle permet</div>
+        <div class="mut">Accès et rôles des comptes du portail, effectifs BAC 75 N et niveaux d’accès.</div>
       </div>
       <div id="usersBox"></div>`;
   },
 
   async mount() {
     counted = null;
-    portal.setModuleBar(`
-      <b>Gestion utilisateurs</b>
-      <span class="mut">${esc(auth.describeRole())}</span>
-      <span class="spacer"></span>
-      <a class="pnav-item" href="${href('parametres')}">Paramètres →</a>
-      <a class="pnav-item" href="${href('administration')}">Administration →</a>`);
 
     // Première passe avec ce qui est déjà en cache, pour que la page ne
     // reste pas vide pendant la lecture du dépôt.
