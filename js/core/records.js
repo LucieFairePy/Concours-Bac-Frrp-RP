@@ -13,26 +13,33 @@
 import * as store from './store.js';
 import * as lifecycle from './lifecycle.js';
 
+/**
+ * Les trois familles de l'historique, comme dans la maquette V4 :
+ * formations, concours, examens. Chaque module appartient à une famille.
+ */
 export const CATEGORIES = {
+  formations: {
+    id: 'formations',
+    label: 'Formations',
+    blurb: 'Négociation · Chef de Groupe · Radio · Antiterrorisme',
+    image: 'formation-cdg'
+  },
   concours: {
     id: 'concours',
-    label: 'Concours d’intégration BAC',
-    blurb: 'Dossiers de passage des candidats à l’intégration.',
-    image: 'assets/img/cover-hero.jpg'
+    label: 'Concours',
+    blurb: 'Concours d’intégration BAC',
+    image: 'concours'
   },
-  negociation: {
-    id: 'negociation',
-    label: 'Formation Négociation BAC',
-    blurb: 'Suivi et évaluation de la formation négociation.',
-    image: 'assets/img/mises-en-situation.jpg'
-  },
-  cdg: {
-    id: 'cdg',
-    label: 'Chef de Groupe / Qualification',
-    blurb: 'Formation Chef de Groupe et examen de qualification.',
-    image: 'assets/img/recap-general.jpg'
+  examens: {
+    id: 'examens',
+    label: 'Examens',
+    blurb: 'Examen de qualification Chef de Groupe',
+    image: 'cdg'
   }
 };
+
+/** Anciennes catégories (liens `?categorie=` d'avant la V4) → module. */
+export const LEGACY_CATEGORIES = { negociation: 'negociation', cdg: 'cdg' };
 
 export const MODULES = {
   concours: {
@@ -45,12 +52,12 @@ export const MODULES = {
     index: 'dossiers/index.json',
     draft: login => `drafts/${login}.json`,
     max: 1000,
-    page: 'app.html',
+    route: 'concours',
     legacy: true
   },
   negociation: {
     id: 'negociation',
-    category: 'negociation',
+    category: 'formations',
     label: 'Formation Négociation BAC',
     short: 'Négociation',
     prefix: 'NEG',
@@ -58,11 +65,11 @@ export const MODULES = {
     index: 'negociation/index.json',
     draft: login => `drafts/negociation-${login}.json`,
     max: 100,
-    page: 'negociation.html'
+    route: 'formation-negociation'
   },
   'formation-cdg': {
     id: 'formation-cdg',
-    category: 'cdg',
+    category: 'formations',
     label: 'Formation Chef de Groupe BAC',
     short: 'Formation CDG',
     prefix: 'FCG',
@@ -70,11 +77,35 @@ export const MODULES = {
     index: 'formation-cdg/index.json',
     draft: login => `drafts/formation-cdg-${login}.json`,
     max: 100,
-    page: 'chef-de-groupe.html'
+    route: 'formation-chef-groupe'
+  },
+  radio: {
+    id: 'radio',
+    category: 'formations',
+    label: 'Formation Radio BAC',
+    short: 'Radio',
+    prefix: 'RAD',
+    dir: 'radio',
+    index: 'radio/index.json',
+    draft: login => `drafts/radio-${login}.json`,
+    max: 100,
+    route: 'formation-radio'
+  },
+  antiterrorisme: {
+    id: 'antiterrorisme',
+    category: 'formations',
+    label: 'Formation Antiterrorisme BAC',
+    short: 'Antiterrorisme',
+    prefix: 'ANT',
+    dir: 'antiterrorisme',
+    index: 'antiterrorisme/index.json',
+    draft: login => `drafts/antiterrorisme-${login}.json`,
+    max: 100,
+    route: 'formation-antiterrorisme'
   },
   cdg: {
     id: 'cdg',
-    category: 'cdg',
+    category: 'examens',
     label: 'Examen de qualification Chef de Groupe BAC',
     short: 'Examen CDG',
     prefix: 'CDG',
@@ -82,11 +113,11 @@ export const MODULES = {
     index: 'cdg/index.json',
     draft: login => `drafts/cdg-${login}.json`,
     max: 1000,
-    page: 'examen-cdg.html'
+    route: 'examen-chef-groupe'
   }
 };
 
-export const MODULE_ORDER = ['concours', 'negociation', 'formation-cdg', 'cdg'];
+export const MODULE_ORDER = ['concours', 'negociation', 'formation-cdg', 'radio', 'antiterrorisme', 'cdg'];
 
 export function module(id) {
   const found = MODULES[id];

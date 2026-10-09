@@ -6,9 +6,28 @@
   <title>Page introuvable — Portail BAC 75 N</title>
   <link rel="icon" type="image/svg+xml" href="/Concours-Bac-Frrp-RP/assets/favicon.svg">
   <link rel="stylesheet" href="/Concours-Bac-Frrp-RP/css/base.css">
+  <link rel="stylesheet" href="/Concours-Bac-Frrp-RP/css/layout.css">
   <link rel="stylesheet" href="/Concours-Bac-Frrp-RP/css/components.css">
   <link rel="stylesheet" href="/Concours-Bac-Frrp-RP/css/gate.css">
   <link rel="stylesheet" href="/Concours-Bac-Frrp-RP/css/skin-v4.css">
+  <!--
+    GitHub Pages sert ce fichier pour toute adresse inconnue. Les anciennes
+    pages à plat du portail (app.html?dossier=…, historique.html…) ont été
+    remplacées par des routes #/… de index.html : on y redirige, requête
+    comprise, pour qu'aucun favori ni lien de dossier ne casse.
+  -->
+  <script type="module">
+    import { LEGACY_PAGES, href } from '/Concours-Bac-Frrp-RP/js/routes.js';
+
+    const base = '/Concours-Bac-Frrp-RP/';
+    const page = window.location.pathname.split('/').pop();
+    const route = LEGACY_PAGES[page];
+
+    if (route) {
+      const query = Object.fromEntries(new URLSearchParams(window.location.search));
+      window.location.replace(`${base}${href(route, Object.keys(query).length ? query : undefined)}`);
+    }
+  </script>
 </head>
 <body class="gate">
   <main class="gate-wrap">

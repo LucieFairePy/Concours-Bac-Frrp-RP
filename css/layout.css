@@ -9,8 +9,11 @@
   display: block;
 }
 
-body.booting > header,
-body.booting > main {
+/* Une seule page, deux états : l'accès examinateur (body.gate) ou le
+   portail (body.portal-shell). Pendant le démarrage, rien n'est montré. */
+body.booting > *,
+body.gate > :not(.gate-wrap),
+body:not(.gate) > .gate-wrap {
   display: none;
 }
 

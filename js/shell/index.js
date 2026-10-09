@@ -1,0 +1,79 @@
+// Coque du portail BAC 75 N — documentation technique V4 §6 (barre
+// latérale, en-tête) et §17 (rôles).
+//
+// La coque est peinte une fois à l'ouverture de session, puis à chaque
+// changement de page pour allumer la bonne entrée. Les pages importent ce
+// module sous le nom `portal` : bandeaux, état d'enregistrement, barre du
+// module, refus d'accès.
+
+import { CONFIG, isConfigured } from '../config.js';
+import { state } from '../core/state.js';
+import * as store from '../core/store.js';
+import * as auth from '../core/auth.js';
+import * as thresholds from '../core/thresholds.js';
+import { renderSidebar, toggleNav } from './sidebar.js';
+import { renderHeader, search } from './header.js';
+
+export { href } from '../routes.js';
+export { NAV } from './nav.js';
+export { renderSidebar, toggleNav } from './sidebar.js';
+export { renderHeader, search } from './header.js';
+export { setSync, setBanner, errorBanner, okBanner, setModuleBar, deniedCard } from './feedback.js';
+
+/** Allume l'entrée `active` dans la barre latérale et l'en-tête. */
+export function paint(active) {
+  renderSidebar(active);
+  renderHeader(active);
+  toggleNav(false);
+}
+
+/**
+ * Les réglages partagés — direction et seuils de suggestion — sont lus
+ * une fois par session, ici, pour que tous les modules travaillent avec
+ * les mêmes valeurs. Illisibles, ils retombent sur ceux du kit sans
+ * empêcher le portail de s'ouvrir : le message est rendu à l'appelant.
+ */
+export async function loadSettings() {
+  try {
+    const stored = await store.loadSettings();
+    if (stored) state.settings = { ...CONFIG.defaultCommand, ...stored };
+    thresholds.apply(state.settings);
+    return '';
+  } catch (error) {
+    return `Paramètres illisibles : ${error.message} — valeurs du kit utilisées.`;
+  }
+}
+
+/** Bandeau permanent du mode local, quand aucun dépôt n'est configuré. */
+export function localBanner() {
+  if (isConfigured()) return '';
+  return `
+    <div class="banner">
+      <b>Stockage non configuré.</b>
+      Renseigne <code>owner</code> et <code>repo</code> dans <code>js/config.js</code>
+      pour que les dossiers soient partagés via GitHub. Pour l’instant, tout
+      reste dans cet onglet.
+    </div>`;
+}
+
+/**
+ * Retour à la page d'accès. Un rechargement complet plutôt qu'un simple
+ * changement de route : la mémoire de l'onglet (dossier ouvert, liste des
+ * accès, jeton déchiffré) repart à zéro.
+ */
+export function toGate(reason, keepRoute) {
+  const query = reason ? `?r=${encodeURIComponent(reason)}` : '';
+  const hash = keepRoute ? window.location.hash : '';
+  window.location.replace(`${window.location.pathname}${query}${hash}`);
+}
+
+export function signOut() {
+  auth.signOut();
+  store.setOperator('');
+  toGate('signedout');
+}
+
+/** Handlers appelés depuis les gabarits de la coque. */
+export const portal = { signOut, toggleNav, search };
+
+if (typeof window !== 'undefined') window.portal = portal;

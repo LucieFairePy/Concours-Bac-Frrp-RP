@@ -1,12 +1,13 @@
-// Chargement de chaque page, comme le ferait un navigateur — node tools/smoke.mjs
+// Chargement du portail, comme le ferait un navigateur — node tools/smoke.mjs
 //
 // Les tests de tools/test.mjs appellent les fonctions une par une. Ce
-// contrôle-ci fait autre chose : il **charge le module d'entrée de chaque
-// page**, exactement comme le ferait le navigateur au chargement, avec une
-// session déjà ouverte, et vérifie que la page se remplit.
+// contrôle-ci fait autre chose : il **démarre le portail** par son entrée
+// (js/main.js), puis **ouvre chaque route** de js/routes.js avec une
+// session déjà ouverte, parcourt toutes les étapes des modules en étapes et
+// tous les chapitres des formations, et vérifie que chaque page se remplit.
 //
-// Ce qu'il attrape et que rien d'autre ne voyait : une erreur au démarrage
-// (`boot()`), un appel à une API absente, un identifiant d'élément attendu
+// Ce qu'il attrape et que rien d'autre ne voit : une erreur au montage
+// d'une page, un appel à une API absente, un identifiant d'élément attendu
 // par le code mais jamais écrit, une page qui reste blanche.
 //
 // Tout est simulé : pas de réseau, pas de dépôt, pas de navigateur. Le
@@ -47,25 +48,47 @@ fs.writeFileSync(
   'utf8'
 );
 
+const sandboxUrl = rel => pathToFileURL(path.join(SANDBOX, rel)).href;
+
 // ── Un DOM suffisant pour que les pages se rendent ─────────────────────
+//
+// Chaque élément est créé à la demande par getElementById. Écrire du HTML
+// dans un élément (innerHTML, insertAdjacentHTML) déclare les identifiants
+// qu'il contient : un contrôle « #x existe » voit donc aussi ce qu'un
+// gabarit de page a posé.
+
+const nodes = new Map();
+const declared = new Set();
 
 function makeClassList() {
   const set = new Set();
   return {
     add: (...names) => names.forEach(name => set.add(name)),
     remove: (...names) => names.forEach(name => set.delete(name)),
-    toggle: (name, on) => (on ? set.add(name) : set.delete(name)),
+    toggle: (name, on) => {
+      const next = on === undefined ? !set.has(name) : on;
+      if (next) set.add(name);
+      else set.delete(name);
+    },
     contains: name => set.has(name),
     values: () => [...set]
   };
 }
 
+function declare(html) {
+  for (const match of String(html).matchAll(/\bid="([a-zA-Z0-9_-]+)"/g)) declared.add(match[1]);
+}
+
 function makeNode(id) {
+  let html = '';
   return {
     id,
-    innerHTML: '',
+    get innerHTML() { return html; },
+    set innerHTML(value) { html = String(value); declare(html); },
+    insertAdjacentHTML(where, value) { html += String(value); declare(value); },
     textContent: '',
     value: '',
+    className: '',
     disabled: false,
     style: {},
     dataset: {},
@@ -78,30 +101,22 @@ function makeNode(id) {
   };
 }
 
-let nodes;
-let redirect;
-let search;
+function node(id) {
+  if (!nodes.has(id)) nodes.set(id, makeNode(id));
+  return nodes.get(id);
+}
 
-function installDom(pageHtml) {
-  nodes = new Map();
+let replaced = null;
 
-  // Les identifiants présents dans le HTML de la page existent dès le
-  // départ ; tous les autres sont créés à la demande, comme le fait un
-  // innerHTML qui vient d'insérer son contenu.
-  for (const match of pageHtml.matchAll(/\bid="([a-zA-Z0-9_-]+)"/g)) {
-    nodes.set(match[1], makeNode(match[1]));
-  }
-
+function installDom() {
   const body = makeNode('body');
   body.classList.add('booting');
 
   globalThis.document = {
     body,
     title: 'test',
-    getElementById(id) {
-      if (!nodes.has(id)) nodes.set(id, makeNode(id));
-      return nodes.get(id);
-    },
+    visibilityState: 'visible',
+    getElementById: node,
     querySelector: () => null,
     querySelectorAll: () => [],
     addEventListener() {}
@@ -115,20 +130,22 @@ function installDom(pageHtml) {
   };
   globalThis.sessionStorage = globalThis.localStorage;
 
-  // Session déjà ouverte en mode local, échéance dans 12 h.
-  storage.set('bac-session', JSON.stringify({
-    local: 'Brigadier LAURENT Cyril',
-    expiresAt: Date.now() + 12 * 3600 * 1000
-  }));
+  const location = {
+    hash: '#/accueil',
+    search: '',
+    pathname: '/index.html',
+    replace(url) { replaced = url; }
+  };
 
-  redirect = null;
+  globalThis.history = {
+    replaceState(state, title, url) {
+      const hash = String(url).indexOf('#');
+      if (hash >= 0) location.hash = String(url).slice(hash);
+    }
+  };
+
   globalThis.window = {
-    location: {
-      search,
-      href: `http://local/test${search}`,
-      replace(url) { redirect = url; },
-      assign(url) { redirect = url; }
-    },
+    location,
     localStorage: globalThis.localStorage,
     sessionStorage: globalThis.sessionStorage,
     scrollTo() {},
@@ -155,58 +172,50 @@ function installDom(pageHtml) {
 function detectSessionKey() {
   const source = fs.readFileSync(path.join(ROOT, 'js', 'core', 'session-store.js'), 'utf8');
   const match = source.match(/['"]([a-z0-9._:-]*session[a-z0-9._:-]*)['"]/i);
-  return match ? match[1] : 'bac-session';
+  return match ? match[1] : 'bac_session';
 }
 
-const SESSION_KEY = detectSessionKey();
+function openSession() {
+  globalThis.localStorage.setItem(detectSessionKey(), JSON.stringify({
+    local: 'Brigadier LAURENT Cyril',
+    expiresAt: Date.now() + 12 * 3600 * 1000
+  }));
+}
 
-// ── Pages à charger ────────────────────────────────────────────────────
+function settle(ms = 120) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function filled(id) {
+  const found = nodes.get(id);
+  return Boolean(found && String(found.innerHTML || found.textContent || '').trim());
+}
+
+// ── Ce que chaque route doit montrer ───────────────────────────────────
 //
-// `expect` : identifiants qui doivent être remplis une fois la page prête.
-// `query`  : paramètres d'URL à simuler.
+// `expect` : identifiants qui doivent exister une fois la page montée —
+//            remplis par le code, ou posés par le gabarit de la page.
+// `steps`  : étapes à parcourir, et la zone que chacune doit remplir.
 
-const PAGES = [
-  {
-    page: 'accueil.html',
-    entry: 'js/accueil.js',
-    expect: ['portalSidebar', 'portalHeader', 'hero', 'cards', 'dash',
-      'tileNews', 'tileCases', 'tileQuick', 'tileStaff']
-  },
-  {
-    page: 'app.html',
-    entry: 'js/app.js',
-    expect: ['portalHeader', 'moduleBar', 'tabs', 'sections'],
-    // Toutes les étapes du concours, correction et fiche comprises : c'est
-    // là que vivent les rendus les plus fournis.
+const COURSE_STEPS = {
+  steps: ['id', 'cours', 'eval', 'correct', 'final'],
+  stepExpect: { cours: 'coursWrap', eval: 'evalBox', correct: 'correctBox', final: 'sheet' }
+};
+
+const ROUTE_SPECS = {
+  accueil: { expect: ['cards', 'dash', 'tileNews', 'tileCases', 'tileQuick', 'tileStaff'] },
+  concours: {
+    expect: ['tabs', 'sections'],
     steps: ['id', 'theory', 'radio', 'sc', 'phys', 'shoot', 'correct', 'results', 'final'],
-    // Zone que chaque étape doit avoir remplie une fois ouverte.
     stepExpect: { correct: 'correction', results: 'resultBox', final: 'sheet' }
   },
-  {
-    page: 'formations.html',
-    entry: 'js/formations.js',
-    expect: ['portalHeader', 'moduleBar', 'cards']
-  },
-  {
-    page: 'negociation.html',
-    entry: 'js/negociation.js',
-    expect: ['portalHeader', 'moduleBar', 'tabs', 'sections'],
-    steps: ['id', 'cours', 'eval', 'correct', 'final'],
-    stepExpect: { cours: 'coursWrap', eval: 'evalBox', correct: 'correctBox', final: 'sheet' },
-    chapters: 'negociation'
-  },
-  {
-    page: 'chef-de-groupe.html',
-    entry: 'js/chef-de-groupe.js',
-    expect: ['portalHeader', 'moduleBar', 'tabs', 'sections'],
-    steps: ['id', 'cours', 'eval', 'correct', 'final'],
-    stepExpect: { cours: 'coursWrap', eval: 'evalBox', correct: 'correctBox', final: 'sheet' },
-    chapters: 'chef-de-groupe'
-  },
-  {
-    page: 'examen-cdg.html',
-    entry: 'js/examen-cdg.js',
-    expect: ['portalHeader', 'moduleBar', 'tabs', 'sections'],
+  formations: { expect: ['cards'] },
+  'formation-negociation': { expect: ['tabs', 'sections'], ...COURSE_STEPS, chapters: true },
+  'formation-chef-groupe': { expect: ['tabs', 'sections'], ...COURSE_STEPS, chapters: true },
+  'formation-radio': { expect: ['tabs', 'sections'], ...COURSE_STEPS, chapters: true },
+  'formation-antiterrorisme': { expect: ['tabs', 'sections'], ...COURSE_STEPS, chapters: true },
+  'examen-chef-groupe': {
+    expect: ['tabs', 'sections'],
     steps: ['id', 'co', 'cm', 'sit1', 'sit2', 'correct', 'result', 'final'],
     stepExpect: {
       co: 'connaissancesBox', cm: 'commandementBox',
@@ -214,149 +223,142 @@ const PAGES = [
       correct: 'correctBox', result: 'resultBox', final: 'sheet'
     }
   },
-  {
-    page: 'historique.html',
-    entry: 'js/historique.js',
-    expect: ['portalHeader', 'moduleBar', 'hero', 'categories', 'filters', 'results']
-  },
-  {
-    page: 'parametres.html',
-    entry: 'js/parametres.js',
-    expect: ['portalHeader', 'moduleBar', 'settingsBox']
-  },
-  {
-    page: 'administration.html',
-    entry: 'js/administration.js',
-    expect: ['portalHeader', 'moduleBar', 'content']
-  },
-  {
-    page: 'utilisateurs.html',
-    entry: 'js/utilisateurs.js',
-    expect: ['portalSidebar', 'portalHeader', 'moduleBar', 'usersBox']
-  },
-  {
-    page: 'actualites.html',
-    entry: 'js/actualites.js',
-    expect: ['portalSidebar', 'portalHeader', 'moduleBar', 'hero', 'content']
-  },
-  {
-    page: 'index.html',
-    entry: 'js/gate.js',
-    // La page d'accès avec une session valide doit mener au portail.
-    expectRedirect: 'accueil.html'
-  }
-];
+  historique: { expect: ['families', 'filters', 'results'] },
+  actualites: { expect: ['content'] },
+  administration: { expect: ['newsBox', 'storageBox', 'journalBox', 'imagesBox'] },
+  utilisateurs: { expect: ['usersBox'] },
+  parametres: { expect: ['settingsBox'] }
+};
 
-function settle(ms = 120) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
+// ── Démarrage ──────────────────────────────────────────────────────────
 
 const failures = [];
 let loaded = 0;
 
-stdout.write('\nPortail BAC 75 N — chargement des pages\n\n');
+const errors = [];
+process.on('unhandledRejection', reason => errors.push(reason));
 
-for (const spec of PAGES) {
-  const html = fs.readFileSync(path.join(ROOT, spec.page), 'utf8');
-  search = spec.query || '';
-  installDom(html);
+function check(label, fn) {
+  return fn().then(
+    () => {
+      if (errors.length) throw errors.shift();
+      loaded += 1;
+      stdout.write(`  ok   ${label}\n`);
+    }
+  ).catch(error => {
+    failures.push({ page: label, error });
+    stdout.write(`  ÉCHEC ${label}\n         ${error && error.message ? error.message : error}\n`);
+  });
+}
 
-  // La session est lue sous la clé réellement utilisée par le module.
-  globalThis.localStorage.setItem(SESSION_KEY, JSON.stringify({
-    local: 'Brigadier LAURENT Cyril',
-    expiresAt: Date.now() + 12 * 3600 * 1000
-  }));
+stdout.write('\nPortail BAC 75 N — démarrage et routes\n\n');
 
-  const url = `${pathToFileURL(path.join(SANDBOX, spec.entry)).href}?t=${Date.now()}-${Math.random()}`;
+installDom();
 
-  const errors = [];
-  const onRejection = reason => errors.push(reason);
-  process.on('unhandledRejection', onRejection);
+// 1. Sans session : la page d'accès se peint, le portail reste masqué.
+await check('index.html sans session → accès examinateur', async () => {
+  await import(`${sandboxUrl('js/main.js')}?t=gate`);
+  await settle();
+  if (!document.body.classList.contains('gate')) throw new Error('body.gate attendu');
+  if (!filled('gate')) throw new Error('#gate est resté vide');
+  if (filled('view')) throw new Error('le portail a été peint sans session');
+});
 
-  try {
-    await import(url);
+// 2. Le formulaire local ouvre la session et peint le portail.
+await check('connexion locale → portail sur #/accueil', async () => {
+  node('gateName').value = 'Brigadier LAURENT Cyril';
+  await globalThis.window.gate.submitLocal();
+  await settle();
+  if (!document.body.classList.contains('portal-shell')) throw new Error('body.portal-shell attendu');
+  for (const id of ['portalSidebar', 'portalHeader', 'view']) {
+    if (!filled(id)) throw new Error(`#${id} est resté vide`);
+  }
+  if (!declared.has('dash')) throw new Error('l’accueil n’a pas été monté');
+});
+
+// 3. Chaque route, montée comme le routeur la monte.
+const { ROUTES } = await import(sandboxUrl('js/routes.js'));
+const auth = await import(sandboxUrl('js/core/auth.js'));
+const portal = await import(sandboxUrl('js/shell/index.js'));
+
+for (const [id, route] of Object.entries(ROUTES)) {
+  const spec = ROUTE_SPECS[id];
+  await check(`#/${route.path}`, async () => {
+    if (!spec) throw new Error('route sans contrôle déclaré dans tools/smoke.mjs');
+
+    nodes.clear();
+    declared.clear();
+    openSession();
+
+    const page = (await route.load()).default;
+    portal.paint(route.nav);
+    const view = node('view');
+    view.innerHTML = '<div id="banner"></div>';
+    view.insertAdjacentHTML('beforeend', page.template ? page.template({ params: new URLSearchParams() }) : '');
+    globalThis.window.app = page.handlers || {};
+
+    await page.mount({ params: new URLSearchParams(), session: auth.current(), alive: () => true });
     await settle();
+    if (errors.length) throw errors.shift();
 
-    if (errors.length) throw errors[0];
+    for (const wanted of spec.expect) {
+      if (!filled(wanted) && !declared.has(wanted)) throw new Error(`#${wanted} absent`);
+    }
+    if (!filled('portalSidebar')) throw new Error('barre latérale vide');
 
-    if (spec.expectRedirect) {
-      if (!String(redirect || '').includes(spec.expectRedirect)) {
-        throw new Error(`redirection attendue vers ${spec.expectRedirect}, obtenue : ${redirect || 'aucune'}`);
-      }
-    } else {
-      if (redirect) {
-        throw new Error(`la page a redirigé vers ${redirect} au lieu de s’afficher`);
-      }
-      if (document.body.classList.contains('booting')) {
-        throw new Error('la page est restée masquée (body.booting non retiré)');
-      }
-      for (const id of spec.expect) {
-        const node = nodes.get(id);
-        if (!node || !String(node.innerHTML || node.textContent || '').trim()) {
-          throw new Error(`#${id} est resté vide`);
-        }
+    // Parcours de toutes les étapes du module. Sans cela, seule la
+    // première étape serait exercée, et une faute dans la correction ou
+    // dans la fiche finale passerait inaperçue.
+    if (spec.steps) {
+      const app = globalThis.window.app;
+      if (typeof app.openStep !== 'function') {
+        throw new Error('aucun app.openStep() exposé : les étapes ne peuvent pas être parcourues');
       }
 
-      // Parcours de toutes les étapes du module. Sans cela, seule la
-      // première étape serait exercée, et une faute dans la correction ou
-      // dans la fiche finale passerait inaperçue.
-      if (spec.steps) {
-        const app = globalThis.window.app || globalThis.app;
-        if (!app || typeof app.openStep !== 'function') {
-          throw new Error('aucun app.openStep() exposé : les étapes ne peuvent pas être parcourues');
-        }
+      for (const step of spec.steps) {
+        app.openStep(step);
+        await settle(10);
+        if (errors.length) throw errors.shift();
 
-        for (const step of spec.steps) {
-          app.openStep(step);
-          await settle(10);
-          if (errors.length) throw errors[0];
+        if (!declared.has(`s-${step}`)) throw new Error(`étape « ${step} » : section #s-${step} absente`);
 
-          const section = nodes.get(`s-${step}`);
-          if (!section) throw new Error(`étape « ${step} » : section #s-${step} absente`);
+        const host = spec.stepExpect && spec.stepExpect[step];
+        if (host && !filled(host)) throw new Error(`étape « ${step} » : #${host} est resté vide`);
+      }
+    }
 
-          const host = spec.stepExpect && spec.stepExpect[step];
-          if (host) {
-            const node = nodes.get(host);
-            if (!node || !String(node.innerHTML || '').trim()) {
-              throw new Error(`étape « ${step} » : #${host} est resté vide`);
-            }
-          }
-        }
-
-        // Pour un cours, on ouvre aussi chaque chapitre : c'est le rendu le
-        // plus répétitif, donc celui où un bloc mal formé se cache le mieux.
-        if (spec.chapters && typeof app.openChapter === 'function') {
-          const module = await import(
-            pathToFileURL(path.join(SANDBOX, 'js', 'data', `${spec.chapters}.js`)).href
-          );
-          const course = Object.values(module)[0].chapters ? Object.values(module)[0] : module.NEGOCIATION;
-          app.openStep('cours');
-          for (const chapter of course.chapters) {
-            app.openChapter(chapter.id);
-            await settle(2);
-            if (errors.length) throw errors[0];
-            const host = nodes.get('coursWrap');
-            if (!host || !String(host.innerHTML).includes(chapter.title)) {
-              throw new Error(`chapitre « ${chapter.num} ${chapter.title} » non rendu`);
-            }
-          }
+    // Pour un cours, on ouvre aussi chaque chapitre : c'est le rendu le
+    // plus répétitif, donc celui où un bloc mal formé se cache le mieux.
+    if (spec.chapters) {
+      const { courseByRoute } = await import(sandboxUrl('js/data/formations/index.js'));
+      const { course } = courseByRoute(id);
+      const app = globalThis.window.app;
+      app.openStep('cours');
+      for (const chapter of course.chapters) {
+        app.openChapter(chapter.id);
+        await settle(2);
+        if (errors.length) throw errors.shift();
+        if (!String(node('coursWrap').innerHTML).includes(chapter.title.replace(/[&<>"']/g, '').slice(0, 12))) {
+          throw new Error(`chapitre « ${chapter.num} ${chapter.title} » non rendu`);
         }
       }
     }
 
-    loaded += 1;
-    stdout.write(`  ok   ${spec.page}\n`);
-  } catch (error) {
-    failures.push({ page: spec.page, error });
-    stdout.write(`  ÉCHEC ${spec.page}\n         ${error && error.message ? error.message : error}\n`);
-  } finally {
-    process.off('unhandledRejection', onRejection);
-  }
+    if (page.unmount) await page.unmount();
+  });
 }
+
+// 4. Déconnexion : la session est fermée et l'onglet repart sur l'accès.
+await check('déconnexion → retour à l’accès', async () => {
+  replaced = null;
+  portal.signOut();
+  if (auth.current()) throw new Error('session encore ouverte');
+  if (!String(replaced || '').includes('r=signedout')) throw new Error(`retour attendu vers l’accès, obtenu : ${replaced}`);
+});
 
 fs.rmSync(SANDBOX, { recursive: true, force: true });
 
-stdout.write(`\n${loaded} page(s) chargée(s), ${failures.length} échec(s).\n\n`);
+stdout.write(`\n${loaded} contrôle(s) réussi(s), ${failures.length} échec(s).\n\n`);
 
 if (failures.length) {
   for (const failure of failures) {

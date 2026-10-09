@@ -65,14 +65,14 @@ import * as roles from '../js/core/roles.js';
 import * as gen from '../js/data/cdg-generator.js';
 import * as cdg from '../js/scoring/cdg.js';
 import * as cdgState from '../js/core/cdg-state.js';
-import { renderCdgFiche } from '../js/views/cdg-fiche.js';
+import { renderCdgFiche } from '../js/pages/examen-cdg/fiche.js';
 import * as formation from '../js/core/formation.js';
-import { renderFormationFiche } from '../js/views/formation-fiche.js';
-import { NEGOCIATION } from '../js/data/negociation.js';
-import { CHEF_DE_GROUPE } from '../js/data/chef-de-groupe.js';
+import { renderFormationFiche } from '../js/pages/formations/fiche.js';
+import { NEGOCIATION } from '../js/data/formations/negociation.js';
+import { CHEF_DE_GROUPE } from '../js/data/formations/chef-de-groupe.js';
 import { state as concoursState, blankDossier } from '../js/core/state.js';
 import { totals as concoursTotals } from '../js/scoring/totals.js';
-import { renderDossier } from '../js/views/dossier.js';
+import { renderDossier } from '../js/pages/concours/dossier.js';
 import { checkPages } from './check-pages.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -84,10 +84,12 @@ import * as newsService from '../js/core/news.js';
 import { IMAGE_SLOTS, LOGO, imageStyle } from '../js/data/images.js';
 import { suggestedDecision, suggestionSnapshot } from '../js/scoring/totals.js';
 import { physicalAuto } from '../js/scoring/auto.js';
-import { ROUTES as portalRoutes } from '../js/core/portal.js';
+import { ROUTES as portalRoutes, LEGACY_PAGES, resolve as resolveRoute, href as routeHref } from '../js/routes.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const readRoot = file => fs.readFileSync(path.join(ROOT, file), 'utf8');
+const walk = dir => fs.readdirSync(path.join(ROOT, dir), { withFileTypes: true })
+  .flatMap(entry => (entry.isDirectory() ? walk(`${dir}/${entry.name}`) : [`${dir}/${entry.name}`]));
 
 const SETTINGS = { dg: 'Lieutenant', dn: 'BOUSSERE Kevin', ag: 'Brigadier', an: 'LAURENT Cyril' };
 
@@ -432,7 +434,7 @@ await group('§12 — un seul historique, et chaque ligne est complète', async 
 
   assert.deepEqual(
     [...new Set(all.entries.map(entry => entry.category))].sort(),
-    ['cdg', 'concours', 'negociation']
+    ['concours', 'examens', 'formations']
   );
 
   for (const entry of all.entries) {
@@ -504,16 +506,16 @@ await group('câblage — handlers, points de montage, liens et styles', () => {
 // ───────────── Recette V4 — documentation technique §21 ─────────────────
 
 await group('HOME — accueil V4 : quatre cartes, quatre panneaux, proportions', () => {
-  const home = readRoot('js/accueil.js');
-  const html = readRoot('accueil.html');
+  const home = readRoot('js/pages/accueil/index.js');
+  const html = readRoot('index.html');
   const css = readRoot('css/portal.css');
   const base = readRoot('css/base.css');
 
   // HOME-001 : les quatre cartes, dans l'ordre du §6.4, vers les bons modules.
   for (const route of [
-    'concours-bac', 'formation-negociation', 'formation-chef-groupe', 'examen-chef-groupe'
+    'concours', 'formation-negociation', 'formation-chef-groupe', 'examen-chef-groupe'
   ]) {
-    assert.ok(home.includes(`portal.path('${route}')`), `carte manquante vers ${route}`);
+    assert.ok(home.includes(`href: href('${route}')`), `carte manquante vers ${route}`);
   }
   assert.ok(/accent: 'red'/.test(home), 'le concours doit garder son accent rouge (§6.4)');
 
@@ -521,7 +523,7 @@ await group('HOME — accueil V4 : quatre cartes, quatre panneaux, proportions',
   for (const tile of ['tileNews', 'tileCases', 'tileQuick', 'tileStaff']) {
     assert.ok(home.includes(tile), `panneau ${tile} absent de l’accueil`);
   }
-  assert.ok(html.includes('id="dash"'), 'le tableau de bord bas n’a plus de point de montage');
+  assert.ok(home.includes('id="dash"'), 'le tableau de bord bas n’a plus de point de montage');
   assert.ok(html.includes('id="portalSidebar"'), 'la barre latérale n’a plus de point de montage');
 
   // HOME-003 : les mesures et les jetons de l'annexe C.
@@ -659,10 +661,7 @@ await group('§5 — la banque d’images suit la nomenclature du kit', () => {
 await group('SEC-001 et GHP-001 — aucun secret livré, routes servies sous un sous-chemin', () => {
   const livres = fs.readdirSync(ROOT)
     .filter(name => name.endsWith('.html'))
-    .concat(
-      fs.readdirSync(path.join(ROOT, 'js')).filter(n => n.endsWith('.js')).map(n => `js/${n}`),
-      ['js/config.js']
-    );
+    .concat(walk('js').filter(name => name.endsWith('.js')));
 
   for (const file of livres) {
     const source = readRoot(file);
@@ -677,18 +676,30 @@ await group('SEC-001 et GHP-001 — aucun secret livré, routes servies sous un 
   assert.ok(fs.existsSync(path.join(ROOT, '.nojekyll')), '.nojekyll attendu (§19.4)');
 });
 
-await group('§4.1 — chaque route du kit a son identifiant et sa page', () => {
-  for (const id of [
-    'home', 'concours-bac', 'formation-negociation', 'formation-chef-groupe',
-    'examen-chef-groupe', 'history', 'admin', 'users', 'settings'
-  ]) {
-    const route = portalRoutes[id];
-    assert.ok(route, `identifiant de route manquant : ${id}`);
-    assert.ok(fs.existsSync(path.join(ROOT, route.path)), `${id} : ${route.path} absent`);
+await group('§4.1 — une seule page, une adresse #/… par écran', () => {
+  // Chaque route a sa page sur le disque, et son adresse se relit.
+  for (const [id, route] of Object.entries(portalRoutes)) {
+    const file = route.load.toString().match(/import\('\.\/([^']+)'\)/)[1];
+    assert.ok(fs.existsSync(path.join(ROOT, 'js', file)), `${id} : js/${file} absent`);
+    assert.equal(resolveRoute(routeHref(id)).id, id, `${id} : adresse illisible`);
   }
 
-  assert.equal(portalRoutes['concours-bac'].route, '/concours-bac');
-  assert.equal(portalRoutes.users.route, '/administration/utilisateurs');
+  assert.equal(routeHref('utilisateurs'), '#/administration/utilisateurs');
+  assert.equal(routeHref('historique', { dossier: 'BAC-2026-001' }), '#/historique?dossier=BAC-2026-001');
+  assert.equal(resolveRoute('#/historique?q=DUPONT').params.get('q'), 'DUPONT');
+
+  // Les adresses de la maquette V4 mènent toujours à la bonne page.
+  assert.equal(resolveRoute('#/chef-groupe').id, 'formation-chef-groupe');
+  assert.equal(resolveRoute('#/examens').id, 'examen-chef-groupe');
+  assert.equal(resolveRoute('').id, 'accueil');
+  assert.equal(resolveRoute('#/nulle-part').id, null);
+
+  // Les anciennes pages à plat ont chacune leur route, et plus de fichier.
+  for (const [page, id] of Object.entries(LEGACY_PAGES)) {
+    assert.ok(portalRoutes[id], `${page} → route ${id} inconnue`);
+    assert.ok(!fs.existsSync(path.join(ROOT, page)), `${page} devrait avoir disparu`);
+  }
+  assert.ok(readRoot('404.html').includes('LEGACY_PAGES'), 'le 404 redirige les anciennes adresses');
 });
 
 await group('§8.4 — le barème physique se règle, il n’est plus en dur', () => {
@@ -774,9 +785,9 @@ await group('§12 et §14 — la suggestion est archivée, le dossier porte son 
 
   // Et les modules écrivent bien cet instantané au moment de clôturer :
   // c'est là que la pièce est scellée.
-  assert.ok(readRoot('js/app.js').includes('suggestionSnapshot(D)'),
+  assert.ok(readRoot('js/pages/concours/index.js').includes('suggestionSnapshot(D)'),
     'le concours doit archiver sa suggestion à la clôture');
-  assert.ok(readRoot('js/examen-cdg.js').includes('R.suggestedReason'),
+  assert.ok(readRoot('js/pages/examen-cdg/index.js').includes('R.suggestedReason'),
     'l’examen Chef de Groupe doit archiver sa suggestion à la clôture');
 
   // §16 : une suggestion archivée ne bouge pas quand les seuils changent.
@@ -810,10 +821,10 @@ await group('§22 — poids des images, dimensions et chargement différé', () 
     'une déclaration de repli précède image-set()');
 
   // Les images sous la ligne de flottaison sont différées et dimensionnées.
-  const home = readRoot('js/accueil.js');
+  const home = readRoot('js/pages/accueil/index.js');
   assert.ok(home.includes('loading="lazy"'), 'miniatures d’actualité différées');
   assert.ok(home.includes('width="72" height="46"'), 'miniatures dimensionnées');
-  assert.ok(readRoot('js/core/portal.js').includes('width="78" height="78"'),
+  assert.ok(readRoot('js/shell/sidebar.js').includes('width="78" height="78"'),
     'le logo de la barre latérale porte ses dimensions');
 });
 

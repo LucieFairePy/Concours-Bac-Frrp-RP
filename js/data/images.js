@@ -71,6 +71,16 @@ export const IMAGE_SLOTS = {
     attendu: 'Bannière page Formation Négociation.',
     fallback: 'mises-en-situation.jpg'
   },
+  'cours-radio': {
+    file: '12_SIDEBAR_CITATION_BAC75N_NUIT.jpg',
+    attendu: 'Bannière page Formation Radio — la maquette V4 reprend la scène de nuit de la citation.',
+    fallback: 'cover-hero.jpg'
+  },
+  'cours-antiterrorisme': {
+    file: '14_RESERVE_BAC_UNITE_BOUCLIERS.jpg',
+    attendu: 'Bannière page Formation Antiterrorisme — unité aux boucliers, comme dans la maquette V4.',
+    fallback: 'recap-general.jpg'
+  },
   'concours-banner': {
     file: '11_CONCOURS_BAC_BANNER_ALTERNATIVE.jpg',
     attendu: 'Bannière alternative du module Concours.',
