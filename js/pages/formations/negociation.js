@@ -1,7 +1,7 @@
-// Page de la Formation Négociation — le module de l'archive V4, à part du
-// moteur commun des formations (engine.js) : l'archive n'a pas de parcours
-// Identité → Cours → Évaluation → Correction → Fiche finale, seulement vingt
-// chapitres à lire et une grille /100 à l'écran, sans rien enregistrer.
+// Page de la Formation Négociation — le module de l'archive V4.
+// L'archive n'a pas de parcours Identité → Cours → Évaluation → Correction
+// → Fiche finale, seulement vingt chapitres à lire et une grille /100 à
+// l'écran, sans rien enregistrer.
 //
 // Un ancien dossier, créé avec ce parcours et rouvert depuis l'historique
 // (`?dossier=`), s'affiche en lecture seule : sa fiche finale A4, peinte par

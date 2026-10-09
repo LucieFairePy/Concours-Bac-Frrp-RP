@@ -1,8 +1,7 @@
 // Page de la Formation Radio — le module de l'archive V4
 // (modules/formation-radio.html), tel quel : bandeau au logo rond,
 // sommaire interactif à gauche, fil d'Ariane et retour au portail, un
-// chapitre affiché à la fois. Le module n'a qu'un cours : il ne passe pas
-// par le moteur commun des formations (engine.js) et n'enregistre rien.
+// chapitre affiché à la fois. Le module n'a qu'un cours : il n'enregistre rien.
 //
 // Seule exception : un ancien dossier radio ouvert depuis l'historique
 // (`?dossier=…`), créé quand le module avait un parcours évalué. Sa fiche

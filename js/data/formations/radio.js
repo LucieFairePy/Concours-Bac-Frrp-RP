@@ -20,7 +20,7 @@
 // rôle. Rien ici n'est un manuel réel : c'est une formation de serveur de
 // jeu, et les contenus sont écrits pour être joués.
 //
-// Types de blocs reconnus par la vue de cours (js/pages/formations/cours.js) :
+// Types de blocs de l'ancienne vue de cours (retirée avec le moteur commun) :
 //   p        paragraphe
 //   liste    liste à puces
 //   rp       exemple de jeu de rôle

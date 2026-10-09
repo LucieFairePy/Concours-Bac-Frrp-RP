@@ -9,7 +9,7 @@
 // chapitres, exercices et questions sont ceux sur lesquels il a été passé.
 // Ne pas le modifier — un dossier se relit avec le contenu de son époque.
 //
-// Types de blocs reconnus par la vue de cours (js/pages/formations/cours.js) :
+// Types de blocs de l'ancienne vue de cours (retirée avec le moteur commun) :
 //   p        paragraphe
 //   liste    liste à puces
 //   rp       exemple de jeu de rôle

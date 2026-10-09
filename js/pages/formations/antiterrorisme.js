@@ -1,8 +1,7 @@
 // Page de la Formation Antiterrorisme — le module de l'archive V4
 // (modules/formation-antiterrorisme.html) : un cours en treize chapitres,
 // rien d'autre. Ni identité, ni évaluation à saisir, ni fiche : l'archive
-// n'en a pas, donc la page n'écrit aucun dossier et se passe du moteur
-// commun (engine.js).
+// n'en a pas, donc la page n'écrit aucun dossier.
 //
 // Garde : un dossier de l'ancien parcours (`?dossier=` depuis l'historique)
 // reste lisible. Il est lu par records.js et sa fiche finale A4 est rendue

@@ -3,8 +3,7 @@
 //
 // Comme l'archive, c'est un cours à lire : seize chapitres, un sommaire,
 // Précédent / Suivant et le lien vers l'examen. L'archive n'enregistre rien
-// (ni identité, ni évaluation, ni dossier) : cette page non plus, et elle
-// ne passe donc pas par le moteur commun (engine.js).
+// (ni identité, ni évaluation, ni dossier) : cette page non plus.
 //
 // Les dossiers clôturés avec l'ancien parcours restent lisibles : ouverte
 // depuis l'historique (`?dossier=FCG-…`), la page lit le dossier par
