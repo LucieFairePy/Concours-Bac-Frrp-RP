@@ -360,17 +360,13 @@
     .m-concours .c6,
     .m-concours .c8 { grid-column: span 12 }
 
-    /* La maquette masque sa navigation sur téléphone ; ici les actions
-       restent utiles : elles passent sur une seconde ligne, sous l'écusson,
-       et la barre cesse d'être collante pour ne pas manger l'écran. */
-    .m-concours .mc-top { position: static; flex-wrap: wrap; gap: 10px 14px }
+    /* Comme l'archive : la navigation disparaît sur téléphone. Seul le
+       retour au portail reste, sous l'écusson et le titre. */
+    .m-concours .mc-top { flex-wrap: wrap }
     .m-concours .mc-logo { order: 1 }
     .m-concours .mc-title { order: 2; flex: 1 1 calc(100% - 70px) }
-    .m-concours .mc-back { order: 3 }
-    .m-concours .mc-nav { order: 4; flex: 1 1 auto; justify-content: flex-start; margin-left: 0 }
-    .m-concours .mc-back,
-    .m-concours .mc-nav button,
-    .m-concours .mc-link { padding: 8px 10px; font-size: 12px }
+    .m-concours .mc-back { order: 3; padding: 6px 10px; font-size: 12px }
+    .m-concours .mc-nav { display: none }
   }
 }
 
