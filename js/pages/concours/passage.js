@@ -177,12 +177,8 @@ function reviewSections(dis) {
   <section id="s-final" class="section printme">
     <div id="sheet"></div>
     <div class="card no-print">
-      <button class="green" onclick="app.downloadPdf()">Télécharger en PDF</button>
+      <button onclick="app.downloadPdf()">Imprimer / Enregistrer en PDF</button>
       <button class="danger" ${dis} onclick="app.closeDossier()">CLÔTURER DÉFINITIVEMENT LE DOSSIER</button>
-      <p class="mut">
-        Dans la fenêtre qui s’ouvre, choisis <b>Enregistrer au format PDF</b> comme destination.
-        Les 8 pages, les photos et les fonds sont inclus.
-      </p>
       ${lockedNotice}
     </div>
   </section>`;

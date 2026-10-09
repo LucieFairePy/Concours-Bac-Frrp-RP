@@ -418,11 +418,16 @@ await group('§5 — le concours ne régresse pas', async () => {
   noHoles(html, 'fiche concours');
   assert.ok(html.includes('8/8'), 'la fiche du concours fait 8 pages');
 
-  // §13 : la fiche porte la note suggérée à côté de la note retenue, et
-  // §16 : elle lit l'instantané archivé quand il existe.
-  assert.ok(html.includes('Suggérée'), 'la fiche doit montrer la note suggérée');
-  assert.ok(html.includes('Note retenue'), 'la fiche doit montrer la note retenue');
-  assert.ok(html.includes('Suggestion du système'), 'la fiche doit porter le résultat suggéré');
+  // La fiche est celle de l'archive V4 : couverture, récapitulatif des
+  // notes retenues, décision du jury — sans colonne « suggérée ».
+  for (const needed of [
+    'Concours d’intégration<br>Brigade Anti-Criminalité', 'Décision du jury',
+    '1. Récapitulatif des notes', 'TOTAL GÉNÉRAL', 'Signatures &amp; validation'
+  ]) {
+    assert.ok(html.includes(needed), `fiche concours : « ${needed} » manquant`);
+  }
+  assert.ok(!html.includes('Suggérée'), 'la fiche de l’archive n’a pas de colonne suggérée');
+  assert.ok(html.includes('concours-couverture.jpg'), 'photo de couverture de l’archive');
 
   const archive = await records.get('concours', id);
   assert.equal(archive.version, lifecycle.RECORD_VERSION, 'version du modèle (§14)');
@@ -863,14 +868,15 @@ await group('§22 — poids des images, dimensions et chargement différé', () 
 
 // ───────────── Contenu repris de la maquette V4 ─────────────────────────
 
-await group('V4 — concours : banque fusionnée, radio et situations de la maquette', () => {
-  // Banque : 225 questions + 30 de la maquette, identifiants uniques.
-  assert.equal(QUESTION_BANK.length, 255);
+await group('V4 — concours : banque, radio et situations de l’archive', () => {
+  // Banque : les 30 questions de l'archive, et elles seules.
+  assert.equal(QUESTION_BANK.length, 30);
   assert.equal(new Set(QUESTION_BANK.map(q => String(q.id))).size, QUESTION_BANK.length);
-  assert.equal(QUESTION_BANK.filter(q => String(q.id).startsWith('v4-')).length, 30);
-  let drawn = false;
-  for (let i = 0; i < 400 && !drawn; i += 1) drawn = pickQuestions().some(q => String(q.id).startsWith('v4-'));
-  assert.ok(drawn, 'une question de la maquette peut être tirée');
+  assert.ok(QUESTION_BANK.every(q => String(q.id).startsWith('v4-')));
+  assert.equal(QUESTION_BANK[0].q, 'Quel est le rôle principal de la BAC ?');
+  const drawn = pickQuestions();
+  assert.equal(drawn.length, 10);
+  assert.ok(drawn.every(q => String(q.id).startsWith('v4-')), 'seules les questions de l’archive sont tirées');
 
   // Un nouveau dossier passe la radio et les situations de la maquette.
   const fresh = blankDossier('BAC-2026-950', SETTINGS);

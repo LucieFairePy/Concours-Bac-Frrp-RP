@@ -3,44 +3,22 @@ import { scenariosOf } from '../../data/scenarios.js';
 import { esc, setHTML } from '../../core/dom.js';
 import { state, isEditable } from '../../core/state.js';
 import { theoryAuto, radioAuto, scenarioAuto, physicalAuto, shootingAuto, usesPlank } from '../../scoring/auto.js';
-import {
-  scenarioRawTotal,
-  scaleScenarios,
-  scenarioRawMax,
-  SCENARIO_SECTION_MAX
-} from '../../scoring/totals.js';
 
 function markInput(path, value, max) {
   const dis = isEditable() ? '' : 'disabled';
   return `<input type="number" min="0" max="${max}" ${dis} value="${esc(value ?? '')}" oninput="app.set('${path}',this.value)">`;
 }
 
-function block(title, answer, auto, max, path, value) {
+// Libellés de l'archive : « Note de l’examinateur » pour la théorie et la
+// radio, « Note examinateur » pour les mises en situation.
+function block(title, answer, auto, max, path, value, label = 'Note de l’examinateur') {
   return `
     <div class="correction">
       <div class="corrhead">${title}</div>
       <div class="answer"><b>Réponse :</b> ${esc(answer || '—')}</div>
       <p class="auto">Suggestion automatique : ${auto}/${max}</p>
-      <label>Note de l’examinateur /${max}</label>
+      <label>${label} /${max}</label>
       ${markInput(path, value, max)}
-    </div>`;
-}
-
-function scenarioSummary(D) {
-  const raw = scenarioRawTotal(D);
-  const max = scenarioRawMax(D);
-  return `
-    <div class="card">
-      <h3>Mises en situation — total de la section</h3>
-      <p>
-        Somme des notes attribuées : <b>${raw}/${max}</b><br>
-        Ramenée au poids de l’épreuve : <b>${scaleScenarios(raw, max)}/${SCENARIO_SECTION_MAX}</b>
-      </p>
-      <p class="mut">
-        Les ${max / 15} questions sont notées sur 15, soit ${max} points.
-        La section pesant ${SCENARIO_SECTION_MAX} points au barème, le total est converti
-        proportionnellement. Le classement entre candidats est conservé.
-      </p>
     </div>`;
 }
 
@@ -74,11 +52,12 @@ export function renderCorrection() {
         scenarioAuto(D, scenarioIndex, questionIndex),
         15,
         `marks.sc.${key}`,
-        D.marks.sc[key]
+        D.marks.sc[key],
+        'Note examinateur'
       );
     }).join('');
     return `<div class="card"><h3>${esc(scenario.title)}</h3>${questions}</div>`;
-  }).join('') + scenarioSummary(D);
+  }).join('');
 
   setHTML('correction', `
     <div class="card">

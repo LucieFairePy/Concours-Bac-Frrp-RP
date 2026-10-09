@@ -57,11 +57,14 @@ function moduleBar() {
     ? '<button onclick="app.rectify()">Créer une version rectificative</button>'
     : '';
 
-  // Barre du module (#pageActions), comme la navigation de la maquette.
+  // Barre du module (#pageActions) : la navigation de l'archive
+  // (+ NOUVEAU DOSSIER, Dossier) ; Historique et Paramètres suivent dans
+  // le gabarit. Le bouton de rectification n'existe que pour un dossier
+  // clôturé, quand le rôle le permet.
   portal.setModuleBar(`
     ${rectify}
-    <button onclick="app.saveNow()">Enregistrer</button>
-    <button class="primary" onclick="app.newDossier()">+ NOUVEAU DOSSIER</button>`);
+    <button class="primary" onclick="app.newDossier()">+ NOUVEAU DOSSIER</button>
+    <button onclick="app.showDossier()">Dossier</button>`);
 }
 
 function loadImage(src) {
@@ -239,18 +242,24 @@ const handlers = {
   },
 
   async newDossier() {
-    if (autosave.dirty && !window.confirm('Des modifications ne sont pas enregistrées. Démarrer un nouveau dossier ?')) return;
     if (!auth.canWrite()) {
       window.alert('Ton rôle ne permet pas de créer un dossier.');
       return;
     }
+    // Confirmation de l'archive. Ici le brouillon est unique par code
+    // personnel : on dit la vérité sur ce qu'il devient.
+    const D = state.dossier;
+    const started = D && !D.locked && !state.readOnly
+      && (D.c.last || D.c.first || Object.values(D.ans || {}).some(Boolean));
+    const message = 'Créer un nouveau dossier BAC 75 N ?'
+      + (started ? ' Le brouillon en cours, non clôturé, sera remplacé.' : '');
+    if (!window.confirm(message)) return;
     openView('home');
     await startDossier();
   },
 
-  async saveNow() {
-    autosave.reset(true);
-    await autosave.flush();
+  showDossier() {
+    openView('home');
   },
 
   async retry() {
@@ -413,6 +422,7 @@ export default {
             <span id="sync" class="sync"></span>
             <span id="pageActions" class="mc-actions"></span>
             <a class="mc-link" href="${href('historique', { module: MODULE })}">Historique</a>
+            <a class="mc-link" href="${href('parametres')}">Paramètres</a>
           </nav>
         </header>
         <div class="mc-main">

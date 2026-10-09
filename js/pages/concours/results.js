@@ -1,6 +1,14 @@
 import { esc, setHTML, byId } from '../../core/dom.js';
 import { state, isEditable } from '../../core/state.js';
-import { totals, suggestedDecision, markClass, DECISIONS, DECISION_LABEL } from '../../scoring/totals.js';
+import { totals, suggestedDecision, markClass, DECISIONS } from '../../scoring/totals.js';
+
+/**
+ * Libellé de décision de l'archive : seul RESERVE est réécrit, les autres
+ * codes s'affichent tels quels (RETENU, AJOURNE, RECALE).
+ */
+export function decisionLabel(decision) {
+  return decision === 'RESERVE' ? 'RETENU SOUS RÉSERVE' : decision;
+}
 
 const INCIDENTS = [
   ['cheat', 'Triche — éliminatoire'],
@@ -24,7 +32,7 @@ export function renderResults() {
     </label>`).join('');
 
   const decisions = DECISIONS.map(value =>
-    `<option value="${value}" ${D.decision === value ? 'selected' : ''}>${DECISION_LABEL[value]}</option>`
+    `<option value="${value}" ${D.decision === value ? 'selected' : ''}>${decisionLabel(value)}</option>`
   ).join('');
 
   const retakes = RETAKES.map(label => `
@@ -46,7 +54,7 @@ export function renderResults() {
       </table>
       <div class="score ${markClass(t.total, 1000)}">${t.total}/1000</div>
       <p>Proposition automatique :</p>
-      <span class="status ${suggestion}">${DECISION_LABEL[suggestion]}</span>
+      <span class="status ${suggestion}">${decisionLabel(suggestion)}</span>
     </div>
     <div class="card">
       <h3>Incidents / règles</h3>

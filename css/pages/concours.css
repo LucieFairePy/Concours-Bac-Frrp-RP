@@ -225,7 +225,6 @@
     color: #ffffff08;
     font-size: 52px;
     font-weight: 900;
-    white-space: nowrap;
   }
 
   .m-concours .hero .flag {
@@ -348,9 +347,9 @@
 
   .m-concours .banner { border-radius: 8px }
 
-  /* Fond gris clair autour des pages A4, comme la maquette (la fiche
+  /* Fond gris clair autour des pages A4, comme l'archive (la fiche
      elle-même n'est pas restylée). */
-  .m-concours #s-final { background: #0a1520 }
+  .m-concours #s-final { background: #d8dde2 }
   .m-concours #s-final > .card { margin-bottom: 0 }
 
   /* ─────────────── Adaptatif ─────────────── */
@@ -374,3 +373,25 @@
     .m-concours .mc-link { padding: 8px 10px; font-size: 12px }
   }
 }
+
+/* Le titre de la fiche reste en capitales : la remise à zéro des titres
+   du module (text-transform: none) ne doit pas l'atteindre. */
+.m-concours .dp-title { text-transform: uppercase }
+
+/* ─────────────── Code couleur V6 de l'archive ───────────────
+
+   Notes et décisions de la fiche finale (grade-*, decision-*), hors de
+   @media screen : la fiche imprimée garde les mêmes couleurs. */
+
+.m-concours .grade-good { color: #079447 !important; font-weight: 900 }
+.m-concours .grade-mid { color: #e57b00 !important; font-weight: 900 }
+.m-concours .grade-bad { color: #ff1717 !important; font-weight: 900 }
+
+.m-concours .grade-good-bg { background: #073c2a !important; color: #63f3a7 !important; border-color: #079447 !important }
+.m-concours .grade-mid-bg { background: #49300a !important; color: #ffb43b !important; border-color: #e57b00 !important }
+.m-concours .grade-bad-bg { background: #560909 !important; color: #ff3131 !important; border-color: #ff1717 !important }
+
+.m-concours .dp-decision.decision-recale { background: #ff1717 !important; color: white !important; border: 3px solid #a40000 }
+.m-concours .dp-decision.decision-ajourne { background: #e57b00 !important; color: white !important }
+.m-concours .dp-decision.decision-reserve { background: #b96b00 !important; color: white !important }
+.m-concours .dp-decision.decision-retenu { background: #079447 !important; color: white !important }
