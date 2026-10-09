@@ -1030,8 +1030,10 @@ await group('V4 — formations Radio et Antiterrorisme : cours complets, évalua
     assert.ok(portalRoutes[route], `${course.id} : route ${route}`);
     assert.ok(records.MODULES[course.module], `${course.id} : module de dossier`);
     assert.ok(IMAGE_SLOTS[course.image], `${course.id} : image ${course.image}`);
-    assert.equal(course.evaluation.questions.reduce((sum, q) => sum + q.max, 0), 100, course.id);
     assert.equal(new Set(course.chapters.map(c => c.id)).size, course.chapters.length, `${course.id} : chapitres uniques`);
+    // L'antiterrorisme de l'archive est un cours seul, sans évaluation à saisir.
+    if (!course.evaluation) continue;
+    assert.equal(course.evaluation.questions.reduce((sum, q) => sum + q.max, 0), 100, course.id);
     for (const question of course.evaluation.questions) {
       assert.ok(question.q && question.attendu && question.attendu.length, `${course.id} ${question.id}`);
     }
@@ -1055,6 +1057,40 @@ await group('Archive — Formation Chef de Groupe : 16 chapitres, cours seul', a
   const source = fs.readFileSync(path.join(ROOT, 'js/pages/formations/chef-de-groupe.js'), 'utf8');
   assert.ok(!/from '\.\/engine\.js'/.test(source), 'la page Chef de Groupe ne doit plus monter le parcours commun');
   assert.ok(source.includes("params.get('dossier')"), 'un ancien dossier doit rester lisible');
+});
+
+await group('V4 — antiterrorisme : le module de l’archive, anciens dossiers lisibles', async () => {
+  const { ANTITERRORISME } = await import('../js/data/formations/antiterrorisme.js');
+  const { ANTITERRORISME_DOSSIERS } = await import('../js/data/formations/antiterrorisme-dossiers.js');
+  const layout = await import('../js/pages/formations/layouts/antiterrorisme.js');
+
+  // Les treize chapitres de modules/formation-antiterrorisme.html, dans l'ordre.
+  assert.deepEqual(ANTITERRORISME.chapters.map(c => `${c.num} ${c.title}`), [
+    '01 BATACLAN — 13 NOVEMBRE 2015', '02 PRIMO-INTERVENTION ET RÔLE BAC 75 N',
+    '03 APRÈS 2015 — PLAN BAC-PSIG', '04 RAID · BRI · GIGN',
+    '05 DÉTECTION, OBSERVATION ET SIGNALEMENT', '06 TRANSMISSION ET COMPTE RENDU INITIAL',
+    '07 PROTECTION, ZONAGE ET ACCÈS', '08 VICTIMES, TÉMOINS ET INFORMATIONS',
+    '09 COORDINATION ET PASSAGE DE RELAIS', '10 SITUATIONS DÉGRADÉES ET DISCIPLINE',
+    '11 EXERCICES PRATIQUES', '12 MISE EN SITUATION FINALE', '13 ÉVALUATION /100 ET FICHE RÉFLEXE'
+  ]);
+  // Rien que l'archive : pas d'évaluation à saisir, pas de champ de réponse.
+  assert.ok(!ANTITERRORISME.evaluation);
+  const html = layout.page(ANTITERRORISME) + layout.main(ANTITERRORISME);
+  assert.ok(!/<textarea|<input/.test(html), 'aucune saisie dans le module');
+  assert.equal((html.match(/class="at-chapter[ "]/g) || []).length, 13);
+  assert.equal((html.match(/class="at-chapter active"/g) || []).length, 1);
+  assert.ok(html.includes('neutralise <b>l’un des trois terroristes</b>'));
+  assert.ok(html.includes('<tr><th>TOTAL</th><th>/100</th></tr>'));
+  assert.ok(html.includes('13 / 13'));
+
+  // Un dossier de l'ancien parcours se relit avec son contenu d'alors.
+  assert.equal(ANTITERRORISME_DOSSIERS.module, 'antiterrorisme');
+  const old = formation.blankFormation('ANT-OLD', ANTITERRORISME_DOSSIERS, SETTINGS);
+  old.c = { ...old.c, last: 'durand', first: 'Léa', grade: 'Gardien' };
+  old.locked = true;
+  renderFormationFiche(ANTITERRORISME_DOSSIERS, formation.migrateFormation(old, ANTITERRORISME_DOSSIERS, SETTINGS));
+  assert.ok(sheet().includes('DURAND'));
+  assert.ok(layout.dossierPage(ANTITERRORISME, 'ANT-OLD').includes('id="sheet"'));
 });
 
 // ───────────────────────── Résultat ─────────────────────────────────────

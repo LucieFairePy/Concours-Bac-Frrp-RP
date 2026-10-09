@@ -217,7 +217,8 @@ const ROUTE_SPECS = {
   'formation-chef-groupe': { expect: ['chapters', 'lesson'] },
   // La radio n'a que le cours de l'archive : sommaire et chapitre, sans étapes.
   'formation-radio': { expect: ['mrNav', 'mrChapter'] },
-  'formation-antiterrorisme': { expect: ['tabs', 'sections'], ...COURSE_STEPS, chapters: true },
+  // Le module d'archive est un cours seul : ni étapes, ni dossier à remplir.
+  'formation-antiterrorisme': { expect: ['coursWrap'], chapters: true },
   // Les huit onglets de modules/examen-chef-groupe.html (archive V4).
   'examen-chef-groupe': {
     expect: ['steps', 'mxApp'],
@@ -337,7 +338,7 @@ for (const [id, route] of Object.entries(ROUTES)) {
       const { courseByRoute } = await import(sandboxUrl('js/data/formations/index.js'));
       const { course } = courseByRoute(id);
       const app = globalThis.window.app;
-      app.openStep('cours');
+      if (typeof app.openStep === 'function') app.openStep('cours');
       for (const chapter of course.chapters) {
         app.openChapter(chapter.id);
         await settle(2);
