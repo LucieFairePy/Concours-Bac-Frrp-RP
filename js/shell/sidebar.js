@@ -15,9 +15,7 @@ function navEntry(item, active) {
   if (!item.sub) return head;
 
   const children = item.sub
-    .map(child => (child.soon
-      ? `<span class="psb-sub soon">${esc(child.label)} <em>Bientôt</em></span>`
-      : `<a class="psb-sub${child.id === active ? ' active' : ''}" href="${itemHref(child)}">${esc(child.label)}</a>`))
+    .map(child => `<a class="psb-sub${child.id === active ? ' active' : ''}" href="${itemHref(child)}">${esc(child.label)}</a>`)
     .join('');
 
   return head + children;

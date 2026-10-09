@@ -135,11 +135,6 @@ main { max-width: 1440px; margin: auto; padding: 20px }
 .psb-sub.active { color: #fff; font-weight: 600 }
 .psb-sub.active:before { color: var(--blue) }
 
-/* Un module annoncé mais pas encore ouvert : visible, jamais cliquable. */
-.psb-sub.soon { color: #90a5b5; cursor: default }
-.psb-sub.soon:before { content: "○" }
-.psb-sub.soon em { font-style: normal; color: #617687; font-size: 14px }
-
 .psb-quote {
   position: relative;
   display: flex;

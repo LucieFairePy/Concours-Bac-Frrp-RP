@@ -20,10 +20,7 @@ export const NAV = [
       { id: 'negociation', label: 'Négociation BAC', route: 'formation-negociation' },
       { id: 'formation-cdg', label: 'Commandement', route: 'formation-chef-groupe' },
       { id: 'radio', label: 'Radio BAC', route: 'formation-radio' },
-      { id: 'antiterrorisme', label: 'Antiterrorisme', route: 'formation-antiterrorisme' },
-      // Annoncée par la maquette V4, pas encore écrite : visible pour que
-      // le parcours soit lisible, jamais cliquable.
-      { id: 'intervention', label: 'Intervention', soon: true }
+      { id: 'antiterrorisme', label: 'Antiterrorisme', route: 'formation-antiterrorisme' }
     ]
   },
   {
