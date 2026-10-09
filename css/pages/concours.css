@@ -1,1 +1,376 @@
-/* Module concours — mise en page de la maquette V4 (plein écran). */
+/* Module concours — mise en page de la maquette V4 (plein écran).
+
+   Reprend l'habit du module autonome modules/concours-bac.html de la
+   maquette : Arial, panneaux arrondis #0d1924, boutons bleu acier, onglets
+   simples, barre d'en-tête collante avec écusson. Tout est rangé sous
+   `.m-concours` et sous `@media screen` : les autres pages ne sont pas
+   touchées, et la fiche finale imprimée (#sheet, .dossier-page,
+   fiche/print.css) garde exactement son rendu. */
+
+@media screen {
+  .m-concours {
+    --mc-line: #29465e;
+    --mc-mut: #93a9ba;
+    --mc-gold: #d7b46a;
+    --mc-red: #e24a52;
+
+    min-height: 100vh;
+    background: linear-gradient(135deg, #04080d, #091723);
+    color: #eef5fa;
+    font: 14px Arial, sans-serif;
+    line-height: normal;
+  }
+
+  /* ─────────────── Barre du module ─────────────── */
+
+  .m-concours .mc-top {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 13px 20px;
+    border-bottom: 1px solid var(--mc-line);
+    background: #061019f5;
+  }
+
+  .m-concours .mc-back {
+    flex: none;
+    padding: 9px 13px;
+    border: 1px solid #31506a;
+    border-radius: 5px;
+    background: #0c2233;
+    color: #fff;
+    font: 700 13px Arial, sans-serif;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .m-concours .mc-back:hover { background: #12324a }
+
+  .m-concours .mc-logo {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 56px;
+    height: 56px;
+    border: 2px solid #dce7ee;
+    border-radius: 50%;
+    background: #10283c;
+    font-weight: 900;
+  }
+
+  .m-concours .mc-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 50%;
+  }
+
+  .m-concours .mc-title { min-width: 0 }
+
+  .m-concours .mc-title h1 {
+    margin: 0;
+    font: 700 18px Arial, sans-serif;
+    letter-spacing: normal;
+  }
+
+  .m-concours .mc-nav {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 4px 0;
+    margin-left: auto;
+  }
+
+  .m-concours .mc-actions { display: contents }
+
+  .m-concours .sync { margin-right: 6px; font-size: 12px; white-space: nowrap }
+  .m-concours .sync:empty { display: none }
+
+  .m-concours .mc-link {
+    display: inline-block;
+    padding: 10px 13px;
+    border: 1px solid #315977;
+    border-radius: 8px;
+    background: #173d5b;
+    color: #fff;
+    font: 700 13.333px Arial, sans-serif;
+    text-decoration: none;
+  }
+
+  .m-concours .mc-link:hover { filter: brightness(1.12) }
+
+  /* ─────────────── Socle de la maquette ─────────────── */
+
+  .m-concours .mc-main {
+    max-width: 1180px;
+    margin: auto;
+    padding: 20px;
+  }
+
+  .m-concours .mut { color: var(--mc-mut); font-size: 12px }
+
+  .m-concours h1,
+  .m-concours h2,
+  .m-concours h3,
+  .m-concours h4 {
+    font-family: Arial, sans-serif;
+    font-weight: 700;
+    letter-spacing: normal;
+    text-transform: none;
+  }
+
+  .m-concours .card h2,
+  .m-concours .hero h2 { margin: .83em 0; font-size: 1.5em }
+  .m-concours .card h3 { margin: 1em 0; font-size: 1.17em }
+
+  .m-concours button {
+    padding: 10px 13px;
+    border: 1px solid #315977;
+    border-radius: 8px;
+    background: #173d5b;
+    color: #fff;
+    font: 700 13.333px Arial, sans-serif;
+    letter-spacing: normal;
+    text-transform: none;
+    cursor: pointer;
+  }
+
+  .m-concours button:hover { background: #173d5b; filter: brightness(1.12) }
+  .m-concours button:disabled { cursor: default; filter: none; opacity: .6 }
+
+  .m-concours .primary,
+  .m-concours .primary:hover,
+  .m-concours .tabs .tab.active { background: #1d6598 }
+  .m-concours .danger,
+  .m-concours .danger:hover { background: #7d262d }
+  .m-concours .green,
+  .m-concours .green:hover { background: #25694e }
+
+  .m-concours .right { margin-left: auto }
+
+  .m-concours label {
+    display: block;
+    margin: 8px 0 4px;
+    color: #bfd0de;
+    font: 12px Arial, sans-serif;
+    letter-spacing: normal;
+    text-transform: none;
+  }
+
+  .m-concours input,
+  .m-concours textarea,
+  .m-concours select {
+    width: 100%;
+    padding: 9px;
+    border: 1px solid #31506a;
+    border-radius: 7px;
+    background: #07131e;
+    color: #fff;
+    font: 13.333px Arial, sans-serif;
+  }
+
+  .m-concours .inline-check { width: auto }
+
+  .m-concours input:focus,
+  .m-concours textarea:focus,
+  .m-concours select:focus { border-color: #31506a; box-shadow: none; outline: auto }
+
+  .m-concours textarea { min-height: 88px }
+
+  .m-concours th,
+  .m-concours td {
+    padding: 8px;
+    border-bottom: 1px solid #294156;
+    color: inherit;
+    font: inherit;
+    letter-spacing: normal;
+    text-align: left;
+    text-transform: none;
+    vertical-align: top;
+  }
+
+  .m-concours th { font-weight: 700 }
+
+  /* ─────────────── Carte titre et panneaux ─────────────── */
+
+  .m-concours .hero,
+  .m-concours .card {
+    margin: 12px 0;
+    padding: 17px;
+    border: 1px solid var(--mc-line);
+    border-radius: 14px;
+    background: #0d1924;
+  }
+
+  .m-concours .hero {
+    display: block;
+    position: relative;
+    height: auto;
+    min-height: 0;
+    overflow: hidden;
+    background: linear-gradient(135deg, #10283c, #091722);
+  }
+
+  .m-concours .hero:before { content: none }
+
+  .m-concours .hero:after {
+    content: "BRIGADE ANTI-CRIMINALITÉ";
+    position: absolute;
+    right: -20px;
+    top: 14px;
+    color: #ffffff08;
+    font-size: 52px;
+    font-weight: 900;
+    white-space: nowrap;
+  }
+
+  .m-concours .hero .flag {
+    display: block;
+    width: 120px;
+    height: 4px;
+    background: linear-gradient(90deg, #1e5aa8 0 33%, #fff 33% 66%, #e33b43 66%);
+  }
+
+  .m-concours .hero h2 { color: inherit }
+  .m-concours .hero .mut { max-width: none; color: var(--mc-mut) }
+  .m-concours .mc-hero-actions { margin-top: 14px }
+
+  /* ─────────────── Étapes ─────────────── */
+
+  .m-concours .tabs { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0 }
+
+  .m-concours .tabs .tab {
+    padding: 10px 13px;
+    border-color: #315977;
+    border-radius: 8px;
+    background: #173d5b;
+    font: 700 13.333px Arial, sans-serif;
+    letter-spacing: normal;
+    text-transform: none;
+    white-space: normal;
+  }
+
+  .m-concours .tabs .tab.active { background: #1d6598; border-color: #315977 }
+
+  .m-concours .tabs .tab:before { content: none }
+
+  .m-concours .progress {
+    height: 8px;
+    overflow: hidden;
+    border: 1px solid #294156;
+    border-radius: 20px;
+    background: #07131e;
+  }
+
+  .m-concours .progress span { background: linear-gradient(90deg, #1e5aa8, var(--mc-gold)) }
+
+  .m-concours .steptext { margin-top: 5px; color: var(--mc-mut); font-size: 12px }
+
+  .m-concours .stepnav {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin: 18px 0;
+    padding: 14px;
+    border: 1px solid var(--mc-line);
+    border-radius: 12px;
+    background: #091722;
+  }
+
+  /* ─────────────── Questions et correction ─────────────── */
+
+  .m-concours .q {
+    margin: 10px 0;
+    padding: 11px;
+    border: 0;
+    border-left: 3px solid #2b78ad;
+    border-radius: 0 8px 8px 0;
+    background: #091722;
+  }
+
+  .m-concours .q b:first-child,
+  .m-concours .q h4 { font: 700 14px Arial, sans-serif; letter-spacing: normal }
+
+  .m-concours .statement {
+    margin: 12px 0;
+    padding: 14px;
+    border: 1px solid #385a74;
+    border-radius: 10px;
+    background: #111f2c;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  .m-concours .statement b { color: #d7e7f3 }
+
+  .m-concours .correction {
+    margin: 10px 0;
+    padding: 12px;
+    border: 1px solid #294156;
+    border-radius: 10px;
+    background: none;
+  }
+
+  .m-concours .corrhead { margin-bottom: 7px; font: 800 14px Arial, sans-serif; letter-spacing: normal }
+
+  .m-concours .score { color: var(--mc-gold); font-size: 35px; font-weight: 900 }
+  .m-concours .auto { color: var(--mc-red); font-size: 16px; font-weight: 900 }
+
+  /* ─────────────── Décisions et bandeaux ─────────────── */
+
+  .m-concours .status {
+    display: inline-block;
+    padding: 9px 12px;
+    border-radius: 8px;
+    font: 900 14px Arial, sans-serif;
+    letter-spacing: normal;
+  }
+
+  .m-concours .status.RETENU { background: #079447; color: #fff }
+  .m-concours .status.RESERVE { background: #b96b00; color: #fff }
+  .m-concours .status.AJOURNE { background: #e57b00; color: #fff }
+  .m-concours .status.RECALE,
+  .m-concours .status.NONRETENU { background: #ff1717; color: #fff; box-shadow: 0 0 0 2px #8e0000 inset }
+
+  .m-concours .warn,
+  .m-concours .locked {
+    padding: 10px;
+    border: 1px solid #765e2c;
+    border-radius: 8px;
+    background: #2a2417;
+  }
+
+  .m-concours .locked { border-color: #7a3038; background: #2e171a }
+
+  .m-concours .banner { border-radius: 8px }
+
+  /* Fond gris clair autour des pages A4, comme la maquette (la fiche
+     elle-même n'est pas restylée). */
+  .m-concours #s-final { background: #d8dde2 }
+  .m-concours #s-final > .card { margin-bottom: 0 }
+
+  /* ─────────────── Adaptatif ─────────────── */
+
+  @media (max-width: 800px) {
+    .m-concours .c3,
+    .m-concours .c4,
+    .m-concours .c6,
+    .m-concours .c8 { grid-column: span 12 }
+
+    /* La maquette masque sa navigation sur téléphone ; ici les actions
+       restent utiles : elles passent sur une seconde ligne, sous l'écusson,
+       et la barre cesse d'être collante pour ne pas manger l'écran. */
+    .m-concours .mc-top { position: static; flex-wrap: wrap; gap: 10px 14px }
+    .m-concours .mc-logo { order: 1 }
+    .m-concours .mc-title { order: 2; flex: 1 1 calc(100% - 70px) }
+    .m-concours .mc-back { order: 3 }
+    .m-concours .mc-nav { order: 4; flex: 1 1 auto; justify-content: flex-start; margin-left: 0 }
+    .m-concours .mc-back,
+    .m-concours .mc-nav button,
+    .m-concours .mc-link { padding: 8px 10px; font-size: 12px }
+  }
+}

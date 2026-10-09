@@ -57,13 +57,11 @@ function moduleBar() {
     ? '<button onclick="app.rectify()">Créer une version rectificative</button>'
     : '';
 
+  // Barre du module (#pageActions), comme la navigation de la maquette.
   portal.setModuleBar(`
-    <b>Concours d’intégration BAC</b>
-    <span class="mut">dossier ${esc(state.dossier ? state.dossier.id : '—')}</span>
-    <span class="spacer"></span>
     ${rectify}
     <button onclick="app.saveNow()">Enregistrer</button>
-    <button class="primary" onclick="app.newDossier()">Nouveau dossier</button>`);
+    <button class="primary" onclick="app.newDossier()">+ NOUVEAU DOSSIER</button>`);
 }
 
 function loadImage(src) {
@@ -396,25 +394,56 @@ export default {
   handlers,
 
   template() {
+    // Mise en page du module autonome de la maquette V4 : barre d'en-tête
+    // propre (retour au portail, état d'enregistrement, actions), puis la
+    // carte titre, les onglets d'étape et les sections.
     return `
-      <section id="home" class="view">
-        <div class="hero" data-img="concours">
-          <div class="flag"></div>
-          <small class="hero-kicker no-print">Recrutement BAC 75 N</small>
-          <h1 class="no-print">Concours d’intégration BAC</h1>
-          <h2 id="hero">Nouveau concours</h2>
-          <div class="mut">Passage candidat → Correction → Résultats → Fiche finale • /1000</div>
+      <div class="m-concours">
+        <header class="mc-top no-print">
+          <a class="mc-back" href="${href('accueil')}">← Portail BAC 75 N</a>
+          <div class="mc-logo">
+            <img src="assets/bac75n/01_LOGO_BAC75N_PRINCIPAL.png" alt="Logo officiel BAC 75 N"
+                 onerror="this.onerror=null;this.src='assets/logo-bac.svg'">
+          </div>
+          <div class="mc-title">
+            <h1>CONCOURS D’INTÉGRATION — BRIGADE ANTI-CRIMINALITÉ</h1>
+            <div class="mut">Police Nationale • France Roleplay • outil fictif d’évaluation</div>
+          </div>
+          <nav class="mc-nav">
+            <span id="sync" class="sync"></span>
+            <span id="pageActions" class="mc-actions"></span>
+            <a class="mc-link" href="${href('historique', { module: MODULE })}">Historique</a>
+          </nav>
+        </header>
+        <div class="mc-main">
+          <div id="mcBanner"></div>
+          <section id="home" class="view">
+            <div class="hero">
+              <div class="flag"></div>
+              <h2 id="hero">Nouveau concours</h2>
+              <div class="mut">Passage candidat → Correction → Résultats → Fiche finale • /1000</div>
+              <div class="mc-hero-actions no-print">
+                <button class="primary" onclick="app.newDossier()">+ CRÉER UN NOUVEAU DOSSIER</button>
+              </div>
+            </div>
+            <div id="tabs" class="tabs no-print"></div>
+            <div class="no-print">
+              <div class="progress"><span id="prog"></span></div>
+              <div id="stepText" class="steptext"></div>
+            </div>
+            <div id="sections"></div>
+          </section>
         </div>
-        <div id="tabs" class="tabs no-print"></div>
-        <div class="no-print">
-          <div class="progress"><span id="prog"></span></div>
-          <div id="stepText" class="steptext"></div>
-        </div>
-        <div id="sections"></div>
-      </section>`;
+      </div>`;
   },
 
   async mount(ctx) {
+    // Le bandeau (#banner) est posé par le routeur avant la page : il
+    // passe sous la barre du module, comme une alerte de la maquette.
+    const banner = byId('banner');
+    const slot = byId('mcBanner');
+    if (banner && slot && typeof slot.replaceWith === 'function') slot.replaceWith(banner);
+
     params = ctx.params;
     state.dossier = null;
     state.readOnly = false;
