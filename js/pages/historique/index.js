@@ -320,12 +320,6 @@ export default {
   async mount({ alive }) {
     loaded = { entries: [], errors: [] };
 
-    portal.setModuleBar(`
-      <b>Historique centralisé</b>
-      <span class="mut">${exportMode ? 'export d’un rapport' : 'tous modules'}</span>
-      <span class="spacer"></span>
-      <a class="pnav-item" href="${href('accueil')}">← Accueil</a>`);
-
     families();
     types();
     filterBar();
