@@ -22,13 +22,19 @@ export const PHYSICAL_MEASURES = [
   { id: 'run', label: '1200 m chronométré', unit: 's', lower: true },
   { id: 'push', label: 'Pompes', unit: 'rép.', lower: false },
   { id: 'abs', label: 'Abdos', unit: 'rép.', lower: false },
-  { id: 'plank', label: 'Gainage', unit: 's', lower: false }
+  { id: 'jumping', label: 'Jumping jacks', unit: 'rép.', lower: false }
 ];
 
 export const PHYSICAL_STEPS = ['fort', 'bon', 'base'];
 
 function clonePhysical(source) {
-  const out = { pursuit: source.pursuit, cog: source.cog, max: source.max };
+  const out = {
+    pursuit: source.pursuit,
+    cog: source.cog,
+    max: source.max,
+    // Barème figé des anciens dossiers notés sur le gainage.
+    plank: { ...CONFIG.defaultPhysical.plank, points: [...CONFIG.defaultPhysical.plank.points] }
+  };
   for (const measure of PHYSICAL_MEASURES) {
     out[measure.id] = { ...source[measure.id], points: [...source[measure.id].points] };
   }
@@ -65,7 +71,7 @@ export function current() {
   return { bac: bac(), cdg: cdg(), physical: physical() };
 }
 
-/** Clé de réglage d'un palier : `physRunFort`, `physPlankBase`… */
+/** Clé de réglage d'un palier : `physRunFort`, `physJumpingBase`… */
 export function physicalKey(measureId, step) {
   return `phys${measureId[0].toUpperCase()}${measureId.slice(1)}${step[0].toUpperCase()}${step.slice(1)}`;
 }

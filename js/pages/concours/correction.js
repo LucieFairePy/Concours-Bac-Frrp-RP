@@ -2,7 +2,7 @@ import { RADIO_EXERCISE } from '../../data/radio.js';
 import { SCENARIOS } from '../../data/scenarios.js';
 import { esc, setHTML } from '../../core/dom.js';
 import { state, isEditable } from '../../core/state.js';
-import { theoryAuto, radioAuto, scenarioAuto, physicalAuto, shootingAuto } from '../../scoring/auto.js';
+import { theoryAuto, radioAuto, scenarioAuto, physicalAuto, shootingAuto, usesPlank } from '../../scoring/auto.js';
 import {
   scenarioRawTotal,
   scaleScenarios,
@@ -99,7 +99,9 @@ export function renderCorrection() {
         1 200 m : ${esc(D.phys.run || '—')} s •
         Pompes : ${esc(D.phys.push || '—')} •
         Abdos : ${esc(D.phys.abs || '—')} •
-        Gainage : ${esc(D.phys.plank || '—')} s
+        ${usesPlank(D.phys)
+          ? `Gainage : ${esc(D.phys.plank)} s`
+          : `Jumping jacks : ${esc(D.phys.jumping || '—')} / 20`}
       </p>
       <p class="auto">Suggestion automatique : ${physicalAuto(D)}/200</p>
       <label>Note examinateur /200</label>

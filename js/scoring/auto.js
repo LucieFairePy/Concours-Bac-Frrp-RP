@@ -41,18 +41,29 @@ function countBand(value, band) {
   return Math.min(band.cap, value * band.ratio);
 }
 
+/**
+ * Un dossier saisi avant la V4 porte un gainage et pas de jumping jacks :
+ * il reste noté sur le gainage, pour que sa note ne change pas en le
+ * rouvrant.
+ */
+export function usesPlank(phys) {
+  const jumping = String((phys && phys.jumping) || '').trim();
+  const plank = String((phys && phys.plank) || '').trim();
+  return !jumping && Boolean(plank);
+}
+
 export function physicalAuto(dossier, bareme = thresholds.physical()) {
-  const { run, push, abs, plank, pursuit, cog } = dossier.phys;
+  const { run, push, abs, jumping, plank, pursuit, cog } = dossier.phys;
   const r = Number(run);
   const pu = Number(push);
   const ab = Number(abs);
-  const pl = Number(plank);
   let points = 0;
 
   if (r) points += timeBand(r, bareme.run);
   if (pu) points += countBand(pu, bareme.push);
   if (ab) points += countBand(ab, bareme.abs);
-  if (pl) points += countBand(pl, bareme.plank);
+  if (usesPlank(dossier.phys)) points += countBand(Number(plank), bareme.plank);
+  else if (Number(jumping)) points += countBand(Number(jumping), bareme.jumping);
 
   points += autoText(pursuit, bareme.pursuit) + autoText(cog, bareme.cog);
   return Math.min(bareme.max, Math.round(points));

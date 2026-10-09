@@ -119,7 +119,7 @@ function physicalCard() {
       <p class="mut">
         Les trois paliers de chaque mesure, sur les 200 points de l’épreuve.
         Référence du kit : 1200 m (trois tours de 400 m) après un tour
-        d’échauffement, 30 pompes, 50 abdos, 1 min 50 de gainage. Un temps se lit
+        d’échauffement, 30 pompes, 50 abdos, 20 jumping jacks. Un temps se lit
         à l’envers d’un nombre de répétitions : pour le 1200 m, « fort » est le
         temps le plus court.
       </p>

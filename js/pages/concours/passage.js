@@ -4,6 +4,7 @@ import { SCENARIOS } from '../../data/scenarios.js';
 import { esc, setHTML, setText } from '../../core/dom.js';
 import { state, isEditable } from '../../core/state.js';
 import { stepNav, renderProgress } from './navigation.js';
+import { usesPlank } from '../../scoring/auto.js';
 
 function identitySection(dis) {
   const D = state.dossier;
@@ -110,13 +111,15 @@ function physicalSection(dis) {
       <div class="statement">
         <b>PROTOCOLE RP</b><br>
         400 m d’échauffement non noté, puis 1 200 m chronométrés. Objectifs : 30 pompes, 50 abdos,
-        1 min 50 de gainage. Compléter ensuite la course-poursuite fictive et la restitution cognitive sous fatigue.
+        20 jumping jacks. Compléter ensuite la course-poursuite fictive et la restitution cognitive sous fatigue.
       </div>
       <div class="row">
         <div class="c3"><label>1 200 m — secondes</label><input type="number" ${dis} value="${esc(D.phys.run)}" oninput="app.set('phys.run',this.value)"></div>
         <div class="c3"><label>Pompes</label><input type="number" ${dis} value="${esc(D.phys.push)}" oninput="app.set('phys.push',this.value)"></div>
         <div class="c3"><label>Abdos</label><input type="number" ${dis} value="${esc(D.phys.abs)}" oninput="app.set('phys.abs',this.value)"></div>
-        <div class="c3"><label>Gainage — secondes</label><input type="number" ${dis} value="${esc(D.phys.plank)}" oninput="app.set('phys.plank',this.value)"></div>
+        ${usesPlank(D.phys)
+          ? `<div class="c3"><label>Gainage — secondes (saisie d’avant la V4)</label><input type="number" ${dis} value="${esc(D.phys.plank)}" oninput="app.set('phys.plank',this.value)"></div>`
+          : `<div class="c3"><label>Jumping jacks — répétitions</label><input type="number" ${dis} value="${esc(D.phys.jumping)}" oninput="app.set('phys.jumping',this.value)"></div>`}
       </div>
       <label>Course-poursuite fictive — constat examinateur</label>
       <textarea ${dis} oninput="app.set('phys.pursuit',this.value)">${esc(D.phys.pursuit)}</textarea>

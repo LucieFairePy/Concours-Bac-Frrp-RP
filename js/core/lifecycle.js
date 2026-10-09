@@ -62,7 +62,7 @@ function concoursSteps(record) {
     { id: 'theory', label: 'Théorie', done: theoryDone >= 1 },
     { id: 'radio', label: 'Radio', done: radio.length > 0 && countFilled(radio) === radio.length },
     { id: 'sc', label: 'Situations', done: scenarios.length > 0 && countFilled(scenarios) === scenarios.length },
-    { id: 'phys', label: 'Physique / cognitif', done: countFilled([phys.run, phys.push, phys.abs, phys.plank]) >= 4 },
+    { id: 'phys', label: 'Physique / cognitif', done: countFilled([phys.run, phys.push, phys.abs, phys.jumping || phys.plank]) >= 4 },
     { id: 'shoot', label: 'Tir RP', done: countFilled([shoot.safety, shoot.handling, shoot.precision, shoot.reaction]) >= 4 },
     { id: 'correct', label: 'Correction', done: marked > 0 },
     { id: 'results', label: 'Résultats', done: filled(record.decision) },

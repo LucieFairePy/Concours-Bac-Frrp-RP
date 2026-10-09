@@ -32,7 +32,7 @@ export function blankDossier(id, settings) {
     ans: {},
     radioAns: RADIO_EXERCISE.questions.map(() => ''),
     scAns: SCENARIOS.map(scenario => scenario.questions.map(() => '')),
-    phys: { run: '', push: '', abs: '', plank: '', pursuit: '', cog: '', obs: '' },
+    phys: { run: '', push: '', abs: '', jumping: '', pursuit: '', cog: '', obs: '' },
     shoot: {
       safety: '',
       handling: '',

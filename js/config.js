@@ -20,14 +20,20 @@ export const CONFIG = {
   //   `fort` / `bon` / `base` : les trois paliers de chaque mesure
   //   `points`                : ce que vaut chaque palier, puis le plancher
   //
-  // Référence prototype : 1200 m (3 tours de 400 m) après un tour
-  // d'échauffement, 30 pompes, 50 abdos, 1 min 50 de gainage.
+  // Référence maquette V4 : 1200 m (3 tours de 400 m) après un tour
+  // d'échauffement, 30 pompes, 50 abdos, 20 jumping jacks.
+  //
+  // Jumping jacks, barème de la maquette : 20 répétitions et plus valent
+  // 30 points, en dessous 1,5 point par répétition.
   defaultPhysical: {
     // Temps en secondes : plus c'est bas, mieux c'est.
     run: { fort: 300, bon: 330, base: 390, points: [50, 45, 38, 28] },
     // Répétitions et durées : plus c'est haut, mieux c'est.
     push: { fort: 45, bon: 38, base: 30, points: [35, 32, 27], ratio: 0.8, cap: 25 },
     abs: { fort: 70, bon: 60, base: 50, points: [35, 32, 27], ratio: 0.5, cap: 25 },
+    jumping: { fort: 30, bon: 25, base: 20, points: [30, 30, 30], ratio: 1.5, cap: 30 },
+    // Gainage : mesure d'avant la V4, gardée pour noter à l'identique les
+    // dossiers qui l'ont saisie. Elle n'est plus proposée ni réglable.
     plank: { fort: 180, bon: 150, base: 110, points: [30, 27, 23], ratio: 1 / 6, cap: 20 },
     // Parties rédigées de l'épreuve, notées comme une réponse ouverte.
     pursuit: 30,

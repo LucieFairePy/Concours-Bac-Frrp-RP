@@ -702,9 +702,34 @@ await group('§4.1 — une seule page, une adresse #/… par écran', () => {
   assert.ok(readRoot('404.html').includes('LEGACY_PAGES'), 'le 404 redirige les anciennes adresses');
 });
 
+await group('V4 — jumping jacks à la place du gainage, anciens dossiers intacts', () => {
+  thresholds.apply(thresholds.toSettings(thresholds.defaults()));
+  const only = phys => physicalAuto({ phys: { run: '', push: '', abs: '', pursuit: '', cog: '', ...phys } });
+
+  // Barème de la maquette V4 : jj >= 20 → 30 points, sinon 1,5 par répétition.
+  assert.equal(only({ jumping: '20' }), 30);
+  assert.equal(only({ jumping: '35' }), 30);
+  assert.equal(only({ jumping: '10' }), 15);
+  assert.equal(only({ jumping: '1' }), 2);
+  assert.equal(only({ jumping: '' }), 0);
+
+  // Un dossier d'avant la V4 garde sa note de gainage, rouvert ou migré.
+  assert.equal(only({ plank: '180' }), 30);
+  assert.equal(only({ plank: '120' }), 23);
+  const ancien = blankDossier('BAC-2026-904', SETTINGS);
+  delete ancien.phys.jumping;
+  ancien.phys.plank = '150';
+  assert.equal(physicalAuto({ phys: { ...blankDossier('X', SETTINGS).phys, ...ancien.phys } }), 27);
+
+  // Le réglage de la direction porte sur les jumping jacks, plus sur le gainage.
+  const keys = Object.keys(thresholds.toSettings());
+  assert.ok(keys.includes('physJumpingBase') && !keys.includes('physPlankBase'));
+  assert.ok(!readRoot('js/pages/concours/passage.js').includes('1 min 50 de gainage'));
+});
+
 await group('§8.4 — le barème physique se règle, il n’est plus en dur', () => {
   const dossier = blankDossier('BAC-2026-903', SETTINGS);
-  dossier.phys = { run: '320', push: '40', abs: '62', plank: '160', pursuit: '', cog: '', obs: '' };
+  dossier.phys = { run: '320', push: '40', abs: '62', jumping: '18', pursuit: '', cog: '', obs: '' };
 
   // Avec le barème du kit : 320 s → palier « bon », 40 pompes → « bon »…
   thresholds.apply(thresholds.toSettings(thresholds.defaults()));
@@ -773,7 +798,7 @@ await group('§12 et §14 — la suggestion est archivée, le dossier porte son 
 
   dossier.c = { ...dossier.c, last: 'noel', first: 'Marc' };
   for (const question of dossier.qs) dossier.ans[question.id] = 'Réponse construite en plusieurs mots.';
-  dossier.phys = { run: '305', push: '42', abs: '64', plank: '175', pursuit: 'oui', cog: 'oui', obs: '' };
+  dossier.phys = { run: '305', push: '42', abs: '64', jumping: '22', pursuit: 'oui', cog: 'oui', obs: '' };
 
   const snapshot = suggestionSnapshot(dossier);
   assert.ok(snapshot.total > 0);

@@ -2,6 +2,7 @@ import { RADIO_EXERCISE } from '../../data/radio.js';
 import { SCENARIOS } from '../../data/scenarios.js';
 import { esc, initials, setHTML } from '../../core/dom.js';
 import { state } from '../../core/state.js';
+import { usesPlank } from '../../scoring/auto.js';
 import {
   totals,
   suggestedDecision,
@@ -294,7 +295,9 @@ function physicalPage(dossier, t) {
       <tr><td>1 200 m chronométrés</td><td>${esc(dossier.phys.run || '—')} secondes</td></tr>
       <tr><td>Pompes</td><td>${esc(dossier.phys.push || '—')}</td></tr>
       <tr><td>Abdominaux</td><td>${esc(dossier.phys.abs || '—')}</td></tr>
-      <tr><td>Gainage</td><td>${esc(dossier.phys.plank || '—')} secondes</td></tr>
+      ${usesPlank(dossier.phys)
+        ? `<tr><td>Gainage</td><td>${esc(dossier.phys.plank)} secondes</td></tr>`
+        : `<tr><td>Jumping jacks (objectif : 20)</td><td>${esc(dossier.phys.jumping || '—')} répétitions</td></tr>`}
       <tr><td>Course-poursuite fictive</td><td>${esc(dossier.phys.pursuit || '—')}</td></tr>
       <tr><td>Cognitif sous fatigue</td><td>${esc(dossier.phys.cog || '—')}</td></tr>
     </table>
