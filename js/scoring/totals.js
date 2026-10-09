@@ -1,5 +1,5 @@
-import { RADIO_EXERCISE } from '../data/radio.js';
-import { SCENARIOS } from '../data/scenarios.js';
+import { radioOf } from '../data/radio.js';
+import { SCENARIOS, scenariosOf } from '../data/scenarios.js';
 import { theoryAuto, radioAuto, scenarioAuto, physicalAuto, shootingAuto } from './auto.js';
 import * as thresholds from '../core/thresholds.js';
 
@@ -35,13 +35,23 @@ export const SCENARIO_SECTION_MAX = 300;
 
 export const SCENARIO_QUESTION_MAX = 15;
 
-export const SCENARIO_RAW_MAX = SCENARIOS.reduce(
-  (sum, scenario) => sum + scenario.questions.length * SCENARIO_QUESTION_MAX,
-  0
-);
+function rawMaxOf(scenarios) {
+  return scenarios.reduce(
+    (sum, scenario) => sum + scenario.questions.length * SCENARIO_QUESTION_MAX,
+    0
+  );
+}
+
+/** Maximum brut du jeu en vigueur. */
+export const SCENARIO_RAW_MAX = rawMaxOf(SCENARIOS);
+
+/** Maximum brut du jeu sous lequel ce dossier a été passé. */
+export function scenarioRawMax(dossier) {
+  return rawMaxOf(scenariosOf(dossier));
+}
 
 export function scenarioRawTotal(dossier) {
-  return SCENARIOS.reduce(
+  return scenariosOf(dossier).reduce(
     (sum, scenario, scenarioIndex) =>
       sum +
       scenario.questions.reduce(
@@ -52,16 +62,16 @@ export function scenarioRawTotal(dossier) {
   );
 }
 
-export function scaleScenarios(raw) {
-  if (!SCENARIO_RAW_MAX) return 0;
-  return Math.round((raw * SCENARIO_SECTION_MAX) / SCENARIO_RAW_MAX);
+export function scaleScenarios(raw, max = SCENARIO_RAW_MAX) {
+  if (!max) return 0;
+  return Math.round((raw * SCENARIO_SECTION_MAX) / max);
 }
 
 export function totals(dossier) {
   const th = dossier.qs.reduce((sum, question) => sum + theoryMark(dossier, question), 0);
-  const ra = RADIO_EXERCISE.questions.reduce((sum, _, index) => sum + radioMark(dossier, index), 0);
+  const ra = radioOf(dossier).questions.reduce((sum, _, index) => sum + radioMark(dossier, index), 0);
   const scRaw = scenarioRawTotal(dossier);
-  const sc = scaleScenarios(scRaw);
+  const sc = scaleScenarios(scRaw, scenarioRawMax(dossier));
   const ph = finalMark(dossier.marks.phys, physicalAuto(dossier), 200);
   const sh = finalMark(dossier.marks.shoot, shootingAuto(dossier), 300);
 
@@ -102,10 +112,10 @@ export function suggestionSnapshot(dossier, bands = thresholds.bac()) {
     theory[question.id] = theoryAuto(dossier, question);
   }
 
-  const radio = RADIO_EXERCISE.questions.map((_, index) => radioAuto(dossier, index));
+  const radio = radioOf(dossier).questions.map((_, index) => radioAuto(dossier, index));
 
   const sc = {};
-  SCENARIOS.forEach((scenario, scenarioIndex) => {
+  scenariosOf(dossier).forEach((scenario, scenarioIndex) => {
     scenario.questions.forEach((_, questionIndex) => {
       sc[`${scenarioIndex}_${questionIndex}`] = scenarioAuto(dossier, scenarioIndex, questionIndex);
     });
@@ -116,7 +126,7 @@ export function suggestionSnapshot(dossier, bands = thresholds.bac()) {
   const sections = {
     th: Object.values(theory).reduce((sum, value) => sum + value, 0),
     ra: radio.reduce((sum, value) => sum + value, 0),
-    sc: scaleScenarios(scRaw),
+    sc: scaleScenarios(scRaw, scenarioRawMax(dossier)),
     ph: physicalAuto(dossier),
     sh: shootingAuto(dossier)
   };
@@ -158,6 +168,15 @@ export function markClass(value, max) {
   if (ratio >= 0.8) return 'note-verte';
   if (ratio >= 0.65) return 'note-orange';
   return 'note-rouge';
+}
+
+/**
+ * Couleur du résultat final : un RECALÉ s'affiche en rouge quel que soit
+ * le total — un éliminatoire avec un total élevé ne doit pas paraître vert.
+ */
+export function finalScoreClass(total, decision) {
+  if (decision === 'RECALE') return 'note-rouge';
+  return markClass(total, 1000);
 }
 
 export function decisionClass(decision) {

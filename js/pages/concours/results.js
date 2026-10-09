@@ -1,6 +1,6 @@
 import { esc, setHTML, byId } from '../../core/dom.js';
 import { state, isEditable } from '../../core/state.js';
-import { totals, suggestedDecision, DECISIONS, DECISION_LABEL } from '../../scoring/totals.js';
+import { totals, suggestedDecision, markClass, DECISIONS, DECISION_LABEL } from '../../scoring/totals.js';
 
 const INCIDENTS = [
   ['cheat', 'Triche — éliminatoire'],
@@ -44,7 +44,7 @@ export function renderResults() {
         <tr><td>Physique / cognitif</td><td>${t.ph}/200</td></tr>
         <tr><td>Tir</td><td>${t.sh}/300</td></tr>
       </table>
-      <div class="score">${t.total}/1000</div>
+      <div class="score ${markClass(t.total, 1000)}">${t.total}/1000</div>
       <p>Proposition automatique :</p>
       <span class="status ${suggestion}">${DECISION_LABEL[suggestion]}</span>
     </div>
