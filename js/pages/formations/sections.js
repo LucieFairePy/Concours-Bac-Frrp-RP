@@ -13,6 +13,7 @@ import {
   questionSuggestion,
   questionMark,
   formationTotals,
+  evaluationOf,
   suggestedDecision,
   decisionReason,
   DECISIONS
@@ -112,7 +113,8 @@ export function finalSection(R, dis) {
 }
 
 export function evaluationHtml(course, R, dis) {
-  const questions = course.evaluation.questions.map((question, index) => `
+  const evaluation = evaluationOf(R, course);
+  const questions = evaluation.questions.map((question, index) => `
     <div class="q">
       <b>${index + 1}. ${esc(question.q)}</b>
       <span class="mut"> /${question.max}</span>
@@ -130,9 +132,9 @@ export function evaluationHtml(course, R, dis) {
 
   return `
     <div class="card">
-      <h2>Évaluation — ${course.evaluation.max} points</h2>
+      <h2>Évaluation — ${evaluation.max} points</h2>
       <p class="mut">
-        ${course.evaluation.duration ? `${esc(course.evaluation.duration)} • ` : ''}aucune note n’est
+        ${evaluation.duration ? `${esc(evaluation.duration)} • ` : ''}aucune note n’est
         affichée pendant la saisie des réponses.
       </p>
       ${warn}
@@ -182,7 +184,7 @@ export function correctionHtml(course, R, dis) {
   const t = formationTotals(R, course);
   const suggestion = suggestedDecision(R, course);
 
-  const blocks = course.evaluation.questions.map((question, index) => correctionBlock(R, question, index, dis)).join('');
+  const blocks = evaluationOf(R, course).questions.map((question, index) => correctionBlock(R, question, index, dis)).join('');
 
   const options = DECISIONS.map(value =>
     `<option value="${value}" ${R.decision === value ? 'selected' : ''}>${esc(decisionText(value))}</option>`
