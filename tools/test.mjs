@@ -92,6 +92,7 @@ import { SCENARIOS, SCENARIOS_LEGACY, scenariosOf } from '../js/data/scenarios.j
 import { migrate as migrateDossier, pickQuestions } from '../js/core/state.js';
 import { finalScoreClass } from '../js/scoring/totals.js';
 import { EVALUATION_NEGOCIATION_V1 } from '../js/data/formations/negociation.js';
+import * as NEGO_COURS from '../js/data/formations/negociation-cours.js';
 import { COURSES } from '../js/data/formations/index.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -333,10 +334,12 @@ for (const course of [NEGOCIATION, CHEF_DE_GROUPE]) {
       chapter.blocks.filter(block => block.t === 'exercice'));
     assert.ok(exercises.length >= 5, `${exercises.length} exercices`);
 
-    // chaque chapitre a du contenu, et chaque bloc un type connu
+    // chaque chapitre a du contenu, et chaque bloc un type connu — sauf la
+    // négociation, dont le cours suit l'archive (negociation-cours.js) : ses
+    // anciens chapitres ne gardent que ce que la fiche d'un ancien dossier lit.
     const known = new Set(['p', 'liste', 'rp', 'dialogue', 'retenir', 'erreurs', 'etapes', 'table', 'exercice']);
     for (const chapter of course.chapters) {
-      assert.ok(chapter.blocks.length >= 2, `chapitre ${chapter.num} trop court`);
+      if (course !== NEGOCIATION) assert.ok(chapter.blocks.length >= 2, `chapitre ${chapter.num} trop court`);
       for (const block of chapter.blocks) {
         assert.ok(known.has(block.t), `bloc inconnu « ${block.t} » au chapitre ${chapter.num}`);
       }
@@ -915,7 +918,7 @@ await group('V4 — examen Chef de Groupe : évolution à injecter, questions de
   }
 });
 
-await group('V4 — négociation : grille /100 de la maquette, questionnaire hérité', () => {
+await group('V4 — négociation : cours de l’archive, questionnaires des anciens dossiers', () => {
   const evaluation = NEGOCIATION.evaluation;
   assert.equal(evaluation.questions.reduce((sum, q) => sum + q.max, 0), 100);
   for (const axis of evaluation.grid) {
@@ -936,6 +939,26 @@ await group('V4 — négociation : grille /100 de la maquette, questionnaire hé
   assert.ok(!('evalVersion' in migrated));
   assert.equal(formation.evaluationOf(migrated, NEGOCIATION), EVALUATION_NEGOCIATION_V1);
   assert.ok(formation.formationTotals(migrated, NEGOCIATION).total > 0);
+
+  // Le cours à l'écran est celui de l'archive : vingt chapitres, mot pour mot.
+  assert.equal(NEGO_COURS.CHAPTERS.length, 20);
+  NEGO_COURS.CHAPTERS.forEach((chapter, index) => {
+    assert.equal(chapter.n, String(index + 1).padStart(2, '0'));
+    for (const key of ['title', 'sub', 'desc', 'remember']) assert.ok(chapter[key], `${chapter.n} ${key}`);
+    assert.ok(chapter.points.length >= 5, `${chapter.n} points`);
+    assert.ok(IMAGE_SLOTS[chapter.image], `${chapter.n} image ${chapter.image}`);
+  });
+  assert.equal(NEGO_COURS.CHAPTERS[0].title, 'Rôle et objectifs du négociateur');
+  assert.equal(NEGO_COURS.CHAPTERS[19].title, 'Évaluation /100 et fiche réflexe');
+  assert.deepEqual(NEGO_COURS.QUICK.map(entry => entry.index), [0, 4, 14, 18]);
+  assert.equal(NEGO_COURS.GRID.reduce((sum, field) => sum + field.max, 0), 100);
+  assert.deepEqual(Object.keys(NEGO_COURS.EXAMPLES).sort(), ['04', '05', '13', '16', '18']);
+
+  // Pas de parcours à étapes : l'archive n'en a pas. Un ancien dossier
+  // (`?dossier=`) s'ouvre sur sa fiche en lecture seule.
+  const negoPage = readRoot('js/pages/formations/negociation.js');
+  assert.ok(!negoPage.includes('formationPage'), 'la négociation ne passe plus par le moteur commun');
+  assert.ok(negoPage.includes('renderFormationFiche') && negoPage.includes('records.get'), 'ancien dossier non relu');
 
   const cdgRecord = formation.blankFormation('C-T', CHEF_DE_GROUPE, SETTINGS);
   assert.ok(!('evalVersion' in cdgRecord));

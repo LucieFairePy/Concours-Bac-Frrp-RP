@@ -211,7 +211,8 @@ const ROUTE_SPECS = {
     stepExpect: { correct: 'correction', results: 'resultBox', final: 'sheet' }
   },
   formations: { expect: ['cards'] },
-  'formation-negociation': { expect: ['tabs', 'sections'], ...COURSE_STEPS, chapters: true },
+  // Module de l'archive : sommaire et chapitre, sans parcours à étapes.
+  'formation-negociation': { expect: ['toc', 'lesson'], lessons: 20 },
   'formation-chef-groupe': { expect: ['tabs', 'sections'], ...COURSE_STEPS, chapters: true },
   'formation-radio': { expect: ['tabs', 'sections'], ...COURSE_STEPS, chapters: true },
   'formation-antiterrorisme': { expect: ['tabs', 'sections'], ...COURSE_STEPS, chapters: true },
@@ -345,6 +346,18 @@ for (const [id, route] of Object.entries(ROUTES)) {
         if (!String(node('coursWrap').innerHTML).includes(chapter.title.replace(/[&<>"']/g, '').slice(0, 12))) {
           throw new Error(`chapitre « ${chapter.num} ${chapter.title} » non rendu`);
         }
+      }
+    }
+
+    // Un module sans étapes (négociation) : chaque chapitre ouvert par app.go().
+    if (spec.lessons) {
+      const app = globalThis.window.app;
+      for (let index = 0; index < spec.lessons; index += 1) {
+        app.go(index);
+        await settle(2);
+        if (errors.length) throw errors.shift();
+        const number = String(index + 1).padStart(2, '0');
+        if (!String(node('lesson').innerHTML).includes(`>${number}<`)) throw new Error(`chapitre ${number} non rendu`);
       }
     }
 
