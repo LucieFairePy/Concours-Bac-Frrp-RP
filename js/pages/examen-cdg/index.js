@@ -9,7 +9,7 @@
 // intervenir. D'où un format compact et des questions sans piège.
 
 import { CONFIG } from '../../config.js';
-import { esc, setHTML, setText } from '../../core/dom.js';
+import { byId, esc, setHTML, setText } from '../../core/dom.js';
 import * as auth from '../../core/auth.js';
 import * as portal from '../../shell/index.js';
 import { state as shared } from '../../core/state.js';
@@ -46,7 +46,7 @@ const autosave = createAutosave({
 const stepper = createStepper({
   steps: [
     { id: 'id', label: 'Identité' },
-    { id: 'co', label: 'Connaissances' },
+    { id: 'co', label: '10 questions' },
     { id: 'cm', label: 'Commandement' },
     { id: 'sit1', label: 'Situation 1' },
     { id: 'sit2', label: 'Situation 2' },
@@ -91,9 +91,7 @@ function moduleBar() {
     : '';
 
   portal.setModuleBar(`
-    <b>Examen de qualification Chef de Groupe</b>
-    <span class="mut">dossier ${esc(state.record ? state.record.id : '—')}</span>
-    <span class="spacer"></span>
+    <span class="mx-file">${esc(state.record ? state.record.id : '—')}</span>
     ${rectify}
     <button onclick="app.saveNow()">Enregistrer</button>
     ${auth.canWrite() ? '<button class="primary" onclick="app.newRecord()">Nouvel examen</button>' : ''}`);
@@ -103,6 +101,7 @@ function renderAll() {
   const R = state.record;
   const name = `${String(R.c.last).toUpperCase()} ${R.c.first}`.trim();
   setText('hero', name ? `${name} — ${R.id}` : `Nouvel examen — ${R.id}`);
+  setText('mxDossier', name ? `${name} — dossier ${R.id}` : `Nouvel examen — dossier ${R.id}`);
   setText('heroSub', 'Connaissances → Commandement → Situation 1 → Situation 2 → Correction → Résultat → Fiche • /1000');
 
   moduleBar();
@@ -407,25 +406,56 @@ export default {
   handlers,
 
   template() {
+    // Gabarit du module plein écran de la maquette V4 : barre du haut,
+    // bannière photo, onglets, cartes. La carte `.hero` d'origine reste
+    // dans la page, masquée à l'écran : c'est l'en-tête imprimé.
     return `
-      <section id="home" class="view">
-        <div class="hero" data-img="examen">
-          <div class="flag"></div>
-          <small class="hero-kicker no-print">Qualification BAC 75 N</small>
-          <h1 class="no-print">Examen Chef de Groupe</h1>
-          <h2 id="hero">Examen de qualification Chef de Groupe</h2>
-          <div class="mut" id="heroSub"></div>
+      <div class="m-examen">
+        <header class="mx-top no-print">
+          <a class="mx-back" href="${href('accueil')}">← Portail BAC 75 N</a>
+          <div class="mx-brand">
+            EXAMEN DE QUALIFICATION CHEF DE GROUPE BAC
+            <small>45 minutes cible · maximum 1 heure</small>
+          </div>
+          <div id="pageActions" class="mx-actions"></div>
+          <span id="sync" class="sync"></span>
+          <div class="mx-id"><b id="mxWho">${esc(auth.describeOperator())}</b><small>Examinateur</small></div>
+        </header>
+
+        <div class="mx-hero no-print">
+          <div>
+            <div class="mx-tri"></div>
+            <h1>EXAMEN<br>CHEF DE GROUPE</h1>
+            <p>Le système suggère. L’examinateur note et décide.</p>
+            <p id="mxDossier" class="mx-dossier"></p>
+          </div>
         </div>
-        <div id="tabs" class="tabs no-print"></div>
-        <div class="no-print">
-          <div class="progress"><span id="prog"></span></div>
-          <div id="stepText" class="steptext"></div>
-        </div>
-        <div id="sections"></div>
-      </section>`;
+
+        <section id="home" class="view mx-wrap">
+          <div id="mxBanner"></div>
+          <div class="hero mx-printhead" data-img="examen">
+            <div class="flag"></div>
+            <small class="hero-kicker no-print">Qualification BAC 75 N</small>
+            <h1 class="no-print">Examen Chef de Groupe</h1>
+            <h2 id="hero">Examen de qualification Chef de Groupe</h2>
+            <div class="mut" id="heroSub"></div>
+          </div>
+          <div id="tabs" class="tabs no-print"></div>
+          <div class="no-print mx-progress">
+            <div class="progress"><span id="prog"></span></div>
+            <div id="stepText" class="steptext"></div>
+          </div>
+          <div id="sections"></div>
+        </section>
+      </div>`;
   },
 
   async mount(ctx) {
+    // Le bandeau du portail (#banner) se range sous la barre du module.
+    const banner = byId('banner');
+    const slot = byId('mxBanner');
+    if (banner && slot && typeof slot.replaceWith === 'function') slot.replaceWith(banner);
+
     params = ctx.params;
     state.record = null;
     state.readOnly = false;
