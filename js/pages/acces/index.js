@@ -15,7 +15,7 @@ import {
   setBusy
 } from './view.js';
 
-export const REASONS = {
+const REASONS = {
   expired: 'Session expirée. Entre ton code pour continuer.',
   invalid: 'Session fermée : ton accès a été modifié ou retiré. Entre ton code.',
   required: 'Connecte-toi pour accéder au portail BAC 75 N.',

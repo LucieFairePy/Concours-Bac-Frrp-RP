@@ -107,6 +107,18 @@ async function onHashChange() {
     return;
   }
 
+  // Chaque changement d'écran revérifie la session, comme le faisait
+  // chaque chargement de page : la durée glissante repart, et un accès
+  // retiré ou un code régénéré ferme la session au lieu de la laisser
+  // courir jusqu'au rechargement de l'onglet.
+  if (shownHash) {
+    const restored = await auth.restore();
+    if (restored.status !== 'ok') {
+      portal.toGate(restored.status === 'none' ? 'required' : restored.status);
+      return;
+    }
+  }
+
   shownHash = hash;
   await show(id, params);
 }
@@ -129,22 +141,4 @@ export function start() {
     history.replaceState(null, '', href(HOME));
   }
   return onHashChange();
-}
-
-/** Recharge la page en cours avec la même adresse. */
-export function reload() {
-  const { id, params } = resolve(window.location.hash);
-  if (id) return show(id, params);
-  return undefined;
-}
-
-/**
- * Change la requête de l'adresse sans recharger la page (un filtre de
- * l'historique, par exemple) : le bouton retour retrouve l'état.
- */
-export function replaceQuery(query) {
-  const { id } = resolve(window.location.hash);
-  if (!id) return;
-  shownHash = href(id, query);
-  history.replaceState(null, '', shownHash);
 }

@@ -14,10 +14,6 @@ import * as thresholds from '../core/thresholds.js';
 import { renderSidebar, toggleNav } from './sidebar.js';
 import { renderHeader, search } from './header.js';
 
-export { href } from '../routes.js';
-export { NAV } from './nav.js';
-export { renderSidebar, toggleNav } from './sidebar.js';
-export { renderHeader, search } from './header.js';
 export { setSync, setBanner, errorBanner, okBanner, setModuleBar, deniedCard } from './feedback.js';
 
 /** Allume l'entrée `active` dans la barre latérale et l'en-tête. */
@@ -61,10 +57,9 @@ export function localBanner() {
  * changement de route : la mémoire de l'onglet (dossier ouvert, liste des
  * accès, jeton déchiffré) repart à zéro.
  */
-export function toGate(reason, keepRoute) {
+export function toGate(reason) {
   const query = reason ? `?r=${encodeURIComponent(reason)}` : '';
-  const hash = keepRoute ? window.location.hash : '';
-  window.location.replace(`${window.location.pathname}${query}${hash}`);
+  window.location.replace(`${window.location.pathname}${query}`);
 }
 
 export function signOut() {
