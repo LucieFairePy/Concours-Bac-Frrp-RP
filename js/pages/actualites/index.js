@@ -27,7 +27,7 @@ function hero() {
       <div class="phero-img" style="${imageStyle('actualite-nuit')}"></div>
       <div class="phero-body">
         <div class="phero-kicker">Brigade Anti-Criminalité 75 N</div>
-        <h1>ACTUALITÉS</h1>
+        <h1>Actualités BAC 75 N</h1>
         <div class="flag"></div>
         <p>
           Notes de service, retours d’expérience et informations de session.
@@ -38,18 +38,23 @@ function hero() {
     </section>`;
 }
 
+/** Une actualité, au gabarit des grandes cartes photo de la maquette. */
 function articleCard(item) {
   return `
-    <a class="pcard" href="${href('actualites', { actu: item.id })}">
-      <span class="pcard-img" style="${imageStyle(item.imageAsset)}"></span>
-      <span class="pcard-tag">${esc(item.sector || 'BAC 75 N')}</span>
-      <span class="pcard-body">
+    <a class="pfeature" href="${href('actualites', { actu: item.id })}" style="${imageStyle(item.imageAsset)}">
+      <span class="pfeature-more">${esc(String(item.publishedAt || '').slice(0, 10))}</span>
+      <div class="pfeature-body">
+        <span class="ptag">${esc(item.sector || 'BAC 75 N')}</span>
         <h3>${esc(item.title)}</h3>
         <p>${esc(item.excerpt)}</p>
-        <span class="pcard-go">Lire →</span>
-      </span>
-      <span class="pcard-accent"></span>
+      </div>
     </a>`;
+}
+
+function publishLink() {
+  return auth.can('accounts')
+    ? `<a href="${href('administration')}">Publier une actualité →</a>`
+    : '';
 }
 
 function list() {
@@ -64,11 +69,11 @@ function list() {
     ${loaded.seeded
       ? `<div class="banner">Actualités de départ. Publie les tiennes depuis l’<a href="${href('administration')}">Administration</a>.</div>`
       : ''}
-    <div class="psection-title">
-      <h2>${items.length} actualité${items.length > 1 ? 's' : ''}</h2>
-      <p class="mut">La plus récente d’abord</p>
-    </div>
-    <div class="pcards">${items.map(articleCard).join('')}</div>`);
+    <div class="pfeatures three">${items.map(articleCard).join('')}</div>
+    <p class="pfoot">
+      <span>${items.length} actualité${items.length > 1 ? 's' : ''} — la plus récente d’abord</span>
+      ${publishLink()}
+    </p>`);
 }
 
 function detail(id) {
@@ -85,21 +90,26 @@ function detail(id) {
   }
 
   setHTML('content', `
-    <article class="card">
-      <div class="co-banner" style="${imageStyle(item.imageAsset)};border-radius:11px;min-height:180px;background-size:cover;background-position:center"></div>
-      <h2 style="margin-top:14px">${esc(item.title)}</h2>
+    <article class="pcontent">
+      <div class="pnews-banner" style="${imageStyle(item.imageAsset)}"></div>
+      <span class="ptag">${esc(item.sector || 'BAC 75 N')}</span>
+      <h3 class="pnews-title">${esc(item.title)}</h3>
       <p class="mut">
         ${esc(longDate(item.publishedAt))}
         ${item.sector ? ` • ${esc(item.sector)}` : ''}
         ${item.author ? ` • ${esc(item.author)}` : ''}
         ${item.visibility === 'direction' ? ' • <b>direction</b>' : ''}
       </p>
-      <p class="answer">${esc(item.body || item.excerpt)}</p>
-      <a class="pnav-item" href="${href('actualites')}">← Toutes les actualités</a>
+      <p class="pnews-body">${esc(item.body || item.excerpt)}</p>
+      <div class="pactions">
+        <a class="pnav-item" href="${href('actualites')}">← Toutes les actualités</a>
+      </div>
     </article>`);
 }
 
 export default {
+  mainClass: 'pportal',
+
   template() {
     return `
       ${hero()}
@@ -107,13 +117,6 @@ export default {
   },
 
   async mount({ params, alive }) {
-    portal.setModuleBar(`
-      <b>Actualités BAC 75 N</b>
-      <span class="mut">informations de service</span>
-      <span class="spacer"></span>
-      ${auth.can('accounts') ? `<a class="pnav-item" href="${href('administration')}">Publier une actualité →</a>` : ''}
-      <a class="pnav-item" href="${href('accueil')}">← Accueil</a>`);
-
     try {
       loaded = await news.load();
     } catch (error) {

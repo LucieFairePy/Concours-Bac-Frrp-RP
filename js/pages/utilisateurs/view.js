@@ -9,6 +9,7 @@
 import { byId, setHTML, esc } from '../../core/dom.js';
 import * as auth from '../../core/auth.js';
 import { ROLE_ORDER, ROLES, roleLabel } from '../../core/roles.js';
+import { identity } from '../../core/roster.js';
 
 function roleSelect(entry) {
   const options = ROLE_ORDER
@@ -18,21 +19,22 @@ function roleSelect(entry) {
   return `<select onchange="app.setAccessRole('${esc(entry.id)}',this.value)">${options}</select>`;
 }
 
+/** Une ligne au gabarit de la maquette : utilisateur, grade, rôle, statut. */
 function rosterRow(entry, selfId) {
-  if (entry.id === selfId) {
-    return `<tr>
-      <td>${esc(entry.label)}</td>
-      <td>${esc(roleLabel(entry.role))}</td>
-      <td class="row-actions"><span class="mut">session en cours</span></td>
-    </tr>`;
-  }
+  const who = identity(entry);
+  const name = who.name || entry.label;
+  const self = entry.id === selfId;
 
   return `<tr>
-    <td>${esc(entry.label)}</td>
-    <td>${roleSelect(entry)}</td>
-    <td class="row-actions">
-      <button class="danger" onclick="app.removeAccess('${esc(entry.id)}')">Retirer</button>
-    </td>
+    <td>${esc(name)}</td>
+    <td>${esc(who.grade || '—')}</td>
+    <td>${self ? esc(roleLabel(entry.role)) : roleSelect(entry)}</td>
+    <td>${self
+      ? '<span class="pstatus self">SESSION EN COURS</span>'
+      : '<span class="pstatus">ACTIF</span>'}</td>
+    <td class="row-actions">${self
+      ? ''
+      : `<button class="danger" onclick="app.removeAccess('${esc(entry.id)}')">Retirer</button>`}</td>
   </tr>`;
 }
 
@@ -41,41 +43,44 @@ function accessCard(entries) {
 
   const rows = entries.length
     ? entries.map(entry => rosterRow(entry, selfId)).join('')
-    : '<tr><td colspan="3" class="mut">Aucun accès enregistré.</td></tr>';
+    : '<tr><td colspan="5" class="mut">Aucun accès enregistré.</td></tr>';
 
   const newRoles = ROLE_ORDER
     .map(id => `<option value="${id}" ${id === 'formateur' ? 'selected' : ''}>${esc(ROLES[id].label)}</option>`)
     .join('');
 
   return `
-    <div class="card">
-      <h2>Accès et rôles</h2>
-      <p class="mut">
-        Changer le rôle d’une personne <b>régénère son code</b> : l’ancien cesse de
-        fonctionner et le nouveau s’affiche une seule fois. C’est inévitable, le rôle
-        est scellé avec le code.
-      </p>
+    <div class="ptable">
       <table>
-        <tr><th>Personne</th><th>Rôle</th><th></th></tr>
+        <tr><th>Utilisateur</th><th>Grade</th><th>Rôle site</th><th>Statut</th><th></th></tr>
         ${rows}
       </table>
+    </div>
+    <p class="phint">
+      Changer le rôle d’une personne <b>régénère son code</b> : l’ancien cesse de
+      fonctionner et le nouveau s’affiche une seule fois. C’est inévitable, le rôle
+      est scellé avec le code.
+    </p>
 
+    <div class="pcontent">
       <h3>Ajouter une personne</h3>
-      <div class="row">
-        <div class="c3">
+      <div class="pform three">
+        <div>
           <label for="newGrade">Grade</label>
           <input id="newGrade" placeholder="Brigadier">
         </div>
-        <div class="c6">
+        <div>
           <label for="newName">Nom et prénom</label>
           <input id="newName" placeholder="LAURENT Cyril">
         </div>
-        <div class="c3">
-          <label for="newRole">Rôle</label>
+        <div>
+          <label for="newRole">Rôle site</label>
           <select id="newRole">${newRoles}</select>
         </div>
       </div>
-      <button class="primary" onclick="app.createAccess()">Générer l’accès</button>
+      <div class="pactions">
+        <button class="primary" onclick="app.createAccess()">Générer l’accès</button>
+      </div>
       <div id="accessStatus"></div>
     </div>`;
 }
@@ -99,7 +104,7 @@ function staffCard(counted) {
   }
 
   const rows = counted.lines
-    .map(line => `<tr><th>${esc(line.label)}</th><td>${line.count}</td></tr>`)
+    .map(line => `<tr><td>${esc(line.label)}</td><td><b>${line.count}</b></td></tr>`)
     .join('');
 
   return `
@@ -109,10 +114,13 @@ function staffCard(counted) {
         Comptés sur les accès ouverts, par le grade de chacun. Aucun nombre
         n’est écrit en dur dans la page.
       </p>
-      <table>
-        ${rows}
-        <tr><th>Total</th><td><b>${counted.total}</b></td></tr>
-      </table>
+      <div class="ptable">
+        <table>
+          <tr><th>Corps</th><th>Effectif</th></tr>
+          ${rows}
+          <tr><td><b>Total</b></td><td><b>${counted.total}</b></td></tr>
+        </table>
+      </div>
     </div>`;
 }
 
@@ -126,11 +134,13 @@ function roleTableCard() {
   return `
     <div class="card">
       <h2>Ce que chaque rôle permet</h2>
-      <table>
-        <tr><th>Rôle</th><th>Permissions</th></tr>
-        ${rows}
-      </table>
-      <table>
+      <div class="ptable">
+        <table>
+          <tr><th>Rôle</th><th>Permissions</th></tr>
+          ${rows}
+        </table>
+      </div>
+      <div class="ptable" style="margin-top:10px"><table>
         <tr><th><code>read</code></th><td>consulter les dossiers clôturés et l’historique</td></tr>
         <tr><th><code>write</code></th><td>créer et corriger un dossier, enregistrer un brouillon</td></tr>
         <tr><th><code>close</code></th><td>clôturer définitivement un dossier</td></tr>
@@ -138,7 +148,7 @@ function roleTableCard() {
         <tr><th><code>settings</code></th><td>modifier la direction BAC, les seuils et les accès</td></tr>
         <tr><th><code>journal</code></th><td>lire le journal des actions sensibles</td></tr>
         <tr><th><code>accounts</code></th><td>ouvrir l’Administration et la gestion des utilisateurs</td></tr>
-      </table>
+      </table></div>
       <div class="warn">
         <b>À savoir — §17.</b> Ces rôles décident ce que l’interface propose. Sur un
         hébergement statique, toute personne détenant un code valide détient le

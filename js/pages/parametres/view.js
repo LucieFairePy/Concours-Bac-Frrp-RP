@@ -15,11 +15,12 @@ import * as thresholds from '../../core/thresholds.js';
 import { ROLES } from '../../core/roles.js';
 import { href } from '../../routes.js';
 
+// Dans l'ordre de la maquette : le nom, puis le grade, sur une ligne.
 const FIELDS = [
-  ['dg', 'Grade directeur'],
-  ['dn', 'Directeur'],
-  ['ag', 'Grade directeur adjoint'],
-  ['an', 'Directeur adjoint']
+  ['dn', 'Directeur BAC'],
+  ['dg', 'Grade'],
+  ['an', 'Directeur adjoint BAC'],
+  ['ag', 'Grade']
 ];
 
 const THRESHOLD_FIELDS = [
@@ -35,26 +36,24 @@ function commandCard() {
   const dis = allowed ? '' : 'disabled';
 
   const inputs = FIELDS.map(([key, label]) => `
-    <div class="c6">
+    <div>
       <label for="set-${key}">${label}</label>
       <input id="set-${key}" ${dis} value="${esc(state.settings[key] || '')}">
     </div>`).join('');
 
   return `
-    <div class="card">
-      <h2>Direction BAC</h2>
-      <p class="mut">
-        Ces valeurs sont partagées par tous les examinateurs. Elles pré-remplissent
-        les nouveaux dossiers et apparaissent dans les signatures des fiches finales
-        de tous les modules. Un dossier déjà clôturé garde la direction qui a signé
+    <div class="pcontent">
+      <div class="pform">${inputs}</div>
+      ${allowed
+        ? '<div class="pactions"><button class="primary" onclick="app.saveSettings()">Enregistrer</button></div>'
+        : `<p class="mut">Ton rôle : <b>${esc(auth.describeRole())}</b>.</p>`}
+      <div id="settingsStatus"></div>
+      <p class="phint">
+        Modification réservée à l’administrateur, au Directeur BAC et à son adjoint.
+        Ces valeurs pré-remplissent les nouveaux dossiers et signent les fiches finales
+        de tous les modules ; un dossier déjà clôturé garde la direction qui a signé
         au moment de sa clôture (§13).
       </p>
-      <div class="row">${inputs}</div>
-      ${allowed
-        ? '<button class="primary" onclick="app.saveSettings()">Enregistrer</button>'
-        : `<p class="mut">Modification réservée à l’administrateur, au Directeur BAC et à son adjoint.
-             Ton rôle : <b>${esc(auth.describeRole())}</b>.</p>`}
-      <div id="settingsStatus"></div>
     </div>`;
 }
 
@@ -161,7 +160,7 @@ function sessionCard() {
   return `
     <div class="card">
       <h2>Mon profil</h2>
-      <table>
+      <div class="ptable"><table>
         <tr><th>Nom</th><td>${esc(session ? session.name : '—')}</td></tr>
         <tr><th>Grade</th><td>${esc(session && session.grade ? session.grade : '—')}</td></tr>
         <tr><th>Fonction BAC</th><td>${esc(auth.describeRole())}</td></tr>
@@ -169,11 +168,14 @@ function sessionCard() {
         <tr><th>Permissions</th><td>${permissionList()}</td></tr>
         <tr><th>Session valable jusqu’à</th><td>${esc(expiryLabel())}</td></tr>
         <tr><th>Mémorisée sur cet appareil</th><td>${auth.persistent() ? 'oui' : 'non — onglet seulement'}</td></tr>
-      </table>
-      ${auth.can('accounts')
-        ? `<a class="pnav-item" href="${href('utilisateurs')}">Gérer les utilisateurs →</a>`
-        : ''}
-      <button class="danger" onclick="portal.signOut()">Se déconnecter</button>
+      </table></div>
+      <div class="pactions">
+        ${auth.can('accounts')
+          ? `<a class="pnav-item" href="${href('utilisateurs')}">Gérer les utilisateurs →</a>
+             <a class="pnav-item" href="${href('administration')}">Administration →</a>`
+          : ''}
+        <button class="danger" onclick="portal.signOut()">Se déconnecter</button>
+      </div>
     </div>`;
 }
 

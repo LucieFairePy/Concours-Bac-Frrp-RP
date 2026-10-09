@@ -1,0 +1,260 @@
+/* Pages du portail — Formations, Administration, Gestion des utilisateurs,
+   Paramètres, Actualités. Gabarits repris de la maquette V4 : grandes cartes
+   photo (`.feature`), tuiles chiffrées (`.metric`), panneau (`.contentCard`),
+   tableau encadré (`.table`), grille de formulaire (`.formgrid`). */
+
+/* ───────────── Bannières propres aux pages du portail ───────────── */
+
+@media screen {
+  .hero[data-img="logo"] {
+    background-image: url('../../assets/bac75n/01_LOGO_BAC75N_PRINCIPAL.png');
+    background-position: center;
+  }
+}
+
+/* ───────────── Grandes cartes photo — `.cards2` / `.feature` ───────────── */
+
+.pfeatures {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.pfeatures.three { grid-template-columns: repeat(3, 1fr) }
+
+.pfeature {
+  position: relative;
+  display: block;
+  height: 240px;
+  overflow: hidden;
+  border: 1px solid #1b5e8a;
+  border-radius: 5px;
+  background-color: var(--panel);
+  background-size: cover;
+  background-position: center;
+  color: var(--ink);
+  text-decoration: none;
+  transition: border-color .18s, filter .18s;
+}
+
+.pfeature:before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(0deg, #03101df4, #03101d25);
+}
+
+.pfeature:hover { border-color: var(--blue); filter: brightness(1.08) }
+
+.pfeature-body {
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  bottom: 17px;
+}
+
+.pfeature h3 {
+  margin: 5px 0;
+  font: 800 31px/.9 var(--font-title);
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.pfeature p { margin: 8px 0 0; color: #b5c4cf; font-size: 11px; line-height: 1.45 }
+
+.pfeature-more {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  padding: 3px 8px;
+  border-radius: 12px;
+  background: #02070dcc;
+  color: #b5c4cf;
+  font: 700 10px var(--font-ui);
+  letter-spacing: .4px;
+  text-transform: uppercase;
+}
+
+.pfeature-more:empty { display: none }
+
+.ptag {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 12px;
+  background: #103853;
+  color: #6ccaff;
+  font: 700 10px var(--font-ui);
+  letter-spacing: .3px;
+  text-transform: uppercase;
+}
+
+/* Lien discret sous la grille des formations. */
+.pfoot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  margin: 12px 2px 0;
+  color: #6f8798;
+  font-size: 11px;
+}
+
+.pfoot a { color: #56bfff; text-decoration: none }
+.pfoot a:hover { text-decoration: underline }
+
+/* ───────────── Tuiles chiffrées — `.grid4` / `.metric` ───────────── */
+
+.pmetrics {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 9px;
+}
+
+.pmetric {
+  padding: 15px;
+  border: 1px solid var(--surface-line);
+  border-radius: 5px;
+  background: var(--surface);
+}
+
+.pmetric b { display: block; font: 800 28px var(--font-title) }
+.pmetric small { color: #8299aa; font-size: 13px }
+.pmetric.alert b { color: #ff91a0 }
+
+/* ───────────── Panneau — `.contentCard` ───────────── */
+
+.pcontent {
+  margin-top: 10px;
+  padding: 15px;
+  border: 1px solid var(--surface-line);
+  border-radius: 5px;
+  background: var(--surface);
+}
+
+.pcontent h3 {
+  margin: 4px 0 12px;
+  font: 800 19px var(--font-title);
+  letter-spacing: .3px;
+  text-transform: uppercase;
+}
+
+.pjournal p { margin: 0 0 10px; font-size: 14px }
+.pjournal p:last-child { margin-bottom: 0 }
+.pjournal .mut { font-size: 12px }
+
+/* ───────────── Tableau encadré — `.table` ───────────── */
+
+.ptable {
+  overflow: auto;
+  border: 1px solid #18354a;
+  border-radius: 5px;
+  background: var(--surface);
+}
+
+.ptable table { font-size: 12px }
+
+.ptable th,
+.ptable td {
+  padding: 11px;
+  border-bottom: 1px solid #173246;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.ptable th {
+  color: #8198aa;
+  font: 700 10px var(--font-ui);
+  letter-spacing: .3px;
+  text-transform: uppercase;
+}
+
+.ptable tr:last-child td { border-bottom: 0 }
+.ptable select { max-width: 260px; padding: 6px 8px; font-size: 12px }
+.ptable .row-actions button { padding: 6px 10px; font-size: 11px }
+
+.pstatus {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 12px;
+  background: #123b2a;
+  color: #76dda3;
+  font: 700 10px var(--font-ui);
+  letter-spacing: .3px;
+}
+
+.pstatus.self { background: #103853; color: #6ccaff }
+
+/* ───────────── Formulaire — `.formgrid` / `.field` ───────────── */
+
+.pform {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 9px;
+}
+
+.pform.three { grid-template-columns: repeat(3, 1fr) }
+.pform .wide { grid-column: 1 / -1 }
+
+.pform label,
+.pcontent .row label {
+  margin: 0 0 4px;
+  color: #8ca3b4;
+  font: 700 10px var(--font-ui);
+  letter-spacing: .3px;
+  text-transform: uppercase;
+}
+
+.pform input,
+.pform select,
+.pform textarea {
+  padding: 10px;
+  border-color: var(--field-line);
+  border-radius: 4px;
+  background: var(--field);
+}
+
+.pactions { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 }
+
+.pactions button,
+.pcontent > button {
+  border-radius: 4px;
+}
+
+.phint { margin: 6px 0 0; color: #6f8798; font-size: 10px }
+
+/* Les cartes historiques (.card) des pages du portail prennent l'allure du
+   panneau de la maquette. */
+.pportal .card { margin: 10px 0 0 }
+.pportal .card h2 { font-size: 19px; margin: 4px 0 12px }
+.pportal .card button { border-radius: 4px }
+
+/* ───────────── Actualité ouverte ───────────── */
+
+.pnews-banner {
+  height: 240px;
+  margin-bottom: 14px;
+  border-radius: 5px;
+  background-color: var(--panel);
+  background-size: cover;
+  background-position: center;
+}
+
+.pcontent h3.pnews-title { margin: 8px 0 4px; font-size: 30px; line-height: 1 }
+.pnews-body { white-space: pre-line; line-height: 1.6 }
+
+/* ───────────── Adaptatif — mêmes paliers que la maquette ───────────── */
+
+@media (max-width: 1100px) {
+  .pmetrics { grid-template-columns: repeat(2, 1fr) }
+  .pfeatures.three { grid-template-columns: repeat(2, 1fr) }
+}
+
+@media (max-width: 760px) {
+  .pfeatures,
+  .pfeatures.three,
+  .pmetrics,
+  .pform,
+  .pform.three { grid-template-columns: 1fr }
+
+  .pfeature { height: 210px }
+  .pfeature h3 { font-size: 27px }
+}

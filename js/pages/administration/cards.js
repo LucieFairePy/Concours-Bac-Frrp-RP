@@ -12,6 +12,50 @@ import { href } from '../../routes.js';
 import { slots, IMAGE_SLOTS } from '../../data/images.js';
 import { NEWS_VISIBILITY } from '../../data/news.js';
 
+/**
+ * Les quatre tuiles de la maquette V4. `figures` vaut null pendant la
+ * lecture : les tuiles affichent alors un tiret, jamais un nombre inventé.
+ */
+export function metricsCard(figures) {
+  const value = key => (figures ? esc(Array.isArray(figures[key]) ? figures[key].length : figures[key]) : '—');
+  const alerts = figures ? figures.alerts : [];
+
+  const tile = (key, label, hint, extra = '') => `
+    <div class="pmetric ${extra}" title="${esc(hint)}">
+      <b>${value(key)}</b>
+      <small>${label}</small>
+    </div>`;
+
+  return `
+    <div class="pmetrics">
+      ${tile('open', 'Dossiers en cours', 'Brouillons ouverts, tous modules et tous examinateurs')}
+      ${tile('correcting', 'Correction attendue', 'Brouillons dont la correction a commencé, pas encore clôturés')}
+      ${tile('closed', 'Dossiers clôturés', 'Dossiers clôturés dans l’historique, tous modules')}
+      ${tile('alerts', 'Alertes', alerts.length ? alerts.join(' • ') : 'Historiques et brouillons lisibles', alerts.length ? 'alert' : '')}
+    </div>
+    ${alerts.length ? `<p class="phint">Alertes : ${esc(alerts.join(' • '))}</p>` : ''}`;
+}
+
+/** Journal récent : les dernières lignes, au format court de la maquette. */
+export function recentCard(lines) {
+  const body = !lines
+    ? '<p class="pempty">Lecture du journal…</p>'
+    : lines.length
+      ? lines.map(line => `
+          <p>
+            ${esc(new Date(line.at).toLocaleDateString('fr-FR'))}
+            · ${line.target ? `${esc(line.target)} — ` : ''}${esc(journal.actionLabel(line.action))}
+            · ${esc(line.who)}
+          </p>`).join('')
+      : '<p class="pempty">Aucune action enregistrée pour le moment.</p>';
+
+  return `
+    <div class="pcontent pjournal">
+      <h3>Journal récent</h3>
+      ${body}
+    </div>`;
+}
+
 export function storageCard(counts) {
   const rows = records.MODULE_ORDER.map(id => {
     const mod = records.MODULES[id];
