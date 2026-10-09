@@ -1,12 +1,12 @@
-import { RADIO_EXERCISE } from '../data/radio.js';
-import { SCENARIOS } from '../data/scenarios.js';
+import { radioOf } from '../data/radio.js';
+import { scenariosOf } from '../data/scenarios.js';
 import { esc, setHTML } from '../core/dom.js';
 import { state, isEditable } from '../core/state.js';
 import { theoryAuto, radioAuto, scenarioAuto, physicalAuto, shootingAuto } from '../scoring/auto.js';
 import {
   scenarioRawTotal,
   scaleScenarios,
-  SCENARIO_RAW_MAX,
+  scenarioRawMax,
   SCENARIO_SECTION_MAX
 } from '../scoring/totals.js';
 
@@ -28,15 +28,16 @@ function block(title, answer, auto, max, path, value) {
 
 function scenarioSummary(D) {
   const raw = scenarioRawTotal(D);
+  const max = scenarioRawMax(D);
   return `
     <div class="card">
       <h3>Mises en situation — total de la section</h3>
       <p>
-        Somme des notes attribuées : <b>${raw}/${SCENARIO_RAW_MAX}</b><br>
-        Ramenée au poids de l’épreuve : <b>${scaleScenarios(raw)}/${SCENARIO_SECTION_MAX}</b>
+        Somme des notes attribuées : <b>${raw}/${max}</b><br>
+        Ramenée au poids de l’épreuve : <b>${scaleScenarios(raw, max)}/${SCENARIO_SECTION_MAX}</b>
       </p>
       <p class="mut">
-        Les ${SCENARIO_RAW_MAX / 15} questions sont notées sur 15, soit ${SCENARIO_RAW_MAX} points.
+        Les ${max / 15} questions sont notées sur 15, soit ${max} points.
         La section pesant ${SCENARIO_SECTION_MAX} points au barème, le total est converti
         proportionnellement. Le classement entre candidats est conservé.
       </p>
@@ -55,7 +56,7 @@ export function renderCorrection() {
     D.marks.theory[question.id]
   )).join('');
 
-  const radio = RADIO_EXERCISE.questions.map((question, index) => block(
+  const radio = radioOf(D).questions.map((question, index) => block(
     esc(question),
     D.radioAns[index],
     radioAuto(D, index),
@@ -64,7 +65,7 @@ export function renderCorrection() {
     D.marks.radio[index]
   )).join('');
 
-  const scenarios = SCENARIOS.map((scenario, scenarioIndex) => {
+  const scenarios = scenariosOf(D).map((scenario, scenarioIndex) => {
     const questions = scenario.questions.map((question, questionIndex) => {
       const key = `${scenarioIndex}_${questionIndex}`;
       return block(

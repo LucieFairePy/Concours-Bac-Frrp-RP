@@ -1,6 +1,6 @@
 import { STEPS } from '../data/steps.js';
-import { RADIO_EXERCISE } from '../data/radio.js';
-import { SCENARIOS } from '../data/scenarios.js';
+import { radioOf } from '../data/radio.js';
+import { scenariosOf } from '../data/scenarios.js';
 import { esc, setHTML, setText } from '../core/dom.js';
 import { state, isEditable } from '../core/state.js';
 import { stepNav, renderProgress } from './navigation.js';
@@ -63,7 +63,8 @@ function theorySection(dis) {
 
 function radioSection(dis) {
   const D = state.dossier;
-  const questions = RADIO_EXERCISE.questions.map((question, index) => `
+  const radio = radioOf(D);
+  const questions = radio.questions.map((question, index) => `
     <div class="q">
       <b>Question ${index + 1} — ${esc(question)}</b>
       <textarea ${dis} oninput="app.setRadioAnswer(${index},this.value)">${esc(D.radioAns[index])}</textarea>
@@ -73,7 +74,7 @@ function radioSection(dis) {
   <section id="s-radio" class="section">
     <div class="card">
       <h2>Radio / coordination</h2>
-      <div class="statement"><b>ÉNONCÉ À LIRE AU CANDIDAT</b><br>${esc(RADIO_EXERCISE.statement)}</div>
+      <div class="statement"><b>ÉNONCÉ À LIRE AU CANDIDAT</b><br>${esc(radio.statement)}</div>
       ${questions}
     </div>
     ${stepNav(2)}
@@ -82,7 +83,7 @@ function radioSection(dis) {
 
 function scenarioSection(dis) {
   const D = state.dossier;
-  const cards = SCENARIOS.map((scenario, scenarioIndex) => {
+  const cards = scenariosOf(D).map((scenario, scenarioIndex) => {
     const questions = scenario.questions.map((question, questionIndex) => `
       <div class="q">
         <b>Question ${questionIndex + 1} — ${esc(question)}</b>

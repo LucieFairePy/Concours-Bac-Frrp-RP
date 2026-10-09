@@ -1,5 +1,5 @@
-import { RADIO_EXERCISE } from '../data/radio.js';
-import { SCENARIOS } from '../data/scenarios.js';
+import { radioOf } from '../data/radio.js';
+import { scenariosOf } from '../data/scenarios.js';
 import { esc, initials, setHTML } from '../core/dom.js';
 import { state } from '../core/state.js';
 import {
@@ -11,6 +11,7 @@ import {
   scenarioMark,
   markClass,
   decisionClass,
+  finalScoreClass,
   DECISION_LABEL
 } from '../scoring/totals.js';
 
@@ -65,7 +66,7 @@ function pageFoot(number) {
 }
 
 function scenarioBlock(dossier, index) {
-  const scenario = SCENARIOS[index];
+  const scenario = scenariosOf(dossier)[index];
   const sugg = suggestions(dossier);
 
   const questions = scenario.questions.map((question, questionIndex) => {
@@ -147,7 +148,7 @@ function coverPage(dossier, t, decision) {
     <div class="coverResults">
       <div class="coverScore">
         <div class="label">RÉSULTAT FINAL</div>
-        <div class="number ${markClass(t.total, 1000)}">${t.total} / 1000</div>
+        <div class="number ${finalScoreClass(t.total, decision)}">${t.total} / 1000</div>
         <div class="verdict ${decisionClass(decision)}">${label}</div>
       </div>
       <div class="juryBox">
@@ -235,7 +236,8 @@ function theoryPage(dossier, t) {
     </tr>`;
   }).join('');
 
-  const radioRows = RADIO_EXERCISE.questions.map((question, index) => {
+  const radio = radioOf(dossier);
+  const radioRows = radio.questions.map((question, index) => {
     const mark = radioMark(dossier, index);
     return `<tr>
       <td>${index + 1}</td>
@@ -254,7 +256,7 @@ function theoryPage(dossier, t) {
       ${theoryRows}
     </table>
     <div class="dp-band">2. Radio &amp; coordination — ${t.ra}/100</div>
-    <div class="dp-box dp-muted">${esc(RADIO_EXERCISE.statement)}</div>
+    <div class="dp-box dp-muted">${esc(radio.statement)}</div>
     <table class="dp-table">
       <tr><th>N°</th><th>Question</th><th>Réponse</th><th>Note</th></tr>
       ${radioRows}
@@ -344,7 +346,7 @@ function closingPage(dossier, t, decision) {
     </div>
     <div class="dp-band">Décision finale</div>
     <div class="dp-decision"><span class="${decisionClass(decision)}">${label}</span></div>
-    <div class="dp-score"><span class="${markClass(t.total, 1000)}">${t.total} / 1000</span></div>
+    <div class="dp-score"><span class="${finalScoreClass(t.total, decision)}">${t.total} / 1000</span></div>
     <div class="dp-band">Motivation de la décision</div>
     <div class="dp-box">${esc(dossier.reason || '—')}</div>
     <div class="dp-band">Rattrapage / réserve</div>

@@ -1,6 +1,7 @@
 import { QUESTION_BANK } from '../data/questions.js';
-import { RADIO_EXERCISE } from '../data/radio.js';
-import { SCENARIOS } from '../data/scenarios.js';
+import { radioOf } from '../data/radio.js';
+import { scenariosOf } from '../data/scenarios.js';
+import { CONTENT_SET } from '../data/content-set.js';
 import { RECORD_VERSION } from './lifecycle.js';
 import { CONFIG } from '../config.js';
 
@@ -16,12 +17,16 @@ export function pickQuestions(count = 10) {
 
 export function blankDossier(id, settings) {
   const today = new Date().toISOString().slice(0, 10);
+  // Jeu radio / situations sous lequel le dossier est passé : ses réponses
+  // y sont rangées par index (voir data/content-set.js).
+  const content = { contentSet: CONTENT_SET };
   return {
     id,
     // §14 : version du modèle de dossier, et piste d'audit portée par le
     // dossier lui-même — le journal central (§17.1) reste la trace de
     // service, celle-ci voyage avec la pièce.
     version: RECORD_VERSION,
+    contentSet: CONTENT_SET,
     status: 'draft',
     locked: false,
     created: new Date().toISOString(),
@@ -30,8 +35,8 @@ export function blankDossier(id, settings) {
     ex: [{ grade: settings.ag || '', name: settings.an || '' }],
     qs: pickQuestions(),
     ans: {},
-    radioAns: RADIO_EXERCISE.questions.map(() => ''),
-    scAns: SCENARIOS.map(scenario => scenario.questions.map(() => '')),
+    radioAns: radioOf(content).questions.map(() => ''),
+    scAns: scenariosOf(content).map(scenario => scenario.questions.map(() => '')),
     phys: { run: '', push: '', abs: '', plank: '', pursuit: '', cog: '', obs: '' },
     shoot: {
       safety: '',
@@ -72,6 +77,12 @@ function fit(stored, length) {
 
 export function migrate(dossier) {
   const base = blankDossier(dossier.id, dossier.cmd || state.settings);
+  // Un dossier sans estampille a été passé sous l'ancien jeu : il ne doit
+  // pas hériter de celle du dossier vierge, sinon ses réponses se
+  // retrouveraient sous des questions qu'il n'a jamais vues.
+  const content = { contentSet: dossier.contentSet };
+  const radio = radioOf(content);
+  const scenarios = scenariosOf(content);
   const examiners = Array.isArray(dossier.ex) && dossier.ex.length ? dossier.ex : base.ex;
 
   return {
@@ -81,8 +92,9 @@ export function migrate(dossier) {
     ex: examiners,
     qs: Array.isArray(dossier.qs) && dossier.qs.length ? dossier.qs : base.qs,
     ans: dossier.ans || {},
-    radioAns: fit(dossier.radioAns, RADIO_EXERCISE.questions.length),
-    scAns: SCENARIOS.map((scenario, index) =>
+    contentSet: content.contentSet,
+    radioAns: fit(dossier.radioAns, radio.questions.length),
+    scAns: scenarios.map((scenario, index) =>
       fit(Array.isArray(dossier.scAns) ? dossier.scAns[index] : [], scenario.questions.length)
     ),
     phys: { ...base.phys, ...dossier.phys },
