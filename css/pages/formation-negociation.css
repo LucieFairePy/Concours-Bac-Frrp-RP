@@ -1,1 +1,443 @@
-/* Module formation-negociation — mise en page de la maquette V4 (plein écran). */
+/* Module formation-negociation — mise en page de la maquette V4 (plein écran),
+   modules/formation-negociation.html + module.css. Tout est rangé sous
+   `.m-nego` ; les règles d'écran sont dans `@media screen` pour que la
+   fiche finale et l'impression restent celles du gabarit commun. */
+
+@media screen {
+  .m-nego {
+    --mn-line: #18354a;
+    --mn-line2: #234158;
+    --mn-blue: #0b9ff5;
+    --mn-red: #ee1834;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #03070c, #081621);
+    color: #f3f7fb;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  /* La maquette écrit ses commandes en Arial, sans capitales forcées. */
+  .m-nego button { font-family: Arial, Helvetica, sans-serif; letter-spacing: 0; text-transform: none }
+  .m-nego label { letter-spacing: 0; text-transform: none }
+
+  /* ─────────────── Barre collante ─────────────── */
+
+  .m-nego .mn-top {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    min-height: 66px;
+    padding: 0 22px;
+    border-bottom: 1px solid #254158;
+    background: #04101bea;
+    backdrop-filter: blur(12px);
+  }
+
+  .m-nego .mn-back {
+    flex: none;
+    padding: 9px 13px;
+    border: 1px solid #31506a;
+    border-radius: 5px;
+    background: #0c2233;
+    color: #fff;
+    font-size: 16px;
+    text-decoration: none;
+  }
+
+  .m-nego .mn-back:hover { border-color: var(--mn-blue) }
+
+  .m-nego .mn-brand { flex: none; font-size: 20px; font-weight: 900; line-height: 1.15 }
+  .m-nego .mn-brand small { display: block; color: #7d96a8; font-size: 10px; font-weight: 700 }
+
+  /* Actions du dossier (#pageActions) : discrètes, à droite de la marque. */
+  .m-nego .mn-actions {
+    display: flex;
+    flex: 1;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    min-width: 0;
+    font-size: 12px;
+  }
+
+  .m-nego .mn-actions > b { display: none }
+  .m-nego .mn-actions .mut { color: #7d96a8 }
+  .m-nego .mn-actions .spacer { display: none }
+
+  .m-nego .mn-actions button {
+    padding: 7px 11px;
+    border: 1px solid #2c4b61;
+    border-radius: 4px;
+    background: #0a1925;
+    font: 700 12px Arial, sans-serif;
+  }
+
+  .m-nego .mn-actions button.primary { background: #0d7fc0; border-color: #28a9ec }
+
+  .m-nego .mn-id { flex: none; text-align: right; font-size: 16px; line-height: 1.15 }
+  .m-nego .mn-id small { display: block; color: #91a7b8; font-size: 13px }
+  .m-nego .mn-id #sync { display: block; max-width: 220px; font-size: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis }
+
+  /* ─────────────── Bannière ─────────────── */
+
+  .m-nego .hero.mn-hero {
+    justify-content: flex-end;
+    height: auto;
+    min-height: 285px;
+    margin: 0;
+    padding: 35px;
+    border-bottom: 1px solid #24445c;
+    background-position: center 30%;
+  }
+
+  .m-nego .hero.mn-hero:before { background: linear-gradient(90deg, #03080deb, #03080d75) }
+
+  .m-nego .mn-tri {
+    width: 170px;
+    height: 5px;
+    background: linear-gradient(90deg, #138bea 33%, #fff 33% 66%, #e6233c 66%);
+  }
+
+  .m-nego .hero.mn-hero h1 {
+    max-width: 760px;
+    margin: 6px 0;
+    font: 700 48px/.9 Arial, Helvetica, sans-serif;
+  }
+
+  .m-nego .mn-lead { max-width: 700px; margin: 14px 0 0; color: #b1c1ce; font-size: 16px }
+
+  .m-nego .hero.mn-hero h2#hero {
+    align-self: flex-start;
+    margin: 14px 0 0;
+    padding: 5px 10px;
+    border: 1px solid #31506a;
+    border-radius: 14px;
+    background: #04101bc0;
+    color: #cfe0ec;
+    font: 700 12px Arial, sans-serif;
+  }
+
+  .m-nego .hero.mn-hero #heroSub { display: none }
+
+  /* ─────────────── Contenu et étapes du dossier ─────────────── */
+
+  .m-nego .mn-wrap { max-width: 1400px; margin: auto; padding: 18px }
+
+  .m-nego .mn-steps .tabs { display: flex; flex-wrap: nowrap; gap: 4px; margin: 0 0 10px; overflow-x: auto }
+
+  .m-nego .mn-steps .tabs .tab {
+    flex: 1;
+    padding: 11px;
+    border: 1px solid var(--mn-line2);
+    border-radius: 10px;
+    background: #0a1a27;
+    color: #9eb2c1;
+    font: 700 13px Arial, sans-serif;
+    text-transform: none;
+  }
+
+  .m-nego .mn-steps .tabs .tab:hover { border-color: var(--mn-blue); color: #fff }
+  .m-nego .mn-steps .tabs .tab.active { background: #0b78b5; border-color: #28a9ec; color: #fff }
+
+  .m-nego .progress { height: 4px; border-radius: 5px; background: #102536 }
+  .m-nego .progress span { background: var(--mn-blue) }
+  .m-nego .steptext { margin: 6px 0 4px; color: #8197a8; font-size: 11px }
+
+  .m-nego .card {
+    margin: 0 0 14px;
+    padding: 18px;
+    border: 1px solid var(--mn-line);
+    border-radius: 14px;
+    background: linear-gradient(180deg, #0a1b29, #07141f);
+  }
+
+  .m-nego .card h2,
+  .m-nego .card h3 {
+    margin-top: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 700;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
+  .m-nego .card h2 { font-size: 24px }
+  .m-nego .card h3 { font-size: 19px }
+
+  .m-nego label { color: #8ea5b7; font: 700 11px Arial, Helvetica, sans-serif }
+
+  .m-nego input,
+  .m-nego textarea,
+  .m-nego select {
+    border: 1px solid #315069;
+    border-radius: 4px;
+    background: #06111a;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  .m-nego .co-reflexe {
+    padding: 14px 16px;
+    border: 0;
+    border-left: 4px solid var(--mn-blue);
+    border-radius: 8px;
+    background: rgba(11, 159, 245, .08);
+  }
+
+  .m-nego .co-reflexe .co-tag { margin-bottom: 8px; color: #fff; font: 700 14px Arial, sans-serif; letter-spacing: 0 }
+  .m-nego .co-reflexe .co-step { border-radius: 6px; background: #0a1a27; border-color: var(--mn-line2); font: 700 12px Arial, sans-serif }
+
+  .m-nego .q { border: 1px solid #27475e; border-radius: 6px; background: #091a28 }
+
+  .m-nego .section button {
+    border: 1px solid #2c4b61;
+    border-radius: 4px;
+    background: #0a1925;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  .m-nego .section button.primary { background: #0d7fc0; border-color: #28a9ec }
+  .m-nego .section button.green { background: #21754f; border-color: #38a974 }
+  .m-nego .section button.danger { background: #c91631; border-color: #ef2947 }
+
+  .m-nego .stepnav {
+    margin: 16px 0 0;
+    padding: 0;
+    border: 0;
+    background: none;
+  }
+
+  /* ─────────────── Cours : écran de la maquette ─────────────── */
+
+  .m-nego #s-cours.active {
+    display: grid;
+    grid-template-columns: 250px minmax(0, 1fr);
+    grid-template-areas:
+      "quick quick"
+      "side  prog"
+      "side  main"
+      "side  nav";
+    grid-template-rows: auto auto 1fr auto;
+    column-gap: 18px;
+    margin-top: 16px;
+  }
+
+  .m-nego #s-cours .co-wrap { display: contents }
+  .m-nego #s-cours > .stepnav { grid-area: nav }
+
+  .m-nego .co-progress { grid-area: prog; display: flex; align-items: center; gap: 12px; margin: 12px 0 20px }
+  .m-nego .co-progress .progress { flex: 1 }
+  .m-nego .co-progress b { color: #8197a8; font: 700 11px Arial, sans-serif; white-space: nowrap }
+
+  .m-nego .mn-quick {
+    grid-area: quick;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin: 0 0 16px;
+  }
+
+  .m-nego .mn-quick button {
+    padding: 11px;
+    border: 1px solid var(--mn-line);
+    border-radius: 10px;
+    background: #0a1a27;
+    color: #dce9f2;
+    font: 400 13px Arial, sans-serif;
+  }
+
+  .m-nego .mn-quick button:hover { border-color: var(--mn-blue) }
+
+  .m-nego .mn-side {
+    grid-area: side;
+    align-self: start;
+    position: sticky;
+    top: 82px;
+    max-height: calc(100vh - 100px);
+    overflow: auto;
+    padding: 10px;
+    border: 1px solid var(--mn-line2);
+    border-radius: 7px;
+    background: #07141f;
+  }
+
+  .m-nego .mn-side button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    border: 0;
+    border-radius: 4px;
+    background: none;
+    color: #b5c5d1;
+    font: 400 13px/1.2 Arial, sans-serif;
+    text-align: left;
+  }
+
+  .m-nego .mn-side button:hover,
+  .m-nego .mn-side button.on { background: #0c2b42; color: #fff }
+  .m-nego .mn-side .mn-tick { margin-left: 6px; color: #55e8a0; font-style: normal; font-weight: 900 }
+
+  .m-nego .mn-content { grid-area: main; min-width: 0 }
+
+  .m-nego .mn-lesson {
+    position: relative;
+    height: 270px;
+    margin-bottom: 16px;
+    overflow: hidden;
+    border: 1px solid var(--mn-line);
+    border-radius: 16px;
+    background-color: #06121d;
+    background-size: cover;
+    background-position: center;
+  }
+
+  .m-nego .mn-lesson:after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(3, 12, 20, .96), rgba(3, 12, 20, .55), rgba(3, 12, 20, .12));
+  }
+
+  .m-nego .mn-inside { position: absolute; z-index: 2; left: 28px; right: 28px; bottom: 26px; max-width: 660px }
+  .m-nego .mn-no { display: inline-flex; padding: 8px 12px; border-radius: 8px; background: var(--mn-blue); font-weight: 900 }
+  .m-nego .mn-lesson h2 { margin: 7px 0; font: 700 34px/1.15 Arial, sans-serif }
+  .m-nego .mn-lesson p { margin: 0; color: #c8d7e4; font-size: 16px }
+
+  .m-nego .mn-grid { display: grid; grid-template-columns: 1.25fr .75fr; gap: 14px; align-items: start }
+
+  .m-nego .mn-panel {
+    min-width: 0;
+    padding: 18px;
+    border: 1px solid var(--mn-line);
+    border-radius: 14px;
+    background: linear-gradient(180deg, #0a1b29, #07141f);
+  }
+
+  .m-nego .mn-panel h3 { margin: 0 0 12px; font: 700 19px Arial, sans-serif }
+  .m-nego .mn-panel h3:not(:first-child) { margin-top: 18px }
+
+  .m-nego .mn-remember,
+  .m-nego .mn-example {
+    padding: 14px 16px;
+    border-radius: 8px;
+    font-size: 16px;
+    line-height: 1.15;
+  }
+
+  .m-nego .mn-remember { border-left: 4px solid var(--mn-red); background: rgba(238, 24, 52, .08) }
+  .m-nego .mn-remember ul { margin: 0; padding-left: 18px }
+  .m-nego .mn-remember li { margin: 6px 0 }
+  .m-nego .mn-example { margin-top: 12px; border-left: 4px solid var(--mn-blue); background: rgba(11, 159, 245, .08) }
+
+  /* Blocs pédagogiques du rendu commun, à l'habit de la maquette. */
+  .m-nego .mn-main .co-p { margin: 0 0 12px; color: #f3f7fb; font: 16px/1.15 Arial, sans-serif }
+  .m-nego .mn-main .co-list { margin: 0 0 12px; padding-left: 22px }
+  .m-nego .mn-main .co-list li { margin: 8px 0; color: #f3f7fb; font: 16px/1.15 Arial, sans-serif }
+
+  .m-nego .mn-main .co-rp,
+  .m-nego .mn-main .co-dialogue,
+  .m-nego .mn-main .co-erreurs,
+  .m-nego .mn-main .co-retenir,
+  .m-nego .mn-main .co-exercice {
+    margin: 12px 0;
+    padding: 14px 16px;
+    border: 0;
+    border-left: 4px solid var(--mn-blue);
+    border-radius: 8px;
+    background: rgba(11, 159, 245, .08);
+    font: 16px/1.15 Arial, sans-serif;
+  }
+
+  .m-nego .mn-main .co-erreurs { border-left-color: var(--mn-red); background: rgba(238, 24, 52, .08) }
+  .m-nego .mn-main .co-exercice { border-left-color: #d7a62d; background: rgba(215, 166, 45, .08) }
+
+  .m-nego .mn-main .co-tag {
+    margin: 0 0 2px;
+    padding: 0;
+    background: none;
+    color: #fff;
+    font: 700 16px Arial, sans-serif;
+    letter-spacing: 0;
+  }
+
+  .m-nego .mn-main .co-rp p,
+  .m-nego .mn-main .co-exercice p,
+  .m-nego .mn-main .co-dialogue span:not(.co-tag),
+  .m-nego .mn-main .co-erreurs li { color: #f3f7fb; font: 16px/1.15 Arial, sans-serif }
+
+  .m-nego .mn-main .co-erreurs ul { margin: 0; padding-left: 18px }
+  .m-nego .mn-main .co-erreurs li { margin: 6px 0 }
+  .m-nego .mn-main .co-hint { margin-top: 6px !important; color: #c8b27a !important; font-size: 14px !important }
+  .m-nego .mn-main .co-exercice textarea { min-height: 90px }
+
+  .m-nego .mn-main .co-etapes { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 12px 0 }
+  .m-nego .mn-main .co-step {
+    padding: 6px 10px;
+    border: 1px solid var(--mn-line2);
+    border-radius: 6px;
+    background: #0a1a27;
+    color: #fff;
+    font: 700 13px Arial, sans-serif;
+  }
+
+  .m-nego .mn-main .co-tablewrap { margin: 12px 0 }
+  .m-nego .mn-main .co-table th,
+  .m-nego .mn-main .co-table td { padding: 10px; border-bottom: 1px solid #213a4e; font: 12px/1.35 Arial, sans-serif; text-align: left }
+  .m-nego .mn-main .co-table th { background: none; color: #8fa5b5; font-weight: 700; text-transform: none; letter-spacing: 0 }
+  .m-nego .mn-main .co-table tr:nth-child(even) td { background: #0a1a2780 }
+
+  .m-nego .mn-read {
+    margin-top: 14px;
+    padding: 12px 16px;
+    border: 1px solid #1f4b39;
+    border-radius: 10px;
+    background: #0a1f19;
+  }
+
+  .m-nego .mn-read label { display: flex; align-items: center; gap: 10px; margin: 0; color: #bfe9d2; font-size: 14px; font-weight: 400 }
+  .m-nego .mn-read input { width: auto }
+
+  .m-nego .mn-navrow { display: flex; gap: 10px; margin-top: 16px }
+  .m-nego .mn-navrow .mn-btn:last-child { margin-left: auto }
+
+  .m-nego .mn-btn {
+    padding: 10px 14px;
+    border: 1px solid #28a9ec;
+    border-radius: 4px;
+    background: #0d7fc0;
+    color: #fff;
+    font: 700 13px Arial, sans-serif;
+  }
+
+  .m-nego .mn-btn.ghost { background: #0a1925; border-color: #2c4b61 }
+  .m-nego .mn-btn:disabled { opacity: .45; cursor: default }
+
+  /* ─────────────── Adaptatif ─────────────── */
+
+  @media (max-width: 900px) {
+    .m-nego .mn-top { flex-wrap: wrap; gap: 8px 12px; padding: 10px 14px }
+    .m-nego .mn-back { padding: 8px 10px; font-size: 14px }
+    .m-nego .mn-brand { flex: 1; min-width: 0; font-size: 15px }
+    .m-nego .mn-id { display: none }
+    .m-nego .mn-actions { flex-basis: 100%; justify-content: flex-start }
+
+    .m-nego .hero.mn-hero { min-height: 230px; padding: 26px 18px }
+    .m-nego .hero.mn-hero h1 { font-size: 38px }
+
+    .m-nego .mn-wrap { padding: 14px }
+
+    .m-nego #s-cours.active {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-areas: "quick" "side" "prog" "main" "nav";
+    }
+
+    .m-nego .mn-quick,
+    .m-nego .mn-grid { grid-template-columns: 1fr }
+    .m-nego .mn-side { position: static; max-height: 320px }
+    .m-nego .mn-lesson { height: 300px }
+    .m-nego .mn-lesson h2 { font-size: 28px }
+    .m-nego .mn-steps .tabs .tab { flex: none }
+    .m-nego .row > [class^="c"] { grid-column: span 12 }
+  }
+}
