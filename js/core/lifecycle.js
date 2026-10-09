@@ -70,8 +70,28 @@ function concoursSteps(record) {
   ];
 }
 
-/** Étapes de l'examen Chef de Groupe — §11, huit étapes. */
+/** Étapes de l'examen Chef de Groupe au format de l'archive V4 (`qs`, `lead`, `s`). */
+function cdgV4Steps(record) {
+  const all = list => Array.isArray(list) && list.length > 0 && countFilled(list) === list.length;
+  const situation = index => filled(record.s[index] && record.s[index].ans);
+  const marks = record.marks || {};
+  const marked = countFilled([...(marks.q || []), ...(marks.lead || []), marks.s1, marks.s2, marks.radio]);
+
+  return [
+    { id: 'id', label: 'Identité', done: filled(record.c && record.c.last) && filled(record.c && record.c.first) },
+    { id: 'q', label: '10 questions', done: all(record.ans) },
+    { id: 'lead', label: 'Commandement', done: all(record.lead) },
+    { id: 's1', label: 'Situation 1', done: situation(0) },
+    { id: 's2', label: 'Situation 2', done: situation(1) },
+    { id: 'corr', label: 'Correction', done: marked > 0 },
+    { id: 'res', label: 'Résultat', done: filled(record.decision) },
+    { id: 'final', label: 'Fiche finale', done: Boolean(record.locked) }
+  ];
+}
+
+/** Étapes de l'examen Chef de Groupe — §11, huit étapes (dossiers d'avant la V4). */
 function cdgSteps(record) {
+  if (Array.isArray(record.qs) && Array.isArray(record.s)) return cdgV4Steps(record);
   const draw = record.draw || {};
   const answers = record.ans || {};
   const marks = record.marks || {};
