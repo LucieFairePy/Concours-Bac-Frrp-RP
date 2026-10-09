@@ -288,30 +288,31 @@
 
   .m-examen .section .card > .tag + h2 { margin-top: 6px }
 
-  /* Énoncé et évolution : bandeaux `.remember` et `.rp` de la maquette. */
+  /* Énoncé et évolution : bandeaux `.remember` et `.rp` de la maquette,
+     en teintes sombres (le portail reste en thème sombre). */
   .m-examen .statement {
     margin: 12px 0;
     padding: 13px;
     border: 0;
     border-left: 4px solid #0b87ca;
     border-radius: 0;
-    background: #dcecf7;
-    color: #102131;
+    background: #0b2438;
+    color: #dbe8f2;
     font-size: 15px;
   }
 
-  .m-examen .statement b { color: #0b4f78 }
+  .m-examen .statement b { color: #6ccaff }
 
   .m-examen .rp {
     margin: 12px 0;
     padding: 13px;
     border-left: 4px solid #d7a62d;
-    background: #fff1d6;
-    color: #3a2a06;
+    background: #241c0b;
+    color: #eee2c8;
     font-size: 14px;
   }
 
-  .m-examen .rp b { color: #7a5200 }
+  .m-examen .rp b { color: #f0c46a }
 
   .m-examen .card .warn {
     margin: 12px 0;
@@ -319,12 +320,12 @@
     border: 0;
     border-left: 4px solid #d9263c;
     border-radius: 0;
-    background: #f6e3e6;
-    color: #3d0d16;
+    background: #2a1218;
+    color: #f3dcde;
     font-size: 14px;
   }
 
-  .m-examen .card .warn b { color: #8e1023 }
+  .m-examen .card .warn b { color: #ff8a99 }
 
   .m-examen .section .banner { border-radius: 4px }
 
