@@ -1,0 +1,294 @@
+/* Pages de cours des formations — sommaire sombre à gauche, page claire
+   « papier » à droite, comme la maquette V4. Cartes du catalogue des
+   formations en fin de fichier. */
+
+.co-wrap {
+  display: grid;
+  grid-template-columns: 245px 1fr;
+  gap: 10px;
+  align-items: start;
+  margin: 14px 0;
+}
+
+/* ───────────────────────── Sommaire ───────────────────────── */
+
+.co-side {
+  position: sticky;
+  top: 108px;
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - 128px);
+  overflow: hidden;
+  border: 1px solid #19364b;
+  background: var(--surface);
+}
+
+.co-side-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface);
+  font-family: var(--font-title);
+}
+
+.co-side-head b,
+.co-side-head strong { font: 700 16px var(--font-title); text-transform: uppercase }
+
+.co-nav { overflow-y: auto; padding: 10px }
+
+.co-nav-item {
+  display: grid;
+  grid-template-columns: 22px 1fr 12px;
+  gap: 8px;
+  align-items: start;
+  width: 100%;
+  padding: 9px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #a9bac6;
+  font: 400 13px var(--font-ui);
+  letter-spacing: 0;
+  text-align: left;
+  text-transform: none;
+}
+
+.co-nav-item:hover { background: #0b263a; color: #fff; filter: none }
+
+.co-nav-item.active { background: #0b263a; color: #fff; font-weight: 600 }
+
+.co-num { padding-top: 1px; color: inherit; font: 600 13px var(--font-ui) }
+.co-nav-item.active .co-num { color: #fff }
+.co-tick { color: #55e8a0; font-weight: 900; font-size: 12px }
+.co-nav-item.done .co-navtitle { color: #a9c9b9 }
+
+/* ───────────────────────── Page de cours ───────────────────────── */
+
+.co-main {
+  overflow: hidden;
+  border-radius: 5px;
+  background: #edf2f5;
+  color: #12202b;
+}
+
+.co-banner {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  min-height: 150px;
+  background-size: cover;
+  background-position: center 35%;
+}
+
+.co-banner:after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, #02070d40, #02070de6);
+}
+
+.co-banner-body { position: relative; z-index: 2; padding: 18px 26px }
+
+.co-kicker {
+  color: var(--blue-light);
+  font: 700 13px var(--font-title);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.co-banner h2 {
+  margin: 5px 0 0;
+  color: #fff;
+  font: 800 36px/1 var(--font-title);
+  text-transform: uppercase;
+}
+
+.co-body { padding: 8px 26px 22px }
+
+.co-body h3,
+.co-body h4 { color: #0a3150; font: 700 23px var(--font-title) }
+
+.co-p {
+  max-width: 76ch;
+  margin: 14px 0;
+  color: #12202b;
+  font-size: 15px;
+  line-height: 1.68;
+}
+
+.co-list {
+  max-width: 76ch;
+  margin: 14px 0;
+  padding-left: 20px;
+}
+
+.co-list li { margin: 7px 0; color: #1c2c38; font-size: 14px; line-height: 1.6 }
+
+.co-tag {
+  margin-bottom: 7px;
+  font: 700 14px var(--font-title);
+  letter-spacing: .8px;
+  text-transform: uppercase;
+}
+
+/* Encadrés pédagogiques : bandeau coloré à gauche, fond clair. */
+
+.co-rp, .co-dialogue, .co-retenir, .co-erreurs, .co-exercice, .co-reflexe {
+  max-width: 80ch;
+  margin: 12px 0;
+  padding: 13px 16px;
+}
+
+.co-rp { background: #e3ecf2; border-left: 4px solid #0a3150 }
+.co-rp .co-tag { color: #0a3150 }
+.co-rp p { margin: 0; color: #12202b; font-size: 14px; line-height: 1.6 }
+
+.co-dialogue {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  background: #f7fafc;
+  border: 1px solid #cdd9e2;
+  border-left: 4px solid #5e8fb3;
+}
+
+.co-dialogue .co-tag { color: #0a3150 }
+.co-dialogue span:not(.co-tag) { color: #12202b; font-size: 14px; line-height: 1.55 }
+
+/* À retenir : bleu. */
+.co-retenir { background: #dcebf4; border-left: 4px solid #087ab9 }
+.co-retenir .co-tag { color: #0a3150 }
+
+/* Erreurs à éviter : rouge. */
+.co-erreurs { background: #f4e2e5; border-left: 4px solid #d01c35 }
+.co-erreurs .co-tag { color: #8d0f22 }
+
+.co-retenir ul,
+.co-erreurs ul { margin: 0; padding-left: 19px }
+
+.co-retenir li,
+.co-erreurs li { margin: 5px 0; color: #12202b; font-size: 14px; line-height: 1.55 }
+
+.co-exercice { background: #fbf3df; border-left: 4px solid #c98a12 }
+.co-exercice .co-tag { color: #7a5106 }
+.co-exercice p { margin: 0 0 7px; color: #12202b; font-size: 14px; line-height: 1.6 }
+.co-hint { color: #7a6a45 !important; font-size: 12.5px !important; font-style: italic }
+
+.co-reflexe { max-width: none; background: #0a3150; color: #fff }
+.co-reflexe .co-tag { color: #6ccaff; font-size: 11px }
+
+/* Fiche réflexe : enchaînement avec flèches. */
+
+.co-etapes {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 7px;
+  margin: 6px 0;
+}
+
+.co-step {
+  display: inline-block;
+  padding: 7px 12px;
+  border: 1px solid #b9cbd8;
+  background: #fff;
+  color: #0a3150;
+  font: 700 13px var(--font-title);
+  letter-spacing: .4px;
+}
+
+.co-reflexe .co-step { background: #0d4069; border-color: #2c6a98; color: #fff }
+
+.co-arrow { color: #087ab9; font-weight: 900; font-size: 14px }
+
+/* Tableaux de cours. */
+
+.co-tablewrap { overflow-x: auto; margin: 18px 0 }
+
+.co-table { min-width: 460px; font-size: 13px }
+
+.co-table th {
+  border-bottom: 0;
+  background: #0a3150;
+  color: #fff;
+  font-size: 11px;
+  letter-spacing: .6px;
+  text-transform: uppercase;
+}
+
+.co-table td { border-bottom: 1px solid #cdd9e2; color: #12202b; line-height: 1.5 }
+.co-table tr:nth-child(even) td { background: #e3ecf2 }
+
+/* Case « j'ai lu ce chapitre ». */
+
+.co-read {
+  margin: 0 24px;
+  padding: 12px 14px;
+  border: 1px solid #9fd2b6;
+  background: #dff1e7;
+}
+
+.co-read label { margin: 0; color: #12402a; font-size: 13.5px; letter-spacing: 0; text-transform: none }
+
+.co-main .stepnav {
+  margin: 18px 26px 0;
+  padding: 14px 0 20px;
+  border: 0;
+  border-top: 1px solid #cdd9e2;
+  border-radius: 0;
+  background: transparent;
+}
+
+.co-main .stepnav button:not(.primary) { background: #fff; color: #0a3150; border-color: #b9cbd8 }
+
+.co-main .mut { color: #50687a }
+
+/* Progression du cours. */
+
+.co-progress {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 10px 0 4px;
+}
+
+.co-progress .progress { flex: 1 }
+.co-progress b { color: #19a9ff; font-family: var(--font-title); font-size: 15px; white-space: nowrap }
+
+/* ───────────────────── Catalogue des formations ───────────────────── */
+
+.ptiles .ptile .co-banner { min-height: 190px; border-radius: 4px }
+
+.ptiles .ptile .co-banner h2,
+.ptiles .ptile .co-banner h3 {
+  margin: 5px 0;
+  font: 800 31px/.9 var(--font-title);
+  text-transform: uppercase;
+}
+
+.ptiles .ptile .co-kicker {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 12px;
+  background: #103853;
+  color: #6ccaff;
+  font: 700 10px var(--font-ui);
+  letter-spacing: .3px;
+}
+
+/* ───────────────────────── Adaptatif ───────────────────────── */
+
+@media (max-width: 1100px) {
+  .co-wrap { grid-template-columns: 1fr }
+}
+
+@media (max-width: 1000px) {
+  .co-side { position: static; max-height: none }
+  .co-nav { max-height: 320px }
+  .co-body { padding: 4px 15px 16px }
+  .co-read { margin: 0 15px }
+  .co-banner h2 { font-size: 18px }
+  .co-p, .co-list li { font-size: 14px }
+}

@@ -1,14 +1,103 @@
-.hero, .card {
-  border: 1px solid var(--line);
-  background: var(--panel);
-  border-radius: 14px;
-  padding: 17px;
+/* Composants communs à toutes les pages : panneaux, bannières, étapes,
+   questions, pastilles, bandeaux, fenêtres, liens d'action. */
+
+/* ───────────────────────── Panneaux ───────────────────────── */
+
+.card {
   margin: 12px 0;
+  padding: 15px;
+  border: 1px solid var(--surface-line);
+  border-radius: 5px;
+  background: var(--surface);
 }
+
+.card h2,
+.card h3 {
+  font-family: var(--font-title);
+  font-weight: 800;
+  letter-spacing: .3px;
+  text-transform: uppercase;
+}
+
+.card h2 { font-size: 24px; margin: 2px 0 12px }
+.card h3 { font-size: 19px }
+
+.psection-title {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin: 22px 0 11px;
+}
+
+.psection-title h2 { font-size: 18px; margin: 0 }
+.psection-title .mut { margin: 0 }
+.psection-title a { margin-left: auto; font-size: 12px; color: var(--blue); text-decoration: none }
+
+/* Grille de panneaux libre : cartes de hauteur variable (formations…). */
+.ptiles {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+  align-items: start;
+}
+
+.ptile {
+  display: flex;
+  flex-direction: column;
+  padding: 11px 11px 8px;
+  border: 1px solid #183349;
+  border-radius: 5px;
+  background: linear-gradient(145deg, #071522, #050d15);
+}
+
+.ptile-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 0 7px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid #173247;
+}
+
+.ptile > *:not(.ptile-head) { padding-left: 0; padding-right: 0 }
+
+.ptile h3 { margin: 0; font: 700 16px var(--font-title); letter-spacing: 0; text-transform: uppercase }
+.ptile-head a { margin-left: auto; color: #12a8ff; font: 500 16px var(--font-title); text-decoration: none }
+.ptile .mut { margin: 0 0 9px }
+
+.plist { list-style: none; margin: 0; padding: 0 }
+
+.plist li {
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+  padding: 7px 0;
+  border-top: 1px solid #142c3e;
+  font-family: var(--font-title);
+  font-size: 14px;
+}
+
+.plist li:first-child { border-top: 0 }
+.plist .pid { font-weight: 800; color: #9dd7f8; white-space: nowrap }
+.plist .pwhen { margin-left: auto; color: var(--mut); font-size: 11px; white-space: nowrap }
+
+.pempty { color: var(--mut); font-size: 12.5px; padding: 4px 0 10px }
+
+/* ─────────────── Bannière photo des modules ─────────────── */
+
+/* À l'écran, la carte `.hero` d'un module est la bannière `sectionHero` de
+   la maquette : photo pleine largeur, voile sombre, sur-titre bleu, grand
+   titre. La photo se choisit par `data-img` (ou un style en ligne), avec le
+   repli du dépôt en dessous si le visuel du kit manque. À l'impression,
+   elle redevient l'en-tête du document (fiche/print.css). */
 
 .hero {
   position: relative;
   overflow: hidden;
+  margin: 12px 0;
+  padding: 17px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
   background: linear-gradient(135deg, #0d2b40, var(--panel));
 }
 
@@ -22,70 +111,230 @@
   color: #ffffff08;
 }
 
-.flag {
-  height: 4px;
-  width: 120px;
-  background: linear-gradient(90deg, #1b3a8f 0 33%, #e8eef5 33% 66%, var(--red) 66%);
+@media screen {
+  .hero {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    height: var(--banner);
+    margin: 0 -12px 12px;
+    padding: 0 28px 27px;
+    border: 0;
+    border-bottom: 1px solid #1a3b52;
+    border-radius: 0;
+    background-color: var(--navy);
+    background-size: cover;
+    background-position: center 35%;
+  }
+
+  .hero:before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, #02070df3, #02070d82);
+  }
+
+  .hero:after { content: none }
+
+  .hero > * { position: relative; z-index: 1 }
+
+  .hero .flag { display: none }
+
+  .hero-kicker {
+    display: block;
+    color: var(--blue-light);
+    font: 700 14px var(--font-title);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .hero h1 {
+    margin: 5px 0;
+    font: 800 45px/.9 var(--font-title);
+    letter-spacing: 0;
+    text-transform: uppercase;
+  }
+
+  .hero h2 {
+    margin: 4px 0 2px;
+    color: #e9f1f7;
+    font: 600 19px var(--font-title);
+    letter-spacing: .2px;
+  }
+
+  .hero .mut { max-width: 650px; color: #b0c0cc; font-size: 12px }
+
+  .hero[data-img="concours"] {
+    background-image: url('../assets/bac75n/11_CONCOURS_BAC_BANNER_ALTERNATIVE.jpg'), url('../assets/img/cover-hero.jpg');
+  }
+
+  .hero[data-img="examen"] {
+    background-image: url('../assets/bac75n/06_HOME_CARD_EXAMEN_CHEF_GROUPE_CASQUE_MICRO.jpg'), url('../assets/img/epreuve-tir.jpg');
+  }
+
+  .hero[data-img="formations"] {
+    background-image: url('../assets/bac75n/04_HOME_CARD_FORMATION_NEGOCIATION.jpg'), url('../assets/img/mises-en-situation.jpg');
+  }
+
+  .hero[data-img="administration"] {
+    background-image: url('../assets/bac75n/13_ADMINISTRATION_BANNER_UNITE.jpg'), url('../assets/img/recap-general.jpg');
+  }
+
+  .hero[data-img="unite"] {
+    background-image: url('../assets/bac75n/14_RESERVE_BAC_UNITE_BOUCLIERS.jpg'), url('../assets/img/recap-general.jpg');
+  }
 }
+
+/* Bannières construites en JS (historique, actualités) : même gabarit que
+   la bannière des modules, image dans `.phero-img`. L'accueil a la sienne,
+   plus haute (pages/accueil.css). */
+
+.phero {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  min-height: var(--banner);
+  margin: 0 -12px 12px;
+  overflow: hidden;
+  background: var(--panel);
+  border-bottom: 1px solid #1a3b52;
+}
+
+.phero-img {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center 30%;
+}
+
+.phero:after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, #02070df3, #02070d82);
+}
+
+.phero-body { position: relative; z-index: 2; min-width: 0; max-width: 760px; padding: 26px 28px 27px }
+
+.phero-kicker {
+  color: var(--blue-light);
+  font: 700 14px var(--font-title);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.phero h1 {
+  margin: 5px 0;
+  font-family: var(--font-title);
+  font-size: 45px;
+  font-weight: 800;
+  line-height: .9;
+  letter-spacing: .5px;
+  text-transform: uppercase;
+}
+
+.phero .flag { display: none }
+.phero p { max-width: 650px; color: #b0c0cc; font-size: 12px }
+
+/* ───────────────────────── Étapes ───────────────────────── */
+
+.tabs { display: flex; flex-wrap: wrap; gap: 4px; margin: 10px 0; counter-reset: etape }
+
+.tabs .tab {
+  padding: 8px 11px;
+  border: 1px solid #1b374b;
+  border-radius: 0;
+  background: var(--surface);
+  font: 600 13px var(--font-title);
+  letter-spacing: 0;
+  text-transform: uppercase;
+  white-space: nowrap;
+  counter-increment: etape;
+}
+
+/* Onglets numérotés « 01 IDENTITÉ », comme la maquette. */
+.tabs .tab:before { content: counter(etape, decimal-leading-zero) " " }
+.tabs .tab:hover { background: #0b2234 }
+.tabs .tab.active { background: #0878b9; border-color: var(--blue) }
+
+.section { display: none }
+.section.active { display: block }
+
+.progress {
+  height: 6px;
+  overflow: hidden;
+  border-radius: 5px;
+  background: #243848;
+}
+
+.progress span { display: block; height: 100%; background: #19a9ff }
+
+.steptext { margin-top: 5px; color: var(--muted); font-size: 11px }
+
+.stepnav {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 18px 0;
+  padding: 14px;
+  border: 1px solid var(--surface-line);
+  border-radius: 5px;
+  background: var(--surface);
+}
+
+/* ───────────────────────── Questions ───────────────────────── */
 
 .q {
+  margin: 8px 0;
+  padding: 13px;
+  border: 1px solid #19384e;
   border-left: 3px solid var(--blue);
-  background: #0a2033;
-  padding: 11px;
-  margin: 10px 0;
-  border-radius: 0 8px 8px 0;
+  border-radius: 5px;
+  background: var(--surface);
 }
 
+.q b:first-child,
+.q h4 { font: 700 19px var(--font-title); letter-spacing: .2px }
+
 .statement {
-  background: #111f2c;
-  border: 1px solid #385a74;
-  border-radius: 10px;
-  padding: 14px;
   margin: 12px 0;
+  padding: 14px;
+  border: 1px solid #28516c;
+  border-radius: 5px;
+  background: #071b2a;
   font-size: 15px;
   line-height: 1.5;
 }
 
 .statement b { color: #d7e7f3 }
 
+.correction {
+  margin: 10px 0;
+  padding: 12px;
+  border: 1px solid #19384e;
+  border-radius: 5px;
+  background: var(--surface);
+}
+
+.corrhead { margin-bottom: 7px; font: 700 17px var(--font-title); letter-spacing: .3px }
+
 .score { font-size: 35px; font-weight: 900; color: var(--gold) }
 .auto { color: var(--red); font-weight: 900; font-size: 16px }
 
+/* ───────────────────────── Décisions ───────────────────────── */
+
 .status {
   display: inline-block;
-  padding: 9px 12px;
-  border-radius: 8px;
-  font-weight: 900;
+  padding: 6px 11px;
+  border-radius: 12px;
+  font: 700 12px var(--font-title);
+  letter-spacing: .6px;
 }
 
 .RETENU { background: #216a4c }
 .RESERVE { background: #78601e }
 .AJOURNE { background: #7a4b20 }
 .RECALE { background: #78232a }
-
-.warn {
-  background: #2a2417;
-  border: 1px solid #765e2c;
-  padding: 10px;
-  border-radius: 8px;
-}
-
-.locked {
-  background: #2e171a;
-  border: 1px solid #7a3038;
-  padding: 10px;
-  border-radius: 8px;
-}
-
-.correction {
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  padding: 12px;
-  margin: 10px 0;
-}
-
-.corrhead { font-weight: 800; margin-bottom: 7px }
-.finalDecision { font-size: 22px }
 
 .note-verte { color: #079447 !important; font-weight: 900 }
 .note-orange { color: #e57b00 !important; font-weight: 900 }
@@ -95,96 +344,135 @@
 .appreciation-ajourne { color: #e57b00 !important; font-weight: 900 }
 .appreciation-recale { color: #ff1717 !important; font-weight: 900 }
 
-.inline-check { width: auto }
+/* Pastilles de décision, communes aux modules. */
+.pchip {
+  display: inline-block;
+  padding: 3px 9px;
+  border-radius: 20px;
+  font: 700 11px var(--font-title);
+  letter-spacing: .6px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
 
-.banner {
-  border-radius: 10px;
-  padding: 11px 14px;
-  margin: 12px 0;
-  font-size: 13px;
+.pchip-ok { background: #0f4a36; color: #8ff0bf; border: 1px solid #1f7a59 }
+.pchip-warn { background: #4e4018; color: #f0d79a; border: 1px solid #8a7030 }
+.pchip-wait { background: #4d3418; color: #f3c694; border: 1px solid #8a5f2c }
+.pchip-no { background: #5a0f1c; color: #ffb3bd; border: 1px solid #a0263a }
+.pchip-mut { background: #0e2537; color: #9fb5c6; border: 1px solid var(--line) }
+
+/* ───────────────────────── Bandeaux ───────────────────────── */
+
+.banner,
+.warn,
+.locked {
   border: 1px solid #765e2c;
+  border-radius: 5px;
   background: #2a2417;
 }
+
+.banner { margin: 12px 0; padding: 11px 14px; font-size: 13px }
+.warn, .locked { padding: 10px }
+
+.locked,
+.banner.error { border-color: #7a3038; background: #2e171a }
+
+.banner.ok { border-color: #2c6a4e; background: #10281f }
 
 .banner a { color: #ffd98a; text-decoration: underline }
 .banner.error a { color: #ffb3bd }
 .banner.ok a { color: #8ff0bf }
 
-.banner.error { border-color: #7a3038; background: #2e171a }
-.banner.ok { border-color: #2c6a4e; background: #10281f }
+/* ───────────────────────── Liens d'action ───────────────────────── */
 
-.sync {
-  font-size: 11px;
-  color: var(--mut);
-  margin-left: 10px;
-  white-space: nowrap;
+.pnav-item,
+.gate-link {
+  display: inline-block;
+  border: 1px solid #28485e;
+  border-radius: 4px;
+  background: var(--surface);
+  color: #fff;
+  font: 600 14px/1.2 var(--font-title);
+  letter-spacing: .6px;
+  text-transform: uppercase;
+  text-decoration: none;
 }
 
+.pnav-item { padding: 8px 12px }
+
+.gate-link {
+  display: inline-block;
+  margin-top: 18px;
+  padding: 10px 14px;
+  text-align: center;
+}
+
+.pnav-item:hover,
+.gate-link:hover { background: #0b2234; filter: brightness(1.12) }
+
+.row-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+/* ───────────────────────── Fenêtres ───────────────────────── */
+
+.pmodal,
 .modal {
   position: fixed;
   inset: 0;
-  z-index: 100;
-  background: #030810e8;
   display: grid;
   place-items: center;
   padding: 20px;
 }
 
+.pmodal { z-index: 60; background: #020a11cc }
+.modal { z-index: 100; background: #030810e8 }
+
+.pmodal-box,
 .modal-box {
   width: 100%;
-  max-width: 520px;
-  border: 1px solid var(--line);
-  background: var(--panel);
-  border-radius: 14px;
   padding: 20px;
+  border: 1px solid #315a76;
+  border-radius: 6px;
+  background: var(--surface);
 }
 
+.pmodal-box { width: min(420px, 100%); padding: 18px }
+.modal-box { max-width: 520px }
+
+.pmodal-box h3,
+.modal-box h2 { font: 800 24px var(--font-title); text-transform: uppercase }
+
+.pmodal-box h3 { margin: 0 0 4px }
 .modal-box h2 { margin-top: 0 }
+.pmodal-box .pquick { margin: 12px 0 }
 .modal-actions { display: flex; gap: 10px; margin-top: 14px }
 
+/* Code d'accès généré, à recopier une seule fois. */
 .code-row {
   display: flex;
-  gap: 8px;
   align-items: center;
+  gap: 8px;
   margin: 10px 0 4px;
 }
 
 .code-field {
+  border-color: #2c6a4e;
+  background: #061520;
+  color: #55e8a0;
   font: 700 18px ui-monospace, "Cascadia Mono", Consolas, monospace;
   letter-spacing: 1px;
   text-align: center;
-  background: #061520;
-  border-color: #2c6a4e;
-  color: #55e8a0;
 }
 
-.row-actions {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-}
+/* ───────────────────────── Adaptatif ───────────────────────── */
 
-/* Libellé réservé aux lecteurs d'écran — §22 (accessibilité) : un champ
-   sans étiquette visible garde une étiquette lisible par la synthèse. */
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  white-space: nowrap;
-  border: 0;
-}
-
-/* Focus clavier visible partout — §22. */
-a:focus-visible,
-button:focus-visible,
-input:focus-visible,
-select:focus-visible,
-textarea:focus-visible {
-  outline: 2px solid var(--blue);
-  outline-offset: 2px;
+@media screen and (max-width: 900px) {
+  .hero { height: auto; min-height: 200px; padding-top: 30px }
+  .phero { flex-direction: column }
+  .hero h1,
+  .phero h1 { font-size: 34px }
 }

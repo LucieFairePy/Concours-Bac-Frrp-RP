@@ -1,0 +1,88 @@
+/* Page d'accès examinateur — avant toute session : photo de nuit voilée,
+   carte centrale surmontée du bandeau tricolore, écusson rond. Sert aussi
+   au 404.html de GitHub Pages. */
+
+body.gate {
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+  padding: 24px 16px;
+  background:
+    linear-gradient(#02070dd9, #02070df2),
+    url('../../assets/bac75n/02_HOME_HERO_BAC_CONTROLE_NUIT.jpg') center / cover,
+    var(--night);
+}
+
+.gate-wrap {
+  width: 100%;
+  max-width: 460px;
+  margin: auto;
+  padding: 20px;
+}
+
+.gate-card {
+  position: relative;
+  padding: 26px 24px 22px;
+  border: 1px solid #315a76;
+  border-top: 0;
+  border-radius: 6px;
+  background: var(--surface);
+  box-shadow: 0 18px 48px #0006;
+}
+
+.gate-card:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  border-radius: 6px 6px 0 0;
+  background: var(--tri);
+}
+
+.gate-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.gate-logo {
+  flex: none;
+  width: 84px;
+  height: 84px;
+  object-fit: contain;
+  border-radius: 50%;
+}
+
+.gate-head h1 {
+  margin: 2px 0;
+  color: var(--blue-light);
+  font: 700 14px var(--font-title);
+  letter-spacing: 1px;
+}
+
+.gate-head h2 {
+  margin: 0 0 8px;
+  color: var(--ink);
+  font: 800 30px/.95 var(--font-title);
+  text-transform: uppercase;
+}
+
+.gate-head .flag { margin-bottom: 8px }
+.gate-head p { margin: 0 }
+
+.gate-card h3 { margin: 0 0 6px; font-size: 16px }
+.gate-card label { margin-top: 14px }
+
+.gate-submit {
+  width: 100%;
+  margin-top: 18px;
+  padding: 12px;
+  font-size: 15px;
+}
+
+.gate-note { margin: 16px 0 0; line-height: 1.5 }
+.gate-loading { margin: 24px 0; text-align: center }
+.gate-foot { margin: 18px 0 0; text-align: center }

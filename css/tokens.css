@@ -1,0 +1,51 @@
+/* Jetons de design — maquette V4 (documentation technique §6 et annexe C).
+
+   Les couleurs, les polices et les mesures de la V4 se déclarent ici et
+   nulle part ailleurs. Repères de la maquette : Barlow Condensed pour tout
+   ce qui se lit comme un titre ou une commande, Inter pour le texte courant,
+   angles de 4 à 6 px, panneaux #071522 liserés #18364b, bleu #0b9ff5,
+   rouge #ee1834. Les noms courts (--p, --mut, --gold) restent en alias :
+   le reste du dépôt les utilise, ils pointent sur les valeurs V4. */
+
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+  /* Couleurs V4 */
+  --blue: #0b9ff5;
+  --blue-light: #1ab0ff;
+  --red: #ee1834;
+  --navy: #06121d;
+  --night: #02070c;
+  --panel: #081723;
+  --line: #18354a;
+  --muted: #8197a8;
+
+  /* Surfaces de la maquette */
+  --surface: #071522;
+  --surface-line: #18364b;
+  --field: #05111c;
+  --field-line: #29475c;
+
+  /* Bandeau tricolore */
+  --tri: linear-gradient(90deg, #168cf0 33%, #fff 33% 66%, #ed1d39 66%);
+
+  /* Polices V4 */
+  --font-title: 'Barlow Condensed', 'Arial Narrow', Arial, sans-serif;
+  --font-ui: 'Inter', 'Segoe UI', Arial, sans-serif;
+
+  /* Mesures V4 (§6) */
+  --sidebar: 236px;
+  --header: 68px;
+  --hero: 335px;
+  --banner: 245px;
+  --card: 176px;
+
+  /* Alias historiques du dépôt, alignés sur les jetons V4 */
+  --bg: var(--navy);
+  --p: var(--panel);
+  --p2: #0d2435;
+  --ink: #f5f8fb;
+  --mut: var(--muted);
+  --gold: var(--blue);
+  --green: #1d7d58;
+}

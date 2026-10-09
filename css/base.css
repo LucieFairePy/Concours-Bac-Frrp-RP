@@ -1,46 +1,16 @@
-/* Jetons de design V4 — documentation technique §6 et annexe C.
-   Les six couleurs et les deux polices de la V4 sont la référence : elles
-   ne se redéfinissent nulle part ailleurs. Les noms courts (--p, --mut,
-   --gold) restent déclarés en alias parce que le reste du dépôt les
-   utilise déjà ; ils pointent sur les valeurs V4, pas sur les anciennes. */
+/* Socle : éléments HTML, commandes, champs, tableaux, grille, utilitaires.
 
-@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Inter:wght@400;600;700;800&display=swap');
-
-:root {
-  /* Jetons V4 */
-  --blue: #0b9ff5;
-  --red: #ee1834;
-  --navy: #06121d;
-  --panel: #081723;
-  --line: #18354a;
-  --muted: #8197a8;
-
-  /* Polices V4 */
-  --font-title: 'Barlow Condensed', 'Arial Narrow', Arial, sans-serif;
-  --font-ui: 'Inter', 'Segoe UI', Arial, sans-serif;
-
-  /* Mesures V4 (§6) */
-  --sidebar: 236px;
-  --header: 68px;
-  --hero: 335px;
-  --card: 176px;
-
-  /* Alias historiques du dépôt, alignés sur les jetons V4 */
-  --bg: var(--navy);
-  --p: var(--panel);
-  --p2: #0d2435;
-  --ink: #eef5fa;
-  --mut: var(--muted);
-  --gold: var(--blue);
-  --green: #1d7d58;
-}
+   Les éléments ont deux habits. Hors écran — la fiche finale imprimée —
+   ils gardent la sobriété du document A4. À l'écran (bloc `@media screen`
+   en fin de fichier), ils prennent l'allure de la maquette V4 : commandes
+   en Barlow capitales, champs sombres, intitulés de tableau discrets. */
 
 * { box-sizing: border-box }
 
 body {
   margin: 0;
   background: var(--navy);
-  color: var(--ink);
+  color: #eef5fa;
   font: 14px/1.5 var(--font-ui);
 }
 
@@ -53,40 +23,54 @@ h1 { font-size: 20px; margin: 0 }
 
 .mut { color: var(--mut); font-size: 12px }
 
+.flag {
+  height: 4px;
+  width: 120px;
+  background: linear-gradient(90deg, #1b3a8f 0 33%, #e8eef5 33% 66%, var(--red) 66%);
+}
+
+/* ───────────────────────── Commandes ───────────────────────── */
+
 button {
-  background: #10344c;
-  color: white;
+  padding: 10px 13px;
   border: 1px solid #235878;
   border-radius: 8px;
-  padding: 10px 13px;
+  background: #10344c;
+  color: white;
   font: 700 13px var(--font-ui);
   cursor: pointer;
 }
-
-button:hover { background: #164a6b }
 
 .primary { background: #0a6ca8; border-color: #1587c9 }
 .danger { background: #8b1224; border-color: #b8263b }
 .green { background: #1d7d58; border-color: #2fa174 }
 
+.right { margin-left: auto }
+
+/* ───────────────────────── Champs ───────────────────────── */
+
 label {
   display: block;
+  margin: 8px 0 4px;
   color: #bfd0de;
   font-size: 12px;
-  margin: 8px 0 4px;
 }
 
 input, textarea, select {
   width: 100%;
-  background: #061520;
-  color: white;
+  padding: 9px;
   border: 1px solid #23485f;
   border-radius: 7px;
-  padding: 9px;
+  background: #061520;
+  color: white;
   font: 14px var(--font-ui);
 }
 
 textarea { min-height: 88px }
+
+.inline-check { width: auto }
+
+/* ───────────────────────── Tableaux ───────────────────────── */
 
 table { width: 100%; border-collapse: collapse }
 
@@ -97,5 +81,109 @@ th, td {
   vertical-align: top;
 }
 
+/* ───────────────────────── Grille 12 colonnes ───────────────────────── */
+
+.row { display: grid; grid-template-columns: repeat(12, 1fr); gap: 10px }
+.c3 { grid-column: span 3 }
+.c4 { grid-column: span 4 }
+.c6 { grid-column: span 6 }
+.c12 { grid-column: span 12 }
+
+@media (max-width: 800px) {
+  .c3, .c4, .c6 { grid-column: span 12 }
+}
+
+/* ───────────────────────── Accessibilité — §22 ───────────────────────── */
+
+/* Libellé réservé aux lecteurs d'écran : un champ sans étiquette visible
+   garde une étiquette lisible par la synthèse. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Focus clavier visible partout. */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 2px;
+}
+
+
 .sig { font: italic 27px cursive }
 .answer { white-space: pre-wrap }
+
+/* ───────────────────────── Maquette V4 à l'écran ───────────────────────── */
+
+@media screen {
+  html, body { background: var(--night) }
+  body { color: var(--ink) }
+
+  .flag { background: var(--tri) }
+
+  button {
+    border: 1px solid #28485e;
+    border-radius: 4px;
+    background: var(--surface);
+    color: #fff;
+    font: 600 14px/1.2 var(--font-title);
+    letter-spacing: .6px;
+    text-transform: uppercase;
+  }
+
+  button:hover { background: #0b2234; filter: brightness(1.12) }
+
+  .primary { background: #0b6da8; border-color: #168bd0 }
+  .danger { background: #c7102c; border-color: #f01d3a }
+  .green { background: #13704c; border-color: #22a172 }
+
+  label {
+    color: #8ca3b4;
+    font: 700 10.5px var(--font-ui);
+    letter-spacing: .5px;
+    text-transform: uppercase;
+  }
+
+  /* Une case à cocher se lit comme une phrase, pas comme un intitulé. */
+  .inline-check + label,
+  label:has(> input[type="checkbox"]),
+  label:has(> input[type="radio"]) {
+    color: #c9d7e1;
+    font-size: 13px;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
+  input, textarea, select {
+    padding: 10px;
+    border: 1px solid var(--field-line);
+    border-radius: 4px;
+    background: var(--field);
+    color: #fff;
+  }
+
+  /* Un champ en saisie montre son focus par sa bordure bleue. */
+  input:focus,
+  textarea:focus,
+  select:focus { border-color: var(--blue); outline: none; box-shadow: 0 0 0 2px #0b9ff533 }
+
+  th {
+    color: #8198aa;
+    font: 700 10px var(--font-ui);
+    letter-spacing: .5px;
+    text-transform: uppercase;
+    border-bottom: 1px solid #173246;
+  }
+
+  td { border-bottom: 1px solid #173246 }
+}

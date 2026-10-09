@@ -1,0 +1,386 @@
+/* Coque du portail — documentation technique V4 §6.
+   Barre latérale 236 px, en-tête 68 px, barre d'actions du module, zone de
+   contenu. Une seule page, deux états : l'accès examinateur (body.gate) ou
+   le portail (body.portal-shell). */
+
+/* Pendant le démarrage, rien n'est montré ; ensuite, un seul des deux états. */
+body.booting > *,
+body.gate > :not(.gate-wrap),
+body:not(.gate) > .gate-wrap {
+  display: none;
+}
+
+body.portal-shell { padding-left: var(--sidebar) }
+
+/* Zone de contenu : le document imprimé repart de la marge zéro
+   (fiche/print.css) ; à l'écran, elle prend toute la largeur. */
+main { max-width: 1440px; margin: auto; padding: 20px }
+
+@media screen {
+  body.portal-shell > main { max-width: none; padding: 0 12px 18px }
+}
+
+/* ───────────────────────── Barre latérale ───────────────────────── */
+
+.psidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 40;
+  width: var(--sidebar);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  background: linear-gradient(180deg, #02070d, #06121d);
+  border-right: 1px solid #16364e;
+}
+
+.psb-head {
+  display: block;
+  padding: 16px 14px 12px;
+  color: var(--ink);
+  font-family: var(--font-title);
+  text-align: center;
+  text-decoration: none;
+}
+
+/* L'écusson du kit est déjà rond : pas de disque derrière. */
+.psb-medal {
+  display: grid;
+  place-items: center;
+  width: 130px;
+  height: 130px;
+  margin: 0 auto 7px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.psb-medal img {
+  display: block;
+  width: 130px;
+  height: 130px;
+  object-fit: contain;
+}
+
+.psb-unit {
+  display: block;
+  color: #f5f8fb;
+  font: 700 13px var(--font-title);
+  text-transform: uppercase;
+}
+
+.psb-name {
+  display: block;
+  margin: 0;
+  font: 700 32px/1 var(--font-title);
+}
+
+.psb-devise {
+  display: block;
+  color: #0ca9ff;
+  font: 400 12px var(--font-title);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.psb-flag {
+  display: block;
+  width: 108px;
+  height: 3px;
+  margin: 8px auto 0;
+  background: var(--tri);
+}
+
+.psb-head > .psb-flag { width: 120px; margin-top: 11px }
+
+.psb-nav { flex: 1; padding: 4px 0 12px }
+
+.psb-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 19px;
+  border-left: 3px solid transparent;
+  color: #d9e4ec;
+  font: 500 16px var(--font-title);
+  text-decoration: none;
+}
+
+.psb-item .psb-ico { width: 16px; font-size: 15px; text-align: center }
+
+.psb-item:hover,
+.psb-item.active {
+  background: linear-gradient(90deg, #087ec2aa, transparent);
+  border-left-color: #19a9ff;
+  color: #fff;
+}
+
+/* Sous-entrées : colonne liserée à gauche, comme la maquette. */
+.psb-sub {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 29px;
+  padding: 7px 13px;
+  border-left: 1px solid #29485e;
+  color: #90a5b5;
+  font: 400 14px var(--font-title);
+  text-decoration: none;
+}
+
+.psb-sub:before { content: "●"; font-size: 9px; color: inherit }
+.psb-sub:hover { color: #fff }
+.psb-sub.active { color: #fff; font-weight: 600 }
+.psb-sub.active:before { color: var(--blue) }
+
+/* Un module annoncé mais pas encore ouvert : visible, jamais cliquable. */
+.psb-sub.soon { color: #90a5b5; cursor: default }
+.psb-sub.soon:before { content: "○" }
+.psb-sub.soon em { font-style: normal; color: #617687; font-size: 14px }
+
+.psb-quote {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  margin: 10px 14px 14px;
+  border: 1px solid #17384f;
+  overflow: hidden;
+}
+
+.psb-quote-img {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+}
+
+.psb-quote:after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(#03101aa0, #03101af2);
+}
+
+.psb-quote-body { position: relative; z-index: 2; padding: 20px 12px }
+
+.psb-quote-body span {
+  display: block;
+  font: italic 800 24px/1.02 var(--font-title);
+  text-transform: uppercase;
+}
+
+.psb-quote-body .psb-flag { width: 55px; height: 4px; margin: 10px 0 0 }
+
+/* ───────────────────────── En-tête 68 px ───────────────────────── */
+
+header.phead {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  height: var(--header);
+  background: #05101aed;
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid #17344a;
+}
+
+.phead-main {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  height: var(--header);
+  padding: 0 24px;
+}
+
+.phead-id { position: relative; flex: none; font-family: var(--font-title); line-height: .82 }
+
+.phead-title {
+  font: 700 24px/.82 var(--font-title);
+  text-transform: uppercase;
+}
+
+.phead-sub {
+  display: block;
+  margin-top: 2px;
+  color: #8ea3b4;
+  font: 400 10px var(--font-title);
+  text-transform: uppercase;
+}
+
+.phead-id .flag { display: block; width: 36px; height: 5px; margin-top: 6px }
+
+/* Navigation horizontale de l'en-tête, doublant la barre latérale. */
+.phead-nav { display: flex; flex: none; align-items: center; gap: 19px }
+
+.phead-nav a {
+  padding: 4px 0;
+  border-bottom: 2px solid transparent;
+  color: #9fb0bd;
+  font: 600 13px var(--font-title);
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.phead-nav a:hover { color: #fff }
+.phead-nav a.active { color: #fff; border-bottom-color: #19a9ff }
+
+/* Recherche globale : ouvre l'historique sur la saisie (Entrée). */
+.psearch {
+  position: relative;
+  display: flex;
+  flex: 1 1 200px;
+  align-items: center;
+  min-width: 0;
+  max-width: 300px;
+  margin-left: auto;
+}
+
+.psearch:before {
+  content: "⌕";
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-52%);
+  color: #6f8495;
+  font-size: 14px;
+  pointer-events: none;
+}
+
+.psearch input {
+  flex: 1;
+  min-width: 0;
+  padding: 8px 14px 8px 30px;
+  border: 1px solid #28475e;
+  border-radius: 20px;
+  background: transparent;
+  color: #cfe2ef;
+  font-size: 11px;
+}
+
+.psearch input::placeholder { color: #6f8698 }
+.psearch input:focus { outline: 2px solid var(--blue); outline-offset: 1px }
+.psearch button { display: none }
+
+/* État d'enregistrement des modules. `#who` répète le nom du profil
+   affiché juste à côté : il ne reste que si la place le permet. */
+.phead-state {
+  display: flex;
+  flex: 0 1 auto;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  overflow: hidden;
+}
+
+#who { color: #bfd0de; font-weight: 700; font-size: 11.5px; white-space: nowrap }
+#who:not(:empty)::before { content: " • " }
+
+.sync { margin-left: 10px; color: var(--mut); font-size: 11px; white-space: nowrap }
+
+.pburger { display: none; flex: none; padding: 7px 11px; font-size: 16px }
+
+/* ───────────────────────── Profil ───────────────────────── */
+
+.pprofile {
+  position: relative;
+  flex: none;
+  padding: 4px 0;
+  text-align: right;
+  cursor: default;
+}
+
+.pprofile-name { font: 700 18px var(--font-title); white-space: nowrap }
+
+.pprofile-grade,
+.pprofile-role {
+  display: block;
+  color: #8ea3b4;
+  font-size: 10px;
+  line-height: 1.25;
+  white-space: nowrap;
+}
+
+.pprofile-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 50;
+  display: none;
+  min-width: 210px;
+  margin-top: 6px;
+  padding: 7px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--surface);
+  box-shadow: 0 14px 34px #0009;
+  text-align: left;
+}
+
+.pprofile:hover .pprofile-menu,
+.pprofile:focus-within .pprofile-menu { display: block }
+
+.pprofile-menu a {
+  display: block;
+  padding: 9px 11px;
+  border-radius: 4px;
+  color: #cfdeea;
+  font-family: var(--font-title);
+  font-size: 15px;
+  text-decoration: none;
+}
+
+.pprofile-menu a:hover { background: #10405f; color: #fff }
+.pprofile-menu button { width: 100%; margin-top: 5px }
+
+/* ──────────────── Barre d'actions du module ──────────────── */
+
+.pmodulebar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 24px;
+  background: #04101a;
+  border-bottom: 1px solid #17344a;
+  font-family: var(--font-title);
+}
+
+.pmodulebar > b,
+.pmodulebar > strong { font: 700 17px var(--font-title); text-transform: uppercase }
+
+.pmodulebar .spacer { margin-left: auto }
+
+/* ───────────────────────── Adaptatif ───────────────────────── */
+
+@media (max-width: 1500px) {
+  #who { display: none }
+}
+
+@media (max-width: 1060px) {
+  .phead-nav { display: none }
+}
+
+@media (max-width: 900px) {
+  body.portal-shell { padding-left: 0 }
+
+  .psidebar {
+    transform: translateX(-100%);
+    transition: transform .2s;
+    box-shadow: 0 0 40px #000a;
+  }
+
+  .psidebar.open { transform: none }
+  .pburger { display: block }
+  .psearch { display: none }
+
+  .pprofile-name { font-size: 15px }
+  .pprofile-grade, .pprofile-role { display: none }
+
+  .psb-medal,
+  .psb-medal img { width: 96px; height: 96px }
+}
+
+@media (max-width: 620px) {
+  .phead-id .phead-sub { display: none }
+}

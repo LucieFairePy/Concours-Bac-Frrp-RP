@@ -508,8 +508,8 @@ await group('câblage — handlers, points de montage, liens et styles', () => {
 await group('HOME — accueil V4 : quatre cartes, quatre panneaux, proportions', () => {
   const home = readRoot('js/pages/accueil/index.js');
   const html = readRoot('index.html');
-  const css = readRoot('css/portal.css');
-  const base = readRoot('css/base.css');
+  const css = readRoot('css/pages/accueil.css');
+  const base = readRoot('css/tokens.css');
 
   // HOME-001 : les quatre cartes, dans l'ordre du §6.4, vers les bons modules.
   for (const route of [
@@ -528,7 +528,7 @@ await group('HOME — accueil V4 : quatre cartes, quatre panneaux, proportions',
 
   // HOME-003 : les mesures et les jetons de l'annexe C.
   for (const token of ['#0b9ff5', '#ee1834', '#06121d', '#081723', '#18354a', '#8197a8']) {
-    assert.ok(base.includes(token), `jeton V4 ${token} absent de base.css`);
+    assert.ok(base.includes(token), `jeton V4 ${token} absent de tokens.css`);
   }
   assert.ok(base.includes('--sidebar: 236px'), 'barre latérale : 236 px (§6)');
   assert.ok(base.includes('--header: 68px'), 'en-tête : 68 px (§6)');
