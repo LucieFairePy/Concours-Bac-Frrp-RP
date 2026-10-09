@@ -1,140 +1,94 @@
-// Examen de qualification Chef de Groupe — cahier des charges §8 à §11.
+// Examen de qualification Chef de Groupe — module plein écran repris de
+// modules/examen-chef-groupe.html (archive V4) : barre du haut, bannière,
+// huit onglets (Identité → 10 questions → Commandement → Situation 1 →
+// Situation 2 → Correction → Résultat → Fiche finale), mêmes textes.
 //
-// Parcours du §16 : Créer l'examen → Identité → Questions → Commandement →
-// Situation 1 → Situation 2 → Correction → Résultat → Vérification finale →
-// Signatures → Clôture → Historique.
-//
-// La personne qui passe cet examen est déjà un agent BAC expérimenté :
-// l'épreuve vérifie si on peut lui confier un groupe, pas si elle sait
-// intervenir. D'où un format compact et des questions sans piège.
+// Ce qui change par rapport à l'archive, et seulement cela : le dossier
+// part au dépôt par js/core/records.js (brouillon automatique, clôture,
+// version rectificative) au lieu du localStorage, et les permissions du
+// rôle décident de qui peut ouvrir, modifier ou clôturer un dossier.
 
 import { CONFIG } from '../../config.js';
-import { byId, esc, setHTML, setText } from '../../core/dom.js';
+import { byId, esc, setHTML } from '../../core/dom.js';
 import * as auth from '../../core/auth.js';
 import * as portal from '../../shell/index.js';
 import { state as shared } from '../../core/state.js';
 import { href } from '../../routes.js';
 import * as records from '../../core/records.js';
 import * as journal from '../../core/journal.js';
-import { blankExam, migrateExam, isEditableExam } from '../../core/cdg-state.js';
-import { totals, recommendation } from '../../scoring/cdg.js';
+import { migrateExam } from '../../core/cdg-state.js';
 import { decisionText } from '../../ui/chips.js';
-import { createStepper } from '../../ui/stepper.js';
 import { createAutosave } from '../../ui/autosave.js';
-import {
-  renderConnaissances,
-  renderCommandement,
-  renderSituation,
-  renderCorrection,
-  renderResult,
-  renderTimer
-} from './epreuves.js';
+import { STEPS } from '../../data/cdg-examen.js';
+import { blankDossier, isV4, migrateDossier } from './dossier.js';
+import { totals, suggestion } from './bareme.js';
+import { stepsBar, stepView } from './vues.js';
 import { renderCdgFiche } from './fiche.js';
-import { identitySection, section, finalSection } from './sections.js';
 
 const MODULE = 'cdg';
 
-const state = { record: null, readOnly: false, settings: { ...CONFIG.defaultCommand } };
+// `legacy` : dossier d'avant la V4, montré sur son ancienne fiche finale.
+const state = { record: null, readOnly: false, legacy: false, cur: 'id', settings: { ...CONFIG.defaultCommand } };
 let params = new URLSearchParams();
 
 // Le brouillon part au dépôt après chaque pause de saisie.
 const autosave = createAutosave({
   module: MODULE,
-  current: () => (state.readOnly ? null : state.record)
+  current: () => (state.readOnly || state.legacy ? null : state.record)
 });
 
-const stepper = createStepper({
-  steps: [
-    { id: 'id', label: 'Identité' },
-    { id: 'co', label: '10 questions' },
-    { id: 'cm', label: 'Commandement' },
-    { id: 'sit1', label: 'Situation 1' },
-    { id: 'sit2', label: 'Situation 2' },
-    { id: 'correct', label: 'Correction' },
-    { id: 'result', label: 'Résultat' },
-    { id: 'final', label: 'Fiche finale' }
-  ],
-  nextLabel: {
-    4: 'TERMINER LE PASSAGE ET PASSER À LA CORRECTION →',
-    5: 'VALIDER LES NOTES →',
-    6: 'VALIDER LA DÉCISION ET CRÉER LA FICHE →'
-  },
-  validate(id) {
-    if (id !== 'id') return true;
-    const { last, first, grade } = state.record.c;
-    if (!last.trim() || !first.trim() || !grade.trim()) {
-      window.alert('Renseigne le nom, le prénom et le grade du candidat.');
-      return false;
-    }
-    return true;
-  },
-  onOpen(id) {
-    const d = dis();
-    if (id === 'co') { renderConnaissances(state.record, d); renderTimer(state.record); }
-    if (id === 'cm') renderCommandement(state.record, d);
-    if (id === 'sit1') renderSituation(state.record, 0, d, 'sit1Box');
-    if (id === 'sit2') renderSituation(state.record, 1, d, 'sit2Box');
-    if (id === 'correct') renderCorrection(state.record, d);
-    if (id === 'result') renderResult(state.record, d);
-    if (id === 'final') renderCdgFiche(state.record);
-  }
-});
+const editable = () => Boolean(state.record) && !state.legacy && !state.readOnly && !state.record.locked && auth.canWrite();
 
-const editable = () => isEditableExam(state.record, state.readOnly);
-const dis = () => (editable() ? '' : 'disabled');
+const operatorName = () => {
+  const session = auth.current();
+  return (session && session.name) || auth.describeOperator();
+};
 
 // ───────────────────────────── Rendu ────────────────────────────────────
 
-function moduleBar() {
-  const rectify = !editable() && state.record && state.record.locked && auth.can('write')
-    ? '<button onclick="app.rectify()">Créer une version rectificative</button>'
-    : '';
+function render() {
+  const R = state.record;
+  if (!R) return;
 
-  portal.setModuleBar(`
-    <span class="mx-file">${esc(state.record ? state.record.id : '—')}</span>
-    ${rectify}
-    <button onclick="app.saveNow()">Enregistrer</button>
-    ${auth.canWrite() ? '<button class="primary" onclick="app.newRecord()">Nouvel examen</button>' : ''}`);
+  if (state.legacy) {
+    renderLegacy();
+    return;
+  }
+
+  setHTML('steps', stepsBar(state.cur));
+  setHTML('mxApp', stepView(state.cur, R, {
+    d: editable() ? '' : 'disabled',
+    canClose: editable() && auth.can('close'),
+    canNew: auth.canWrite(),
+    canRectify: Boolean(R.locked) && auth.can('write')
+  }));
 }
 
-function renderAll() {
-  const R = state.record;
-  const name = `${String(R.c.last).toUpperCase()} ${R.c.first}`.trim();
-  setText('hero', name ? `${name} — ${R.id}` : `Nouvel examen — ${R.id}`);
-  setText('mxDossier', name ? `${name} — dossier ${R.id}` : `Nouvel examen — dossier ${R.id}`);
-  setText('heroSub', 'Connaissances → Commandement → Situation 1 → Situation 2 → Correction → Résultat → Fiche • /1000');
+/** Dossier d'avant la V4 : sa fiche finale d'origine, en lecture seule. */
+function renderLegacy() {
+  setHTML('steps', '');
+  setHTML('mxApp', `
+    <section id="s-final" class="section active printme">
+      <div id="sheet"></div>
+      <div class="mx-card no-print">
+        <div class="mx-row">
+          <button class="mx-btn" onclick="app.print()">Imprimer / PDF</button>
+          ${auth.canWrite() ? '<button class="mx-btn" onclick="app.newExam()">Nouvel examen</button>' : ''}
+        </div>
+      </div>
+    </section>`);
+  renderCdgFiche(state.record);
+}
 
-  moduleBar();
-  stepper.renderTabs();
-
-  const nav = stepper.stepNav;
-  setHTML('sections', [
-    identitySection(R, dis(), nav),
-    `<section id="s-co" class="section"><div id="timerBox" class="no-print"></div><div id="connaissancesBox"></div>${nav(1)}</section>`,
-    section('cm', 'commandementBox', 2, nav),
-    section('sit1', 'sit1Box', 3, nav),
-    section('sit2', 'sit2Box', 4, nav),
-    section('correct', 'correctBox', 5, nav),
-    section('result', 'resultBox', 6, nav),
-    finalSection(R, dis())
-  ].join(''));
-
-  stepper.renderProgress();
+function show(record, { readOnly = false, cur = 'id' } = {}) {
+  state.legacy = !isV4(record);
+  state.record = state.legacy ? migrateExam(record, state.settings) : migrateDossier(record, state.settings);
+  state.readOnly = readOnly || state.legacy;
+  state.cur = cur;
+  render();
 }
 
 // ───────────────────────────── Cycle de vie ─────────────────────────────
-
-function setPath(path, value) {
-  if (!editable()) return false;
-  const keys = path.split('.');
-  let node = state.record;
-  for (let i = 0; i < keys.length - 1; i += 1) {
-    if (node[keys[i]] === undefined || node[keys[i]] === null) node[keys[i]] = {};
-    node = node[keys[i]];
-  }
-  node[keys[keys.length - 1]] = value;
-  return true;
-}
 
 async function startRecord() {
   let id;
@@ -145,11 +99,12 @@ async function startRecord() {
     return;
   }
 
-  state.record = blankExam(id, state.settings);
+  state.record = blankDossier(id, operatorName(), state.settings);
   state.readOnly = false;
+  state.legacy = false;
+  state.cur = 'id';
   autosave.reset(true);
-  renderAll();
-  stepper.openStep('id');
+  render();
   await autosave.flush();
 }
 
@@ -164,11 +119,8 @@ async function openFromUrl() {
       portal.setBanner(portal.errorBanner(`Dossier ${id} introuvable dans les examens Chef de Groupe.`));
       return false;
     }
-    state.record = migrateExam(found, state.settings);
-    state.readOnly = true;
     autosave.reset();
-    renderAll();
-    stepper.openStep('final');
+    show(found, { readOnly: true, cur: 'final' });
     portal.setSync(`${id} — lecture seule`);
     return true;
   } catch (error) {
@@ -180,22 +132,24 @@ async function openFromUrl() {
 async function loadInitial() {
   if (await openFromUrl()) return;
 
-  const session = auth.current();
-
   let draft = null;
   try {
-    draft = await records.loadDraft(MODULE, session.login);
+    draft = await records.loadDraft(MODULE, auth.current().login);
   } catch (error) {
     portal.setBanner(portal.errorBanner(`Brouillon illisible : ${error.message}`));
     return;
   }
 
   if (draft) {
-    state.record = migrateExam(draft, state.settings);
-    state.readOnly = false;
-    renderAll();
-    stepper.openStep('id');
+    show(draft);
     portal.setSync('brouillon repris');
+    if (state.legacy) {
+      portal.setBanner(`
+        <div class="banner">
+          Ce brouillon date d’avant la nouvelle version de l’examen : il reste lisible
+          ci-dessous, mais ne peut plus être poursuivi. « Nouvel examen » le remplace.
+        </div>`);
+    }
     return;
   }
 
@@ -214,155 +168,99 @@ async function loadInitial() {
 
 // ───────────────────────────── Handlers ─────────────────────────────────
 
+/** Applique une saisie si le dossier est modifiable, puis l'enregistre. */
+function edit(apply) {
+  if (!editable()) return;
+  apply(state.record);
+  autosave.mark();
+}
+
 const handlers = {
-  set(path, value) {
-    if (!setPath(path, value)) return;
-    autosave.mark();
-    if (path.startsWith('c.start') || path.startsWith('c.end') || path === 'c.date') {
-      renderTimer(state.record);
-    }
-  },
-
-  setExaminer(index, field, value) {
-    if (!editable()) return;
-    state.record.ex[index][field] = value;
-    autosave.mark();
-  },
-
-  addExaminer() {
-    if (!editable() || state.record.ex.length >= 3) return;
-    state.record.ex.push({ grade: '', name: '' });
-    autosave.mark();
-    renderAll();
-    stepper.openStep('id');
-  },
-
-  setAnswer(questionId, value) {
-    if (!editable()) return;
-    state.record.ans[questionId] = value;
-    autosave.mark();
-  },
-
-  setMark(questionId, value) {
-    if (!editable()) return;
-    state.record.marks[questionId] = value;
-    autosave.mark();
-    renderCorrection(state.record, dis());
-  },
-
-  setDecision(value) {
-    if (!setPath('decision', value)) return;
-    autosave.mark();
-    renderResult(state.record, dis());
-  },
-
   openStep(id) {
-    stepper.openStep(id);
-  },
-
-  step(delta) {
+    if (state.legacy || !STEPS.some(([step]) => step === id)) return;
+    state.cur = id;
     autosave.flush();
-    stepper.move(delta);
+    render();
   },
 
-  async saveNow() {
-    await autosave.now();
+  setC(key, value) { edit(R => { R.c[key] = value; }) },
+  setExaminer(value) { edit(R => { R.ex = [{ grade: '', name: value }]; }) },
+  setAns(i, value) { edit(R => { R.ans[i] = value; }) },
+  setLead(i, value) { edit(R => { R.lead[i] = value; }) },
+  setSit(i, value) { edit(R => { R.s[i].ans = value; }) },
+  setDecision(value) { edit(R => { R.decision = value; }) },
+  setReason(value) { edit(R => { R.reason = value; }) },
+
+  /** Note retenue : `kind` q ou lead (avec son rang), ou s1, s2, radio. */
+  setMark(kind, i, value) {
+    edit(R => {
+      if (kind === 'q' || kind === 'lead') R.marks[kind][i] = value;
+      else R.marks[kind] = value;
+    });
   },
 
-  async newRecord() {
-    if (autosave.dirty && !window.confirm('Des modifications ne sont pas enregistrées. Démarrer un nouvel examen ?')) return;
-    if (!auth.canWrite()) return;
-    await startRecord();
-  },
-
-  async downloadPdf() {
-    if (!state.record) return;
-    stepper.openStep('final');
-
+  print() {
     const R = state.record;
-    const name = `${String(R.c.last).toUpperCase()} ${R.c.first}`.trim();
+    if (!R) return;
+    const name = `${String(R.c.last || '').toUpperCase()} ${R.c.first || ''}`.trim();
     const previous = document.title;
     document.title = name ? `${R.id} — ${name}` : R.id;
     window.print();
     document.title = previous;
   },
 
+  async newExam() {
+    if (!auth.canWrite()) return;
+    if (!window.confirm('Créer un nouvel examen ?')) return;
+    await startRecord();
+  },
+
   async rectify() {
     const R = state.record;
-    if (!R || !auth.can('write')) return;
+    if (!R || state.legacy || !R.locked || !auth.can('write')) return;
 
     const confirmed = window.confirm(
       `Créer une version rectificative de ${R.id} ?\n\n`
       + 'Le dossier d’origine ne sera pas modifié. La version rectificative '
-      + 'portera un nouveau numéro, conservera le même tirage et citera le '
-      + 'dossier corrigé.'
+      + 'portera un nouveau numéro et citera le dossier corrigé.'
     );
     if (!confirmed) return;
 
-    state.record = migrateExam(
+    state.record = migrateDossier(
       { ...R, locked: false, rectifies: R.id, closedAt: null, closedBy: null },
       state.settings
     );
     state.readOnly = false;
+    state.cur = 'corr';
     autosave.reset(true);
-    renderAll();
-    stepper.openStep('correct');
+    render();
     portal.setSync(`version rectificative de ${R.id} — à clôturer de nouveau`);
   },
 
   async close() {
     const R = state.record;
-    if (!R || R.locked || state.readOnly) return;
+    if (!R || !editable()) return;
 
     if (!auth.can('close')) {
       window.alert('Ton rôle ne permet pas de clôturer un dossier.');
       return;
     }
-
     if (!R.decision) {
-      window.alert('Choisis d’abord la décision définitive sur la page Résultat.');
-      stepper.openStep('result');
+      window.alert('Choisir d’abord la décision finale.');
       return;
     }
-
-    const reco = recommendation(R, R.draw);
-
-    // §10 : une décision qui s'écarte de la suggestion se motive.
-    if (R.decision !== reco.decision && !String(R.reason || '').trim()) {
-      window.alert(
-        'Ta décision s’écarte de la suggestion du système.\n\n'
-        + 'Renseigne le motif avant de clôturer : il est conservé dans la fiche finale.'
-      );
-      stepper.openStep('result');
-      return;
-    }
-
-    // Un refus, une réserve ou un ajournement se motivent toujours (§10).
-    const needsReason = ['QUALIFIE_RESERVE', 'AJOURNE', 'REFUSE'].includes(R.decision);
-    if (needsReason && !String(R.reason || '').trim()) {
-      window.alert(
-        `Une décision « ${decisionText(R.decision)} » doit être motivée.\n\n`
-        + 'Renseigne le motif sur la page Résultat.'
-      );
-      stepper.openStep('result');
-      return;
-    }
-
-    const rectifying = Boolean(R.rectifies);
-    const confirmed = window.confirm(
-      rectifying
-        ? `Publier la version rectificative de ${R.rectifies} ? Elle sera définitive.`
-        : `Clôturer définitivement ${R.id} ? Après validation, aucune modification directe ne sera possible.`
-    );
-    if (!confirmed) return;
+    if (!window.confirm('Clôturer définitivement ce dossier ?')) return;
 
     const session = auth.current();
-    const t = totals(R, R.draw);
+    const t = totals(R);
+    const suggested = suggestion(R);
+    const rectifying = Boolean(R.rectifies);
 
+    // La suggestion est archivée avec le dossier : elle ne bougera plus
+    // si les seuils changent dans Paramètres.
     R.total = t.total;
-    R.suggestedTotal = t.suggestedTotal;
-    R.suggestedDecision = reco.decision;
-    R.suggestedReason = reco.reason;
+    R.suggestedDecision = suggested;
+    R.suggestedReason = `${t.total}/1000 — ${decisionText(suggested)}`;
     R.locked = true;
     R.closedAt = new Date().toISOString();
     R.closedBy = session.login;
@@ -384,8 +282,8 @@ const handlers = {
         role: auth.role(),
         action: rectifying ? 'dossier.rectificatif' : 'dossier.cloture',
         target: published.id,
-        detail: `Qualification CDG — ${decisionText(published.decision)} — ${t.total}/${t.max}`
-          + (reco.decision !== published.decision ? ` (suggestion : ${decisionText(reco.decision)})` : '')
+        detail: `Qualification CDG — ${decisionText(published.decision)} — ${t.total}/1000`
+          + (suggested !== published.decision ? ` (suggestion : ${decisionText(suggested)})` : '')
       });
       if (!logged) portal.setSync(`dossier ${published.id} clôturé — journal non écrit`, 'error');
     } catch (error) {
@@ -397,8 +295,9 @@ const handlers = {
       return;
     }
 
-    renderAll();
-    stepper.openStep('final');
+    state.cur = 'final';
+    render();
+    window.alert('Dossier clôturé et archivé en lecture seule.');
   }
 };
 
@@ -406,52 +305,27 @@ export default {
   handlers,
 
   template() {
-    // Gabarit du module plein écran de la maquette V4 : barre du haut,
-    // bannière photo, onglets, cartes. La carte `.hero` d'origine reste
-    // dans la page, masquée à l'écran : c'est l'en-tête imprimé.
     return `
       <div class="m-examen">
-        <header class="mx-top no-print">
+        <div class="mx-top no-print">
           <a class="mx-back" href="${href('accueil')}">← Portail BAC 75 N</a>
-          <div class="mx-brand">
-            EXAMEN DE QUALIFICATION CHEF DE GROUPE BAC
-            <small>45 minutes cible · maximum 1 heure</small>
-          </div>
-          <div id="pageActions" class="mx-actions"></div>
-          <span id="sync" class="sync"></span>
-          <div class="mx-id"><b id="mxWho">${esc(auth.describeOperator())}</b><small>Examinateur</small></div>
-        </header>
-
-        <div class="mx-hero no-print">
-          <div>
-            <div class="mx-tri"></div>
-            <h1>EXAMEN<br>CHEF DE GROUPE</h1>
-            <p>Le système suggère. L’examinateur note et décide.</p>
-            <p id="mxDossier" class="mx-dossier"></p>
-          </div>
+          <div class="mx-brand">EXAMEN DE QUALIFICATION CHEF DE GROUPE BAC<small>45 minutes cible · maximum 1 heure</small></div>
+          <span id="sync" class="mx-sync"></span>
+          <div class="mx-id"><b>${esc(operatorName())}</b><small>Examinateur</small></div>
         </div>
-
-        <section id="home" class="view mx-wrap">
+        <div class="mx-hero no-print">
+          <div><div class="mx-tri"></div><h1>EXAMEN<br>CHEF DE GROUPE</h1><p>Le système suggère. L’examinateur note et décide.</p></div>
+        </div>
+        <div class="mx-wrap">
           <div id="mxBanner"></div>
-          <div class="hero mx-printhead" data-img="examen">
-            <div class="flag"></div>
-            <small class="hero-kicker no-print">Qualification BAC 75 N</small>
-            <h1 class="no-print">Examen Chef de Groupe</h1>
-            <h2 id="hero">Examen de qualification Chef de Groupe</h2>
-            <div class="mut" id="heroSub"></div>
-          </div>
-          <div id="tabs" class="tabs no-print"></div>
-          <div class="no-print mx-progress">
-            <div class="progress"><span id="prog"></span></div>
-            <div id="stepText" class="steptext"></div>
-          </div>
-          <div id="sections"></div>
-        </section>
+          <div class="mx-steps no-print" id="steps"></div>
+          <div id="mxApp"></div>
+        </div>
       </div>`;
   },
 
   async mount(ctx) {
-    // Le bandeau du portail (#banner) se range sous la barre du module.
+    // Le bandeau du portail (#banner) se range sous la bannière du module.
     const banner = byId('banner');
     const slot = byId('mxBanner');
     if (banner && slot && typeof slot.replaceWith === 'function') slot.replaceWith(banner);
@@ -459,6 +333,8 @@ export default {
     params = ctx.params;
     state.record = null;
     state.readOnly = false;
+    state.legacy = false;
+    state.cur = 'id';
     state.settings = { ...CONFIG.defaultCommand, ...shared.settings };
     autosave.reset();
     await loadInitial();

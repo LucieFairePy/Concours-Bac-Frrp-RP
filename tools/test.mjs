@@ -86,6 +86,9 @@ import { suggestedDecision, suggestionSnapshot } from '../js/scoring/totals.js';
 import { physicalAuto } from '../js/scoring/auto.js';
 import { ROUTES as portalRoutes, LEGACY_PAGES, resolve as resolveRoute, href as routeHref } from '../js/routes.js';
 import * as bank from '../js/data/cdg-bank.js';
+import * as cdgV4 from '../js/data/cdg-examen.js';
+import * as baremeV4 from '../js/pages/examen-cdg/bareme.js';
+import { blankDossier as blankCdgV4, isV4 } from '../js/pages/examen-cdg/dossier.js';
 import { QUESTION_BANK } from '../js/data/questions.js';
 import { RADIO_EXERCISE, RADIO_EXERCISE_LEGACY, radioOf } from '../js/data/radio.js';
 import { SCENARIOS, SCENARIOS_LEGACY, scenariosOf } from '../js/data/scenarios.js';
@@ -319,6 +322,57 @@ await group('échappement — une saisie HTML ne casse pas le document', () => {
   );
   renderCdgFiche(piege);
   assert.ok(!sheet().includes('<script>alert(1)'), 'le HTML saisi doit être échappé');
+});
+
+// ─────────── Examen Chef de Groupe — module de l'archive V4 ──────────────
+//
+// Les groupes §8/§9/§11 ci-dessus portent sur l'ancien format (tirage
+// `draw`), encore lu pour afficher les dossiers clôturés avant la V4.
+
+await group('V4 — examen Chef de Groupe : contenu et barème de l’archive', () => {
+  assert.deepEqual(cdgV4.STEPS.map(([, text]) => text),
+    ['Identité', '10 questions', 'Commandement', 'Situation 1', 'Situation 2', 'Correction', 'Résultat', 'Fiche finale']);
+  assert.equal(cdgV4.THEMES.length, 8);
+  assert.equal(cdgV4.LEAD_QUESTIONS.length, 5);
+  assert.equal(cdgV4.EVOLUTIONS.length, 5);
+  assert.ok(cdgV4.SITUATIONS[0].startsWith('Tu es chef de groupe avec six agents.'));
+
+  const R = blankCdgV4('CDG-2026-950', 'LAURENT Cyril', SETTINGS);
+  assert.ok(isV4(R) && !isV4({ draw: {} }), 'ancien format reconnu');
+  assert.equal(R.qs.length, 10);
+  for (const q of R.qs) {
+    assert.match(q.q, /^Contexte : .+\. Tu commandes \d agents\. Sur le thème « .+ », qu’est-ce que tu mets en place et pourquoi \?$/);
+  }
+  R.s.forEach(s => assert.ok(cdgV4.EVOLUTIONS.includes(s.evol)));
+
+  // Copie vide : 0/1000, REFUSÉ. Notes pleines saisies : 1000/1000.
+  assert.equal(baremeV4.totals(R).total, 0);
+  assert.equal(baremeV4.suggestion(R), 'REFUSE');
+  R.marks = { q: Array(10).fill('20'), lead: Array(5).fill('40'), s1: '250', s2: '250', radio: '100' };
+  assert.equal(baremeV4.totals(R).total, 1000);
+  assert.equal(baremeV4.suggestion(R), 'QUALIFIE');
+  R.marks.s1 = '0'; R.marks.s2 = '0';
+  assert.equal(baremeV4.suggestion(R), 'AJOURNE', '500/1000');
+  R.marks.q[0] = '99';
+  assert.equal(baremeV4.totals(R).q, 200, 'note bornée au barème');
+
+  // Suggestion de l'archive : mots-clés et longueur de la réponse.
+  const a = baremeV4.analyze('Je garde mon calme, je prends le temps d’expliquer et d’écouter, et je vais maintenir la consigne.', cdgV4.LEAD_QUESTIONS[0][1], 40);
+  assert.equal(a.miss.length, 0);
+  assert.ok(a.score >= 26 && a.score <= 40, `${a.score}/40`);
+
+  // Le dossier a la forme attendue par l'historique (records.summarize).
+  R.c = { ...R.c, last: 'durand', first: 'Léa', grade: 'GPX', mat: '75N-1' };
+  R.decision = 'QUALIFIE_RESERVE';
+  const line = records.summarize(R, 'cdg');
+  assert.equal(line.examiner, 'LAURENT Cyril');
+  assert.equal(line.mat, '75N-1');
+  assert.equal(line.max, 1000);
+
+  // Les dossiers passent par records.js, jamais par le localStorage.
+  for (const file of ['index.js', 'vues.js', 'dossier.js', 'bareme.js']) {
+    assert.ok(!readRoot(`js/pages/examen-cdg/${file}`).includes('localStorage.'), file);
+  }
 });
 
 // ───────────────────────── §6 et §7 formations ──────────────────────────

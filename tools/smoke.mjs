@@ -215,14 +215,11 @@ const ROUTE_SPECS = {
   'formation-chef-groupe': { expect: ['tabs', 'sections'], ...COURSE_STEPS, chapters: true },
   'formation-radio': { expect: ['tabs', 'sections'], ...COURSE_STEPS, chapters: true },
   'formation-antiterrorisme': { expect: ['tabs', 'sections'], ...COURSE_STEPS, chapters: true },
+  // Les huit onglets de modules/examen-chef-groupe.html (archive V4).
   'examen-chef-groupe': {
-    expect: ['tabs', 'sections'],
-    steps: ['id', 'co', 'cm', 'sit1', 'sit2', 'correct', 'result', 'final'],
-    stepExpect: {
-      co: 'connaissancesBox', cm: 'commandementBox',
-      sit1: 'sit1Box', sit2: 'sit2Box',
-      correct: 'correctBox', result: 'resultBox', final: 'sheet'
-    }
+    expect: ['steps', 'mxApp'],
+    steps: ['id', 'q', 'lead', 's1', 's2', 'corr', 'res', 'final'],
+    stepExpect: { id: 'mxApp', q: 'mxApp', lead: 'mxApp', s1: 'mxApp', s2: 'mxApp', corr: 'mxApp', res: 'mxApp', final: 'mxApp' }
   },
   historique: { expect: ['families', 'filters', 'results'] },
   actualites: { expect: ['content'] },
