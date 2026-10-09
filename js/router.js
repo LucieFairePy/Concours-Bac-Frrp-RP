@@ -21,7 +21,7 @@ import * as portal from './shell/index.js';
 const SITE = 'Portail BAC 75 N';
 
 let current = null;   // { id, page }
-let shownHash = '';
+let shownHash = null; // adresse affichée ; null tant qu'aucune page ne l'est
 let token = 0;
 
 function confirmLeave() {
@@ -111,7 +111,7 @@ async function onHashChange() {
   // chaque chargement de page : la durée glissante repart, et un accès
   // retiré ou un code régénéré ferme la session au lieu de la laisser
   // courir jusqu'au rechargement de l'onglet.
-  if (shownHash) {
+  if (shownHash !== null) {
     const restored = await auth.restore();
     if (restored.status !== 'ok') {
       portal.toGate(restored.status === 'none' ? 'required' : restored.status);
@@ -137,7 +137,9 @@ export function start() {
     if (document.visibilityState === 'hidden' && current && current.page.onHide) current.page.onHide();
   });
 
-  if (!resolve(window.location.hash).id) {
+  // La racine du site arrive sans `#` : on l'écrit, pour que l'adresse
+  // affichée soit toujours celle de l'écran.
+  if (!window.location.hash || !resolve(window.location.hash).id) {
     history.replaceState(null, '', href(HOME));
   }
   return onHashChange();

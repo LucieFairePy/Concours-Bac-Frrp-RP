@@ -130,8 +130,9 @@ function installDom() {
   };
   globalThis.sessionStorage = globalThis.localStorage;
 
+  // Comme sur GitHub Pages : on arrive sur la racine, sans `#`.
   const location = {
-    hash: '#/accueil',
+    hash: '',
     search: '',
     pathname: '/index.html',
     replace(url) { replaced = url; }
@@ -274,6 +275,9 @@ await check('connexion locale → portail sur #/accueil', async () => {
     if (!filled(id)) throw new Error(`#${id} est resté vide`);
   }
   if (!declared.has('dash')) throw new Error('l’accueil n’a pas été monté');
+  if (globalThis.window.location.hash !== '#/accueil') {
+    throw new Error(`adresse attendue #/accueil, obtenue « ${globalThis.window.location.hash} »`);
+  }
 });
 
 // 3. Chaque route, montée comme le routeur la monte.
