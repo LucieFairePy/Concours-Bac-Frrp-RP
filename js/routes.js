@@ -9,6 +9,7 @@
 //
 //   path     adresse après `#/`
 //   nav      entrée de la barre latérale allumée sur cette page
+//   layout   'module' : module plein écran, sans la coque du portail
 //   requires permission exigée (js/core/roles.js) ; sans elle, la page
 //            affiche un refus au lieu de son contenu
 //   load     le module de la page, chargé à la demande
@@ -21,6 +22,7 @@ export const ROUTES = {
     load: () => import('./pages/accueil/index.js')
   },
   concours: {
+    layout: 'module',
     path: 'concours',
     nav: 'concours',
     title: 'Concours d’intégration BAC',
@@ -33,30 +35,35 @@ export const ROUTES = {
     load: () => import('./pages/formations/index.js')
   },
   'formation-negociation': {
+    layout: 'module',
     path: 'formations/negociation',
     nav: 'negociation',
     title: 'Formation Négociation BAC',
     load: () => import('./pages/formations/negociation.js')
   },
   'formation-chef-groupe': {
+    layout: 'module',
     path: 'formations/chef-de-groupe',
     nav: 'formation-cdg',
     title: 'Formation Chef de Groupe BAC',
     load: () => import('./pages/formations/chef-de-groupe.js')
   },
   'formation-radio': {
+    layout: 'module',
     path: 'formations/radio',
     nav: 'radio',
     title: 'Formation Radio BAC',
     load: () => import('./pages/formations/radio.js')
   },
   'formation-antiterrorisme': {
+    layout: 'module',
     path: 'formations/antiterrorisme',
     nav: 'antiterrorisme',
     title: 'Formation Antiterrorisme BAC',
     load: () => import('./pages/formations/antiterrorisme.js')
   },
   'examen-chef-groupe': {
+    layout: 'module',
     path: 'examens/chef-de-groupe',
     nav: 'cdg',
     title: 'Examen Chef de Groupe',

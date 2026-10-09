@@ -384,3 +384,17 @@ header.phead {
 @media (max-width: 620px) {
   .phead-id .phead-sub { display: none }
 }
+
+/* ─────────────── Module plein écran (maquette V4) ─────────────── */
+
+/* Les modules s'ouvrent comme les pages autonomes de la maquette : sans
+   barre latérale ni en-tête du portail, avec leur propre barre de retour. */
+body.module-full { padding-left: 0 }
+
+body.module-full > #portalSidebar,
+body.module-full > #portalHeader,
+body.module-full > #moduleBar { display: none }
+
+@media screen {
+  body.module-full > main { max-width: none; padding: 0 }
+}

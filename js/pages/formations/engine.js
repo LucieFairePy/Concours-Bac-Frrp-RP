@@ -45,7 +45,20 @@ import {
   correctionHtml
 } from './sections.js';
 
-export function formationPage(course, kicker = '') {
+/**
+ * `layout` donne à un cours la mise en page de son module dans la maquette
+ * V4 (js/pages/formations/layouts/) :
+ *
+ *   page({ course, kicker })      le HTML de l'écran ; il doit contenir
+ *                                 #sections, #tabs, #prog, #stepText,
+ *                                 #hero, #pageActions et #sync
+ *   cours({ course, record, chapter, index, dis })
+ *                                 le HTML de #coursWrap : sommaire et
+ *                                 chapitre ouvert (facultatif)
+ *
+ * Sans layout, le cours garde le gabarit commun.
+ */
+export function formationPage(course, kicker = '', layout = {}) {
   const MODULE = course.module;
   const mod = records.MODULES[MODULE];
 
@@ -135,8 +148,9 @@ export function formationPage(course, kicker = '') {
     const index = Math.max(0, course.chapters.findIndex(chapter => chapter.id === state.chapter));
     const chapter = course.chapters[index];
 
-    setHTML('coursWrap', sidebar(course, state.record, chapter.id)
-      + chapterPanel(course, state.record, chapter, index, dis()));
+    setHTML('coursWrap', layout.cours
+      ? layout.cours({ course, record: state.record, chapter, index, dis: dis() })
+      : sidebar(course, state.record, chapter.id) + chapterPanel(course, state.record, chapter, index, dis()));
 
     const ratio = readRatio(state.record, course);
     const bar = byId('coursProg');
@@ -448,6 +462,7 @@ export function formationPage(course, kicker = '') {
     handlers,
 
     template() {
+      if (layout.page) return layout.page({ course, kicker });
       return `
         <section id="home" class="view">
           <div class="hero" style="${imageStyle(course.image)}">

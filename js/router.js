@@ -10,6 +10,11 @@
 //   onHide()    l'onglet passe en arrière-plan : enregistrer ce qui traîne
 //   unmount()   la page est quittée : arrêter ses minuteries
 //
+// Une route `layout: 'module'` s'ouvre en plein écran, comme les modules de
+// la maquette V4 : ni barre latérale ni en-tête du portail. La page porte
+// alors sa propre barre (retour au portail, état d'enregistrement #sync,
+// actions dans #pageActions).
+//
 // Quitter une page avec des modifications non enregistrées demande
 // confirmation ; refusé, l'adresse revient sur la page en cours.
 
@@ -63,7 +68,10 @@ async function show(id, params) {
   await leave();
 
   document.title = `${route.title} — ${SITE}`;
-  portal.paint(route.nav);
+  const full = route.layout === 'module';
+  document.body.classList.toggle('module-full', full);
+  if (full) portal.clearShell();
+  else portal.paint(route.nav);
   portal.setModuleBar('');
   portal.setSync('');
 

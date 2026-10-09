@@ -24,7 +24,15 @@ export function okBanner(message) {
   return `<div class="banner ok">${esc(message)}</div>`;
 }
 
+/**
+ * Actions de la page. Un module plein écran les reçoit dans sa propre
+ * barre (#pageActions) ; une page du portail, dans la barre sous l'en-tête.
+ */
 export function setModuleBar(html) {
+  if (byId('pageActions')) {
+    setHTML('pageActions', html || '');
+    return;
+  }
   setHTML('moduleBar', html ? `<div class="pmodulebar no-print">${html}</div>` : '');
 }
 

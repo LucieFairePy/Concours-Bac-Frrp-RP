@@ -16,6 +16,17 @@ import { renderHeader, search } from './header.js';
 
 export { setSync, setBanner, errorBanner, okBanner, setModuleBar, deniedCard } from './feedback.js';
 
+/**
+ * Module plein écran : la coque se vide, pour qu'aucun identifiant (#sync,
+ * #who) n'existe deux fois avec ceux de la barre du module.
+ */
+export function clearShell() {
+  for (const id of ['portalSidebar', 'portalHeader', 'moduleBar']) {
+    const node = document.getElementById(id);
+    if (node) node.innerHTML = '';
+  }
+}
+
 /** Allume l'entrée `active` dans la barre latérale et l'en-tête. */
 export function paint(active) {
   renderSidebar(active);
