@@ -1,1 +1,543 @@
-/* Module formation-radio — mise en page de la maquette V4 (plein écran). */
+/* Module formation-radio — mise en page de la maquette V4 (plein écran).
+
+   Reprise de modules/formation-radio.html : bandeau de 210 px au logo rond,
+   sommaire interactif sur toute la hauteur à gauche (285 px), fil d'Ariane
+   et retour au portail, cartouche « CHAPITRE 01 », cartes numérotées à
+   gauche, encadrés rouges et photo à droite.
+
+   Tout est rangé sous .m-radio (js/pages/formations/layouts/radio.js). La
+   fiche finale (#s-final) garde ses propres styles : rien ici ne la touche,
+   ni à l'écran ni à l'impression. */
+
+.m-radio {
+  --r-bg: #07111b;
+  --r-panel: #0a1824;
+  --r-line: #1a3a50;
+  --r-blue: #168cf2;
+  --r-red: #e52a35;
+  --r-text: #eef5fb;
+  --r-muted: #91a8b9;
+
+  min-height: 100vh;
+  background: radial-gradient(circle at 75% 8%, #12324a55, transparent 32%), var(--r-bg);
+  color: var(--r-text);
+  font-family: Arial, 'Inter', sans-serif;
+}
+
+/* ─────────────── Bandeau ─────────────── */
+
+.m-radio .mr-hero {
+  position: relative;
+  height: 210px;
+  overflow: hidden;
+  border-bottom: 1px solid #1c4560;
+  background-position: center 35%;
+  background-size: cover;
+}
+
+.m-radio .mr-hero:before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, #06101a 0%, #07131fdd 45%, #07131f99);
+}
+
+.m-radio .mr-hero:after {
+  content: 'BAC 75 N';
+  position: absolute;
+  right: 4%;
+  bottom: -28px;
+  color: #fff;
+  font: 900 96px Arial, sans-serif;
+  opacity: .035;
+}
+
+.m-radio .mr-hero-copy {
+  position: absolute;
+  z-index: 1;
+  left: 34px;
+  top: 28px;
+}
+
+.m-radio .mr-hero-copy img {
+  width: 72px;
+  height: 72px;
+  padding: 5px;
+  border-radius: 50%;
+  background: #fff;
+  object-fit: contain;
+}
+
+.m-radio .mr-hero-copy h1 {
+  margin: 8px 0 2px;
+  color: #fff;
+  font: 700 38px Arial, sans-serif;
+  letter-spacing: 0;
+}
+
+.m-radio .mr-hero-copy p {
+  margin: 0;
+  color: #b9c9d5;
+  letter-spacing: .12em;
+}
+
+/* Le dossier ouvert : discret, en bas à droite du bandeau. */
+.m-radio .mr-hero-file {
+  position: absolute;
+  z-index: 1;
+  right: 30px;
+  bottom: 22px;
+  max-width: 420px;
+  padding: 10px 14px;
+  border: 1px solid #1b4764;
+  border-left: 3px solid var(--r-blue);
+  border-radius: 6px;
+  background: #07131fcc;
+  text-align: right;
+}
+
+.m-radio .mr-hero-file small { display: block; color: #6db8f4; font-size: 11px; letter-spacing: .12em }
+.m-radio .mr-hero-file b { display: block; margin: 3px 0; color: #fff; font-size: 15px }
+.m-radio .mr-hero-file span { color: var(--r-muted); font-size: 12px }
+
+/* ─────────────── Colonnes ─────────────── */
+
+.m-radio .mr-layout {
+  display: grid;
+  grid-template-columns: 285px 1fr;
+  min-height: calc(100vh - 210px);
+}
+
+.m-radio .mr-side {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: auto;
+  padding: 20px 14px;
+  border-right: 1px solid var(--r-line);
+  background: #06111b;
+}
+
+.m-radio .mr-side h3 {
+  margin: 0 8px 14px;
+  color: #c9d8e2;
+  font: 700 13px Arial, sans-serif;
+  letter-spacing: .12em;
+  text-transform: none;
+}
+
+.m-radio .mr-side .mr-side-gap {
+  margin-top: 26px;
+  padding-top: 18px;
+  border-top: 1px solid var(--r-line);
+}
+
+.m-radio .mr-nav,
+.m-radio .mr-steps .tab {
+  display: flex;
+  align-items: baseline;
+  width: 100%;
+  margin: 3px 0;
+  padding: 11px 12px;
+  border: 0;
+  border-left: 3px solid transparent;
+  border-radius: 5px;
+  background: transparent;
+  color: #b8c8d4;
+  font: 700 13px Arial, sans-serif;
+  letter-spacing: 0;
+  text-align: left;
+  text-transform: none;
+  white-space: normal;
+  cursor: pointer;
+}
+
+.m-radio .mr-nav:hover,
+.m-radio .mr-nav.active,
+.m-radio .mr-steps .tab:hover,
+.m-radio .mr-steps .tab.active {
+  border-left-color: var(--r-blue);
+  background: #0d2232;
+  color: #fff;
+}
+
+.m-radio .mr-nav b { flex: 0 0 34px; color: #5caaf7 }
+.m-radio .mr-nav span { flex: 1 }
+.m-radio .mr-nav i { flex: 0 0 auto; color: #55e8a0; font-style: normal }
+
+/* Les étapes du dossier, numérotées comme les chapitres. */
+.m-radio .mr-steps { counter-reset: etape }
+.m-radio .mr-steps .tab { counter-increment: etape }
+.m-radio .mr-steps .tab:before {
+  content: counter(etape, decimal-leading-zero);
+  flex: 0 0 34px;
+  color: #5caaf7;
+}
+
+.m-radio .mr-steprog {
+  height: 4px;
+  margin: 12px 12px 6px;
+  overflow: hidden;
+  border-radius: 3px;
+  background: #17303f;
+}
+
+.m-radio .mr-steprog span { display: block; height: 100%; background: var(--r-blue) }
+.m-radio .mr-steptext { margin: 0 12px; color: var(--r-muted); font-size: 11px }
+
+.m-radio .mr-content {
+  min-width: 0;
+  max-width: 1240px;
+  padding: 26px 30px 60px;
+}
+
+/* ─────────────── Fil d'Ariane, actions ─────────────── */
+
+.m-radio .mr-topbar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.m-radio .mr-crumb { color: #7ea0b8; font-size: 13px; white-space: nowrap }
+
+.m-radio .mr-back {
+  padding: 8px 12px;
+  border: 1px solid var(--r-line);
+  border-radius: 6px;
+  color: #dceaf4;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.m-radio .mr-back:hover { border-color: var(--r-blue) }
+
+/* Actions du dossier (#pageActions), dans la barre du fil d'Ariane. */
+.m-radio .mr-actions {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  font-size: 12px;
+}
+
+/* Le titre est déjà dans le bandeau : la barre garde le numéro et les commandes. */
+.m-radio .mr-actions > b,
+.m-radio .mr-actions .spacer { display: none }
+.m-radio .mr-actions .mut { margin-right: 4px; color: #7ea0b8 }
+.m-radio .mr-sync { color: var(--r-muted); font-size: 12px }
+.m-radio .mr-sync:empty { display: none }
+
+.m-radio button {
+  border-color: var(--r-line);
+  border-radius: 6px;
+  background: #0d2232;
+  font: 700 13px Arial, sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.m-radio .mr-actions button { padding: 8px 12px; font-weight: 400; font-size: 14px; color: #dceaf4 }
+
+.m-radio button.primary { border-color: #1a8ce8; background: #0d65bd }
+.m-radio button:hover:not(:disabled) { border-color: var(--r-blue) }
+
+/* ─────────────── Chapitre ─────────────── */
+
+.m-radio .co-progress {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.m-radio .co-progress .progress { flex: 1; height: 4px; background: #17303f }
+.m-radio .co-progress .progress span { background: var(--r-blue) }
+.m-radio .co-progress b { color: #6db8f4; font: 700 12px Arial, sans-serif; white-space: nowrap }
+
+.m-radio .co-wrap { display: block }
+
+.m-radio .mr-titlebox {
+  margin-bottom: 14px;
+  padding: 18px 20px;
+  border: 1px solid #1b4764;
+  border-radius: 9px;
+  background: linear-gradient(90deg, #0c2030, #091723);
+}
+
+.m-radio .mr-titlebox small { color: #6db8f4; font-size: 13px }
+
+.m-radio .mr-titlebox h2 {
+  margin: 0;
+  color: #fff;
+  font: 700 30px Arial, sans-serif;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.m-radio .mr-grid2 {
+  display: grid;
+  grid-template-columns: 1.25fr .75fr;
+  gap: 14px;
+  align-items: start;
+}
+
+.m-radio .mr-col { min-width: 0 }
+
+.m-radio .mr-card,
+.m-radio .section:not(#s-final) .card {
+  margin: 0 0 14px;
+  padding: 18px;
+  border: 1px solid var(--r-line);
+  border-radius: 8px;
+  background: var(--r-panel);
+}
+
+.m-radio .mr-card h3,
+.m-radio .section:not(#s-final) .card h3,
+.m-radio .section:not(#s-final) .card h2 {
+  margin: 0 0 12px;
+  color: #fff;
+  font: 700 17px Arial, sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.m-radio .section:not(#s-final) .card h2 { font-size: 22px }
+
+.m-radio .mr-card h3 span {
+  display: inline-block;
+  margin-right: 8px;
+  padding: 5px 9px;
+  border-radius: 5px;
+  background: #0d65bd;
+}
+
+.m-radio .mr-card p,
+.m-radio .mr-card li {
+  color: #d9e4eb;
+  font-size: 16px;
+  line-height: 1.55;
+}
+
+.m-radio .mr-card ul { margin: 12px 0; padding-left: 40px }
+
+.m-radio .mr-info {
+  margin: 14px 0 0;
+  padding: 12px 14px;
+  border-left: 4px solid var(--r-blue);
+  border-radius: 5px;
+  background: #0a2032;
+}
+
+.m-radio .mr-info b { color: #fff; font-size: 16px }
+.m-radio .mr-info p { margin: 0 }
+.m-radio .mr-info ul { margin: 6px 0 0; padding-left: 20px }
+.m-radio .mr-info p,
+.m-radio .mr-info li { color: #fff; font-size: 16px; line-height: 1.25 }
+
+.m-radio .mr-important {
+  margin-bottom: 14px;
+  padding: 15px;
+  border: 1px solid #8d252c;
+  border-radius: 7px;
+  background: #211015;
+}
+
+.m-radio .mr-important h3 {
+  margin: 10px 0 18px;
+  color: #ff4852;
+  font: 700 19px Arial, sans-serif;
+  text-transform: none;
+}
+
+.m-radio .mr-important ul { margin: 0 0 16px; padding: 0; list-style: none }
+
+.m-radio .mr-important li {
+  color: #d9e4eb;
+  font-size: 16px;
+  line-height: 1.3;
+}
+
+.m-radio .mr-important li:before { content: '✓ ' }
+
+.m-radio .mr-photo {
+  position: relative;
+  height: 175px;
+  margin-bottom: 14px;
+  overflow: hidden;
+  border-radius: 8px;
+  background-position: center 35%;
+  background-size: cover;
+}
+
+.m-radio .mr-photo:after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, #07111bd9, transparent 70%);
+}
+
+/* Terminologie : « terme : définition » ligne à ligne. */
+.m-radio .mr-card .mr-defs b { color: #fff }
+
+.m-radio .mr-dialogues { margin: 4px 0 2px }
+
+.m-radio .mr-dialogue {
+  display: grid;
+  grid-template-columns: 155px 1fr;
+  border-bottom: 1px solid #17384e;
+}
+
+.m-radio .mr-dialogue:last-child { border-bottom: 0 }
+.m-radio .mr-who { padding: 10px; color: #fff; font-weight: 800 }
+.m-radio .mr-who.tn { color: #ff5962 }
+.m-radio .mr-msg { padding: 10px; background: #0b1b28; color: #d9e4eb; line-height: 1.5 }
+.m-radio .mr-msg-full { grid-column: 1 / -1 }
+
+.m-radio .mr-card .mr-formula {
+  color: #fff;
+  font-size: 19px;
+  font-weight: 900;
+  line-height: 1.5;
+}
+
+.m-radio .mr-formula em { color: #5eb5ff; font-style: normal }
+
+.m-radio .mr-corps,
+.m-radio .mr-shortcuts {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin: 4px 0 12px;
+}
+
+.m-radio .mr-corps div {
+  padding: 13px;
+  border: 1px solid #21445b;
+  border-radius: 6px;
+  background: #0b1a26;
+  color: #d9e4eb;
+}
+
+.m-radio .mr-corps b { color: #5fb4ff; font-size: 24px }
+.m-radio .mr-corps small { color: var(--r-muted) }
+
+.m-radio .mr-shortcut {
+  padding: 13px;
+  border: 1px solid #24455a;
+  border-radius: 6px;
+  background: #0b1925;
+  color: #d9e4eb;
+}
+
+.m-radio .mr-shortcut b { color: #63b6fa }
+
+/* Rendus communs (cours.js) dans le ton de la maquette. */
+.m-radio .mr-card .co-etapes { margin: 10px 0 }
+.m-radio .mr-card .co-tablewrap { margin: 10px 0 }
+
+/* Exercices et lecture. */
+.m-radio .mr-card label {
+  margin: 14px 0 6px;
+  color: #c9d8e2;
+  font-size: 12px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.m-radio textarea,
+.m-radio input,
+.m-radio select {
+  border-color: #21445b;
+  border-radius: 6px;
+  background: #07131e;
+  font-family: Arial, sans-serif;
+}
+
+.m-radio .mr-readcard h3 { font-size: 15px }
+
+.m-radio .mr-card .mr-check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  color: #d9e4eb;
+  font-size: 14px;
+  letter-spacing: 0;
+  text-transform: none;
+  cursor: pointer;
+}
+
+.m-radio .mr-check input { width: 18px; height: 18px; margin: 0; accent-color: var(--r-blue) }
+.m-radio .mr-card .mr-readcount { margin: 10px 0 12px; color: var(--r-muted); font-size: 13px }
+
+.m-radio .mr-chapnav { display: flex; flex-wrap: wrap; gap: 8px }
+.m-radio .mr-chapnav .primary { margin-left: auto }
+
+/* ─────────────── Autres étapes du dossier ─────────────── */
+
+.m-radio .stepnav {
+  margin: 4px 0 14px;
+  padding: 14px;
+  border: 1px solid var(--r-line);
+  border-radius: 8px;
+  background: var(--r-panel);
+}
+
+.m-radio .section:not(#s-final) .q {
+  border-color: var(--r-line);
+  border-left: 4px solid var(--r-blue);
+  border-radius: 5px;
+  background: #0a2032;
+}
+
+.m-radio .section:not(#s-final) .q b:first-child,
+.m-radio .section:not(#s-final) .q h4 { font: 700 16px Arial, sans-serif; letter-spacing: 0 }
+
+.m-radio .section:not(#s-final) .warn {
+  border: 1px solid #8d252c;
+  border-radius: 7px;
+  background: #211015;
+}
+
+.m-radio .section:not(#s-final) .card p { color: #d9e4eb; line-height: 1.55 }
+
+/* ─────────────── Téléphone ─────────────── */
+
+@media (max-width: 850px) {
+  .m-radio .mr-hero { height: auto; min-height: 190px; padding: 22px 16px 18px }
+  .m-radio .mr-hero-copy,
+  .m-radio .mr-hero-file { position: relative; left: auto; top: auto; right: auto; bottom: auto }
+  .m-radio .mr-hero-copy h1 { font-size: 28px; line-height: 1.1 }
+  .m-radio .mr-hero-copy p { font-size: 12px; line-height: 1.5 }
+  .m-radio .mr-hero-file { max-width: none; margin-top: 14px; text-align: left }
+  .m-radio .mr-hero:after { font-size: 64px; bottom: -18px }
+
+  .m-radio .mr-layout { grid-template-columns: 1fr; min-height: 0; align-content: start }
+  .m-radio .stepnav { flex-wrap: wrap }
+  .m-radio .stepnav button { flex: 1 1 100%; margin: 0 }
+  .m-radio .mr-side { position: relative; height: auto; border-right: 0; border-bottom: 1px solid var(--r-line) }
+  .m-radio .mr-content { padding: 18px 16px 40px }
+  .m-radio .mr-grid2,
+  .m-radio .mr-corps,
+  .m-radio .mr-shortcuts { grid-template-columns: 1fr }
+  .m-radio .mr-topbar { flex-wrap: wrap }
+  .m-radio .mr-titlebox h2 { font-size: 26px }
+  .m-radio .mr-dialogue { grid-template-columns: 1fr }
+  .m-radio .mr-who { padding-bottom: 0 }
+  .m-radio .mr-card ul { padding-left: 22px }
+}
+
+/* ─────────────── Impression ─────────────── */
+
+/* Seule la fiche finale s'imprime : la grille à deux colonnes s'efface pour
+   qu'elle reparte de la marge zéro, comme avec le gabarit commun. */
+@media print {
+  .m-radio { min-height: 0; background: white; color: #111 }
+  .m-radio .mr-layout { display: block; min-height: 0 }
+  .m-radio .mr-content { max-width: none; padding: 0 }
+}
