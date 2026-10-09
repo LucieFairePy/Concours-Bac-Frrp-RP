@@ -213,7 +213,8 @@ const ROUTE_SPECS = {
   formations: { expect: ['cards'] },
   'formation-negociation': { expect: ['tabs', 'sections'], ...COURSE_STEPS, chapters: true },
   'formation-chef-groupe': { expect: ['tabs', 'sections'], ...COURSE_STEPS, chapters: true },
-  'formation-radio': { expect: ['tabs', 'sections'], ...COURSE_STEPS, chapters: true },
+  // La radio n'a que le cours de l'archive : sommaire et chapitre, sans étapes.
+  'formation-radio': { expect: ['mrNav', 'mrChapter'] },
   'formation-antiterrorisme': { expect: ['tabs', 'sections'], ...COURSE_STEPS, chapters: true },
   'examen-chef-groupe': {
     expect: ['tabs', 'sections'],

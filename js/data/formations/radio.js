@@ -1,4 +1,11 @@
-// Formation Radio BAC — reprise du module « formation-radio » du site V4.
+// Formation Radio BAC — le parcours évalué d'avant (Identité → Cours →
+// Évaluation → Correction → Fiche finale).
+//
+// La page ne l'affiche plus : elle montre le cours de l'archive tel quel
+// (js/data/formations/radio-cours.js). Ce contenu reste pour relire les
+// anciens dossiers radio ouverts depuis l'historique — leur fiche finale
+// cite ces chapitres, exercices et questions — et pour le registre des
+// formations (js/data/formations/index.js).
 //
 // Règle de rédaction imposée par le cahier des charges : complet sur le
 // fond, simple dans la formulation. Chaque notion suit le même chemin —
