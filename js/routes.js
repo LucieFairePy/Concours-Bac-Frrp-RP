@@ -77,7 +77,7 @@ export const ROUTES = {
   },
   actualites: {
     path: 'actualites',
-    nav: 'actualites',
+    nav: 'administration',
     title: 'Actualités',
     load: () => import('./pages/actualites/index.js')
   },

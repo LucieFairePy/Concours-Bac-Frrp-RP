@@ -1,260 +1,227 @@
-/* Pages du portail — Formations, Administration, Gestion des utilisateurs,
-   Paramètres, Actualités. Gabarits repris de la maquette V4 : grandes cartes
-   photo (`.feature`), tuiles chiffrées (`.metric`), panneau (`.contentCard`),
-   tableau encadré (`.table`), grille de formulaire (`.formgrid`). */
+/* Pages du portail — Accueil, Formations, Historique, Administration,
+   Gestion des utilisateurs, Paramètres, Actualités, et la fenêtre modale.
 
-/* ───────────── Bannières propres aux pages du portail ───────────── */
+   Ce sont les règles de style.css de l'archive V4 (BAC75N_SITE_V4), reprises
+   telles quelles, valeur pour valeur. Chaque page du portail est enveloppée
+   dans `.page`, comme dans l'archive, et toutes les règles ci-dessous sont
+   rangées sous `.page` : elles ne touchent pas les modules plein écran,
+   qui ont leur propre feuille (css/pages/<module>.css).
 
-@media screen {
-  .hero[data-img="logo"] {
-    background-image: url('../../assets/bac75n/01_LOGO_BAC75N_PRINCIPAL.png');
-    background-position: center;
-  }
+   Le socle (base.css, components.css) habille les éléments pour les
+   modules. Dans `.page`, on le retire d'abord (bloc « Remise à zéro ») pour
+   repartir des valeurs du navigateur, comme l'archive. */
+
+/* ───────────────────────── Remise à zéro ───────────────────────── */
+
+.page :is(h1, h2, h3, h4, button, label, input, textarea, select, table, th, td) {
+  all: revert;
+  box-sizing: border-box;
 }
 
-/* ───────────── Grandes cartes photo — `.cards2` / `.feature` ───────────── */
-
-.pfeatures {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
-}
-
-.pfeatures.three { grid-template-columns: repeat(3, 1fr) }
-
-.pfeature {
-  position: relative;
-  display: block;
-  height: 240px;
+/* La remise à zéro ne doit pas rendre visible une étiquette réservée aux
+   lecteurs d'écran. */
+.page .sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
   overflow: hidden;
-  border: 1px solid #1b5e8a;
-  border-radius: 5px;
-  background-color: var(--panel);
-  background-size: cover;
-  background-position: center;
-  color: var(--ink);
-  text-decoration: none;
-  transition: border-color .18s, filter .18s;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
 }
 
-.pfeature:before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(0deg, #03101df4, #03101d25);
+.page {
+  padding: 0 12px 18px;
+  color: #f5f8fb;
+  font: 16px/normal Inter, Arial, sans-serif;
 }
 
-.pfeature:hover { border-color: var(--blue); filter: brightness(1.08) }
+.page *,
+.page *:before,
+.page *:after { box-sizing: border-box }
 
-.pfeature-body {
-  position: absolute;
-  left: 18px;
-  right: 18px;
-  bottom: 17px;
+/* Le socle donne à `.hero`, `.status`, `.score` et `.sig` un habit de
+   module : on le neutralise avant de poser celui de l'archive. */
+.page .hero { display: block; padding: 0; border: 0; border-radius: 0; background-color: transparent }
+.page .hero:before,
+.page .hero:after { content: none }
+.page .status { display: inline; border-radius: 12px; letter-spacing: 0 }
+.page .score { font-size: 11px; font-weight: 400 }
+.page .sig { font: inherit }
+
+/* ───────────────────────── Accueil : héros ───────────────────────── */
+
+.page .hero {
+  height: 335px;
+  margin: 0 -12px 0;
+  position: relative;
+  background: linear-gradient(90deg, #02070df5 0%, #02070da8 29%, #02070d30 65%), var(--bg) center/cover;
+  border-bottom: 1px solid #17364d;
+  overflow: hidden;
 }
+.page .hero .copy { position: absolute; left: 28px; bottom: 26px }
+.page .hero .eyebrow { font: 500 16px 'Barlow Condensed' }
+.page .hero h1 { font: 800 51px/.87 'Barlow Condensed'; margin: 4px 0 10px; letter-spacing: .4px }
+.page .tri { width: 205px; height: 7px; background: linear-gradient(90deg, #168cf0 33%, #fff 33% 66%, #ed1d39 66%) }
+.page .hero h2 { font: 500 24px 'Barlow Condensed'; margin: 10px 0 32px }
+.page .hero p { font: 600 15px/1.2 'Barlow Condensed'; letter-spacing: .4px }
+.page .weather { position: absolute; right: 20px; top: 20px; width: 160px; background: #06121ded; border: 1px solid #24445d; padding: 13px; border-radius: 5px; text-align: center }
+.page .weather b { display: block; font: 33px 'Barlow Condensed' }
+.page .weather span { display: block; border-top: 1px solid #294458; margin-top: 7px; padding-top: 7px; font: 13px 'Barlow Condensed' }
 
-.pfeature h3 {
-  margin: 5px 0;
-  font: 800 31px/.9 var(--font-title);
-  letter-spacing: 0;
-  text-transform: uppercase;
-}
+/* ───────────────────────── Accueil : cartes modules ───────────────────────── */
 
-.pfeature p { margin: 8px 0 0; color: #b5c4cf; font-size: 11px; line-height: 1.45 }
+.page .modules { display: grid; grid-template-columns: repeat(4, 1fr); gap: 9px; margin-top: -1px }
+.page .module { display: block; color: inherit; text-decoration: none; height: 176px; position: relative; border: 1px solid #168ed3; background: linear-gradient(0deg, #04101df5, #04101d20), var(--img) center/cover; border-radius: 4px; overflow: hidden; cursor: pointer; transition: .2s }
+.page .module.primary { border-color: #ee1834; box-shadow: 0 0 12px #e7193455 }
+.page .module:hover { transform: translateY(-3px); filter: brightness(1.08) }
+.page .module .label { position: absolute; left: 15px; right: 15px; bottom: 13px; display: flex; align-items: end; gap: 12px }
+.page .module .icon { font-size: 30px }
+.page .module strong { font: 800 27px/.87 'Barlow Condensed'; text-shadow: 0 2px 6px #000 }
+.page .module .arrow { margin-left: auto; width: 34px; height: 34px; border: 1px solid #fff; border-radius: 50%; display: grid; place-items: center; font-size: 22px }
 
-.pfeature-more {
-  position: absolute;
-  top: 14px;
-  right: 16px;
-  padding: 3px 8px;
-  border-radius: 12px;
-  background: #02070dcc;
-  color: #b5c4cf;
-  font: 700 10px var(--font-ui);
-  letter-spacing: .4px;
-  text-transform: uppercase;
-}
+/* ───────────────────────── Accueil : tableau de bord ───────────────────────── */
 
-.pfeature-more:empty { display: none }
+.page .dashboard { display: grid; grid-template-columns: 1.25fr 1.15fr .85fr 1fr; gap: 9px; margin-top: 10px }
+.page .panel { background: linear-gradient(145deg, #071522, #050d15); border: 1px solid #183349; border-radius: 5px; padding: 11px }
+.page .panel h3 { font: 700 16px 'Barlow Condensed'; margin: 0 0 8px; padding-bottom: 7px; border-bottom: 1px solid #173247 }
+.page .panel h3 a { float: right; color: #12a8ff; font-weight: 500; text-decoration: none }
+.page .news-refresh { float: right; color: #6f8798; font: 500 9px Inter; letter-spacing: .4px }
+.page .newsitem { display: flex; gap: 9px; padding: 5px 0; border-bottom: 1px solid #142c3e; cursor: pointer; color: inherit; text-decoration: none }
+.page .newsitem img { width: 105px; height: 50px; object-fit: cover }
+.page .newsitem p { margin: 0; font: 14px 'Barlow Condensed' }
+.page .newsitem small { display: block; color: #7890a2 }
+.page .caselink { display: block; color: inherit; text-decoration: none }
+.page .case { display: grid; grid-template-columns: 95px 1fr 42px; align-items: center; gap: 8px; margin: 12px 0 4px; font: 14px 'Barlow Condensed' }
+.page .badge { padding: 7px; background: #0b8de7; font: 700 12px 'Barlow Condensed' }
+.page .badge.red { background: #ee1634 }
+.page .badge.light { background: #c8d5df; color: #10202b }
+.page .bar { height: 6px; background: #243848; border-radius: 5px; overflow: hidden }
+.page .bar i { display: block; height: 100% ; background: #19a9ff }
+.page .quick button { display: block; width: 100%; background: none; border: 0; color: #c9d7e1; text-align: left; padding: 9px 5px; font: 15px 'Barlow Condensed'; cursor: pointer }
+.page .quick button:hover { background: #0a2234 }
+.page .staffimg { height: 70px; background: linear-gradient(#06111a40, #06111a88), url('../../assets/bac75n/05_HOME_CARD_FORMATION_CHEF_GROUPE.jpg') center/cover }
+.page .staff p { font: 15px 'Barlow Condensed'; padding: 4px 7px; margin: 0; border-bottom: 1px solid #20394c }
+.page .staff p b { float: right }
 
-.ptag {
-  display: inline-block;
-  padding: 4px 8px;
-  border-radius: 12px;
-  background: #103853;
-  color: #6ccaff;
-  font: 700 10px var(--font-ui);
-  letter-spacing: .3px;
-  text-transform: uppercase;
-}
+/* ───────────────────────── Bannière de section ───────────────────────── */
 
-/* Lien discret sous la grille des formations. */
-.pfoot {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px 18px;
-  margin: 12px 2px 0;
-  color: #6f8798;
-  font-size: 11px;
-}
+.page .sectionHero { height: 245px; margin: 0 -12px 12px; position: relative; background: linear-gradient(90deg, #02070df3, #02070d82), var(--bg) center/cover; border-bottom: 1px solid #1a3b52 }
+.page .sectionHero > div { position: absolute; left: 28px; bottom: 27px }
+.page .sectionHero small { color: #1ab0ff; font: 700 14px 'Barlow Condensed'; letter-spacing: 1px }
+.page .sectionHero h1 { font: 800 45px/.9 'Barlow Condensed'; margin: 5px 0 }
+.page .sectionHero p { max-width: 650px; color: #b0c0cc; font-size: 12px }
 
-.pfoot a { color: #56bfff; text-decoration: none }
-.pfoot a:hover { text-decoration: underline }
+/* ───────────────────────── Commandes, cartes, champs ───────────────────────── */
 
-/* ───────────── Tuiles chiffrées — `.grid4` / `.metric` ───────────── */
+.page .actions { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0 }
+.page .btn { display: inline-block; background: #0b6da8; border: 1px solid #168bd0; color: white; padding: 10px 14px; border-radius: 4px; font-weight: 700; cursor: pointer; text-decoration: none }
+.page a.btn { font: 700 13.333px Arial, sans-serif }
+.page .btn.red { background: #c7102c; border-color: #f01d3a }
+.page .btn.dark { background: #071522; border-color: #28485e }
+.page .btn:hover { filter: brightness(1.14) }
+.page .btn:disabled { opacity: .55; cursor: default; filter: none }
+.page .grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 9px }
+.page .metric,
+.page .contentCard { background: #071522; border: 1px solid #18364b; border-radius: 5px; padding: 15px }
+.page .metric b { font: 800 28px 'Barlow Condensed'; display: block }
+.page .metric small { color: #8299aa }
+.page .formgrid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 9px }
+.page .formgrid.three { grid-template-columns: repeat(3, 1fr) }
+.page .field label { display: block; color: #8ca3b4; font-size: 10px; font-weight: 700; margin-bottom: 4px }
+.page .field input,
+.page .field textarea,
+.page .field select { width: 100%; background: #05111c; border: 1px solid #29475c; color: white; padding: 10px; border-radius: 4px }
+.page .field textarea { min-height: 88px }
+.page .question { background: #071522; border: 1px solid #19384e; border-radius: 5px; padding: 13px; margin: 8px 0 }
+.page .question h4 { font: 700 19px 'Barlow Condensed'; margin: 0 0 6px }
+.page .remember { padding: 13px; margin: 12px 0; background: #dcebf4; border-left: 4px solid #087ab9; color: #12202b }
 
-.pmetrics {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 9px;
-}
+/* ───────────────────────── Tableaux ───────────────────────── */
 
-.pmetric {
-  padding: 15px;
-  border: 1px solid var(--surface-line);
-  border-radius: 5px;
-  background: var(--surface);
-}
+.page .table { overflow: auto; border: 1px solid #18354a; border-radius: 5px; background: #071522 }
+.page table { border-collapse: collapse; width: 100%; font-size: 12px }
+.page th,
+.page td { padding: 11px; border-bottom: 1px solid #173246; text-align: left }
+.page th { font-size: 10px; color: #8198aa }
+.page tbody tr { cursor: pointer }
+.page tbody tr:hover { background: #0b2233 }
+.page tbody.static tr { cursor: default }
+.page tbody.static tr:hover { background: none }
+.page td select { background: #05111c; border: 1px solid #29475c; color: white; padding: 5px 7px; border-radius: 4px; font-size: 12px }
+.page .status { padding: 4px 8px; border-radius: 12px; background: #123b2a; color: #76dda3; font-size: 10px; font-weight: 700 }
+.page .status.warn { background: #46202a; color: #ff91a0 }
+.page .status.info { background: #103853; color: #6ccaff }
+.page .link { background: none; border: 0; padding: 0; color: #ff91a0; font: 700 10px Inter, Arial, sans-serif; cursor: pointer }
 
-.pmetric b { display: block; font: 800 28px var(--font-title) }
-.pmetric small { color: #8299aa; font-size: 13px }
-.pmetric.alert b { color: #ff91a0 }
+/* ───────────────────────── Formations ───────────────────────── */
 
-/* ───────────── Panneau — `.contentCard` ───────────── */
+.page .cards2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px }
+.page .feature { display: block; color: inherit; text-decoration: none; height: 240px; background: linear-gradient(0deg, #03101df4, #03101d25), var(--img) center/cover; border: 1px solid #1b5e8a; border-radius: 5px; position: relative; cursor: pointer }
+.page .feature > div { position: absolute; left: 18px; right: 18px; bottom: 17px }
+.page .feature h3 { font: 800 31px/.9 'Barlow Condensed'; margin: 5px 0 }
+.page .feature p { font-size: 11px; color: #b5c4cf }
+.page .decision { border: 1px solid #28516c; background: #071b2a; padding: 15px; margin: 10px 0 }
+.page .decision strong { font: 800 28px 'Barlow Condensed' }
+.page .hint { color: #6f8798; font-size: 10px }
+.page .tag { display: inline-block; background: #103853; color: #6ccaff; border-radius: 12px; padding: 4px 8px; font-size: 10px; font-weight: 700 }
 
-.pcontent {
-  margin-top: 10px;
-  padding: 15px;
-  border: 1px solid var(--surface-line);
-  border-radius: 5px;
-  background: var(--surface);
-}
+/* ───────────────────────── Historique ───────────────────────── */
 
-.pcontent h3 {
-  margin: 4px 0 12px;
-  font: 800 19px var(--font-title);
-  letter-spacing: .3px;
-  text-transform: uppercase;
-}
+.page .history-home { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 12px 0 }
+.page .history-family { min-height: 128px; background: linear-gradient(145deg, #091b29, #06111b); border: 1px solid #21465f; color: white; border-radius: 6px; padding: 18px; text-align: left; display: grid; grid-template-columns: 58px 1fr 30px; align-items: center; gap: 14px; cursor: pointer }
+.page .history-family:hover { border-color: #0b9ff5; background: #0a2030 }
+.page .history-family > span { font: 800 32px 'Barlow Condensed'; color: #0b9ff5 }
+.page .history-family b { display: block; font: 800 27px 'Barlow Condensed' }
+.page .history-family small { display: block; color: #8ca2b2; margin-top: 4px }
+.page .history-family i { font-style: normal; font-size: 28px }
+.page .history-head { display: flex; align-items: center; gap: 14px; margin: 16px 0 10px }
+.page .history-head h2 { font: 800 30px 'Barlow Condensed'; margin: 0 }
+.page .history-head small { color: #8197a8 }
+.page .history-subgrid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px }
+.page .history-sub { height: 190px; position: relative; border: 1px solid #20506e; border-radius: 6px; overflow: hidden; color: white; text-align: left; cursor: pointer; background: linear-gradient(0deg, #03101df5, #03101d55), var(--img) center/cover }
+.page .history-sub:hover { border-color: #0b9ff5; filter: brightness(1.08) }
+.page .history-sub > div { position: absolute; left: 18px; right: 18px; bottom: 16px }
+.page .history-sub b { display: block; font: 800 27px 'Barlow Condensed' }
+.page .history-sub small { display: block; color: #c2ced7; max-width: 460px; margin: 3px 0 9px }
+.page .history-sub span { color: #56bfff; font: 700 11px Inter }
+.page .emptyhist { text-align: center; color: #8197a8; padding: 30px !important }
 
-.pjournal p { margin: 0 0 10px; font-size: 14px }
-.pjournal p:last-child { margin-bottom: 0 }
-.pjournal .mut { font-size: 12px }
+/* ───────────────────────── Fenêtre modale ───────────────────────── */
 
-/* ───────────── Tableau encadré — `.table` ───────────── */
+.page.pmback { position: fixed; inset: 0; z-index: 30; display: grid; place-items: center; padding: 20px; background: #000c }
+.page .modalbox { width: min(860px, 95vw); max-height: 90vh; overflow: auto; background: #071522; border: 1px solid #315a76; border-radius: 6px; padding: 22px; position: relative }
+.page .x { position: absolute; right: 10px; top: 7px; background: none; border: 0; color: white; font-size: 28px; cursor: pointer }
 
-.ptable {
-  overflow: auto;
-  border: 1px solid #18354a;
-  border-radius: 5px;
-  background: var(--surface);
-}
+/* Bandeaux d'état (enregistrement, erreur) posés par les pages. */
+.page .banner { margin: 10px 0; padding: 10px 13px; border: 1px solid #28485e; border-radius: 4px; background: #05111c; color: #c9d7e1; font-size: 12px }
+.page .banner.ok { border-color: #1f7a59; background: #0c2a20; color: #76dda3 }
+.page .banner.error { border-color: #7a3038; background: #2a1218; color: #ff91a0 }
+.page .banner input { width: 100%; margin: 8px 0; background: #05111c; border: 1px solid #29475c; color: white; padding: 10px; border-radius: 4px; font: 15px monospace }
 
-.ptable table { font-size: 12px }
-
-.ptable th,
-.ptable td {
-  padding: 11px;
-  border-bottom: 1px solid #173246;
-  text-align: left;
-  vertical-align: middle;
-}
-
-.ptable th {
-  color: #8198aa;
-  font: 700 10px var(--font-ui);
-  letter-spacing: .3px;
-  text-transform: uppercase;
-}
-
-.ptable tr:last-child td { border-bottom: 0 }
-.ptable select { max-width: 260px; padding: 6px 8px; font-size: 12px }
-.ptable .row-actions button { padding: 6px 10px; font-size: 11px }
-
-.pstatus {
-  display: inline-block;
-  padding: 4px 8px;
-  border-radius: 12px;
-  background: #123b2a;
-  color: #76dda3;
-  font: 700 10px var(--font-ui);
-  letter-spacing: .3px;
-}
-
-.pstatus.self { background: #103853; color: #6ccaff }
-
-/* ───────────── Formulaire — `.formgrid` / `.field` ───────────── */
-
-.pform {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 9px;
-}
-
-.pform.three { grid-template-columns: repeat(3, 1fr) }
-.pform .wide { grid-column: 1 / -1 }
-
-.pform label,
-.pcontent .row label {
-  margin: 0 0 4px;
-  color: #8ca3b4;
-  font: 700 10px var(--font-ui);
-  letter-spacing: .3px;
-  text-transform: uppercase;
-}
-
-.pform input,
-.pform select,
-.pform textarea {
-  padding: 10px;
-  border-color: var(--field-line);
-  border-radius: 4px;
-  background: var(--field);
-}
-
-.pactions { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 }
-
-.pactions button,
-.pcontent > button {
-  border-radius: 4px;
-}
-
-.phint { margin: 6px 0 0; color: #6f8798; font-size: 10px }
-
-/* Les cartes historiques (.card) des pages du portail prennent l'allure du
-   panneau de la maquette. */
-.pportal .card { margin: 10px 0 0 }
-.pportal .card h2 { font-size: 19px; margin: 4px 0 12px }
-.pportal .card button { border-radius: 4px }
-
-/* ───────────── Actualité ouverte ───────────── */
-
-.pnews-banner {
-  height: 240px;
-  margin-bottom: 14px;
-  border-radius: 5px;
-  background-color: var(--panel);
-  background-size: cover;
-  background-position: center;
-}
-
-.pcontent h3.pnews-title { margin: 8px 0 4px; font-size: 30px; line-height: 1 }
-.pnews-body { white-space: pre-line; line-height: 1.6 }
-
-/* ───────────── Adaptatif — mêmes paliers que la maquette ───────────── */
+/* ───────────────────────── Adaptatif (archive) ───────────────────────── */
 
 @media (max-width: 1100px) {
-  .pmetrics { grid-template-columns: repeat(2, 1fr) }
-  .pfeatures.three { grid-template-columns: repeat(2, 1fr) }
+  .page .modules,
+  .page .dashboard,
+  .page .grid4 { grid-template-columns: repeat(2, 1fr) }
+}
+
+@media (max-width: 900px) {
+  .page .history-home,
+  .page .history-subgrid { grid-template-columns: 1fr }
+  .page .news-refresh { display: none }
 }
 
 @media (max-width: 760px) {
-  .pfeatures,
-  .pfeatures.three,
-  .pmetrics,
-  .pform,
-  .pform.three { grid-template-columns: 1fr }
-
-  .pfeature { height: 210px }
-  .pfeature h3 { font-size: 27px }
+  .page .modules,
+  .page .dashboard,
+  .page .grid4,
+  .page .cards2 { grid-template-columns: 1fr }
+  .page .formgrid,
+  .page .formgrid.three { grid-template-columns: 1fr }
+  .page .hero h1 { font-size: 39px }
+  .page .weather { display: none }
 }

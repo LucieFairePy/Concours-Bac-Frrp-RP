@@ -1,19 +1,24 @@
-// Navigation du portail — documentation technique V4 §6.1 et §6.2.
+// Navigation du portail — la barre latérale et la nav de l'en-tête de
+// l'archive V4 (index.html), entrée pour entrée, dans le même ordre.
 //
-// Une seule liste pour la barre latérale et la nav de l'en-tête. `need`
-// est la permission requise : un rôle qui ne l'a pas ne voit pas l'entrée.
-// `sub` liste les sous-entrées, affichées sous leur section.
+// Une seule liste pour les deux. `need` est la permission requise : un rôle
+// qui ne l'a pas ne voit pas l'entrée. `sub` liste les sous-entrées,
+// affichées en retrait sous leur section (`.navsub` de l'archive).
+//
+// L'entrée « Intervention — Bientôt » de l'archive est volontairement
+// absente. Les Actualités n'ont pas d'entrée : l'archive n'en a pas, elles
+// s'ouvrent depuis l'accueil et l'Administration.
 
 import { href } from '../routes.js';
 import * as auth from '../core/auth.js';
 
 export const NAV = [
-  { id: 'accueil', label: 'Accueil', short: 'Accueil', icon: '⌂', route: 'accueil' },
-  { id: 'concours', label: 'Concours d’intégration BAC', short: 'Concours BAC', icon: '▣', route: 'concours' },
+  { id: 'accueil', label: 'Accueil', short: 'ACCUEIL', icon: '⌂', route: 'accueil' },
+  { id: 'concours', label: 'Concours d’intégration BAC', short: 'CONCOURS BAC', icon: '▣', route: 'concours' },
   {
     id: 'formations',
     label: 'Formations BAC',
-    short: 'Formations',
+    short: 'FORMATIONS',
     icon: '▤',
     route: 'formations',
     sub: [
@@ -23,22 +28,14 @@ export const NAV = [
       { id: 'antiterrorisme', label: 'Antiterrorisme', route: 'formation-antiterrorisme' }
     ]
   },
-  {
-    id: 'examens',
-    label: 'Examens',
-    short: 'Examens',
-    icon: '☑',
-    route: 'examen-chef-groupe',
-    sub: [{ id: 'cdg', label: 'Chef de Groupe', route: 'examen-chef-groupe' }]
-  },
-  { id: 'historique', label: 'Historique', short: 'Historique', icon: '◷', route: 'historique' },
-  { id: 'actualites', label: 'Actualités', short: 'Actualités', icon: '◈', route: 'actualites' },
-  { id: 'administration', label: 'Administration', icon: '⚐', route: 'administration', need: 'accounts' },
-  { id: 'utilisateurs', label: 'Gestion des utilisateurs', icon: '⚇', route: 'utilisateurs', need: 'accounts' },
+  { id: 'examens', label: 'Examens', short: 'EXAMENS', icon: '☑', route: 'examen-chef-groupe' },
+  { id: 'historique', label: 'Historique', short: 'HISTORIQUE', icon: '◴', route: 'historique' },
+  { id: 'administration', label: 'Administration', icon: '♟', route: 'administration', need: 'accounts' },
+  { id: 'utilisateurs', label: 'Gestion des utilisateurs', icon: '♙', route: 'utilisateurs', need: 'accounts' },
   { id: 'parametres', label: 'Paramètres du site', icon: '⚙', route: 'parametres' }
 ];
 
-/** Les entrées reprises par la nav horizontale de l'en-tête (§6.2). */
+/** Les entrées reprises par la nav horizontale de l'en-tête. */
 export const HEADER_NAV = ['accueil', 'concours', 'formations', 'examens', 'historique'];
 
 export function visibleNav() {

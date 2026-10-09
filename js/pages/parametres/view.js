@@ -1,139 +1,72 @@
-// Page Paramètres — documentation technique V4 §4.1, §13 et §17.
+// Page Paramètres — affichage. La carte de l'archive V4 (app.js,
+// `settings()`) : Directeur BAC et son grade, Directeur adjoint et son
+// grade, ENREGISTRER, et la mention de réserve.
 //
-// Deux réglages partagés par tout le portail : la direction BAC, reprise
-// dans les signatures des fiches finales, et les seuils de suggestion
-// (§8.6 et §11.3), qui doivent vivre dans une configuration et non en dur
-// dans les modules de notation.
+// Le portail garde trois réglages que l'archive n'avait pas — seuils de
+// suggestion, barème physique, et la session de l'examinateur. Ils
+// s'ouvrent dans la fenêtre modale depuis la rangée de boutons sous la
+// carte, pour que la page garde la forme de l'archive.
 //
-// Les accès et les rôles ont leur propre page (Gestion des utilisateurs) ; ils ne
-// sont plus mêlés aux réglages de direction.
+// Seuls les rôles qui portent le droit « paramètres » peuvent modifier :
+// pour les autres, les champs sont grisés et les boutons absents.
 
 import { byId, setHTML, esc } from '../../core/dom.js';
 import { state } from '../../core/state.js';
 import * as auth from '../../core/auth.js';
 import * as thresholds from '../../core/thresholds.js';
 import { ROLES } from '../../core/roles.js';
-import { href } from '../../routes.js';
 
-// Dans l'ordre de la maquette : le nom, puis le grade, sur une ligne.
+// Dans l'ordre de l'archive : le nom, puis le grade, sur une ligne.
 const FIELDS = [
-  ['dn', 'Directeur BAC'],
-  ['dg', 'Grade'],
-  ['an', 'Directeur adjoint BAC'],
-  ['ag', 'Grade']
+  ['dn', 'DIRECTEUR BAC'],
+  ['dg', 'GRADE'],
+  ['an', 'DIRECTEUR ADJOINT BAC'],
+  ['ag', 'GRADE']
 ];
 
 const THRESHOLD_FIELDS = [
-  ['bacRetenu', 'Concours — RETENU à partir de', 'bac', 'retenu'],
-  ['bacReserve', 'Concours — réserve à partir de', 'bac', 'reserve'],
-  ['cdgQualifie', 'Chef de Groupe — QUALIFIÉ à partir de', 'cdg', 'qualifie'],
-  ['cdgReserve', 'Chef de Groupe — réserve à partir de', 'cdg', 'reserve'],
-  ['cdgAjourne', 'Chef de Groupe — AJOURNÉ à partir de', 'cdg', 'ajourne']
+  ['bacRetenu', 'CONCOURS — RETENU À PARTIR DE', 'bac', 'retenu'],
+  ['bacReserve', 'CONCOURS — RÉSERVE À PARTIR DE', 'bac', 'reserve'],
+  ['cdgQualifie', 'CHEF DE GROUPE — QUALIFIÉ À PARTIR DE', 'cdg', 'qualifie'],
+  ['cdgReserve', 'CHEF DE GROUPE — RÉSERVE À PARTIR DE', 'cdg', 'reserve'],
+  ['cdgAjourne', 'CHEF DE GROUPE — AJOURNÉ À PARTIR DE', 'cdg', 'ajourne']
 ];
 
 function commandCard() {
   const allowed = auth.can('settings');
-  const dis = allowed ? '' : 'disabled';
+  const dis = allowed ? '' : ' disabled';
 
-  const inputs = FIELDS.map(([key, label]) => `
-    <div>
-      <label for="set-${key}">${label}</label>
-      <input id="set-${key}" ${dis} value="${esc(state.settings[key] || '')}">
-    </div>`).join('');
+  const inputs = FIELDS.map(([key, label]) => `<div class="field"><label for="set-${key}">${label}</label><input id="set-${key}"${dis} value="${esc(state.settings[key] || '')}"></div>`).join('');
 
-  return `
-    <div class="pcontent">
-      <div class="pform">${inputs}</div>
-      ${allowed
-        ? '<div class="pactions"><button class="primary" onclick="app.saveSettings()">Enregistrer</button></div>'
-        : `<p class="mut">Ton rôle : <b>${esc(auth.describeRole())}</b>.</p>`}
-      <div id="settingsStatus"></div>
-      <p class="phint">
-        Modification réservée à l’administrateur, au Directeur BAC et à son adjoint.
-        Ces valeurs pré-remplissent les nouveaux dossiers et signent les fiches finales
-        de tous les modules ; un dossier déjà clôturé garde la direction qui a signé
-        au moment de sa clôture (§13).
-      </p>
-    </div>`;
+  return `<div class="contentCard"><div class="formgrid">${inputs}</div><div class="actions">${allowed ? '<button class="btn" onclick="app.saveSettings()">ENREGISTRER</button>' : ''}<button class="btn dark" onclick="app.openThresholds()">SEUILS DE SUGGESTION</button><button class="btn dark" onclick="app.openPhysical()">BARÈME PHYSIQUE</button><button class="btn dark" onclick="app.openSession()">MA SESSION</button></div><div id="settingsStatus"></div><p class="hint">Version finale : modification réservée au Directeur BAC, Directeur adjoint et créateur/administrateur du site.</p></div>`;
 }
 
-function thresholdCard() {
+/** Seuils de suggestion (fenêtre modale). */
+export function thresholdView() {
   const allowed = auth.can('settings');
-  const dis = allowed ? '' : 'disabled';
+  const dis = allowed ? '' : ' disabled';
   const current = thresholds.current();
 
-  const inputs = THRESHOLD_FIELDS.map(([key, label, module, field]) => `
-    <div class="c4">
-      <label for="thr-${key}">${label}</label>
-      <input id="thr-${key}" type="number" min="0" max="1000" step="10" ${dis}
-             value="${esc(current[module][field])}">
-    </div>`).join('');
+  const inputs = THRESHOLD_FIELDS.map(([key, label, module, field]) => `<div class="field"><label for="thr-${key}">${label}</label><input id="thr-${key}" type="number" min="0" max="1000" step="10"${dis} value="${esc(current[module][field])}"></div>`).join('');
 
-  return `
-    <div class="card">
-      <h2>Seuils de suggestion</h2>
-      <p class="mut">
-        Exprimés sur 1000. Ils ne décident rien : ils règlent la <b>suggestion</b>
-        affichée à l’examinateur, qui reste libre de s’en écarter (§12). Les règles
-        bloquantes du concours — cible otage touchée, triche, abandon injustifié —
-        passent avant ces seuils et ne se règlent pas ici.
-      </p>
-      <div class="row">${inputs}</div>
-      ${allowed
-        ? `<button class="primary" onclick="app.saveThresholds()">Enregistrer les seuils</button>
-           <button onclick="app.resetThresholds()">Revenir aux valeurs du kit</button>`
-        : '<p class="mut">Modification réservée aux rôles portant le droit « paramètres ».</p>'}
-      <div id="thresholdStatus"></div>
-    </div>`;
+  return `<h2>SEUILS DE SUGGESTION</h2><p class="hint">Exprimés sur 1000. Ils ne décident rien : ils règlent la suggestion affichée à l’examinateur, qui reste libre de s’en écarter.</p><div class="formgrid">${inputs}</div>${allowed ? '<div class="actions"><button class="btn" onclick="app.saveThresholds()">ENREGISTRER LES SEUILS</button><button class="btn dark" onclick="app.resetThresholds()">REVENIR AUX VALEURS DU KIT</button></div>' : ''}<div id="thresholdStatus"></div>`;
 }
 
-/** §8.4 — le barème physique se règle ici, pas dans le code. */
-function physicalCard() {
+/** Barème physique (fenêtre modale). */
+export function physicalView() {
   const allowed = auth.can('settings');
-  const dis = allowed ? '' : 'disabled';
+  const dis = allowed ? '' : ' disabled';
   const bareme = thresholds.physical();
 
   const rows = thresholds.PHYSICAL_MEASURES.map(measure => {
     const fields = thresholds.PHYSICAL_STEPS.map(step => {
       const key = thresholds.physicalKey(measure.id, step);
-      return `<td>
-        <label class="sr-only" for="phy-${key}">${esc(measure.label)} — palier ${step}</label>
-        <input id="phy-${key}" type="number" min="0" ${dis}
-               value="${esc(bareme[measure.id][step])}">
-      </td>`;
+      return `<td class="field"><label class="sr-only" for="phy-${key}">${esc(measure.label)} — palier ${step}</label><input id="phy-${key}" type="number" min="0"${dis} value="${esc(bareme[measure.id][step])}"></td>`;
     }).join('');
-
-    const points = bareme[measure.id].points;
-
-    return `<tr>
-      <th>${esc(measure.label)} <span class="mut">(${esc(measure.unit)})</span></th>
-      ${fields}
-      <td class="mut">${points.join(' / ')} pts</td>
-    </tr>`;
+    return `<tr><td><b>${esc(measure.label)}</b> <span class="hint">(${esc(measure.unit)})</span></td>${fields}<td>${bareme[measure.id].points.join(' / ')} pts</td></tr>`;
   }).join('');
 
-  return `
-    <div class="card">
-      <h2>Barème physique et cognitif</h2>
-      <p class="mut">
-        Les trois paliers de chaque mesure, sur les 200 points de l’épreuve.
-        Référence du kit : 1200 m (trois tours de 400 m) après un tour
-        d’échauffement, 30 pompes, 50 abdos, 20 jumping jacks. Un temps se lit
-        à l’envers d’un nombre de répétitions : pour le 1200 m, « fort » est le
-        temps le plus court.
-      </p>
-      <div class="htable-wrap">
-        <table class="htable">
-          <tr><th>Mesure</th><th>Fort</th><th>Bon</th><th>Base</th><th>Points</th></tr>
-          ${rows}
-        </table>
-      </div>
-      ${allowed
-        ? `<button class="primary" onclick="app.savePhysical()">Enregistrer le barème</button>
-           <button onclick="app.resetPhysical()">Revenir aux valeurs du kit</button>`
-        : '<p class="mut">Modification réservée aux rôles portant le droit « paramètres ».</p>'}
-      <div id="physicalStatus"></div>
-    </div>`;
+  return `<h2>BARÈME PHYSIQUE ET COGNITIF</h2><p class="hint">Les trois paliers de chaque mesure, sur les 200 points de l’épreuve. Pour un temps, « fort » est le temps le plus court.</p><div class="table"><table><thead><tr><th>MESURE</th><th>FORT</th><th>BON</th><th>BASE</th><th>POINTS</th></tr></thead><tbody class="static">${rows}</tbody></table></div>${allowed ? '<div class="actions"><button class="btn" onclick="app.savePhysical()">ENREGISTRER LE BARÈME</button><button class="btn dark" onclick="app.resetPhysical()">REVENIR AUX VALEURS DU KIT</button></div>' : ''}<div id="physicalStatus"></div>`;
 }
 
 function expiryLabel() {
@@ -149,43 +82,26 @@ function expiryLabel() {
   return `${when.toLocaleString('fr-FR', { dateStyle: 'short', timeStyle: 'short' })} (dans ${remaining})`;
 }
 
-function permissionList() {
-  const mine = ROLES[auth.role()] || ROLES.lecture;
-  return mine.can.map(item => `<code>${esc(item)}</code>`).join(' ');
-}
-
-function sessionCard() {
+/** La session de l'examinateur (fenêtre modale). */
+export function sessionView() {
   const session = auth.current();
+  const mine = ROLES[auth.role()] || ROLES.lecture;
 
-  return `
-    <div class="card">
-      <h2>Mon profil</h2>
-      <div class="ptable"><table>
-        <tr><th>Nom</th><td>${esc(session ? session.name : '—')}</td></tr>
-        <tr><th>Grade</th><td>${esc(session && session.grade ? session.grade : '—')}</td></tr>
-        <tr><th>Fonction BAC</th><td>${esc(auth.describeRole())}</td></tr>
-        <tr><th>Identifiant</th><td>${esc(session ? session.login : '—')}</td></tr>
-        <tr><th>Permissions</th><td>${permissionList()}</td></tr>
-        <tr><th>Session valable jusqu’à</th><td>${esc(expiryLabel())}</td></tr>
-        <tr><th>Mémorisée sur cet appareil</th><td>${auth.persistent() ? 'oui' : 'non — onglet seulement'}</td></tr>
-      </table></div>
-      <div class="pactions">
-        ${auth.can('accounts')
-          ? `<a class="pnav-item" href="${href('utilisateurs')}">Gérer les utilisateurs →</a>
-             <a class="pnav-item" href="${href('administration')}">Administration →</a>`
-          : ''}
-        <button class="danger" onclick="portal.signOut()">Se déconnecter</button>
-      </div>
-    </div>`;
+  const facts = [
+    ['NOM', session ? session.name : '—'],
+    ['GRADE', session && session.grade ? session.grade : '—'],
+    ['RÔLE SITE', auth.describeRole()],
+    ['IDENTIFIANT', session ? session.login : '—'],
+    ['PERMISSIONS', mine.can.join(' · ')],
+    ['SESSION VALABLE JUSQU’À', expiryLabel()],
+    ['MÉMORISÉE SUR CET APPAREIL', auth.persistent() ? 'oui' : 'non — onglet seulement']
+  ].map(([label, value]) => `<tr><th>${label}</th><td>${esc(value)}</td></tr>`).join('');
+
+  return `<h2>MA SESSION</h2><div class="table"><table><tbody class="static">${facts}</tbody></table></div><div class="actions"><button class="btn red" onclick="portal.signOut()">SE DÉCONNECTER</button></div>`;
 }
 
 export function renderSettings() {
-  setHTML('settingsBox', [
-    commandCard(),
-    thresholdCard(),
-    physicalCard(),
-    sessionCard()
-  ].join(''));
+  setHTML('settingsBox', commandCard());
 }
 
 export function readSettingsForm() {

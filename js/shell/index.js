@@ -14,13 +14,17 @@ import * as thresholds from '../core/thresholds.js';
 import { renderSidebar, toggleNav } from './sidebar.js';
 import { renderHeader, search } from './header.js';
 
+import { closeModal } from './modal.js';
+
 export { setSync, setBanner, errorBanner, okBanner, setModuleBar, deniedCard } from './feedback.js';
+export { openModal, closeModal } from './modal.js';
 
 /**
  * Module plein écran : la coque se vide, pour qu'aucun identifiant (#sync,
  * #who) n'existe deux fois avec ceux de la barre du module.
  */
 export function clearShell() {
+  closeModal();
   for (const id of ['portalSidebar', 'portalHeader', 'moduleBar']) {
     const node = document.getElementById(id);
     if (node) node.innerHTML = '';
@@ -29,6 +33,7 @@ export function clearShell() {
 
 /** Allume l'entrée `active` dans la barre latérale et l'en-tête. */
 export function paint(active) {
+  closeModal();
   renderSidebar(active);
   renderHeader(active);
   toggleNav(false);
@@ -80,6 +85,6 @@ export function signOut() {
 }
 
 /** Handlers appelés depuis les gabarits de la coque. */
-export const portal = { signOut, toggleNav, search };
+export const portal = { signOut, toggleNav, search, closeModal };
 
 if (typeof window !== 'undefined') window.portal = portal;

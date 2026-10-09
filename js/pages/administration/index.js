@@ -1,43 +1,25 @@
-// Page Administration — cahier des charges §14 (journalisation) et §15
-// (état des données, architecture modulaire).
+// Page Administration — celle de l'archive V4 (app.js, `admin()`) : la
+// bannière, quatre tuiles chiffrées, le journal récent.
 //
-// En tête, le gabarit de la maquette V4 : quatre tuiles chiffrées puis le
-// journal récent. Les chiffres sont comptés sur les données réelles, jamais
-// écrits en dur (overview). Dessous, rien d'inventé :
-//   1. les actualités publiées sur l'accueil ;
-//   2. l'état réel du stockage : où vont les dossiers, qui peut écrire ;
-//   3. le journal des actions sensibles, mois par mois ;
-//   4. l'inventaire des places d'images encore à livrer.
+// Les chiffres et le journal sont lus sur les données réelles, jamais
+// écrits en dur. Sous le journal, une rangée de boutons ouvre ce que
+// l'archive n'avait pas et que le portail garde : la gestion des
+// actualités de l'accueil (page Actualités), le journal complet des actions
+// sensibles et l'état du stockage, ces deux derniers dans la fenêtre modale.
 
-import { byId, setHTML } from '../../core/dom.js';
+import { setHTML } from '../../core/dom.js';
 import * as portal from '../../shell/index.js';
 import * as auth from '../../core/auth.js';
 import * as records from '../../core/records.js';
 import * as journal from '../../core/journal.js';
-import * as news from '../../core/news.js';
 import * as store from '../../core/store.js';
 import * as lifecycle from '../../core/lifecycle.js';
-import { storageCard, journalCard, imagesCard, newsCard, metricsCard, recentCard } from './cards.js';
+import { href } from '../../routes.js';
+import { metricsCard, recentCard, journalView, storageView } from './cards.js';
 
 let selectedMonth = '';
 let availableMonths = [];
-let newsState = { items: [], seeded: true };
-
-async function paintNews(pending) {
-  if (pending) {
-    setHTML('newsBox', '<div class="card"><h2>Actualités BAC 75 N</h2><p class="pempty">Lecture…</p></div>');
-    return;
-  }
-
-  try {
-    newsState = await news.load();
-  } catch (error) {
-    setHTML('newsBox', portal.errorBanner(`Actualités illisibles : ${error.message}`));
-    return;
-  }
-
-  setHTML('newsBox', newsCard(newsState));
-}
+let figures = null;
 
 /** Le module d'un fichier de brouillon, d'après le nom que records.js lui donne. */
 function draftModule(name) {
@@ -93,7 +75,7 @@ async function openDrafts(login) {
   return { open: [...found.values()].filter(item => !item.record.locked), unreadable };
 }
 
-/** Les quatre tuiles de la maquette, comptées sur les données. */
+/** Les quatre tuiles, comptées sur les données. */
 async function overview() {
   const login = auth.current() ? auth.current().login : '';
 
@@ -115,13 +97,7 @@ async function overview() {
     ['correction', 'decision'].includes(lifecycle.status(item.module, item.record)));
   if (drafts.unreadable) errors.push(`${drafts.unreadable} brouillon(s) illisible(s)`);
 
-  return {
-    open: drafts.open.length,
-    correcting: correcting.length,
-    closed,
-    alerts: errors,
-    perModule
-  };
+  return { open: drafts.open.length, correcting: correcting.length, closed, alerts: errors, perModule };
 }
 
 /** Les dernières lignes du journal, sur les deux derniers mois au plus. */
@@ -134,137 +110,65 @@ async function recentLines(months) {
   return lines.slice(0, 5);
 }
 
-async function paintJournal(pending) {
+async function showJournal() {
+  portal.openModal(journalView([], true, { months: availableMonths, selected: selectedMonth }));
   let lines = [];
-  if (!pending && selectedMonth) {
-    try {
-      lines = await journal.read(selectedMonth);
-    } catch (error) {
-      setHTML('journalBox', portal.errorBanner(`Journal illisible : ${error.message}`));
-      return;
-    }
+  try {
+    lines = selectedMonth ? await journal.read(selectedMonth) : [];
+  } catch (error) {
+    portal.openModal(`<h2>JOURNAL DES ACTIONS SENSIBLES</h2>${portal.errorBanner(`Journal illisible : ${error.message}`)}`);
+    return;
   }
-  setHTML('journalBox', journalCard(lines, pending, { months: availableMonths, selected: selectedMonth }));
+  portal.openModal(journalView(lines, false, { months: availableMonths, selected: selectedMonth }));
 }
 
 const handlers = {
+  journal() {
+    return showJournal();
+  },
+
   async month(value) {
     selectedMonth = value;
-    await paintJournal(false);
+    await showJournal();
   },
 
-  async publishNews() {
-    if (!auth.can('settings')) return;
-
-    const item = {
-      title: byId('naTitle')?.value.trim() || '',
-      sector: byId('naSector')?.value.trim() || '',
-      imageAsset: byId('naImage')?.value || 'actualite-nuit',
-      excerpt: byId('naExcerpt')?.value.trim() || '',
-      body: byId('naBody')?.value.trim() || '',
-      author: byId('naAuthor')?.value.trim() || '',
-      visibility: byId('naVisibility')?.value || 'portail',
-      publishedAt: new Date().toISOString()
-    };
-
-    if (!item.title) {
-      setHTML('newsStatus', portal.errorBanner('Une actualité sans titre ne part pas.'));
-      return;
-    }
-
-    setHTML('newsStatus', '<div class="banner">Publication…</div>');
-    try {
-      await news.publish(item);
-      await paintNews(false);
-      setHTML('newsStatus', portal.okBanner(`Actualité publiée : ${item.title}`));
-      await journal.record({
-        who: auth.describeOperator(),
-        role: auth.role(),
-        action: 'actualite.publication',
-        target: item.title,
-        detail: `${item.sector || 'sans secteur'} • ${item.visibility}`
-      });
-    } catch (error) {
-      setHTML('newsStatus', portal.errorBanner(`Échec : ${error.message}`));
-    }
+  storage() {
+    const counts = figures ? figures.perModule : Object.fromEntries(records.MODULE_ORDER.map(id => [id, null]));
+    portal.openModal(storageView(counts));
   },
 
-  async removeNews(id) {
-    if (!auth.can('settings')) return;
-
-    const item = newsState.items.find(entry => entry.id === id);
-    if (!item) return;
-    if (!window.confirm(`Retirer l’actualité « ${item.title} » ?`)) return;
-
-    setHTML('newsStatus', '<div class="banner">Retrait…</div>');
-    try {
-      await news.remove(id);
-      await paintNews(false);
-      setHTML('newsStatus', portal.okBanner('Actualité retirée.'));
-      await journal.record({
-        who: auth.describeOperator(),
-        role: auth.role(),
-        action: 'actualite.retrait',
-        target: item.title,
-        detail: ''
-      });
-    } catch (error) {
-      setHTML('newsStatus', portal.errorBanner(`Échec : ${error.message}`));
-    }
+  news() {
+    window.location.hash = href('actualites');
   }
 };
 
 export default {
   handlers,
-  mainClass: 'pportal',
 
   template() {
-    return `
-      <div class="hero" data-img="administration">
-        <div class="flag"></div>
-        <small class="hero-kicker no-print">Gestion du portail</small>
-        <h1>Administration</h1>
-        <div class="mut">Suivi des sessions, validations et actions réservées aux responsables.</div>
-      </div>
-      <div id="metricsBox">${metricsCard(null)}</div>
-      <div id="recentBox">${recentCard(null)}</div>
-      <div id="newsBox"></div>
-      <div id="storageBox"></div>
-      <div id="journalBox"></div>
-      <div id="imagesBox">${imagesCard()}</div>`;
+    return `<div class="page"><div class="sectionHero" style="--bg:none"><div><small>GESTION DU PORTAIL</small><h1>ADMINISTRATION</h1><p>Suivi des sessions, validations et actions réservées aux responsables.</p></div></div><div id="metricsBox">${metricsCard(null)}</div><div id="recentBox">${recentCard(null)}</div><div class="actions"><button class="btn dark" onclick="app.news()">ACTUALITÉS DE L’ACCUEIL</button><button class="btn dark" onclick="app.journal()">JOURNAL DES ACTIONS SENSIBLES</button><button class="btn dark" onclick="app.storage()">MODULES ET STOCKAGE</button></div></div>`;
   },
 
   async mount({ alive }) {
     selectedMonth = '';
     availableMonths = [];
-    await paintNews(true);
-    await paintJournal(true);
-    setHTML('storageBox', storageCard(Object.fromEntries(records.MODULE_ORDER.map(id => [id, null]))));
+    figures = null;
 
-    let figures = null;
     try {
       figures = await overview();
     } catch (error) {
       if (alive()) setHTML('metricsBox', portal.errorBanner(`Tableau de bord illisible : ${error.message}`));
     }
     if (!alive()) return;
-    if (figures) {
-      setHTML('metricsBox', metricsCard(figures));
-      setHTML('storageBox', storageCard(figures.perModule));
-    }
+    if (figures) setHTML('metricsBox', metricsCard(figures));
 
-    availableMonths = await journal.months();
-    if (!alive()) return;
     try {
+      availableMonths = await journal.months();
+      if (!alive()) return;
+      selectedMonth = availableMonths[0] || new Date().toISOString().slice(0, 7);
       setHTML('recentBox', recentCard(await recentLines(availableMonths)));
     } catch (error) {
-      setHTML('recentBox', portal.errorBanner(`Journal illisible : ${error.message}`));
+      if (alive()) setHTML('recentBox', portal.errorBanner(`Journal illisible : ${error.message}`));
     }
-
-    await paintNews(false);
-    if (!alive()) return;
-
-    selectedMonth = availableMonths[0] || new Date().toISOString().slice(0, 7);
-    if (alive()) await paintJournal(false);
   }
 };

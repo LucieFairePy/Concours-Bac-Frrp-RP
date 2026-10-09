@@ -225,9 +225,9 @@ const ROUTE_SPECS = {
     steps: ['id', 'q', 'lead', 's1', 's2', 'corr', 'res', 'final'],
     stepExpect: { id: 'mxApp', q: 'mxApp', lead: 'mxApp', s1: 'mxApp', s2: 'mxApp', corr: 'mxApp', res: 'mxApp', final: 'mxApp' }
   },
-  historique: { expect: ['families', 'filters', 'results'] },
+  historique: { expect: ['families', 'historyStage'] },
   actualites: { expect: ['content'] },
-  administration: { expect: ['newsBox', 'storageBox', 'journalBox', 'imagesBox'] },
+  administration: { expect: ['metricsBox', 'recentBox'] },
   utilisateurs: { expect: ['usersBox'] },
   parametres: { expect: ['settingsBox'] }
 };

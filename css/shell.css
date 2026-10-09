@@ -1,7 +1,8 @@
-/* Coque du portail — documentation technique V4 §6.
-   Barre latérale 236 px, en-tête 68 px, barre d'actions du module, zone de
-   contenu. Une seule page, deux états : l'accès examinateur (body.gate) ou
-   le portail (body.portal-shell). */
+/* Coque du portail — la barre latérale et l'en-tête de l'archive V4
+   (style.css de BAC75N_SITE_V4), règle pour règle, posés sur les points
+   de montage du portail (#portalSidebar, #portalHeader). Une seule page,
+   deux états : l'accès examinateur (body.gate) ou le portail
+   (body.portal-shell) ; un module s'ouvre en plein écran (body.module-full). */
 
 /* Pendant le démarrage, rien n'est montré ; ensuite, un seul des deux états. */
 body.booting > *,
@@ -10,379 +11,221 @@ body:not(.gate) > .gate-wrap {
   display: none;
 }
 
-body.portal-shell { padding-left: var(--sidebar) }
+body.portal-shell { padding-left: 236px }
 
 /* Zone de contenu : le document imprimé repart de la marge zéro
-   (fiche/print.css) ; à l'écran, elle prend toute la largeur. */
+   (fiche/print.css) ; à l'écran, chaque page du portail porte sa propre
+   marge (.page), comme dans l'archive. */
 main { max-width: 1440px; margin: auto; padding: 20px }
 
 @media screen {
-  body.portal-shell > main { max-width: none; padding: 0 12px 18px }
+  body.portal-shell > main { max-width: none; padding: 0 }
+  body.portal-shell:not(.module-full) #banner > * { margin: 12px }
 }
+
+/* Les deux blocs de la coque ont la typographie de l'archive : Inter 16 px,
+   interligne normal, sans hériter du socle des modules. */
+#portalSidebar,
+#portalHeader {
+  font: 16px/normal Inter, Arial, sans-serif;
+  color: #f5f8fb;
+}
+
+/* État d'enregistrement : les barres des modules plein écran l'affichent
+   aussi (#sync), avec cette allure de base. */
+.sync { margin-left: 10px; color: var(--mut); font-size: 11px; white-space: nowrap }
 
 /* ───────────────────────── Barre latérale ───────────────────────── */
 
-.psidebar {
+#portalSidebar {
   position: fixed;
-  top: 0;
   left: 0;
+  top: 0;
   bottom: 0;
-  z-index: 40;
-  width: var(--sidebar);
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
-  scrollbar-width: thin;
+  width: 236px;
   background: linear-gradient(180deg, #02070d, #06121d);
   border-right: 1px solid #16364e;
+  z-index: 10;
 }
 
-.psb-head {
+#portalSidebar .identity { text-align: center; padding: 16px 14px 12px; font-family: 'Barlow Condensed' }
+#portalSidebar .identity img { width: 130px; height: 130px; object-fit: contain; border-radius: 50%; display: block; margin: 0 auto 7px }
+#portalSidebar .identity small { font-size: 13px; font-weight: 700 }
+#portalSidebar .identity b { display: block; font-size: 32px; line-height: 1 }
+#portalSidebar .identity em { font-style: normal; color: #0ca9ff; font-size: 12px; letter-spacing: 2px }
+#portalSidebar .identity:after {
+  content: '';
   display: block;
-  padding: 16px 14px 12px;
-  color: var(--ink);
-  font-family: var(--font-title);
-  text-align: center;
-  text-decoration: none;
-}
-
-/* L'écusson du kit est déjà rond : pas de disque derrière. */
-.psb-medal {
-  display: grid;
-  place-items: center;
-  width: 130px;
-  height: 130px;
-  margin: 0 auto 7px;
-  border-radius: 50%;
-  overflow: hidden;
-}
-
-.psb-medal img {
-  display: block;
-  width: 130px;
-  height: 130px;
-  object-fit: contain;
-}
-
-.psb-unit {
-  display: block;
-  color: #f5f8fb;
-  font: 700 13px var(--font-title);
-  text-transform: uppercase;
-}
-
-.psb-name {
-  display: block;
-  margin: 0;
-  font: 700 32px/1 var(--font-title);
-}
-
-.psb-devise {
-  display: block;
-  color: #0ca9ff;
-  font: 400 12px var(--font-title);
-  letter-spacing: 2px;
-  text-transform: uppercase;
-}
-
-.psb-flag {
-  display: block;
-  width: 108px;
   height: 3px;
-  margin: 8px auto 0;
-  background: var(--tri);
+  width: 120px;
+  margin: 11px auto 0;
+  background: linear-gradient(90deg, #168cf0 33%, #fff 33% 66%, #ed1d39 66%);
 }
 
-.psb-head > .psb-flag { width: 120px; margin-top: 11px }
-
-.psb-nav { flex: 1; padding: 4px 0 12px }
-
-.psb-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+#portalSidebar nav > a,
+#portalSidebar .navsub a {
+  display: block;
+  text-decoration: none;
+  color: #d9e4ec;
+  font: 500 16px 'Barlow Condensed';
   padding: 10px 19px;
   border-left: 3px solid transparent;
-  color: #d9e4ec;
-  font: 500 16px var(--font-title);
-  text-decoration: none;
 }
 
-.psb-item .psb-ico { width: 16px; font-size: 15px; text-align: center }
-
-.psb-item:hover,
-.psb-item.active {
+#portalSidebar nav > a:hover,
+#portalSidebar nav > a.active {
   background: linear-gradient(90deg, #087ec2aa, transparent);
   border-left-color: #19a9ff;
-  color: #fff;
+  color: white;
 }
 
-/* Sous-entrées : colonne liserée à gauche, comme la maquette. */
-.psb-sub {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-left: 29px;
-  padding: 7px 13px;
-  border-left: 1px solid #29485e;
-  color: #90a5b5;
-  font: 400 14px var(--font-title);
-  text-decoration: none;
-}
+#portalSidebar .navsub { border-left: 1px solid #29485e; margin-left: 29px }
+#portalSidebar .navsub a { padding: 7px 13px; font-size: 14px; color: #90a5b5 }
 
-.psb-sub:before { content: "●"; font-size: 9px; color: inherit }
-.psb-sub:hover { color: #fff }
-.psb-sub.active { color: #fff; font-weight: 600 }
-.psb-sub.active:before { color: var(--blue) }
-
-.psb-quote {
-  position: relative;
-  display: flex;
-  align-items: flex-end;
-  margin: 10px 14px 14px;
+#portalSidebar .quote {
+  position: absolute;
+  bottom: 14px;
+  left: 14px;
+  right: 14px;
+  padding: 20px 12px;
+  font: 800 italic 24px/1.02 'Barlow Condensed';
+  background: linear-gradient(#03101aa0, #03101af2), var(--bg) center/cover;
   border: 1px solid #17384f;
-  overflow: hidden;
 }
 
-.psb-quote-img {
-  position: absolute;
-  inset: 0;
-  background-size: cover;
-  background-position: center;
+#portalSidebar .quote div {
+  height: 4px;
+  width: 55px;
+  margin-top: 10px;
+  background: linear-gradient(90deg, #168cf0 33%, #fff 33% 66%, #ed1d39 66%);
 }
 
-.psb-quote:after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(#03101aa0, #03101af2);
-}
+/* ───────────────────────── En-tête ───────────────────────── */
 
-.psb-quote-body { position: relative; z-index: 2; padding: 20px 12px }
+/* `display:flex` seulement dans le portail : sur la page d'accès, l'en-tête
+   reste masqué par la règle du haut. */
+body.portal-shell:not(.module-full) > #portalHeader { display: flex }
 
-.psb-quote-body span {
-  display: block;
-  font: italic 800 24px/1.02 var(--font-title);
-  text-transform: uppercase;
-}
-
-.psb-quote-body .psb-flag { width: 55px; height: 4px; margin: 10px 0 0 }
-
-/* ───────────────────────── En-tête 68 px ───────────────────────── */
-
-header.phead {
-  position: sticky;
-  top: 0;
-  z-index: 30;
-  height: var(--header);
-  background: #05101aed;
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid #17344a;
-}
-
-.phead-main {
-  display: flex;
+#portalHeader {
+  height: 68px;
   align-items: center;
   gap: 24px;
-  height: var(--header);
   padding: 0 24px;
+  background: #05101aed;
+  border-bottom: 1px solid #17344a;
+  position: sticky;
+  top: 0;
+  z-index: 9;
+  backdrop-filter: blur(12px);
 }
 
-.phead-id { position: relative; flex: none; font-family: var(--font-title); line-height: .82 }
-
-.phead-title {
-  font: 700 24px/.82 var(--font-title);
-  text-transform: uppercase;
+#portalHeader .pn { font-family: 'Barlow Condensed'; font-size: 24px; line-height: .82; white-space: nowrap }
+#portalHeader .pn:after {
+  content: '';
+  display: inline-block;
+  width: 36px;
+  height: 5px;
+  margin-left: 9px;
+  background: linear-gradient(90deg, #168cf0 33%, #fff 33% 66%, #ed1d39 66%);
+  vertical-align: middle;
 }
 
-.phead-sub {
+#portalHeader .pn small,
+#portalHeader .profile small { display: block; color: #8ea3b4; font-size: 10px }
+
+#portalHeader .top { display: flex; gap: 19px }
+#portalHeader .top a { text-decoration: none; color: #9fb0bd; font: 600 13px 'Barlow Condensed' }
+#portalHeader .top a:hover { color: #fff }
+
+/* La recherche de l'archive est un cartouche ; ici, c'est un vrai champ
+   habillé à l'identique (bordure arrondie, texte 10 px). */
+#portalHeader .search { margin-left: auto; min-width: 270px }
+#portalHeader .search input {
   display: block;
-  margin-top: 2px;
-  color: #8ea3b4;
-  font: 400 10px var(--font-title);
-  text-transform: uppercase;
-}
-
-.phead-id .flag { display: block; width: 36px; height: 5px; margin-top: 6px }
-
-/* Navigation horizontale de l'en-tête, doublant la barre latérale. */
-.phead-nav { display: flex; flex: none; align-items: center; gap: 19px }
-
-.phead-nav a {
-  padding: 4px 0;
-  border-bottom: 2px solid transparent;
-  color: #9fb0bd;
-  font: 600 13px var(--font-title);
-  text-transform: uppercase;
-  text-decoration: none;
-}
-
-.phead-nav a:hover { color: #fff }
-.phead-nav a.active { color: #fff; border-bottom-color: #19a9ff }
-
-/* Recherche globale : ouvre l'historique sur la saisie (Entrée). */
-.psearch {
-  position: relative;
-  display: flex;
-  flex: 1 1 200px;
-  align-items: center;
-  min-width: 0;
-  max-width: 300px;
-  margin-left: auto;
-}
-
-.psearch:before {
-  content: "⌕";
-  position: absolute;
-  left: 12px;
-  top: 50%;
-  transform: translateY(-52%);
-  color: #6f8495;
-  font-size: 14px;
-  pointer-events: none;
-}
-
-.psearch input {
-  flex: 1;
-  min-width: 0;
-  padding: 8px 14px 8px 30px;
+  width: 100%;
+  margin: 0;
   border: 1px solid #28475e;
   border-radius: 20px;
+  padding: 8px 14px;
   background: transparent;
   color: #cfe2ef;
-  font-size: 11px;
+  font: 10px Inter, Arial, sans-serif;
+  line-height: normal;
+  box-shadow: none;
 }
+#portalHeader .search input::placeholder { color: #6f8495; opacity: 1 }
+#portalHeader .search input:focus { border-color: #0b9ff5; outline: none }
+#portalHeader .search input::-webkit-search-cancel-button { display: none }
 
-.psearch input::placeholder { color: #6f8698 }
-.psearch input:focus { outline: 2px solid var(--blue); outline-offset: 1px }
-.psearch button { display: none }
+#portalHeader .profile { position: relative; font: 18px 'Barlow Condensed'; white-space: nowrap; outline: none }
 
-/* État d'enregistrement des modules. `#who` répète le nom du profil
-   affiché juste à côté : il ne reste que si la place le permet. */
-.phead-state {
-  display: flex;
-  flex: 0 1 auto;
-  align-items: center;
-  gap: 8px;
-  min-width: 0;
-  overflow: hidden;
-}
+/* État d'enregistrement (#sync) : sous le profil, seulement quand il parle. */
+#portalHeader .sync { position: absolute; right: 0; top: 100%; font: 10px Inter, Arial, sans-serif; color: #8197a8; white-space: nowrap }
+#portalHeader .sync:empty { display: none }
 
-#who { color: #bfd0de; font-weight: 700; font-size: 11.5px; white-space: nowrap }
-#who:not(:empty)::before { content: " • " }
-
-.sync { margin-left: 10px; color: var(--mut); font-size: 11px; white-space: nowrap }
-
-.pburger { display: none; flex: none; padding: 7px 11px; font-size: 16px }
-
-/* ───────────────────────── Profil ───────────────────────── */
-
-.pprofile {
-  position: relative;
-  flex: none;
-  padding: 4px 0;
-  text-align: right;
-  cursor: default;
-}
-
-.pprofile-name { font: 700 18px var(--font-title); white-space: nowrap }
-
-.pprofile-grade,
-.pprofile-role {
-  display: block;
-  color: #8ea3b4;
-  font-size: 10px;
-  line-height: 1.25;
-  white-space: nowrap;
-}
-
-.pprofile-menu {
+/* Menu de session, au survol du profil. */
+#portalHeader .pmenu {
   position: absolute;
   top: 100%;
   right: 0;
   z-index: 50;
   display: none;
-  min-width: 210px;
+  min-width: 190px;
   margin-top: 6px;
   padding: 7px;
-  border: 1px solid var(--line);
+  border: 1px solid #315a76;
   border-radius: 6px;
-  background: var(--surface);
+  background: #071522;
   box-shadow: 0 14px 34px #0009;
-  text-align: left;
 }
-
-.pprofile:hover .pprofile-menu,
-.pprofile:focus-within .pprofile-menu { display: block }
-
-.pprofile-menu a {
+#portalHeader .profile:hover .pmenu,
+#portalHeader .profile:focus-within .pmenu { display: block }
+#portalHeader .pmenu:before { content: ''; position: absolute; left: 0; right: 0; top: -8px; height: 8px }
+#portalHeader .pmenu a,
+#portalHeader .pmenu button {
   display: block;
+  width: 100%;
+  margin: 0;
   padding: 9px 11px;
+  border: 0;
   border-radius: 4px;
-  color: #cfdeea;
-  font-family: var(--font-title);
-  font-size: 15px;
+  background: none;
+  color: #c9d7e1;
+  font: 15px 'Barlow Condensed';
+  text-align: left;
+  text-transform: none;
+  letter-spacing: 0;
   text-decoration: none;
+  cursor: pointer;
+}
+#portalHeader .pmenu a:hover,
+#portalHeader .pmenu button:hover { background: #0a2234; color: #fff; filter: none }
+#portalHeader .pmenu button { color: #ff91a0 }
+
+/* ───────────────────────── Adaptatif (archive) ───────────────────────── */
+
+@media (max-width: 1100px) {
+  #portalHeader .top { display: none }
 }
 
-.pprofile-menu a:hover { background: #10405f; color: #fff }
-.pprofile-menu button { width: 100%; margin-top: 5px }
-
-/* ──────────────── Barre d'actions du module ──────────────── */
-
-.pmodulebar {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 24px;
-  background: #04101a;
-  border-bottom: 1px solid #17344a;
-  font-family: var(--font-title);
+@media (max-width: 760px) {
+  #portalSidebar { width: 70px }
+  #portalSidebar .identity img { width: 52px; height: 52px }
+  #portalSidebar .identity small,
+  #portalSidebar .identity b,
+  #portalSidebar .identity em,
+  #portalSidebar .quote,
+  #portalSidebar nav span,
+  #portalSidebar .navsub { display: none }
+  #portalSidebar nav > a { text-align: center; font-size: 22px; padding: 12px 0 }
+  body.portal-shell { padding-left: 70px }
+  #portalHeader .search { display: none }
+  #portalHeader .profile { margin-left: auto }
 }
 
-.pmodulebar > b,
-.pmodulebar > strong { font: 700 17px var(--font-title); text-transform: uppercase }
+/* ─────────────── Module plein écran ─────────────── */
 
-.pmodulebar .spacer { margin-left: auto }
-
-/* ───────────────────────── Adaptatif ───────────────────────── */
-
-@media (max-width: 1500px) {
-  #who { display: none }
-}
-
-@media (max-width: 1060px) {
-  .phead-nav { display: none }
-}
-
-@media (max-width: 900px) {
-  body.portal-shell { padding-left: 0 }
-
-  .psidebar {
-    transform: translateX(-100%);
-    transition: transform .2s;
-    box-shadow: 0 0 40px #000a;
-  }
-
-  .psidebar.open { transform: none }
-  .pburger { display: block }
-  .psearch { display: none }
-
-  .pprofile-name { font-size: 15px }
-  .pprofile-grade, .pprofile-role { display: none }
-
-  .psb-medal,
-  .psb-medal img { width: 96px; height: 96px }
-}
-
-@media (max-width: 620px) {
-  .phead-id .phead-sub { display: none }
-}
-
-/* ─────────────── Module plein écran (maquette V4) ─────────────── */
-
-/* Les modules s'ouvrent comme les pages autonomes de la maquette : sans
+/* Les modules s'ouvrent comme les pages autonomes de l'archive : sans
    barre latérale ni en-tête du portail, avec leur propre barre de retour. */
 body.module-full { padding-left: 0 }
 
@@ -392,4 +235,15 @@ body.module-full > #moduleBar { display: none }
 
 @media screen {
   body.module-full > main { max-width: none; padding: 0 }
+}
+
+/* Barre d'actions d'une page du portail (setModuleBar), rarement utilisée. */
+.pmodulebar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 24px;
+  background: #04101a;
+  border-bottom: 1px solid #17344a;
 }
