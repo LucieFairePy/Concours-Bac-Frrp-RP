@@ -17,10 +17,10 @@ import { href } from '../../routes.js';
 import * as records from '../../core/records.js';
 import * as journal from '../../core/journal.js';
 import { blankExam, migrateExam, isEditableExam } from '../../core/cdg-state.js';
-import { countVariants } from '../../data/cdg-generator.js';
 import { totals, recommendation } from '../../scoring/cdg.js';
 import { decisionText } from '../../ui/chips.js';
 import { createStepper } from '../../ui/stepper.js';
+import { createAutosave } from '../../ui/autosave.js';
 import {
   renderConnaissances,
   renderCommandement,
@@ -30,15 +30,18 @@ import {
   renderTimer
 } from './epreuves.js';
 import { renderCdgFiche } from './fiche.js';
+import { identitySection, section, finalSection } from './sections.js';
 
 const MODULE = 'cdg';
 
 const state = { record: null, readOnly: false, settings: { ...CONFIG.defaultCommand } };
 let params = new URLSearchParams();
 
-let dirty = false;
-let saving = false;
-let autosaveTimer = null;
+// Le brouillon part au dépôt après chaque pause de saisie.
+const autosave = createAutosave({
+  module: MODULE,
+  current: () => (state.readOnly ? null : state.record)
+});
 
 const stepper = createStepper({
   steps: [
@@ -80,36 +83,6 @@ const stepper = createStepper({
 const editable = () => isEditableExam(state.record, state.readOnly);
 const dis = () => (editable() ? '' : 'disabled');
 
-// ───────────────────────────── Enregistrement ───────────────────────────
-
-function markDirty() {
-  dirty = true;
-  portal.setSync('modifications non enregistrées');
-  if (autosaveTimer) window.clearTimeout(autosaveTimer);
-  autosaveTimer = window.setTimeout(() => { flush() }, CONFIG.autosaveDelay);
-}
-
-async function flush() {
-  if (!dirty || saving || !state.record || state.readOnly) return;
-  if (!auth.canWrite()) {
-    portal.setSync('lecture seule — rien n’est enregistré', 'error');
-    return;
-  }
-
-  saving = true;
-  portal.setSync('enregistrement…');
-  try {
-    await records.saveDraft(MODULE, auth.current().login, state.record);
-    dirty = false;
-    const time = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
-    portal.setSync(`enregistré à ${time}`, 'ok');
-  } catch (error) {
-    portal.setSync(`échec : ${error.message}`, 'error');
-  } finally {
-    saving = false;
-  }
-}
-
 // ───────────────────────────── Rendu ────────────────────────────────────
 
 function moduleBar() {
@@ -126,109 +99,6 @@ function moduleBar() {
     ${auth.canWrite() ? '<button class="primary" onclick="app.newRecord()">Nouvel examen</button>' : ''}`);
 }
 
-function identitySection() {
-  const R = state.record;
-  const d = dis();
-
-  const examiners = R.ex.map((person, index) => `
-    <div class="row">
-      <div class="c6">
-        <label>Grade examinateur ${index + 1}</label>
-        <input ${d} value="${esc(person.grade)}" oninput="app.setExaminer(${index},'grade',this.value)">
-      </div>
-      <div class="c6">
-        <label>Nom examinateur ${index + 1}</label>
-        <input ${d} value="${esc(person.name)}" oninput="app.setExaminer(${index},'name',this.value)">
-      </div>
-    </div>`).join('');
-
-  const variants = countVariants();
-
-  return `
-    <section id="s-id" class="section active">
-      <div class="card">
-        <h2>Candidat</h2>
-        <p class="mut">
-          Le candidat est déjà un agent BAC expérimenté. L’examen vérifie s’il peut
-          désormais se voir confier un groupe.
-        </p>
-        <div class="row">
-          <div class="c4"><label>Nom</label><input ${d} value="${esc(R.c.last)}" oninput="app.set('c.last',this.value)"></div>
-          <div class="c4"><label>Prénom</label><input ${d} value="${esc(R.c.first)}" oninput="app.set('c.first',this.value)"></div>
-          <div class="c4"><label>Grade</label><input ${d} value="${esc(R.c.grade)}" oninput="app.set('c.grade',this.value)"></div>
-          <div class="c3"><label>Matricule</label><input ${d} value="${esc(R.c.mat)}" oninput="app.set('c.mat',this.value)"></div>
-          <div class="c3"><label>Date</label><input type="date" ${d} value="${esc(R.c.date)}" oninput="app.set('c.date',this.value)"></div>
-          <div class="c3"><label>Heure de début</label><input type="time" ${d} value="${esc(R.c.start)}" oninput="app.set('c.start',this.value)"></div>
-          <div class="c3"><label>Heure de fin</label><input type="time" ${d} value="${esc(R.c.end)}" oninput="app.set('c.end',this.value)"></div>
-        </div>
-      </div>
-
-      <div class="card">
-        <h3>Examinateur(s)</h3>
-        ${examiners}
-        <button ${d} onclick="app.addExaminer()">+ Ajouter un examinateur</button>
-      </div>
-
-      <div class="card">
-        <h3>Déroulement et barème</h3>
-        <p class="mut">
-          Format compact voulu : environ 45 minutes, une heure au maximum.
-        </p>
-        <table>
-          <tr><th>Épreuve</th><th>Contenu</th><th>Barème</th></tr>
-          <tr><td>Connaissances essentielles</td><td>10 questions simples et aléatoires</td><td>/200</td></tr>
-          <tr><td>Commandement / leadership</td><td>5 questions courtes</td><td>/200</td></tr>
-          <tr><td>Mise en situation n°1</td><td>Organisation d’une intervention</td><td>/250</td></tr>
-          <tr><td>Mise en situation n°2</td><td>Situation évolutive / adaptation</td><td>/250</td></tr>
-          <tr><td>Radio &amp; compte rendu</td><td>Intégré aux situations</td><td>/100</td></tr>
-          <tr><th>TOTAL</th><th></th><th>/1000</th></tr>
-        </table>
-      </div>
-
-      <div class="card">
-        <h3>Tirage de cette session</h3>
-        <table>
-          <tr><th>Graine du tirage</th><td><code>${esc(R.draw.seed)}</code></td></tr>
-          <tr><th>Tiré le</th><td>${esc(new Date(R.draw.drawnAt).toLocaleString('fr-FR'))}</td></tr>
-          <tr><th>Thèmes de connaissances</th><td>${esc([...new Set(R.draw.connaissances.map(q => q.themeLabel))].join(' • '))}</td></tr>
-          <tr><th>Variantes possibles</th><td>${variants.total.toLocaleString('fr-FR')}</td></tr>
-        </table>
-        <p class="mut">
-          Les questions et les situations de ce dossier sont <b>figées</b> : elles ne
-          changeront plus, même si la banque évolue. La graine permet de vérifier
-          après coup comment le tirage a été fait.
-        </p>
-      </div>
-
-      ${stepper.stepNav(0)}
-    </section>`;
-}
-
-function section(id, hostId, index) {
-  return `<section id="s-${id}" class="section"><div id="${hostId}"></div>${stepper.stepNav(index)}</section>`;
-}
-
-function finalSection() {
-  const locked = state.record.locked ? '<p class="locked">DOSSIER CLÔTURÉ — lecture seule.</p>' : '';
-
-  return `
-    <section id="s-final" class="section printme">
-      <div id="sheet"></div>
-      <div class="card no-print">
-        <button class="green" onclick="app.downloadPdf()">Télécharger en PDF</button>
-        ${auth.can('close')
-          ? `<button class="danger" ${dis()} onclick="app.close()">CLÔTURER DÉFINITIVEMENT LE DOSSIER</button>`
-          : '<span class="mut">Ton rôle ne permet pas de clôturer un dossier.</span>'}
-        <p class="mut">
-          Vérifie la fiche avant de clôturer. Dans la fenêtre d’impression, choisis
-          <b>Enregistrer au format PDF</b> comme destination : les cinq pages A4,
-          les fonds et les photos sont inclus.
-        </p>
-        ${locked}
-      </div>
-    </section>`;
-}
-
 function renderAll() {
   const R = state.record;
   const name = `${String(R.c.last).toUpperCase()} ${R.c.first}`.trim();
@@ -238,15 +108,16 @@ function renderAll() {
   moduleBar();
   stepper.renderTabs();
 
+  const nav = stepper.stepNav;
   setHTML('sections', [
-    identitySection(),
-    `<section id="s-co" class="section"><div id="timerBox" class="no-print"></div><div id="connaissancesBox"></div>${stepper.stepNav(1)}</section>`,
-    section('cm', 'commandementBox', 2),
-    section('sit1', 'sit1Box', 3),
-    section('sit2', 'sit2Box', 4),
-    section('correct', 'correctBox', 5),
-    section('result', 'resultBox', 6),
-    finalSection()
+    identitySection(R, dis(), nav),
+    `<section id="s-co" class="section"><div id="timerBox" class="no-print"></div><div id="connaissancesBox"></div>${nav(1)}</section>`,
+    section('cm', 'commandementBox', 2, nav),
+    section('sit1', 'sit1Box', 3, nav),
+    section('sit2', 'sit2Box', 4, nav),
+    section('correct', 'correctBox', 5, nav),
+    section('result', 'resultBox', 6, nav),
+    finalSection(R, dis())
   ].join(''));
 
   stepper.renderProgress();
@@ -277,10 +148,10 @@ async function startRecord() {
 
   state.record = blankExam(id, state.settings);
   state.readOnly = false;
-  dirty = true;
+  autosave.reset(true);
   renderAll();
   stepper.openStep('id');
-  await flush();
+  await autosave.flush();
 }
 
 async function openFromUrl() {
@@ -296,7 +167,7 @@ async function openFromUrl() {
     }
     state.record = migrateExam(found, state.settings);
     state.readOnly = true;
-    dirty = false;
+    autosave.reset();
     renderAll();
     stepper.openStep('final');
     portal.setSync(`${id} — lecture seule`);
@@ -347,7 +218,7 @@ async function loadInitial() {
 const handlers = {
   set(path, value) {
     if (!setPath(path, value)) return;
-    markDirty();
+    autosave.mark();
     if (path.startsWith('c.start') || path.startsWith('c.end') || path === 'c.date') {
       renderTimer(state.record);
     }
@@ -356,13 +227,13 @@ const handlers = {
   setExaminer(index, field, value) {
     if (!editable()) return;
     state.record.ex[index][field] = value;
-    markDirty();
+    autosave.mark();
   },
 
   addExaminer() {
     if (!editable() || state.record.ex.length >= 3) return;
     state.record.ex.push({ grade: '', name: '' });
-    markDirty();
+    autosave.mark();
     renderAll();
     stepper.openStep('id');
   },
@@ -370,19 +241,19 @@ const handlers = {
   setAnswer(questionId, value) {
     if (!editable()) return;
     state.record.ans[questionId] = value;
-    markDirty();
+    autosave.mark();
   },
 
   setMark(questionId, value) {
     if (!editable()) return;
     state.record.marks[questionId] = value;
-    markDirty();
+    autosave.mark();
     renderCorrection(state.record, dis());
   },
 
   setDecision(value) {
     if (!setPath('decision', value)) return;
-    markDirty();
+    autosave.mark();
     renderResult(state.record, dis());
   },
 
@@ -391,17 +262,16 @@ const handlers = {
   },
 
   step(delta) {
-    flush();
+    autosave.flush();
     stepper.move(delta);
   },
 
   async saveNow() {
-    dirty = true;
-    await flush();
+    await autosave.now();
   },
 
   async newRecord() {
-    if (dirty && !window.confirm('Des modifications ne sont pas enregistrées. Démarrer un nouvel examen ?')) return;
+    if (autosave.dirty && !window.confirm('Des modifications ne sont pas enregistrées. Démarrer un nouvel examen ?')) return;
     if (!auth.canWrite()) return;
     await startRecord();
   },
@@ -435,7 +305,7 @@ const handlers = {
       state.settings
     );
     state.readOnly = false;
-    dirty = true;
+    autosave.reset(true);
     renderAll();
     stepper.openStep('correct');
     portal.setSync(`version rectificative de ${R.id} — à clôturer de nouveau`);
@@ -507,7 +377,7 @@ const handlers = {
       state.record = published;
       state.readOnly = true;
       await records.deleteDraft(MODULE, session.login);
-      dirty = false;
+      autosave.reset();
       portal.setSync(`dossier ${published.id} clôturé`, 'ok');
 
       const logged = await journal.record({
@@ -560,21 +430,20 @@ export default {
     state.record = null;
     state.readOnly = false;
     state.settings = { ...CONFIG.defaultCommand, ...shared.settings };
-    dirty = false;
+    autosave.reset();
     await loadInitial();
   },
 
   canLeave() {
-    return !dirty;
+    return !autosave.dirty;
   },
 
   onHide() {
-    flush();
+    autosave.flush();
   },
 
   async unmount() {
-    if (autosaveTimer) window.clearTimeout(autosaveTimer);
-    autosaveTimer = null;
-    await flush();
+    autosave.cancel();
+    await autosave.flush();
   }
 };

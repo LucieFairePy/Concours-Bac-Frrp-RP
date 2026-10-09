@@ -11,7 +11,6 @@
 // correction après clôture crée une version rectificative liée au dossier
 // d'origine au lieu de le réécrire.
 
-import { CONFIG } from '../../config.js';
 import { byId, esc, setHTML } from '../../core/dom.js';
 import { state, blankDossier, migrate, setPath, isEditable } from '../../core/state.js';
 import * as auth from '../../core/auth.js';
@@ -25,13 +24,17 @@ import { renderCorrection } from './correction.js';
 import { refreshResults } from './results.js';
 import { DOSSIER_IMAGES } from './dossier.js';
 import { openStep, step, openView } from './navigation.js';
+import { createAutosave } from '../../ui/autosave.js';
 
 const MODULE = 'concours';
 
-let autosaveTimer = null;
 let params = new URLSearchParams();
-let dirty = false;
-let saving = false;
+
+// Le brouillon part au dépôt après chaque pause de saisie.
+const autosave = createAutosave({
+  module: MODULE,
+  current: () => (state.readOnly ? null : state.dossier)
+});
 
 const setSync = portal.setSync;
 
@@ -61,34 +64,6 @@ function moduleBar() {
     ${rectify}
     <button onclick="app.saveNow()">Enregistrer</button>
     <button class="primary" onclick="app.newDossier()">Nouveau dossier</button>`);
-}
-
-function markDirty() {
-  dirty = true;
-  setSync('modifications non enregistrées');
-  if (autosaveTimer) window.clearTimeout(autosaveTimer);
-  autosaveTimer = window.setTimeout(() => { flush() }, CONFIG.autosaveDelay);
-}
-
-async function flush() {
-  if (!dirty || saving || !state.dossier || state.readOnly) return;
-  if (!auth.canWrite()) {
-    setSync('lecture seule — rien n’est enregistré', 'error');
-    return;
-  }
-
-  saving = true;
-  setSync('enregistrement…');
-  try {
-    await records.saveDraft(MODULE, auth.current().login, state.dossier);
-    dirty = false;
-    const time = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
-    setSync(`enregistré à ${time}`, 'ok');
-  } catch (error) {
-    setSync(`échec : ${error.message}`, 'error');
-  } finally {
-    saving = false;
-  }
 }
 
 function loadImage(src) {
@@ -128,10 +103,10 @@ async function startDossier() {
 
   state.dossier = blankDossier(id, state.settings);
   state.readOnly = false;
-  dirty = true;
+  autosave.reset(true);
   renderAll();
   openStep('id');
-  await flush();
+  await autosave.flush();
 }
 
 /** Ouverture directe d'un dossier clôturé depuis l'historique central. */
@@ -148,7 +123,7 @@ async function openFromUrl() {
     }
     state.dossier = migrate(dossier);
     state.readOnly = true;
-    dirty = false;
+    autosave.reset();
     renderAll();
     openStep('final');
     setSync(`${id} — lecture seule`);
@@ -207,36 +182,36 @@ async function start() {
 const handlers = {
   set(path, value) {
     if (!setPath(path, value)) return;
-    markDirty();
+    autosave.mark();
   },
 
   setAnswer(questionId, value) {
     if (!isEditable()) return;
     state.dossier.ans[questionId] = value;
-    markDirty();
+    autosave.mark();
   },
 
   setRadioAnswer(index, value) {
     if (!isEditable()) return;
     state.dossier.radioAns[index] = value;
-    markDirty();
+    autosave.mark();
   },
 
   setScenarioAnswer(scenarioIndex, questionIndex, value) {
     if (!isEditable()) return;
     state.dossier.scAns[scenarioIndex][questionIndex] = value;
-    markDirty();
+    autosave.mark();
   },
 
   setExaminer(index, field, value) {
     if (!isEditable()) return;
     state.dossier.ex[index][field] = value;
-    markDirty();
+    autosave.mark();
   },
 
   setIncident(key, checked) {
     if (!setPath(`el.${key}`, checked)) return;
-    markDirty();
+    autosave.mark();
     refreshResults();
   },
 
@@ -245,13 +220,13 @@ const handlers = {
     const list = state.dossier.retakes;
     if (checked && !list.includes(label)) list.push(label);
     if (!checked) state.dossier.retakes = list.filter(item => item !== label);
-    markDirty();
+    autosave.mark();
   },
 
   addExaminer() {
     if (!isEditable() || state.dossier.ex.length >= 3) return;
     state.dossier.ex.push({ grade: '', name: '' });
-    markDirty();
+    autosave.mark();
     renderAll();
     openStep('id');
   },
@@ -261,12 +236,12 @@ const handlers = {
   },
 
   step(delta) {
-    flush();
+    autosave.flush();
     step(delta);
   },
 
   async newDossier() {
-    if (dirty && !window.confirm('Des modifications ne sont pas enregistrées. Démarrer un nouveau dossier ?')) return;
+    if (autosave.dirty && !window.confirm('Des modifications ne sont pas enregistrées. Démarrer un nouveau dossier ?')) return;
     if (!auth.canWrite()) {
       window.alert('Ton rôle ne permet pas de créer un dossier.');
       return;
@@ -276,8 +251,8 @@ const handlers = {
   },
 
   async saveNow() {
-    dirty = true;
-    await flush();
+    autosave.reset(true);
+    await autosave.flush();
   },
 
   async retry() {
@@ -327,7 +302,7 @@ const handlers = {
 
     state.dossier = migrate({ ...D, locked: false, rectifies: D.id, closedAt: null, closedBy: null });
     state.readOnly = false;
-    dirty = true;
+    autosave.reset(true);
     renderAll();
     openStep('correct');
     setSync(`version rectificative de ${D.id} — à clôturer de nouveau`);
@@ -389,7 +364,7 @@ const handlers = {
       state.dossier = published;
       state.readOnly = true;
       await records.deleteDraft(MODULE, session.login);
-      dirty = false;
+      autosave.reset();
       setSync(`dossier ${published.id} clôturé`, 'ok');
 
       const logged = await journal.record({
@@ -443,21 +418,20 @@ export default {
     params = ctx.params;
     state.dossier = null;
     state.readOnly = false;
-    dirty = false;
+    autosave.reset();
     await start();
   },
 
   canLeave() {
-    return !dirty;
+    return !autosave.dirty;
   },
 
   onHide() {
-    flush();
+    autosave.flush();
   },
 
   async unmount() {
-    if (autosaveTimer) window.clearTimeout(autosaveTimer);
-    autosaveTimer = null;
-    await flush();
+    autosave.cancel();
+    await autosave.flush();
   }
 };

@@ -32,6 +32,7 @@ import {
 } from '../../core/formation.js';
 import { decisionText } from '../../ui/chips.js';
 import { createStepper } from '../../ui/stepper.js';
+import { createAutosave } from '../../ui/autosave.js';
 import { sidebar, chapterPanel } from './cours.js';
 import { renderFormationFiche } from './fiche.js';
 import {
@@ -51,9 +52,12 @@ export function formationPage(course, kicker = '') {
   const state = { record: null, readOnly: false, chapter: course.chapters[0].id, settings: { ...CONFIG.defaultCommand } };
   let params = new URLSearchParams();
 
-  let dirty = false;
-  let saving = false;
-  let autosaveTimer = null;
+  // Le brouillon part au dépôt après chaque pause de saisie.
+  const autosave = createAutosave({
+    module: MODULE,
+    current: () => (state.readOnly ? null : state.record)
+  });
+
 
   const stepper = createStepper({
     steps: [
@@ -89,34 +93,6 @@ export function formationPage(course, kicker = '') {
   const dis = () => (editable() ? '' : 'disabled');
 
   // ───────────────────────────── Enregistrement ─────────────────────────
-
-  function markDirty() {
-    dirty = true;
-    portal.setSync('modifications non enregistrées');
-    if (autosaveTimer) window.clearTimeout(autosaveTimer);
-    autosaveTimer = window.setTimeout(() => { flush() }, CONFIG.autosaveDelay);
-  }
-
-  async function flush() {
-    if (!dirty || saving || !state.record || state.readOnly) return;
-    if (!auth.canWrite()) {
-      portal.setSync('lecture seule — rien n’est enregistré', 'error');
-      return;
-    }
-
-    saving = true;
-    portal.setSync('enregistrement…');
-    try {
-      await records.saveDraft(MODULE, auth.current().login, state.record);
-      dirty = false;
-      const time = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
-      portal.setSync(`enregistré à ${time}`, 'ok');
-    } catch (error) {
-      portal.setSync(`échec : ${error.message}`, 'error');
-    } finally {
-      saving = false;
-    }
-  }
 
   // ───────────────────────────── Rendu ─────────────────────────────────
 
@@ -202,10 +178,10 @@ export function formationPage(course, kicker = '') {
     state.record = blankFormation(id, course, state.settings);
     state.readOnly = false;
     state.chapter = course.chapters[0].id;
-    dirty = true;
+    autosave.reset(true);
     renderAll();
     stepper.openStep('id');
-    await flush();
+    await autosave.flush();
   }
 
   async function openFromUrl() {
@@ -221,7 +197,7 @@ export function formationPage(course, kicker = '') {
       }
       state.record = migrateFormation(found, course, state.settings);
       state.readOnly = true;
-      dirty = false;
+      autosave.reset();
       renderAll();
       stepper.openStep('final');
       portal.setSync(`${id} — lecture seule`);
@@ -271,19 +247,19 @@ export function formationPage(course, kicker = '') {
 
   const handlers = {
     set(path, value) {
-      if (setPath(path, value)) markDirty();
+      if (setPath(path, value)) autosave.mark();
     },
 
     setExaminer(index, field, value) {
       if (!editable()) return;
       state.record.ex[index][field] = value;
-      markDirty();
+      autosave.mark();
     },
 
     addExaminer() {
       if (!editable() || state.record.ex.length >= 3) return;
       state.record.ex.push({ grade: '', name: '' });
-      markDirty();
+      autosave.mark();
       renderAll();
       stepper.openStep('id');
     },
@@ -292,32 +268,32 @@ export function formationPage(course, kicker = '') {
       if (!editable()) return;
       if (checked) state.record.read[chapterId] = true;
       else delete state.record.read[chapterId];
-      markDirty();
+      autosave.mark();
       renderCours();
     },
 
     setWork(exerciseId, value) {
       if (!editable()) return;
       state.record.work[exerciseId] = value;
-      markDirty();
+      autosave.mark();
     },
 
     setAnswer(questionId, value) {
       if (!editable()) return;
       state.record.ans[questionId] = value;
-      markDirty();
+      autosave.mark();
     },
 
     setMark(questionId, value) {
       if (!editable()) return;
       state.record.marks[questionId] = value;
-      markDirty();
+      autosave.mark();
       renderCorrection();
     },
 
     setDecision(value) {
       if (!setPath('decision', value)) return;
-      markDirty();
+      autosave.mark();
       renderCorrection();
     },
 
@@ -338,17 +314,17 @@ export function formationPage(course, kicker = '') {
     },
 
     step(delta) {
-      flush();
+      autosave.flush();
       stepper.move(delta);
     },
 
     async saveNow() {
-      dirty = true;
-      await flush();
+      autosave.reset(true);
+      await autosave.flush();
     },
 
     async newRecord() {
-      if (dirty && !window.confirm('Des modifications ne sont pas enregistrées. Démarrer un nouveau dossier ?')) return;
+      if (autosave.dirty && !window.confirm('Des modifications ne sont pas enregistrées. Démarrer un nouveau dossier ?')) return;
       if (!auth.canWrite()) return;
       await startRecord();
     },
@@ -382,7 +358,7 @@ export function formationPage(course, kicker = '') {
         state.settings
       );
       state.readOnly = false;
-      dirty = true;
+      autosave.reset(true);
       renderAll();
       stepper.openStep('correct');
       portal.setSync(`version rectificative de ${R.id} — à clôturer de nouveau`);
@@ -442,7 +418,7 @@ export function formationPage(course, kicker = '') {
         state.record = published;
         state.readOnly = true;
         await records.deleteDraft(MODULE, session.login);
-        dirty = false;
+        autosave.reset();
         portal.setSync(`dossier ${published.id} clôturé`, 'ok');
 
         const logged = await journal.record({
@@ -496,22 +472,21 @@ export function formationPage(course, kicker = '') {
       state.readOnly = false;
       state.chapter = course.chapters[0].id;
       state.settings = { ...CONFIG.defaultCommand, ...shared.settings };
-      dirty = false;
+      autosave.reset();
       await loadInitial();
     },
 
     canLeave() {
-      return !dirty;
+      return !autosave.dirty;
     },
 
     onHide() {
-      flush();
+      autosave.flush();
     },
 
     async unmount() {
-      if (autosaveTimer) window.clearTimeout(autosaveTimer);
-      autosaveTimer = null;
-      await flush();
+      autosave.cancel();
+      await autosave.flush();
     }
   };
 }

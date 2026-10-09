@@ -8,7 +8,7 @@
 // Le comptage des effectifs vit sur la même page : il est calculé sur les
 // accès affichés juste au-dessus, et pas sur une liste écrite à la main.
 
-import { byId, esc, setHTML } from '../../core/dom.js';
+import { byId, esc } from '../../core/dom.js';
 import * as portal from '../../shell/index.js';
 import { href } from '../../routes.js';
 import * as auth from '../../core/auth.js';

@@ -5,7 +5,7 @@
 // Les accès et les rôles vivent sur la page Gestion des utilisateurs. Chaque
 // enregistrement passe au journal : qui, quand, quoi.
 
-import { esc, setHTML } from '../../core/dom.js';
+import { esc } from '../../core/dom.js';
 import { CONFIG } from '../../config.js';
 import { state } from '../../core/state.js';
 import * as store from '../../core/store.js';
