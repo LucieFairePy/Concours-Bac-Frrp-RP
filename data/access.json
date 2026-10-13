@@ -18,17 +18,6 @@
       "manage": true
     },
     {
-      "id": "kevin",
-      "label": "Lieutenant BOUSSERE Kevin",
-      "role": "directeur",
-      "manage": true,
-      "salt": "73ZMUfDVbjnLXsIHmIrF9Q==",
-      "iv": "uqctjuGQD6UOoXH8",
-      "data": "/Kbl3LlwpY7m7f7KUDEz/P9bW6unfEa46q7N+wCO2McdEPu4STYo3CFBEEu5cPSNh46j7AC7e6rq/Gkq4MMTtrmRHZWXaCC+H3lDO8oYHntrsMbS20tWCQYMHk4OI+6APwLzt18aCS8u+avZ7b1lH8vAynDMwvknbknbDAqU0DJ7jVSIbEOHBM/EIfGw5sqWqxRNbVrCK8gJjAwXeoFEYWqgXk+FZGRiouqRTsj/mRy1Jwk/fysQBgKjT7+89TifSFSilTTUlA==",
-      "grade": "Lieutenant",
-      "name": "BOUSSERE Kevin"
-    },
-    {
       "id": "kaysen-vega",
       "label": "sous brigadier Kaysen Vega",
       "grade": "sous brigadier",
