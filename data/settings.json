@@ -1,6 +1,23 @@
 {
   "dg": "Lieutenant",
   "dn": "BOUSSERE Kevin",
-  "ag": "Brigadier",
-  "an": "LAURENT Cyril"
+  "ag": "Sous Brigadier",
+  "an": "LAURENT Cyril",
+  "bacRetenu": 800,
+  "bacReserve": 650,
+  "cdgQualifie": 800,
+  "cdgReserve": 650,
+  "cdgAjourne": 500,
+  "physRunFort": 300,
+  "physRunBon": 330,
+  "physRunBase": 390,
+  "physPushFort": 45,
+  "physPushBon": 38,
+  "physPushBase": 30,
+  "physAbsFort": 70,
+  "physAbsBon": 60,
+  "physAbsBase": 50,
+  "physJumpingFort": 30,
+  "physJumpingBon": 25,
+  "physJumpingBase": 20
 }
