@@ -30,5 +30,13 @@
     "action": "direction.maj",
     "target": "direction BAC",
     "detail": "Lieutenant BOUSSERE Kevin — adjoint Sous Brigadier LAURENT Cyril"
+  },
+  {
+    "at": "2026-10-13T23:25:20.168Z",
+    "who": "Brigadier LAURENT Cyril",
+    "role": "directeur",
+    "action": "acces.creation",
+    "target": "Commissaire Dupont Quentin",
+    "detail": "rôle Utilisateur / consultation"
   }
 ]
