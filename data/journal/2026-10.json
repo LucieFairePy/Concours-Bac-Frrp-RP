@@ -22,5 +22,13 @@
     "action": "acces.creation",
     "target": "Lieutenant BOUSSERE Kevin",
     "detail": "rôle Directeur BAC"
+  },
+  {
+    "at": "2026-10-13T23:23:00.404Z",
+    "who": "Brigadier LAURENT Cyril",
+    "role": "directeur",
+    "action": "direction.maj",
+    "target": "direction BAC",
+    "detail": "Lieutenant BOUSSERE Kevin — adjoint Sous Brigadier LAURENT Cyril"
   }
 ]
