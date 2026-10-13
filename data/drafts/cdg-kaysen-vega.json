@@ -1,0 +1,192 @@
+{
+  "id": "CDG-2026-001",
+  "module": "cdg",
+  "format": "v4",
+  "version": 2,
+  "status": "draft",
+  "locked": false,
+  "created": "2026-10-13T23:18:52.887Z",
+  "auditTrail": [
+    {
+      "at": "2026-10-13T23:18:52.887Z",
+      "action": "dossier.creation",
+      "who": "sous brigadier Kaysen Vega",
+      "detail": "CDG-2026-001"
+    }
+  ],
+  "c": {
+    "last": "",
+    "first": "",
+    "grade": "",
+    "mat": "",
+    "date": "2026-10-13",
+    "heure": ""
+  },
+  "ex": [
+    {
+      "grade": "",
+      "name": "Kaysen Vega"
+    }
+  ],
+  "qs": [
+    {
+      "q": "Contexte : plusieurs équipages disponibles. Tu commandes 8 agents. Sur le thème « communication de commandement », qu’est-ce que tu mets en place et pourquoi ?",
+      "keys": [
+        "consigne claire",
+        "priorité",
+        "compréhension",
+        "remontée d’information"
+      ]
+    },
+    {
+      "q": "Contexte : début de vacation. Tu commandes 6 agents. Sur le thème « prise de décision », qu’est-ce que tu mets en place et pourquoi ?",
+      "keys": [
+        "faits confirmés",
+        "hypothèses",
+        "priorités",
+        "réévaluation"
+      ]
+    },
+    {
+      "q": "Contexte : plusieurs équipages disponibles. Tu commandes 8 agents. Sur le thème « communication de commandement », qu’est-ce que tu mets en place et pourquoi ?",
+      "keys": [
+        "consigne claire",
+        "priorité",
+        "compréhension",
+        "remontée d’information"
+      ]
+    },
+    {
+      "q": "Contexte : secteur très fréquenté. Tu commandes 8 agents. Sur le thème « gestion des effectifs », qu’est-ce que tu mets en place et pourquoi ?",
+      "keys": [
+        "répartition",
+        "délégation",
+        "vue d’ensemble",
+        "adaptation"
+      ]
+    },
+    {
+      "q": "Contexte : informations incomplètes. Tu commandes 4 agents. Sur le thème « communication de commandement », qu’est-ce que tu mets en place et pourquoi ?",
+      "keys": [
+        "consigne claire",
+        "priorité",
+        "compréhension",
+        "remontée d’information"
+      ]
+    },
+    {
+      "q": "Contexte : secteur très fréquenté. Tu commandes 2 agents. Sur le thème « prise de décision », qu’est-ce que tu mets en place et pourquoi ?",
+      "keys": [
+        "faits confirmés",
+        "hypothèses",
+        "priorités",
+        "réévaluation"
+      ]
+    },
+    {
+      "q": "Contexte : informations incomplètes. Tu commandes 6 agents. Sur le thème « communication de commandement », qu’est-ce que tu mets en place et pourquoi ?",
+      "keys": [
+        "consigne claire",
+        "priorité",
+        "compréhension",
+        "remontée d’information"
+      ]
+    },
+    {
+      "q": "Contexte : secteur très fréquenté. Tu commandes 8 agents. Sur le thème « communication de commandement », qu’est-ce que tu mets en place et pourquoi ?",
+      "keys": [
+        "consigne claire",
+        "priorité",
+        "compréhension",
+        "remontée d’information"
+      ]
+    },
+    {
+      "q": "Contexte : début de vacation. Tu commandes 2 agents. Sur le thème « situation dégradée », qu’est-ce que tu mets en place et pourquoi ?",
+      "keys": [
+        "prioriser",
+        "réorganiser",
+        "moyens supplémentaires",
+        "rendre compte"
+      ]
+    },
+    {
+      "q": "Contexte : intervention déjà engagée. Tu commandes 6 agents. Sur le thème « débriefing », qu’est-ce que tu mets en place et pourquoi ?",
+      "keys": [
+        "résultat",
+        "difficultés",
+        "points positifs",
+        "améliorations"
+      ]
+    }
+  ],
+  "ans": [
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    ""
+  ],
+  "lead": [
+    "",
+    "",
+    "",
+    "",
+    ""
+  ],
+  "s": [
+    {
+      "txt": "Tu es chef de groupe avec six agents. Un événement est signalé dans une zone fréquentée. Organise ton groupe, fixe les priorités et explique les premières consignes.",
+      "evol": "les informations deviennent contradictoires",
+      "ans": ""
+    },
+    {
+      "txt": "Une intervention déjà engagée se dégrade. Plusieurs informations sont incomplètes et un équipage demande une décision rapide. Reprends une vue d’ensemble, réorganise et rends compte.",
+      "evol": "les informations deviennent contradictoires",
+      "ans": ""
+    }
+  ],
+  "marks": {
+    "q": [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "lead": [
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "s1": "",
+    "s2": "",
+    "radio": ""
+  },
+  "decision": "",
+  "reason": "",
+  "obs": "",
+  "total": null,
+  "suggestedDecision": "",
+  "suggestedReason": "",
+  "cmd": {
+    "dg": "Lieutenant",
+    "dn": "BOUSSERE Kevin",
+    "ag": "Brigadier",
+    "an": "LAURENT Cyril"
+  },
+  "closedAt": null,
+  "closedBy": null
+}
