@@ -1,0 +1,199 @@
+{
+  "id": "BAC-2026-002",
+  "version": 2,
+  "contentSet": "v4",
+  "status": "draft",
+  "locked": false,
+  "created": "2026-10-14T16:26:54.151Z",
+  "auditTrail": [
+    {
+      "at": "2026-10-14T16:26:54.157Z",
+      "action": "dossier.creation",
+      "who": "Lieutenant BOUSSERE Kevin",
+      "detail": "BAC-2026-002"
+    }
+  ],
+  "c": {
+    "last": "",
+    "first": "",
+    "grade": "",
+    "mat": "",
+    "date": "2026-10-14",
+    "start": ""
+  },
+  "ex": [
+    {
+      "grade": "Sous Brigadier",
+      "name": "LAURENT Cyril"
+    }
+  ],
+  "qs": [
+    {
+      "id": "v4-19",
+      "theme": "Sécurité",
+      "q": "Quelle est ta priorité si une personne est blessée ?"
+    },
+    {
+      "id": "v4-23",
+      "theme": "Organisation",
+      "q": "Quand demandes-tu l’aide d’une autre unité ?"
+    },
+    {
+      "id": "v4-24",
+      "theme": "Organisation",
+      "q": "Comment termines-tu une intervention correctement ?"
+    },
+    {
+      "id": "v4-26",
+      "theme": "Connaissances BAC",
+      "q": "Pourquoi la BAC peut-elle travailler en tenue civile ?"
+    },
+    {
+      "id": "v4-4",
+      "theme": "BAC",
+      "q": "Pourquoi les agents de la BAC doivent-ils rester discrets ?"
+    },
+    {
+      "id": "v4-9",
+      "theme": "BAC",
+      "q": "Pourquoi travaille-t-on en équipe à la BAC ?"
+    },
+    {
+      "id": "v4-18",
+      "theme": "Comportement",
+      "q": "Pourquoi faut-il rester poli pendant un contrôle ?"
+    },
+    {
+      "id": "v4-12",
+      "theme": "Radio",
+      "q": "Comment annonces-tu que ton équipe prend son service ?"
+    },
+    {
+      "id": "v4-6",
+      "theme": "BAC",
+      "q": "Que fais-tu si tu vois une infraction en cours ?"
+    },
+    {
+      "id": "v4-20",
+      "theme": "Sécurité",
+      "q": "Que fais-tu si la situation devient dangereuse pour les passants ?"
+    }
+  ],
+  "ans": {},
+  "radioAns": [
+    "",
+    "",
+    "",
+    ""
+  ],
+  "scAns": [
+    [
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ]
+  ],
+  "phys": {
+    "run": "",
+    "push": "",
+    "abs": "",
+    "jumping": "",
+    "pursuit": "",
+    "cog": "",
+    "obs": ""
+  },
+  "shoot": {
+    "safety": "",
+    "handling": "",
+    "precision": "",
+    "reaction": "",
+    "memory": "",
+    "memoryAsked": "",
+    "memoryGood": "",
+    "memoryErrors": "",
+    "discern": "",
+    "discernAsked": "",
+    "discernErrors": "",
+    "analysis": "",
+    "hostage": 0,
+    "obs": ""
+  },
+  "marks": {
+    "theory": {},
+    "radio": {},
+    "sc": {},
+    "phys": "",
+    "shoot": ""
+  },
+  "strength": "",
+  "improve": "",
+  "general": "",
+  "decision": "",
+  "reason": "",
+  "retakes": [],
+  "retakeDate": "",
+  "el": {
+    "cheat": false,
+    "refusal": false,
+    "abandon": false,
+    "danger": false
+  },
+  "cmd": {
+    "dg": "Lieutenant",
+    "dn": "BOUSSERE Kevin",
+    "ag": "Sous Brigadier",
+    "an": "LAURENT Cyril",
+    "bacRetenu": 800,
+    "bacReserve": 650,
+    "cdgQualifie": 800,
+    "cdgReserve": 650,
+    "cdgAjourne": 500,
+    "physRunFort": 300,
+    "physRunBon": 330,
+    "physRunBase": 390,
+    "physPushFort": 45,
+    "physPushBon": 38,
+    "physPushBase": 30,
+    "physAbsFort": 70,
+    "physAbsBon": 60,
+    "physAbsBase": 50,
+    "physJumpingFort": 30,
+    "physJumpingBon": 25,
+    "physJumpingBase": 20
+  },
+  "total": null,
+  "closedAt": null,
+  "closedBy": null
+}
