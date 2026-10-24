@@ -2,7 +2,7 @@
   "id": "BAC-2026-002",
   "version": 2,
   "contentSet": "v4",
-  "status": "in_progress",
+  "status": "correction",
   "locked": false,
   "created": "2026-10-24T13:32:48.759Z",
   "auditTrail": [
@@ -162,7 +162,10 @@
     "obs": "Le candidat a parfaitement mémorisé les 5 cibles dès le début de l’épreuve. Lors du test de mémoire, il a su retrouver correctement les numéros demandés. Lors du test de discernement, lorsqu’il lui a été demandé de tirer sur la cible numéro 2, il a correctement identifié qu’aucune cible ne portait ce numéro et n’a donc pas tiré. Très bonne mémorisation et excellent discernement."
   },
   "marks": {
-    "theory": {},
+    "theory": {
+      "v4-2": "10",
+      "v4-4": "0"
+    },
     "radio": {},
     "sc": {},
     "phys": "",
