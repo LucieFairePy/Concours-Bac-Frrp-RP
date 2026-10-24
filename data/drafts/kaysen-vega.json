@@ -79,7 +79,11 @@
       "q": "Quelle est la différence entre la BAC et Police Secours ?"
     }
   ],
-  "ans": {},
+  "ans": {
+    "v4-2": "Brigade anti criminalité",
+    "v4-4": "Pour garder une couverture et prendre en flagrant délits.",
+    "v4-25": "Elle peut intervenir "
+  },
   "radioAns": [
     "",
     "",
