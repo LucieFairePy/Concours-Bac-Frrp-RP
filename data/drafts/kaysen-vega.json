@@ -139,7 +139,7 @@
   "phys": {
     "run": "8.16",
     "push": "75",
-    "abs": "",
+    "abs": "33",
     "jumping": "",
     "pursuit": "",
     "cog": "",
