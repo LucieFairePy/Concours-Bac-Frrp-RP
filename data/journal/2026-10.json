@@ -38,5 +38,13 @@
     "action": "acces.creation",
     "target": "Commissaire Dupont Quentin",
     "detail": "rôle Utilisateur / consultation"
+  },
+  {
+    "at": "2026-10-24T18:47:07.127Z",
+    "who": "Brigadier LAURENT Cyril",
+    "role": "directeur",
+    "action": "acces.retrait",
+    "target": "Commissaire Dupont Quentin",
+    "detail": "rôle retiré : Utilisateur / consultation"
   }
 ]
