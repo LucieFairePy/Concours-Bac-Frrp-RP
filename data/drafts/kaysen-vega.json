@@ -2,7 +2,7 @@
   "id": "BAC-2026-002",
   "version": 2,
   "contentSet": "v4",
-  "status": "draft",
+  "status": "in_progress",
   "locked": false,
   "created": "2026-10-24T13:32:48.759Z",
   "auditTrail": [
@@ -14,9 +14,9 @@
     }
   ],
   "c": {
-    "last": "",
-    "first": "",
-    "grade": "",
+    "last": "Araujo",
+    "first": "Enzo",
+    "grade": "GPX-S",
     "mat": "",
     "date": "2026-10-24",
     "start": ""
