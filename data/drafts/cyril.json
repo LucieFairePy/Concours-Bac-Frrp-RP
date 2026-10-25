@@ -1,14 +1,24 @@
 {
   "id": "BAC-2026-002",
+  "version": 2,
+  "status": "in_progress",
   "locked": false,
   "created": "2026-10-06T14:44:51.645Z",
+  "auditTrail": [
+    {
+      "at": "2026-10-25T14:52:24.375Z",
+      "action": "dossier.creation",
+      "who": "Brigadier LAURENT Cyril",
+      "detail": "BAC-2026-002"
+    }
+  ],
   "c": {
-    "last": "",
-    "first": "",
-    "grade": "",
-    "mat": "",
+    "last": "Morretti",
+    "first": "Alexandro",
+    "grade": "GPX-S",
+    "mat": "7104648",
     "date": "2026-10-06",
-    "start": ""
+    "start": "15:55"
   },
   "ex": [
     {
@@ -118,10 +128,11 @@
     "run": "",
     "push": "",
     "abs": "",
-    "plank": "",
+    "jumping": "",
     "pursuit": "",
     "cog": "",
-    "obs": ""
+    "obs": "",
+    "plank": ""
   },
   "shoot": {
     "safety": "",
