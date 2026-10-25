@@ -1,7 +1,7 @@
 {
   "id": "BAC-2026-002",
   "version": 2,
-  "status": "correction",
+  "status": "decision",
   "locked": false,
   "created": "2026-10-06T14:44:51.645Z",
   "auditTrail": [
@@ -215,7 +215,7 @@
   "strength": "",
   "improve": "",
   "general": "",
-  "decision": "",
+  "decision": "RETENU",
   "reason": "",
   "retakes": [],
   "retakeDate": "",
