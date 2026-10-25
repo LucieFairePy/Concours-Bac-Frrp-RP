@@ -136,13 +136,13 @@
     ]
   ],
   "phys": {
-    "run": "",
-    "push": "",
-    "abs": "",
-    "jumping": "",
-    "pursuit": "",
-    "cog": "",
-    "obs": "",
+    "run": "120",
+    "push": "30",
+    "abs": "50",
+    "jumping": "20",
+    "pursuit": "tres endurant , bon discernement , bonne prise de decision , ne fonce pas tete baisser ",
+    "cog": "RAS au Top ",
+    "obs": "Bon sportif ",
     "plank": ""
   },
   "shoot": {
@@ -159,7 +159,7 @@
     "discernErrors": "",
     "analysis": "",
     "hostage": 0,
-    "obs": ""
+    "obs": "tres reactif bonne ecoute bonne memoire bonne annalyse "
   },
   "marks": {
     "theory": {},
