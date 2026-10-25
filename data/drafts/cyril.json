@@ -152,8 +152,8 @@
     "reaction": "",
     "memory": "",
     "memoryAsked": "12345",
-    "memoryGood": "9",
-    "memoryErrors": "1",
+    "memoryGood": "",
+    "memoryErrors": "0",
     "discern": "",
     "discernAsked": "5 cible parmis elle des otage ne tirer pas sur les otage ",
     "discernErrors": "",
@@ -209,8 +209,8 @@
       "4_5": "9",
       "4_6": "10"
     },
-    "phys": "159",
-    "shoot": "129"
+    "phys": "190",
+    "shoot": "295"
   },
   "strength": "",
   "improve": "",
