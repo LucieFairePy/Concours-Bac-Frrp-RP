@@ -2,46 +2,61 @@
   "id": "BAC-2026-002",
   "version": 2,
   "contentSet": "v4",
-  "status": "decision",
+  "status": "draft",
   "locked": false,
-  "created": "2026-10-24T13:32:48.759Z",
+  "created": "2026-10-26T16:07:55.523Z",
   "auditTrail": [
     {
-      "at": "2026-10-24T13:32:48.761Z",
+      "at": "2026-10-26T16:07:55.527Z",
       "action": "dossier.creation",
       "who": "sous brigadier Kaysen Vega",
       "detail": "BAC-2026-002"
     }
   ],
   "c": {
-    "last": "Araujo",
-    "first": "Enzo",
-    "grade": "GPX-S",
-    "mat": "1141728",
-    "date": "2026-10-24",
-    "start": "15:30"
+    "last": "",
+    "first": "",
+    "grade": "",
+    "mat": "",
+    "date": "2026-10-26",
+    "start": ""
   },
   "ex": [
     {
       "grade": "Sous Brigadier",
-      "name": "VEGA Kaysen"
+      "name": "LAURENT Cyril"
     }
   ],
   "qs": [
     {
-      "id": "v4-2",
-      "theme": "BAC",
-      "q": "Que signifie BAC ?"
+      "id": "v4-24",
+      "theme": "Organisation",
+      "q": "Comment termines-tu une intervention correctement ?"
     },
     {
-      "id": "v4-4",
-      "theme": "BAC",
-      "q": "Pourquoi les agents de la BAC doivent-ils rester discrets ?"
+      "id": "v4-16",
+      "theme": "Comportement",
+      "q": "Comment réagis-tu face à une personne qui crie ?"
     },
     {
-      "id": "v4-25",
-      "theme": "Connaissances BAC",
-      "q": "La BAC intervient-elle seulement la nuit ? Explique."
+      "id": "v4-13",
+      "theme": "Radio",
+      "q": "Pourquoi faut-il parler clairement et brièvement à la radio ?"
+    },
+    {
+      "id": "v4-12",
+      "theme": "Radio",
+      "q": "Comment annonces-tu que ton équipe prend son service ?"
+    },
+    {
+      "id": "v4-22",
+      "theme": "Organisation",
+      "q": "Que fais-tu si les informations de deux témoins sont différentes ?"
+    },
+    {
+      "id": "v4-7",
+      "theme": "BAC",
+      "q": "Pourquoi faut-il bien observer avant d’agir ?"
     },
     {
       "id": "v4-14",
@@ -54,93 +69,67 @@
       "q": "Que fais-tu si tu reçois une information importante à la radio ?"
     },
     {
-      "id": "v4-12",
-      "theme": "Radio",
-      "q": "Comment annonces-tu que ton équipe prend son service ?"
-    },
-    {
-      "id": "v4-10",
+      "id": "v4-6",
       "theme": "BAC",
-      "q": "Que fais-tu si tu ne comprends pas une consigne ?"
+      "q": "Que fais-tu si tu vois une infraction en cours ?"
     },
     {
-      "id": "v4-26",
+      "id": "v4-29",
       "theme": "Connaissances BAC",
-      "q": "Pourquoi la BAC peut-elle travailler en tenue civile ?"
-    },
-    {
-      "id": "v4-19",
-      "theme": "Sécurité",
-      "q": "Quelle est ta priorité si une personne est blessée ?"
-    },
-    {
-      "id": "v4-5",
-      "theme": "BAC",
-      "q": "Quelle est la différence entre la BAC et Police Secours ?"
+      "q": "Que dois-tu faire avant de transmettre une information non vérifiée ?"
     }
   ],
-  "ans": {
-    "v4-2": "Brigadier anticriminalité.",
-    "v4-4": "Pour garder une couverture et prendre en flagrant délit.",
-    "v4-25": "Elle peut intervenir de jour, à l’exception de la BAC 75N.",
-    "v4-14": "TN de BAC Alpha, besoin de renfort à la position.",
-    "v4-15": "Je la transmets à mes collègues dans le VL et j’attends les directives du TN.",
-    "v4-12": "TN de BAC Alpha à bord d’une Twingo banalisée en 0+2, équipée d’une arme d’épaule pour des missions anticriminalité.",
-    "v4-10": "Lui demander de répéter en simplifiant la consigne.",
-    "v4-26": "Pour leur mission flagrant délis.",
-    "v4-19": "Appeler les pompiers, la mettre en sécurité et faire les premiers soins.",
-    "v4-5": "La BAC est en civil, n’a pas les mêmes missions et elle est TDM2."
-  },
+  "ans": {},
   "radioAns": [
-    "TN de BAC, on a une information : une victime s’est fait voler son téléphone (tu donnes le descriptif de l’individu et le lieu). Tu gardes les infos de la victime s’il faut porter plainte et prends son contact pour l’informer que le téléphone a été retrouvé.",
-    "Contrôler l’individu si une personne correspond à la description de l’individu, l’interpeller pour essayer de trouver plusieurs téléphones.",
-    "Besoin de renfort tout autour du lieu des faits. La personne est peut-être sur les lieux où on est. Il nous faudrait une unité pour surveiller les environs.",
-    "TN de BAC Alpha, nous allons quitter les lieux sur le vol de téléphone. La victime viendra, mais l’individu, après vérifications, a quitté les lieux."
+    "",
+    "",
+    "",
+    ""
   ],
   "scAns": [
     [
-      "Prendre le descriptif de l’individu et le prendre avec nous dans notre VL, et vérifier les alentours pour tenter de le retrouver.",
-      "1 VL qui part de la fin de la rue et un autre qui part à l’autre bout.",
-      "Le descriptif de l’individu, s’il est armé, par quelle direction il a pris la fuite.",
-      "On est actuellement sur un vol à l’arraché, on est avec la victime. Je donne le descriptif de l’individu et informe les 2 unités de BAC sur les lieux afin de retrouver l’individu.",
-      "On garde notre couverture car on est en BAC civil, mais on vérifie les individus dans la rue."
+      "",
+      "",
+      "",
+      "",
+      ""
     ],
     [
-      "À part aller sur les lieux et vérifier s’il y a une possible infraction, demander à la TN s’il y a des individus encore à l’intérieur.",
-      "Une équipe de 2 qui rentre dans la maison et 3 qui sécurisent.",
-      "S’ils ont des PS disponibles aux alentours de la maison.",
-      "Se replier et réorganiser les effectifs.",
-      "Dès le début."
+      "",
+      "",
+      "",
+      "",
+      ""
     ],
     [
-      "Je demande aux témoins de s’écarter, de rester calmes et d’aller voir la personne qui crie.",
-      "Pourquoi elle crie, par où ça a commencé et s’ils ont vu des objets dangereux sur la personne qui crie.",
-      "2 agents qui restent avec les témoins et sécurisent, et 2 autres agents qui s’approchent prudemment de la personne.",
-      "Nous sommes actuellement sur une intervention avec une personne qui crie dans la rue et plusieurs témoins nous ont avertis qu’un individu crie. Je demande si besoin des renforts.",
-      "Demander à d’autres témoins et en déduire une présumée vérité."
+      "",
+      "",
+      "",
+      "",
+      ""
     ],
     [
-      "La priorité est la sécurité, effectuer les premiers soins et appeler les pompiers.",
-      "Une demande à la TN de converser avec Golf pour demander des moyens de secours.",
-      "D’attendre l’arrivée des pompiers et de sécuriser les lieux.",
-      "De quitter les lieux.",
-      "Je vais effectuer un compte rendu à la hiérarchie BAC."
+      "",
+      "",
+      "",
+      "",
+      ""
     ],
     [
-      "Demander plus d’infos à la TN 75, je regroupe les unités BAC et nous nous dirigeons en urgence sur l’intervention.",
-      "Chacun va avoir ses rôles, toujours à plusieurs, jamais seul. 2 personnes pour la sécurisation, 5 à traiter les menaces, 2 autres à recueillir des témoignages.",
-      "Toujours rester par 2 et avoir un œil partout.",
-      "Compléter les informations, leur expliquer la situation et les informer qu’on est sur les lieux et, si besoin, demander des renforts.",
-      "Je recontacte la TN et l’informe de l’évolution de la situation.",
-      "Quand l’intervention devient impossible à gérer à 9 effectifs.",
-      "En précisant la fin de l’intervention, en informant dans le compte rendu et à la TN s’il y a des interpellés."
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
     ]
   ],
   "phys": {
-    "run": "8.16",
-    "push": "75",
-    "abs": "33",
-    "jumping": "60",
+    "run": "",
+    "push": "",
+    "abs": "",
+    "jumping": "",
     "pursuit": "",
     "cog": "",
     "obs": ""
@@ -151,72 +140,28 @@
     "precision": "",
     "reaction": "",
     "memory": "",
-    "memoryAsked": "32",
-    "memoryGood": "32",
-    "memoryErrors": "0",
+    "memoryAsked": "",
+    "memoryGood": "",
+    "memoryErrors": "",
     "discern": "",
-    "discernAsked": "Sur 5 cibles distinguer les otages et les menaces ",
-    "discernErrors": "0",
-    "analysis": "Il s'est sentit confiant et n'indique n'avoir fait aucune erreur il tiré suffisamment rapidement sur chaque ordre.",
+    "discernAsked": "",
+    "discernErrors": "",
+    "analysis": "",
     "hostage": 0,
-    "obs": "Le candidat a parfaitement mémorisé les 5 cibles dès le début de l’épreuve. Lors du test de mémoire, il a su retrouver correctement les numéros demandés. Lors du test de discernement, lorsqu’il lui a été demandé de tirer sur la cible numéro 2, il a correctement identifié qu’aucune cible ne portait ce numéro et n’a donc pas tiré. Très bonne mémorisation et excellent discernement."
+    "obs": ""
   },
   "marks": {
-    "theory": {
-      "v4-2": "10",
-      "v4-4": "8",
-      "v4-25": "10",
-      "v4-14": "6",
-      "v4-15": "7",
-      "v4-12": "4",
-      "v4-10": "9",
-      "v4-26": "6",
-      "v4-19": "7",
-      "v4-5": "6"
-    },
-    "radio": {
-      "0": "23",
-      "1": "20",
-      "2": "15",
-      "3": "19"
-    },
-    "sc": {
-      "0_0": "12",
-      "0_1": "10",
-      "0_2": "14",
-      "0_3": "13",
-      "0_4": "5",
-      "1_0": "11",
-      "1_1": "10",
-      "1_2": "7",
-      "1_3": "8",
-      "1_4": "5",
-      "2_0": "10",
-      "2_1": "12",
-      "2_2": "12",
-      "2_3": "14",
-      "2_4": "13",
-      "3_0": "10",
-      "3_1": "15",
-      "3_2": "12",
-      "3_3": "15",
-      "3_4": "10",
-      "4_0": "12",
-      "4_1": "13",
-      "4_2": "13",
-      "4_3": "15",
-      "4_4": "13",
-      "4_5": "15",
-      "4_6": "13"
-    },
-    "phys": "95",
-    "shoot": "280"
+    "theory": {},
+    "radio": {},
+    "sc": {},
+    "phys": "",
+    "shoot": ""
   },
-  "strength": "Le candidat obtient de bons résultats à l'épreuve de tir, avec une excellente mémorisation des cibles et un bon discernement. Il se distingue également en radio et coordination, avec des transmissions globalement satisfaisantes, ainsi qu'en mises en situation, où il démontre une bonne compréhension des principes d'organisation et de répartition des agents. Ses connaissances théoriques sont correctes et constituent une base solide.",
-  "improve": "Le candidat doit améliorer sa condition physique générale, notamment son endurance cardiovasculaire afin d'obtenir un meilleur temps au 1 200 mètres. Il doit également travailler davantage les abdominaux, qui n'ont pas été réalisés lors de l'épreuve. Sur le plan théorique et opérationnel, il doit approfondir ses connaissances de la BAC, améliorer la précision de ses transmissions radio et mieux structurer ses décisions en situation complexe. Un entraînement régulier et un travail plus rigoureux sur les points faibles identifiés sont nécessaires pour progresser.",
+  "strength": "",
+  "improve": "",
   "general": "",
-  "decision": "RESERVE",
-  "reason": "Le candidat montre une motivation à intégrer la BAC et possède des connaissances de base en matière de radio, de coordination et de gestion de situations opérationnelles. Il sait répartir les agents et recueillir des informations, mais doit encore progresser dans la précision de ses transmissions, l'évaluation des risques et la gestion des priorités. Il fait preuve d'une volonté d'apprendre et devra approfondir ses connaissances théoriques et améliorer la rigueur de ses décisions.",
+  "decision": "",
+  "reason": "",
   "retakes": [],
   "retakeDate": "",
   "el": {
