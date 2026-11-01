@@ -9,5 +9,20 @@
     "total": 13,
     "closedAt": "2026-10-06T14:42:47.126Z",
     "closedBy": "cyril"
+  },
+  {
+    "id": "BAC-2026-002",
+    "last": "Santini",
+    "first": "Mia",
+    "grade": "Eleve Gardien de la paix ",
+    "mat": "6351186",
+    "date": "2026-11-01",
+    "decision": "RETENU",
+    "total": 801,
+    "max": 1000,
+    "examiner": "Brigadier LAURENT Cyril",
+    "closedAt": "2026-11-01T17:56:37.975Z",
+    "closedBy": "cyril",
+    "rectifies": null
   }
 ]
