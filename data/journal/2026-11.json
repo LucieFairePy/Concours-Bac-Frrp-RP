@@ -6,5 +6,13 @@
     "action": "dossier.cloture",
     "target": "BAC-2026-002",
     "detail": "RETENU — 801/1000"
+  },
+  {
+    "at": "2026-11-01T17:59:58.273Z",
+    "who": "Brigadier LAURENT Cyril",
+    "role": "directeur",
+    "action": "direction.maj",
+    "target": "direction BAC",
+    "detail": "Capitaine BOUSSERE Kevin — adjoint Sous Brigadier LAURENT Cyril"
   }
 ]
