@@ -3,7 +3,7 @@
   "module": "cdg",
   "format": "v4",
   "version": 2,
-  "status": "draft",
+  "status": "in_progress",
   "locked": false,
   "created": "2026-10-13T23:31:32.426Z",
   "auditTrail": [
@@ -15,8 +15,8 @@
     }
   ],
   "c": {
-    "last": "",
-    "first": "",
+    "last": "Santini",
+    "first": "Mia",
     "grade": "",
     "mat": "",
     "date": "2026-10-13",
