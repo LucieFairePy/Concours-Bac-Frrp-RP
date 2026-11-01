@@ -1,0 +1,310 @@
+{
+  "id": "BAC-2026-002",
+  "version": 2,
+  "status": "closed",
+  "locked": true,
+  "created": "2026-10-06T14:44:51.645Z",
+  "auditTrail": [
+    {
+      "at": "2026-10-25T14:52:24.375Z",
+      "action": "dossier.creation",
+      "who": "Brigadier LAURENT Cyril",
+      "detail": "BAC-2026-002"
+    },
+    {
+      "at": "2026-11-01T17:56:37.975Z",
+      "action": "dossier.cloture",
+      "who": "Brigadier LAURENT Cyril",
+      "detail": "RETENU"
+    }
+  ],
+  "c": {
+    "last": "Santini",
+    "first": "Mia",
+    "grade": "Eleve Gardien de la paix ",
+    "mat": "6351186",
+    "date": "2026-11-01",
+    "start": "17:00"
+  },
+  "ex": [
+    {
+      "grade": "Brigadier",
+      "name": "LAURENT Cyril"
+    }
+  ],
+  "qs": [
+    {
+      "id": 72,
+      "theme": "Radio",
+      "q": "Pourquoi faut-il distinguer ce que vous avez vu de ce qui vous a été rapporté  avec plusieurs témoins ?"
+    },
+    {
+      "id": 113,
+      "theme": "Analyse",
+      "q": "Que faites-vous si votre première analyse était mauvaise  après un effort physique ?"
+    },
+    {
+      "id": 114,
+      "theme": "Analyse",
+      "q": "Que faites-vous si votre première analyse était mauvaise  avec un nouvel équipier ?"
+    },
+    {
+      "id": 95,
+      "theme": "Analyse",
+      "q": "Deux témoins donnent des versions différentes : comment réagissez-vous  après un effort physique ?"
+    },
+    {
+      "id": 22,
+      "theme": "Connaissance BAC",
+      "q": "Pourquoi la discrétion est-elle importante dans certaines missions  dans une zone fréquentée ?"
+    },
+    {
+      "id": 8,
+      "theme": "Connaissance BAC",
+      "q": "Quel est le rôle principal d’un équipage BAC  avec des informations incomplètes ?"
+    },
+    {
+      "id": 129,
+      "theme": "Analyse",
+      "q": "Comment hiérarchisez-vous plusieurs risques simultanés  en patrouille de nuit ?"
+    },
+    {
+      "id": 130,
+      "theme": "Analyse",
+      "q": "Comment hiérarchisez-vous plusieurs risques simultanés  dans une zone fréquentée ?"
+    },
+    {
+      "id": 61,
+      "theme": "Radio",
+      "q": "Comment rendre un message radio court mais exploitable  dans une situation évolutive ?"
+    },
+    {
+      "id": 118,
+      "theme": "Analyse",
+      "q": "Pourquoi la temporisation peut-elle parfois être une bonne décision ?"
+    }
+  ],
+  "ans": {
+    "8": "aller chercher les info qui manque ",
+    "22": "pour pouvoir avoir une vue d'ensemble et ne pas ce faire repérer ",
+    "61": "",
+    "72": "Car il faut être sur de nous",
+    "95": "je prend leur deux version et je les donne a ma hiérarchie ",
+    "113": "je le dis a mes supérieur ",
+    "114": "je lui explique de nouveaux ce qu'il ces passer ",
+    "118": "Pour éviter que des altercation inutile",
+    "129": "du plus grave au moins grave",
+    "130": "du plus grave au moins grave"
+  },
+  "radioAns": [
+    "Tn 750 de BAC ALPHA possible d'avoir la position de l'individu ? ",
+    "je leur dis de le surveiller de loin et de nous donner des info en continue jusqua notre arriver ",
+    "Tn 750 de BAC demande plus de patrouille sur notre position pour sécuriser ",
+    "TN de BAC annonce Individue interpeler situation controler "
+  ],
+  "scAns": [
+    [
+      " Le dispositif que j’engagerais et les BAC banalisé pour la discrétion et avoir plus de chance d'interpeller l’individu.",
+      "répartie mes agents en trois patrouilles de deux pour avoir plus de chance d’effectuer plus de passage dans les rue pour retrouver au plus vite l’individu",
+      "Je lance un apelle radio en décrivant l’individu rechercher, en expliquant les fait reprocher, et en demandant si il y a d’autre patrouille dans le secteur au cas ou pour qu’il regarde bien si il l'aperçoit ou non",
+      "on continue les recherche en faisant plus attention au civil autour",
+      "Les éléments qui me ferait changer de dispositif sa serait que l’individu devienne agressif avec les citoyens, si il sort un objet ou une arme pour blésser les citoyens\n"
+    ],
+    [
+      "Je choisi d'ouvrire une BAC Alpha avec trois effectifs + une BAC 75 avec deux effectifs, et il partirons ensemble, plus je demanderais a la CSI de les rejoindres et si nécéssaire je ferais appelle au CSU ou CORG pour plus de sécurité\n",
+      "Une BAC Alpha avec trois effectifs et une bac 75 avec deux effectifs, et il doivent etre en contacte tous le temps en cas de probleme pour leur collégue \n",
+      " avant je demande si il ont bien compris toutes les consignes, et pendant je demande des informations sur la situation \n",
+      "Je transmet a la TN la situation a l’arrivé, et a se moment la je vois si il y a besoin de renfort ou non, selon la situation, si les individus sont agressif, armer ou autres.\n",
+      "si la situation dégénére, je met avant tout la sécurité en avant, je ne voudrais pas prendre de risque inutiles, donc je fait appel au renfort et demande a mes effectifs de rester le plus possible en sécurité et de pas prendre de risque \n"
+    ],
+    [
+      "Au vu de ce que les témoin on dit je préfére ne prendre aucun risque, j’envoye mes deux vacation BAC pour qu’il analyse correctement la situation, et si il faut des renfort ou non.\n",
+      "deux BAC et si besoin renfort \n",
+      " En deux BAC, d’aller sur place pour prendre toutes les informations nécéssaire, de bien analyser la situation de bien faire les code radio pour détailler la situation que se soit court, claire et concis   et de faire attention à eux.\n",
+      "Alors fait certains sont ceux que nous savons après vérification, les hypothèses sont avant d’avoir vu la situation claire.\n",
+      "J’en informe ma hiérarchie, puis si c’est possible je reprend depuis le début.\n"
+    ],
+    [
+      "mise en sécurité de mon collégue blessé en lançant un appelle d’urgence , en demandant au pompiers d’intervenir.\n",
+      "Je demande a mes effectif de sécuriser la zone.",
+      "j’informe la situation a la TN en précisant qui est blessé, combien sont ils autour de nous, leurs armes ect, en leur demandant d’envoyer les pompiers, et des renfort.\n",
+      "je demande a mes effectifs de sécurisé de façon qu’on ne soi pas trop éloigné les uns des autres jusqu’a l’arriver des renfort.",
+      "dans le compte rendu j’expliquerais toute la situation, des l’arrivé jusqu’a la fin de l’intervention."
+    ],
+    [
+      "J’ouvre deux BAC ALPHA ET BRAVO avec trois effectifs chacuns plus une BAC 75 avec deux effectifs, pour avoir plusieurs patrouille pour bien analyser la situation \n",
+      "Trois patrouilles, pour analyser la situation, dans la discrétion, et bien communiquer les information de la situation.\n",
+      "d'être discret, de bien analyser et prendre en compte la situation, et de bien faire un code radio court, clair et concis pour que les collègues comprennent bien la situation.\n",
+      "par radio, a la TN faut que le message soit court et claire pour qu’il comprennent rapidement. ",
+      "je demande à tous en radio de prendre en compte les nouvelles informations que je leur fournirais",
+      " j'essaie de temporiser, si je vois que le ton monte encore, je demande des renforts tout en essayant de discuter et de calmer la situation en attendant que les renforts arrivent.\n",
+      "on fait une réunion à la fin de service, on se regroupe et discute de ce qui vient de se produire.\n\n"
+    ]
+  ],
+  "phys": {
+    "run": "150",
+    "push": "30",
+    "abs": "50",
+    "jumping": "30",
+    "pursuit": "tres endurant , bon discernement , bonne prise de decision , ne fonce pas tete baisser ",
+    "cog": "RAS au Top ",
+    "obs": "Bon sportif ",
+    "plank": ""
+  },
+  "shoot": {
+    "safety": "",
+    "handling": "",
+    "precision": "",
+    "reaction": "",
+    "memory": "",
+    "memoryAsked": "12345",
+    "memoryGood": "25",
+    "memoryErrors": "0",
+    "discern": "",
+    "discernAsked": "5 cible parmis elle des otage ne tirer pas sur les otage ",
+    "discernErrors": "",
+    "analysis": "",
+    "hostage": 0,
+    "obs": "tres reactif bonne ecoute bonne memoire bonne annalyse "
+  },
+  "marks": {
+    "theory": {
+      "8": "5",
+      "22": "5",
+      "61": "0",
+      "72": "5",
+      "95": "6",
+      "113": "4",
+      "114": "5",
+      "118": "4",
+      "129": "5",
+      "130": "5"
+    },
+    "radio": {
+      "0": "15",
+      "1": "16",
+      "2": "13",
+      "3": "12"
+    },
+    "sc": {
+      "0_0": "12",
+      "0_1": "13",
+      "0_2": "11",
+      "0_3": "10",
+      "0_4": "13",
+      "1_0": "14",
+      "1_1": "12",
+      "1_2": "11",
+      "1_3": "13",
+      "1_4": "15",
+      "2_0": "14",
+      "2_1": "10",
+      "2_2": "15",
+      "2_3": "11",
+      "2_4": "10",
+      "3_0": "10",
+      "3_1": "10",
+      "3_2": "11",
+      "3_3": "10",
+      "3_4": "10",
+      "4_0": "11",
+      "4_1": "10",
+      "4_2": "13",
+      "4_3": "10",
+      "4_4": "10",
+      "4_5": "13",
+      "4_6": "10"
+    },
+    "phys": "190",
+    "shoot": "280"
+  },
+  "strength": "",
+  "improve": "",
+  "general": "",
+  "decision": "RETENU",
+  "reason": "",
+  "retakes": [],
+  "retakeDate": "",
+  "el": {
+    "cheat": false,
+    "refusal": false,
+    "abandon": false,
+    "danger": false
+  },
+  "cmd": {
+    "dg": "Lieutenant",
+    "dn": "BOUSSERE Kevin",
+    "ag": "Brigadier",
+    "an": "LAURENT Cyril"
+  },
+  "total": 801,
+  "closedAt": "2026-11-01T17:56:37.975Z",
+  "closedBy": "cyril",
+  "systemSuggestions": {
+    "at": "2026-11-01T17:56:37.975Z",
+    "theory": {
+      "8": 4,
+      "22": 5,
+      "61": 0,
+      "72": 5,
+      "95": 5,
+      "113": 4,
+      "114": 5,
+      "118": 4,
+      "129": 4,
+      "130": 4
+    },
+    "radio": [
+      13,
+      16,
+      13,
+      12
+    ],
+    "sc": {
+      "0_0": 9,
+      "0_1": 11,
+      "0_2": 13,
+      "0_3": 8,
+      "0_4": 11,
+      "1_0": 14,
+      "1_1": 11,
+      "1_2": 10,
+      "1_3": 13,
+      "1_4": 15,
+      "2_0": 13,
+      "2_1": 7,
+      "2_2": 14,
+      "2_3": 9,
+      "2_4": 8,
+      "3_0": 9,
+      "3_1": 7,
+      "3_2": 11,
+      "3_3": 10,
+      "3_4": 8,
+      "4_0": 11,
+      "4_1": 9,
+      "4_2": 12,
+      "4_3": 9,
+      "4_4": 9,
+      "4_5": 12,
+      "4_6": 10
+    },
+    "sections": {
+      "th": 40,
+      "ra": 54,
+      "sc": 210,
+      "ph": 159,
+      "sh": 139
+    },
+    "total": 602,
+    "decision": "RETENU",
+    "reason": "602/1000 • seuils 800 / 650",
+    "thresholds": {
+      "retenu": 800,
+      "reserve": 650
+    }
+  },
+  "suggestedTotal": 602,
+  "suggestedDecision": "RETENU",
+  "suggestedReason": "602/1000 • seuils 800 / 650"
+}
