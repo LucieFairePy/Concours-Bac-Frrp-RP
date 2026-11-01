@@ -14,7 +14,7 @@
   ],
   "c": {
     "last": "Santini",
-    "first": "MIa",
+    "first": "Mia",
     "grade": "Eleve Gardien de la paix ",
     "mat": "6351186",
     "date": "2026-11-01",
@@ -136,10 +136,10 @@
     ]
   ],
   "phys": {
-    "run": "",
-    "push": "",
-    "abs": "",
-    "jumping": "",
+    "run": "150",
+    "push": "30",
+    "abs": "50",
+    "jumping": "30",
     "pursuit": "tres endurant , bon discernement , bonne prise de decision , ne fonce pas tete baisser ",
     "cog": "RAS au Top ",
     "obs": "Bon sportif ",
@@ -152,7 +152,7 @@
     "reaction": "",
     "memory": "",
     "memoryAsked": "12345",
-    "memoryGood": "",
+    "memoryGood": "10",
     "memoryErrors": "0",
     "discern": "",
     "discernAsked": "5 cible parmis elle des otage ne tirer pas sur les otage ",
