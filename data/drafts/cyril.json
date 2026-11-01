@@ -79,16 +79,16 @@
     }
   ],
   "ans": {
-    "8": "trouver les bonne info , et mener a bien lintervention",
-    "22": "pour éviter d'être repérer et agir en flagrance   ",
-    "61": "pour moi le messsage doit etre adresserau tn et il doit etre   court / claire / et concis ",
-    "72": "car les information peuvent entre erauner mais ce que jai vue ne peut pas l'etre ",
-    "95": "je note les deux version le rapport qu'on ma fais je fais tout remonter ",
-    "113": "j'irais interroger les témoin ",
-    "114": "je lui rapporte tt les temoignage et demande on avis ",
-    "118": "car si l'individue ne commet pas les fais de suite temporiser peut nous amener a le prendre en flagrance ",
-    "129": "je vais les placer du plus grave au moin grave ",
-    "130": "du plus dangereux pour les civil au moins dangereux "
+    "8": "",
+    "22": "",
+    "61": "",
+    "72": "Car il faut être sur de nous",
+    "95": "",
+    "113": "je le dis a mes supérieur ",
+    "114": "je lui ",
+    "118": "",
+    "129": "",
+    "130": ""
   },
   "radioAns": [
     "Tn 750 de BAC ALPHA possible d'avoir la position de l'individu ? ",
@@ -98,48 +98,48 @@
   ],
   "scAns": [
     [
-      "Je choisis la Bac Banalisés afin de ne pas se faire repérer par l’individu lors de notre approche de celui-ci pour éviter qu’il prenne la fuite.\n",
-      "Je partirais avec une BAc Banalisés de 3 effectif et une Bac 75N de 3 effectif afin que la 75N viennent nous prêter renfort lors de l’interpellation de l'individu vu que c’est un lieu fréquenté\n",
-      "Je transmet directement notre arrivée sur position, et je cherche a savoir les caractéristiques de l’individu pour le repérer au mieux et le plus rapidement.\n",
-      "J’organise mes patrouilles du faite que une patrouille bloque une zone et mes priorités sont que l’individu ne prenne pas un citoyen en otage ou qu’il en fasse du mal, donc ma priorités et les citoyens autour et ensuite l’interpellation de l’individu\n",
-      "Si l’individu décide de prendre un individu en otages ou qu’il contacte des renforts à lui pour venir l’aider, ou meme que l’individu réussit à s’échapper et qu’il reste tout de même proche de la zone\n"
-    ],
-    [
-      "Je pars sur une  vacation BAC 75N de 3 effectifs et une BAC ALPHA qui elle arrivera en première sur les lieux pour observer afin que la 75N arrive directement et l’interpelle.\n",
-      "Une BAC ALPHA avec 2 effectif en but d’observer le lieu et une 75N de 3 effectifs qui interviendra directement sur les lieux\n",
-      "Je vérifie que le cambriolage et toujours d’actualité combien de personnes y sont entré et est elle habité et si les individus sont armés ?\n",
-      "Je préviens la TN de notre arrivée sur les lieux et commence avec les équipe a encerclé la maison puis finir par y rentrer en formant des colonnes pour éviter quelconques blessures sis les individus sont armés\n",
-      "Je demande un équipage en plus, et je décide partir dans une phase de négociation afin de faire redescendre la tension\n"
-    ],
-    [
-      "J’analyse si l’individu est connue de nos services, s’y il représentant une réel menace pour les autres citoyens\n",
-      "Je décide de faire deux vacations de 2 effectifs en BAC 75N pour appréhender l’individus et afin que les deux vacation bouches les deux sorties pour une potentiel fuite\n",
-      "Je les répartis en deux vacation de deux effectif en 75N et je leur demande de bouché les deux sorties avec leur véhicule et d’appréhender l’individu à pied et de faire attention au autres citoyens\n",
-      "Pour moi les fait établis c’est ceux qui s’on vue et confirmer, les hypothèse sont les questions qu’on peut se poser et les information restants a vérifier seront vérifier au CIAT ou directement sur les lieux\n",
-      "Je refais une analyse avec les nouveaux élément et j’adapte la posture de mes effectif selon les éléments rapportés\n"
-    ],
-    [
-      "\nMa priorité c’est de récuperer le collègues= en vie t appeler des secours immédiatement\n",
-      "Je les réorganise de manière que l’individu soit encerclés et n’est pas le choix de se rendre et s’y il faut je demande a tout mes équipe au TOP d’interpeller l’individu avec ou sans la force.\n",
-      "Je leurs transmets qu’un collègue a nous est touchés que l’individus est instable et je demande la présences des Pompiers sur zone afin de soigner notre collègue\n",
-      "En répartissant mes équipage de tout les coté pour etre informé de toute informations complémentaires\n",
+      "",
+      "",
+      "",
+      "",
       ""
     ],
     [
-      "Je décides de faire 4 vacation de 2 effectif afin d’entourer les lieux, et d'appréhender la situation avec plusieur effectif a des endroit différents\n",
-      "Je les répartis en 4 vacation de BAC ALPHA, pour etre le plus discret et je répartis les rôles en les mettant chacun a une position différente tout en gardant les individus en visuel\n",
-      "De faire attentions au citoyens autour et faire attention si les individus sont armés ou non\n",
-      "Je décide d’un commandant d’opération ou tous les effectif remontes les information à celui-ci\n",
-      "Je la communique en radio de manière claire et concise, je re déplace les équipages selon les informations et prends plus de précautions.\n",
-      "Je demande des moyens supplémentaire si la situation dégénère et je temporise si la situation commence à se calmer\n",
-      "Je demande a chaque équipage de me fair un compte rendu de l’intervention pour savoir leur ressenties et les choix qu'ils auraient préféré faire."
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
     ]
   ],
   "phys": {
-    "run": "120",
-    "push": "30",
-    "abs": "50",
-    "jumping": "20",
+    "run": "",
+    "push": "",
+    "abs": "",
+    "jumping": "",
     "pursuit": "tres endurant , bon discernement , bonne prise de decision , ne fonce pas tete baisser ",
     "cog": "RAS au Top ",
     "obs": "Bon sportif ",
