@@ -1,16 +1,16 @@
 {
-  "id": "BAC-2026-002",
+  "id": "BAC-2026-003",
   "version": 2,
   "contentSet": "v4",
   "status": "draft",
   "locked": false,
-  "created": "2026-10-26T16:08:20.697Z",
+  "created": "2026-11-02T18:04:41.347Z",
   "auditTrail": [
     {
-      "at": "2026-10-26T16:08:20.699Z",
+      "at": "2026-11-02T18:04:41.349Z",
       "action": "dossier.creation",
       "who": "sous brigadier Kaysen Vega",
-      "detail": "BAC-2026-002"
+      "detail": "BAC-2026-003"
     }
   ],
   "c": {
@@ -18,7 +18,7 @@
     "first": "",
     "grade": "",
     "mat": "",
-    "date": "2026-10-26",
+    "date": "2026-11-02",
     "start": ""
   },
   "ex": [
@@ -29,29 +29,14 @@
   ],
   "qs": [
     {
-      "id": "v4-22",
-      "theme": "Organisation",
-      "q": "Que fais-tu si les informations de deux témoins sont différentes ?"
-    },
-    {
-      "id": "v4-30",
-      "theme": "Connaissances BAC",
-      "q": "Quel comportement attend-on d’un agent BAC avec ses collègues ?"
-    },
-    {
-      "id": "v4-4",
+      "id": "v4-5",
       "theme": "BAC",
-      "q": "Pourquoi les agents de la BAC doivent-ils rester discrets ?"
+      "q": "Quelle est la différence entre la BAC et Police Secours ?"
     },
     {
-      "id": "v4-24",
-      "theme": "Organisation",
-      "q": "Comment termines-tu une intervention correctement ?"
-    },
-    {
-      "id": "v4-3",
+      "id": "v4-8",
       "theme": "BAC",
-      "q": "Dans quels types de situations la BAC peut-elle intervenir ?"
+      "q": "À quoi sert un compte rendu après une intervention ?"
     },
     {
       "id": "v4-7",
@@ -59,9 +44,9 @@
       "q": "Pourquoi faut-il bien observer avant d’agir ?"
     },
     {
-      "id": "v4-5",
-      "theme": "BAC",
-      "q": "Quelle est la différence entre la BAC et Police Secours ?"
+      "id": "v4-27",
+      "theme": "Connaissances BAC",
+      "q": "Que fais-tu si une personne demande à voir ta qualité de policier ?"
     },
     {
       "id": "v4-18",
@@ -69,14 +54,29 @@
       "q": "Pourquoi faut-il rester poli pendant un contrôle ?"
     },
     {
-      "id": "v4-6",
+      "id": "v4-3",
       "theme": "BAC",
-      "q": "Que fais-tu si tu vois une infraction en cours ?"
+      "q": "Dans quels types de situations la BAC peut-elle intervenir ?"
     },
     {
-      "id": "v4-2",
-      "theme": "BAC",
-      "q": "Que signifie BAC ?"
+      "id": "v4-12",
+      "theme": "Radio",
+      "q": "Comment annonces-tu que ton équipe prend son service ?"
+    },
+    {
+      "id": "v4-26",
+      "theme": "Connaissances BAC",
+      "q": "Pourquoi la BAC peut-elle travailler en tenue civile ?"
+    },
+    {
+      "id": "v4-13",
+      "theme": "Radio",
+      "q": "Pourquoi faut-il parler clairement et brièvement à la radio ?"
+    },
+    {
+      "id": "v4-20",
+      "theme": "Sécurité",
+      "q": "Que fais-tu si la situation devient dangereuse pour les passants ?"
     }
   ],
   "ans": {},
@@ -126,10 +126,10 @@
     ]
   ],
   "phys": {
-    "run": "1.15",
-    "push": "85",
-    "abs": "70",
-    "jumping": "110",
+    "run": "",
+    "push": "",
+    "abs": "",
+    "jumping": "",
     "pursuit": "",
     "cog": "",
     "obs": ""
@@ -148,7 +148,7 @@
     "discernErrors": "",
     "analysis": "",
     "hostage": 0,
-    "obs": "Un peu d'hésitation mais aucune erreur significative"
+    "obs": ""
   },
   "marks": {
     "theory": {},
@@ -171,7 +171,7 @@
     "danger": false
   },
   "cmd": {
-    "dg": "Lieutenant",
+    "dg": "Capitaine",
     "dn": "BOUSSERE Kevin",
     "ag": "Sous Brigadier",
     "an": "LAURENT Cyril",
