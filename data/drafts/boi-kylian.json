@@ -14,9 +14,9 @@
     }
   ],
   "c": {
-    "last": "Bob",
-    "first": "Martin ",
-    "grade": "",
+    "last": "Martin ",
+    "first": "Bob",
+    "grade": "stagiaire ",
     "mat": "",
     "date": "2026-11-04",
     "start": ""
