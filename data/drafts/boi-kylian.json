@@ -2,7 +2,7 @@
   "id": "BAC-2026-003",
   "version": 2,
   "contentSet": "v4",
-  "status": "correction",
+  "status": "decision",
   "locked": false,
   "created": "2026-11-04T16:55:56.647Z",
   "auditTrail": [
@@ -212,11 +212,11 @@
     "phys": "151",
     "shoot": "200"
   },
-  "strength": "",
-  "improve": "",
+  "strength": "le sport et l'implication ",
+  "improve": "ses pas a moi de dire ça ",
   "general": "",
-  "decision": "",
-  "reason": "",
+  "decision": "RETENU",
+  "reason": "il et très motiver il et investi ",
   "retakes": [],
   "retakeDate": "",
   "el": {
