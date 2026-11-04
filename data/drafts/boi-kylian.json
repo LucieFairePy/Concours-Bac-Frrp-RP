@@ -2,7 +2,7 @@
   "id": "BAC-2026-003",
   "version": 2,
   "contentSet": "v4",
-  "status": "draft",
+  "status": "in_progress",
   "locked": false,
   "created": "2026-11-04T16:55:56.647Z",
   "auditTrail": [
@@ -14,8 +14,8 @@
     }
   ],
   "c": {
-    "last": "",
-    "first": "",
+    "last": "Bob",
+    "first": "Martin ",
     "grade": "",
     "mat": "",
     "date": "2026-11-04",
