@@ -2,7 +2,7 @@
   "id": "BAC-2026-003",
   "version": 2,
   "contentSet": "v4",
-  "status": "in_progress",
+  "status": "correction",
   "locked": false,
   "created": "2026-11-04T16:55:56.647Z",
   "auditTrail": [
@@ -153,18 +153,20 @@
     "memory": "",
     "memoryAsked": "2 3 4 5 2 3 4 1 ",
     "memoryGood": "8",
-    "memoryErrors": "",
+    "memoryErrors": "0",
     "discern": "",
-    "discernAsked": "tiré sur les cible ",
+    "discernAsked": "tiré sur les cible le plus rapidement sans otage. ",
     "discernErrors": "0",
     "analysis": "",
     "hostage": 0,
-    "obs": "il fait preuve de "
+    "obs": ""
   },
   "marks": {
     "theory": {},
     "radio": {},
-    "sc": {},
+    "sc": {
+      "0_0": "3"
+    },
     "phys": "",
     "shoot": ""
   },
