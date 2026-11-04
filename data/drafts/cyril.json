@@ -2,7 +2,7 @@
   "id": "BAC-2026-003",
   "version": 2,
   "contentSet": "v4",
-  "status": "draft",
+  "status": "in_progress",
   "locked": false,
   "created": "2026-11-04T16:45:31.082Z",
   "auditTrail": [
@@ -14,12 +14,12 @@
     }
   ],
   "c": {
-    "last": "",
-    "first": "",
-    "grade": "",
-    "mat": "",
+    "last": "Francois ",
+    "first": "Guillaume",
+    "grade": "Capitaine Stagiaire ",
+    "mat": "6608065",
     "date": "2026-11-04",
-    "start": ""
+    "start": "18:30"
   },
   "ex": [
     {
