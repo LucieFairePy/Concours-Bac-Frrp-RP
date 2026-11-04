@@ -79,7 +79,11 @@
       "q": "Que dois-tu faire avant de transmettre une information non vérifiée ?"
     }
   ],
-  "ans": {},
+  "ans": {
+    "v4-5": "LA BAC AGIS EN BANALISER POUR AVOIR DU FLAG ET BATTRE LA CRIMINALITER CONTRAIREMENT A LA POLICFE SECOUR QUI AGIS EN SERIGRAPHIER",
+    "v4-2": "Brigade antis criminaliter",
+    "v4-25": "Non elle peut aussi agir de jour en banaliser."
+  },
   "radioAns": [
     "",
     "",
