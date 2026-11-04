@@ -2,7 +2,7 @@
   "id": "BAC-2026-003",
   "version": 2,
   "contentSet": "v4",
-  "status": "in_progress",
+  "status": "correction",
   "locked": false,
   "created": "2026-11-04T16:45:31.082Z",
   "auditTrail": [
@@ -162,11 +162,13 @@
     "obs": "Bonne secu , reflexion avant tir , pas de precipitation il prend le temp danalyser "
   },
   "marks": {
-    "theory": {},
+    "theory": {
+      "v4-5": "7"
+    },
     "radio": {},
     "sc": {},
-    "phys": "",
-    "shoot": ""
+    "phys": "160",
+    "shoot": "230"
   },
   "strength": "",
   "improve": "",
