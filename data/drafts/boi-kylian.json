@@ -139,10 +139,10 @@
   "phys": {
     "run": "27.29",
     "push": "30",
-    "abs": "",
-    "jumping": "",
+    "abs": "50",
+    "jumping": "20",
     "pursuit": "",
-    "cog": "pompe- sig sauer 2022 -souris/ ",
+    "cog": "pompe- sig sauer 2022 -souris/  sig sauer 2022 pompe-souris ",
     "obs": ""
   },
   "shoot": {
