@@ -81,8 +81,8 @@
   ],
   "ans": {
     "v4-15": "j'attente les directive de la TN 75.",
-    "v4-6": "je regard autour du cartier.  ",
-    "v4-24": "je procède a son arrestation je note les heure pour L'OPJ.",
+    "v4-6": "je regard autour du cartier je voie s'il a des personne suspecte.  \n\nla situation: braquage D'ATM",
+    "v4-24": "je procède a son arrestation je note les heure pour L'OPJ.\n\nla situation: braquage D'ATM ",
     "v4-18": "pour pas que sa part en live parce que il faut être poli.",
     "v4-12": "Tn75 du GPX-S j'annonce que je prend mon service et que je suis spécialité Bac. ",
     "v4-21": "ses importent pour le suivi des effectif pour savoir sur quoi on part.  ",
@@ -92,10 +92,10 @@
     "v4-17": "j'informe ma situation et la TN 75 si mon j'analyse la situation j'appelle des renforts. "
   },
   "radioAns": [
-    "j'appelle la TN 75 et je dit des information a la TN 75 ",
+    "j'appelle la TN 75 et je dit des information a la TN 75 donc se qui se passent si besoin de renfort.",
     "il faut passer part la TN 75 il converse avec tout les unités.  ",
-    "TN 75 de bac on aurais besoin de renfort. pour un control ",
-    "de TN a tous ses pour vous annoncer fin d'intervention  "
+    "TN 75 de bac on aurais besoin de renfort. pour un control \n\nla situation: il en TN 75 ",
+    "de TN a tous ses pour vous annoncer fin d'intervention  \n\nla situation: il en TN 75 "
   ],
   "scAns": [
     [
