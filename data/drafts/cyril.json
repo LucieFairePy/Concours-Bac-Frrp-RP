@@ -151,15 +151,15 @@
     "precision": "",
     "reaction": "",
     "memory": "",
-    "memoryAsked": "",
-    "memoryGood": "",
+    "memoryAsked": "123456",
+    "memoryGood": "6",
     "memoryErrors": "",
     "discern": "",
-    "discernAsked": "",
+    "discernAsked": "Pas dotage retener les numero et ou le feux sur les cibler annoncer ",
     "discernErrors": "",
     "analysis": "",
     "hostage": 0,
-    "obs": ""
+    "obs": "Bonne secu , reflexion avant tir , pas de precipitation il prend le temp danalyser "
   },
   "marks": {
     "theory": {},
