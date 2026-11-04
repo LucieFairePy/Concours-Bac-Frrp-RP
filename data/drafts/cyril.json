@@ -1,0 +1,199 @@
+{
+  "id": "BAC-2026-003",
+  "version": 2,
+  "contentSet": "v4",
+  "status": "draft",
+  "locked": false,
+  "created": "2026-11-04T16:45:31.082Z",
+  "auditTrail": [
+    {
+      "at": "2026-11-04T16:45:31.100Z",
+      "action": "dossier.creation",
+      "who": "Brigadier LAURENT Cyril",
+      "detail": "BAC-2026-003"
+    }
+  ],
+  "c": {
+    "last": "",
+    "first": "",
+    "grade": "",
+    "mat": "",
+    "date": "2026-11-04",
+    "start": ""
+  },
+  "ex": [
+    {
+      "grade": "Sous Brigadier",
+      "name": "LAURENT Cyril"
+    }
+  ],
+  "qs": [
+    {
+      "id": "v4-5",
+      "theme": "BAC",
+      "q": "Quelle est la différence entre la BAC et Police Secours ?"
+    },
+    {
+      "id": "v4-2",
+      "theme": "BAC",
+      "q": "Que signifie BAC ?"
+    },
+    {
+      "id": "v4-25",
+      "theme": "Connaissances BAC",
+      "q": "La BAC intervient-elle seulement la nuit ? Explique."
+    },
+    {
+      "id": "v4-11",
+      "theme": "Radio",
+      "q": "Quelles informations importantes donnes-tu au TN 75 ?"
+    },
+    {
+      "id": "v4-8",
+      "theme": "BAC",
+      "q": "À quoi sert un compte rendu après une intervention ?"
+    },
+    {
+      "id": "v4-19",
+      "theme": "Sécurité",
+      "q": "Quelle est ta priorité si une personne est blessée ?"
+    },
+    {
+      "id": "v4-21",
+      "theme": "Organisation",
+      "q": "Pourquoi faut-il prévenir les autres équipages d’un changement ?"
+    },
+    {
+      "id": "v4-28",
+      "theme": "Connaissances BAC",
+      "q": "Pourquoi la BAC échange-t-elle des informations avec d’autres services ?"
+    },
+    {
+      "id": "v4-24",
+      "theme": "Organisation",
+      "q": "Comment termines-tu une intervention correctement ?"
+    },
+    {
+      "id": "v4-29",
+      "theme": "Connaissances BAC",
+      "q": "Que dois-tu faire avant de transmettre une information non vérifiée ?"
+    }
+  ],
+  "ans": {},
+  "radioAns": [
+    "",
+    "",
+    "",
+    ""
+  ],
+  "scAns": [
+    [
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ]
+  ],
+  "phys": {
+    "run": "",
+    "push": "",
+    "abs": "",
+    "jumping": "",
+    "pursuit": "",
+    "cog": "",
+    "obs": ""
+  },
+  "shoot": {
+    "safety": "",
+    "handling": "",
+    "precision": "",
+    "reaction": "",
+    "memory": "",
+    "memoryAsked": "",
+    "memoryGood": "",
+    "memoryErrors": "",
+    "discern": "",
+    "discernAsked": "",
+    "discernErrors": "",
+    "analysis": "",
+    "hostage": 0,
+    "obs": ""
+  },
+  "marks": {
+    "theory": {},
+    "radio": {},
+    "sc": {},
+    "phys": "",
+    "shoot": ""
+  },
+  "strength": "",
+  "improve": "",
+  "general": "",
+  "decision": "",
+  "reason": "",
+  "retakes": [],
+  "retakeDate": "",
+  "el": {
+    "cheat": false,
+    "refusal": false,
+    "abandon": false,
+    "danger": false
+  },
+  "cmd": {
+    "dg": "Capitaine",
+    "dn": "BOUSSERE Kevin",
+    "ag": "Sous Brigadier",
+    "an": "LAURENT Cyril",
+    "bacRetenu": 800,
+    "bacReserve": 650,
+    "cdgQualifie": 800,
+    "cdgReserve": 650,
+    "cdgAjourne": 500,
+    "physRunFort": 300,
+    "physRunBon": 330,
+    "physRunBase": 390,
+    "physPushFort": 45,
+    "physPushBon": 38,
+    "physPushBase": 30,
+    "physAbsFort": 70,
+    "physAbsBon": 60,
+    "physAbsBase": 50,
+    "physJumpingFort": 30,
+    "physJumpingBon": 25,
+    "physJumpingBase": 20
+  },
+  "total": null,
+  "closedAt": null,
+  "closedBy": null
+}
