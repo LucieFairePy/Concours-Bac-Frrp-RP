@@ -14,5 +14,13 @@
     "action": "direction.maj",
     "target": "direction BAC",
     "detail": "Capitaine BOUSSERE Kevin — adjoint Sous Brigadier LAURENT Cyril"
+  },
+  {
+    "at": "2026-11-04T16:53:35.032Z",
+    "who": "Brigadier LAURENT Cyril",
+    "role": "directeur",
+    "action": "acces.creation",
+    "target": "Gardien de la Paix Stagiaire Boi Kylian",
+    "detail": "rôle Formateur / examinateur"
   }
 ]
