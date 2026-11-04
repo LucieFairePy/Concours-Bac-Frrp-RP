@@ -79,7 +79,9 @@
       "q": "Que fais-tu si un collègue est en difficulté ?"
     }
   ],
-  "ans": {},
+  "ans": {
+    "v4-15": "j'attente les directive de la TN 75."
+  },
   "radioAns": [
     "",
     "",
