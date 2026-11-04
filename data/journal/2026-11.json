@@ -30,5 +30,13 @@
     "action": "dossier.cloture",
     "target": "BAC-2026-003",
     "detail": "RESERVE — 761/1000"
+  },
+  {
+    "at": "2026-11-04T20:16:16.157Z",
+    "who": "Gardien de la Paix Stagiaire Boi Kylian",
+    "role": "formateur",
+    "action": "dossier.cloture",
+    "target": "BAC-2026-004",
+    "detail": "RETENU — 672/1000 (suggestion : RESERVE)"
   }
 ]
