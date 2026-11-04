@@ -151,15 +151,15 @@
     "precision": "",
     "reaction": "",
     "memory": "",
-    "memoryAsked": "5",
-    "memoryGood": "",
+    "memoryAsked": "2 3 4 5 2 3 4 1 ",
+    "memoryGood": "8",
     "memoryErrors": "",
     "discern": "",
-    "discernAsked": "",
-    "discernErrors": "",
+    "discernAsked": "tiré sur les cible ",
+    "discernErrors": "0",
     "analysis": "",
     "hostage": 0,
-    "obs": ""
+    "obs": "il fait preuve de "
   },
   "marks": {
     "theory": {},
