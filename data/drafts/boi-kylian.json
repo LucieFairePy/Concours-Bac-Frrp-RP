@@ -162,10 +162,21 @@
     "obs": "il prend in temps de réflexion avant de tiré ses très bien pas d'erreur il écoute les consigne de sécurité.  "
   },
   "marks": {
-    "theory": {},
+    "theory": {
+      "v4-15": "6",
+      "v4-6": "5",
+      "v4-24": "7",
+      "v4-18": "7",
+      "v4-12": "7",
+      "v4-21": "6",
+      "v4-8": "6",
+      "v4-11": "5",
+      "v4-9": "5",
+      "v4-17": "5"
+    },
     "radio": {},
     "sc": {
-      "0_0": "3"
+      "0_0": ""
     },
     "phys": "",
     "shoot": ""
