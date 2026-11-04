@@ -22,5 +22,13 @@
     "action": "acces.creation",
     "target": "Gardien de la Paix Stagiaire Boi Kylian",
     "detail": "rôle Formateur / examinateur"
+  },
+  {
+    "at": "2026-11-04T20:11:47.627Z",
+    "who": "Brigadier LAURENT Cyril",
+    "role": "directeur",
+    "action": "dossier.cloture",
+    "target": "BAC-2026-003",
+    "detail": "RESERVE — 761/1000"
   }
 ]
