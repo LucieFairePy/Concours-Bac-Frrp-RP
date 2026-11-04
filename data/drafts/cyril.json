@@ -2,7 +2,7 @@
   "id": "BAC-2026-003",
   "version": 2,
   "contentSet": "v4",
-  "status": "correction",
+  "status": "decision",
   "locked": false,
   "created": "2026-11-04T16:45:31.082Z",
   "auditTrail": [
@@ -212,11 +212,11 @@
     "phys": "170",
     "shoot": "230"
   },
-  "strength": "",
-  "improve": "",
+  "strength": "Connaissance du Terrain\nCommandement\nRefelchis ",
+  "improve": "Impulsivité n'aller pas trop vite \nsoyer plus précis et Concis  dans vos CR  Radio \nPrenez le temp avant D'agir\n",
   "general": "",
-  "decision": "",
-  "reason": "",
+  "decision": "RESERVE",
+  "reason": "candidat motiver , avec une bonne connaissance du terrain mais trop de précipitation , ce qui lui a fais perdre des point a l'écrit et au tir. bon candidat a canaliser et réformer.",
   "retakes": [],
   "retakeDate": "",
   "el": {
