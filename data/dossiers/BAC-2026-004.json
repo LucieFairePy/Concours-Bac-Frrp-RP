@@ -1,0 +1,327 @@
+{
+  "id": "BAC-2026-004",
+  "version": 2,
+  "contentSet": "v4",
+  "status": "closed",
+  "locked": true,
+  "created": "2026-11-04T16:55:56.647Z",
+  "auditTrail": [
+    {
+      "at": "2026-11-04T16:55:56.662Z",
+      "action": "dossier.creation",
+      "who": "Gardien de la Paix Stagiaire Boi Kylian",
+      "detail": "BAC-2026-003"
+    },
+    {
+      "at": "2026-11-04T20:16:08.307Z",
+      "action": "dossier.cloture",
+      "who": "Gardien de la Paix Stagiaire Boi Kylian",
+      "detail": "RETENU"
+    }
+  ],
+  "c": {
+    "last": "Martin ",
+    "first": "Bob",
+    "grade": "stagiaire ",
+    "mat": "5493074",
+    "date": "2026-11-04",
+    "start": "18:17"
+  },
+  "ex": [
+    {
+      "grade": "stagiaire ",
+      "name": "Bobi Kilian"
+    }
+  ],
+  "qs": [
+    {
+      "id": "v4-15",
+      "theme": "Radio",
+      "q": "Que fais-tu si tu reçois une information importante à la radio ?"
+    },
+    {
+      "id": "v4-6",
+      "theme": "BAC",
+      "q": "Que fais-tu si tu vois une infraction en cours ?"
+    },
+    {
+      "id": "v4-24",
+      "theme": "Organisation",
+      "q": "Comment termines-tu une intervention correctement ?"
+    },
+    {
+      "id": "v4-18",
+      "theme": "Comportement",
+      "q": "Pourquoi faut-il rester poli pendant un contrôle ?"
+    },
+    {
+      "id": "v4-12",
+      "theme": "Radio",
+      "q": "Comment annonces-tu que ton équipe prend son service ?"
+    },
+    {
+      "id": "v4-21",
+      "theme": "Organisation",
+      "q": "Pourquoi faut-il prévenir les autres équipages d’un changement ?"
+    },
+    {
+      "id": "v4-8",
+      "theme": "BAC",
+      "q": "À quoi sert un compte rendu après une intervention ?"
+    },
+    {
+      "id": "v4-11",
+      "theme": "Radio",
+      "q": "Quelles informations importantes donnes-tu au TN 75 ?"
+    },
+    {
+      "id": "v4-9",
+      "theme": "BAC",
+      "q": "Pourquoi travaille-t-on en équipe à la BAC ?"
+    },
+    {
+      "id": "v4-17",
+      "theme": "Comportement",
+      "q": "Que fais-tu si un collègue est en difficulté ?"
+    }
+  ],
+  "ans": {
+    "v4-15": "j'attente les directive de la TN 75.",
+    "v4-6": "je regard autour du cartier je voie s'il a des personne suspecte.  \n\nla situation: braquage D'ATM",
+    "v4-24": "je procède a son arrestation je note les heure pour L'OPJ.\n\nla situation: braquage D'ATM ",
+    "v4-18": "pour pas que sa part en live parce que il faut être poli avec tout les personne.  ",
+    "v4-12": "Tn75 du GPX-S j'annonce que je prend mon service et que je suis spécialité Bac. ",
+    "v4-21": "ses importent pour le suivi des effectif pour savoir sur quoi on part pour pas être perdu.  ",
+    "v4-8": "il faut expliquer les fait pour les haut gradé le dérouler des fait pour voir aussi si tu a fait de la merde ou pas. ",
+    "v4-11": "Annoncer le départ. \n\nla situation: quand il parte en service en Bac ou PS ",
+    "v4-9": "ses très impotent de travailler en équipe une bonne ambiance et que tout le monde soie cordonner. ",
+    "v4-17": "j'informe ma situation et la TN 75 si mon j'analyse la situation j'appelle des renforts. "
+  },
+  "radioAns": [
+    "j'appelle la TN 75 et je dit des information a la TN 75 donc se qui se passent si besoin de renfort.",
+    "il faut passer part la TN 75 il converse avec tout les unités.  ",
+    "TN 75 de bac on aurais besoin de renfort. pour un control \n\nla situation: il en TN 75 ",
+    "de TN a tous ses pour vous annoncer fin d'intervention  \n\nla situation: il en TN 75 "
+  ],
+  "scAns": [
+    [
+      "Je contacte TN75 si ils ont un descriptif visuel de l’individu. Et je répartsi les missions entre les agents\n",
+      "Je fais des binômes, donc 3 fois 2 agents. Je les répartis sur les quartiers aux alentours.\n",
+      " Je demande à TN75 si ils ont un descriptif de l’individu et/ou du sac volé",
+      "TN75 de BAC Alpha. J’attends le transmettez. Puis je demande si ils ont un descriptif de l’individu et/ou du sac volé\n",
+      "Je répartis comme dit précédemment les tâches pour les binômes puis je répartis sur le secteur donné par TN75, pour que si il y a un problème on réagisse au plus vite et dans les bonnes conditions.\n"
+    ],
+    [
+      "Je veux savoir dans un premier temps si y’a des individus sur les lieux pour que l’on soit en sécurité.\n\n",
+      "Il y aura forcément 1 patrouille de 2 et 1 patrouille de 3. La patrouille de 2 peut tourner sur le secteur si il y a eu un signalement du véhicule et la patrouille de 3 va essayer de prendre contact avec l’individu/les individus, si aucune réponse ils peuvent aller faire une levé de doute avec précaution.\n",
+      "Je demande si ils ont des informations complémentaires pour qu’on est tout pour intervenir en sécurité\n",
+      "Je les prends en comptes directement et je modifie la tactique que j’ai employé avec mes agents si il faut.\n",
+      "Je peux demander des renforts pour la levée de doute. Ou si en arrivant sur les lieux on voit l’individu s’enfuire à pied ou en voiture.\n"
+    ],
+    [
+      "Je prends contact avec l’individu qui crie pour savoir si il a besoin de soins médicaux ou psychologiques. Si non j’essaye de comprendre pourquoi il crie et j’apaise les tensions.\n",
+      "Si l’individu a un problème psychologique ou suit un traitement médical en essayant d’avoir son identité.\n",
+      "Il y a 2 patrouilles de 2. 1 patrouille essaye de prendre contact avec les témoins qui ont appelé pour voir ce qu'il se passe avec l’individu. Pourquoi il crie ? Etc.\nEt l’autre équipage reste avec l’individu pour apaiser les tensions, pour ne pas qu’il se blesse et essayer de récolter des informations.\n\n",
+      "TN75 de BAC Alpha. J’attends le transmettez. Et j’annonce qu’on est actuellement sur intervention. On essaye de calmer l’individu. (Et si il y a besoin je demande une assistance médical) \n",
+      "Réponse du candidat : \nJ’essaye de comprendre pourquoi il a appelé, ce qu’il a vu. Et je lui dit que le numéro 17 sert que pour les appelle d’urgence et qu’il faut être en danger ou sûre de la situation avant le de le composer\n"
+    ],
+    [
+      "Je prends en charge le collègue avec notre trousse de secours. Si il saigne abondamment, je peux lui mettre un garrot tactique pour arrêter le saignement. Dès que je fais quelque chose sur lui je dois bien noter l’heure c’est important pour sa prise en charge par la suite. (Je fais les premiers secours)\n\n",
+      "Je demande par radio a TN75 si je peux converser avec GOLF ou Régulation 15 pour sa prise en charge puis je demande un moyen médicalisé pour sa prise en charge.\n",
+      "De me sécuriser pendant que je m’occupe du collègue ou de m’aider a faire les premiers secours.\n\n",
+      "Mes collègues vont sécuriser les passants pendant la prise en charge du collègue blessé.\n",
+      "Je fais un compte rendu aux responsables pour qu’ils sachent précisément ce qu’il s’est passé. Je retranscris vraiment tout en détail pour que même si ils n’étaient pas là, ils sachent ce qu’il s’est passé dans les moindres détails.\n"
+    ],
+    [
+      "J’organise mes agents, leurs donnent des rôles précis pour ne pas qu’il y ait d’embrouille sur l’intervention.\n",
+      "Je fais 2 patrouilles de 3 et 1 patrouille de 2. Les patrouilles de 3 vont intervenir en premier car ils sont plus puis la patrouille de 2 sera là pour les assistés. \n",
+      "Dans un premier temps, RADIO CLAIRE, PRÉCISE ET TRANSMISSIONS COURTES.\n",
+      "En arrivant sur les lieux je leur fais un mini bilan par radio clair et précis.\nJe leur explique la situation.\n",
+      "J’applique et je modifie l’organisation de mes effectifs très rapidement.\n",
+      "Je peux demander du renfort à n’importe quand durant l’intervention, comme du renfort par les autres équipages ou des équipes médicales pour des prises en charge. (Si nécessaire) \n\n",
+      "Si il y a des blessés à prendre en charge on fait les premiers secours et on contacte des équipes médicales pour leurs prises en charge. Et je fais un compte aux responsables. Il doit être clair et retranscrire parfaitement le déroulé de l’intervention. Du début jusqu’à la fin dans les moindres détails. \n\n"
+    ]
+  ],
+  "phys": {
+    "run": "27.29",
+    "push": "30",
+    "abs": "50",
+    "jumping": "20",
+    "pursuit": "",
+    "cog": "pompe- sig sauer 2022 -souris/  sig sauer 2022 pompe-souris ",
+    "obs": "très bon cardio "
+  },
+  "shoot": {
+    "safety": "",
+    "handling": "",
+    "precision": "",
+    "reaction": "",
+    "memory": "",
+    "memoryAsked": "2 3 4 5 2 3 4 1 ",
+    "memoryGood": "8",
+    "memoryErrors": "0",
+    "discern": "",
+    "discernAsked": "tiré sur les cible le plus rapidement sans otage. ",
+    "discernErrors": "0",
+    "analysis": "///",
+    "hostage": 0,
+    "obs": "il prend in temps de réflexion avant de tiré ses très bien pas d'erreur il écoute les consigne de sécurité.  "
+  },
+  "marks": {
+    "theory": {
+      "v4-15": "6",
+      "v4-6": "5",
+      "v4-24": "7",
+      "v4-18": "7",
+      "v4-12": "7",
+      "v4-21": "6",
+      "v4-8": "6",
+      "v4-11": "5",
+      "v4-9": "5",
+      "v4-17": "5"
+    },
+    "radio": {
+      "0": "14",
+      "1": "10",
+      "2": "14",
+      "3": "14"
+    },
+    "sc": {
+      "0_0": "12",
+      "0_1": "8",
+      "0_2": "8",
+      "0_3": "9",
+      "0_4": "13",
+      "1_0": "9",
+      "1_1": "15",
+      "1_2": "8",
+      "1_3": "10",
+      "1_4": "11",
+      "2_0": "11",
+      "2_1": "9",
+      "2_2": "14",
+      "2_3": "12",
+      "2_4": "13",
+      "3_0": "15",
+      "3_1": "13",
+      "3_2": "8",
+      "4_6": "12",
+      "4_5": "12",
+      "4_4": "8",
+      "3_3": "12",
+      "3_4": "10",
+      "4_0": "6",
+      "4_3": "10",
+      "4_2": "8",
+      "4_1": "7"
+    },
+    "phys": "151",
+    "shoot": "200"
+  },
+  "strength": "le sport et l'implication ",
+  "improve": "ses pas a moi de dire ça ",
+  "general": "",
+  "decision": "RETENU",
+  "reason": "il et très motiver il et investi ",
+  "retakes": [],
+  "retakeDate": "",
+  "el": {
+    "cheat": false,
+    "refusal": false,
+    "abandon": false,
+    "danger": false
+  },
+  "cmd": {
+    "dg": "Capitaine",
+    "dn": "BOUSSERE Kevin",
+    "ag": "Sous Brigadier",
+    "an": "LAURENT Cyril",
+    "bacRetenu": 800,
+    "bacReserve": 650,
+    "cdgQualifie": 800,
+    "cdgReserve": 650,
+    "cdgAjourne": 500,
+    "physRunFort": 300,
+    "physRunBon": 330,
+    "physRunBase": 390,
+    "physPushFort": 45,
+    "physPushBon": 38,
+    "physPushBase": 30,
+    "physAbsFort": 70,
+    "physAbsBon": 60,
+    "physAbsBase": 50,
+    "physJumpingFort": 30,
+    "physJumpingBon": 25,
+    "physJumpingBase": 20
+  },
+  "total": 672,
+  "closedAt": "2026-11-04T20:16:08.307Z",
+  "closedBy": "boi-kylian",
+  "systemSuggestions": {
+    "at": "2026-11-04T20:16:08.307Z",
+    "theory": {
+      "v4-15": 5,
+      "v4-6": 6,
+      "v4-24": 6,
+      "v4-18": 6,
+      "v4-12": 6,
+      "v4-21": 6,
+      "v4-8": 7,
+      "v4-11": 6,
+      "v4-9": 6,
+      "v4-17": 6
+    },
+    "radio": [
+      17,
+      13,
+      15,
+      14
+    ],
+    "sc": {
+      "0_0": 9,
+      "0_1": 9,
+      "0_2": 8,
+      "0_3": 10,
+      "0_4": 13,
+      "1_0": 10,
+      "1_1": 15,
+      "1_2": 9,
+      "1_3": 10,
+      "1_4": 11,
+      "2_0": 12,
+      "2_1": 9,
+      "2_2": 15,
+      "2_3": 12,
+      "2_4": 15,
+      "3_0": 15,
+      "3_1": 12,
+      "3_2": 9,
+      "3_3": 8,
+      "3_4": 14,
+      "4_0": 9,
+      "4_1": 12,
+      "4_2": 7,
+      "4_3": 10,
+      "4_4": 7,
+      "4_5": 11,
+      "4_6": 15
+    },
+    "sections": {
+      "th": 60,
+      "ra": 59,
+      "sc": 219,
+      "ph": 144,
+      "sh": 194
+    },
+    "total": 676,
+    "decision": "RESERVE",
+    "reason": "676/1000 • seuils 800 / 650",
+    "thresholds": {
+      "retenu": 800,
+      "reserve": 650
+    }
+  },
+  "suggestedTotal": 676,
+  "suggestedDecision": "RESERVE",
+  "suggestedReason": "676/1000 • seuils 800 / 650"
+}
