@@ -39,5 +39,20 @@
     "closedAt": "2026-11-04T20:11:42.222Z",
     "closedBy": "cyril",
     "rectifies": null
+  },
+  {
+    "id": "BAC-2026-004",
+    "last": "Martin ",
+    "first": "Bob",
+    "grade": "stagiaire ",
+    "mat": "5493074",
+    "date": "2026-11-04",
+    "decision": "RETENU",
+    "total": 672,
+    "max": 1000,
+    "examiner": "stagiaire  Bobi Kilian",
+    "closedAt": "2026-11-04T20:16:08.307Z",
+    "closedBy": "boi-kylian",
+    "rectifies": null
   }
 ]
