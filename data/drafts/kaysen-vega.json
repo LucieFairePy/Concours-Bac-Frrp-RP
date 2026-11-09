@@ -2,7 +2,7 @@
   "id": "BAC-2026-005",
   "version": 2,
   "contentSet": "v4",
-  "status": "in_progress",
+  "status": "correction",
   "locked": false,
   "created": "2026-11-09T12:54:02.797Z",
   "auditTrail": [
@@ -85,16 +85,16 @@
     "v4-24": "J'avertit la TN en lui transmettant un bilan de la situation et lui informer qu'on est de nouveau disponible",
     "v4-8": "Pour moi le compte rendu sert a retranscrire les faits exactes pour prévenir d'une potentiel et informer la hiérarchie",
     "v4-29": "La vérifié et en être sur",
-    "v4-5": "La police secour est primo intervenant sur mission simple controle de la route accident et BAC flagrant délis",
+    "v4-5": "La police secours est primo intervenant sur mission simple contrôle de la route accident et BAC flagrant délits",
     "v4-14": "Je dit pourquoi j'ai besoin de renfort le nombre et le type d'unités demandés",
-    "v4-15": "Si il y'a un déscriptif ou des infos les notés",
+    "v4-15": "Si il y'a un descriptif ou des infos les notés",
     "v4-10": "Demandés de répéter la consigne",
     "v4-22": "Comparé les deux mais si les deux se contredisent voir comparer au deux lequel est plus crédible , et j'essaye de voir qui est le plus sèrieux et si il y'a d'autres témoins"
   },
   "radioAns": [
-    "Un requerant nous signal tel personne avec la description qu'il a voler un télephone",
+    "Un requérant nous signal tel personne avec la description qu'il a voler un téléphone",
     "J'appel en TPH ou com interne en donnant le lieux pour que les autres équipes se rapprochent avec la description",
-    "J'informe la TN en lui informant de la situation et je demande par exemple un BAC suplementaire a l'adresse indiqué a la bonne adresse",
+    "J'informe la TN en lui informant de la situation et je demande par exemple un BAC supplémentaire a l'adresse indiqué a la bonne adresse",
     "J'informe la TN qu'on reprend vacation"
   ],
   "scAns": [
@@ -102,38 +102,38 @@
       "Demander immédiatement un descriptif de l'individu, envoyer une patrouille à sa recherche et en maintenir une autre auprès de la victime.",
       "En deux équipages de 3",
       "Un descriptif la direction de fuite si elle est véhiculer , les faits ",
-      "Agresseur partit tel direction effectif deja présent si y a besoin de renfort le descriptif de la personne ",
+      "Agresseur partit tel direction effectif déjà présent si y a besoin de renfort le descriptif de la personne ",
       "Si je vois qu'il y'a un risque je demande un renfort dans la zone"
     ],
     [
-      "Premierement faire une reconnaissance de la maison et des issus , mettre 3 personnes a l'avant 2 a l arriere si personne dedant prendre les infos",
+      "Premièrement faire une reconnaissance de la maison et des issus , mettre 3 personnes a l'avant 2 a l arrière si personne devant prendre les infos",
       "Sa dépend si il y'a une porte a l avant je divise en 2 si aucune issus de plus les 5 devant",
       "Si une CSI est disponible ou un PS pour avoir des effectifs en plus",
-      "Je préviens les effectifs sur place pour pas d'incompréhension , si il y'a des personnes a l'interieur vérifier que se soit les personnes propriétaires de la maison si il y a trace d'effractions",
-      "Si il y'a des occupants a l'intérieur et si jamais la situation devient incontrolables home jacking etc... "
+      "Je préviens les effectifs sur place pour pas d'incompréhension , si il y'a des personnes a l'intérieur vérifier que se soit les personnes propriétaires de la maison si il y a trace d'effractions",
+      "Si il y'a des occupants a l'intérieur et si jamais la situation devient incontrôlables home jacking etc... "
     ],
     [
-      "Je demande une PS en plus pour sécurisé la rue en deux diviser l'équipage en deux et procéder au controle de l'individu",
+      "Je demande une PS en plus pour sécurisé la rue en deux diviser l'équipage en deux et procéder au contrôle de l'individu",
       "Si elle est pas sous FPR si elle a des antécédents au TAJ , si elle est agité faire une palpation",
-      "Je ferais 2 personnes de chaque cote on procède au contrôle a 4 si il se laisse pas faire interpellation palpation etc une personne qui prévient de ce qui se passe",
+      "Je ferais 2 personnes de chaque cote on procède au contrôle a 4 si il se laisse pas faire interpellation palpation etc. une personne qui prévient de ce qui se passe",
       "Si on a interpellé la personne , informé la personne si elle est recherche pourquoi interpelle demander un renfort si besoin",
-      "Je le confrote a la seconde version des faits"
+      "Je le confronte a la seconde version des faits"
     ],
     [
       "Appelé du renfort demandés a des agents de s'occuper du blessé et appelé les secours",
-      "J'appel via la TN en donnant les premiere info cause blessure gravité ",
+      "J'appel via la TN en donnant les première info cause blessure gravité ",
       "2 personnes pour s'occuper du blesser et les 4 autres s'occuper du périmètre ",
       "Un périmètre de sécurité ",
       "Les deux si blessure légère que le responsable spé"
     ],
     [
-      "Je demande du renfort directement on se rejoint a un point donné pour etre en nombre lors de l'inter",
+      "Je demande du renfort directement on se rejoint a un point donné pour être en nombre lors de l'inter",
       "2 voiture de 4 ",
       "Un briefing rapide de se qu'on va faire arriver sur les lieux se replier si il faut ",
       "Directement donner les infos tels qu'elles sont avec le nombre de blesser mise en cause et mis en fuite si il y'en a ",
       "J'en informe la TN directement",
       "Si je sais qu'il y  a du monde sur place je demande les renforts dès le début",
-      "Je fais un rapide compte rendu si il y'a eu interpellation a la tn je dis si la situation est terminé comment elle s'est terminée"
+      "Je fais un rapide compte rendu si il y'a eu interpellation a la TN je dis si la situation est terminé comment elle s'est terminée"
     ]
   ],
   "phys": {
@@ -162,11 +162,55 @@
     "obs": "Le candidat a réalisé un passage particulièrement satisfaisant. Il a correctement mémorisé l'intégralité des numéros attribués aux différentes cibles, avec un résultat de 28/28 et aucune erreur de mémorisation. Il a également fait preuve d'un excellent discernement, en distinguant correctement les cibles hostiles des cibles identifiées comme étant des otages.\n\nAucune erreur de discernement n'a été relevée et aucune cible otage n'a été touchée. Le candidat a respecté les consignes annoncées et démontré une bonne maîtrise générale de l'exercice."
   },
   "marks": {
-    "theory": {},
-    "radio": {},
-    "sc": {},
-    "phys": "",
-    "shoot": ""
+    "theory": {
+      "v4-11": "7",
+      "v4-21": "5",
+      "v4-24": "10",
+      "v4-8": "7",
+      "v4-29": "8",
+      "v4-5": "6",
+      "v4-14": "6",
+      "v4-15": "10",
+      "v4-10": "10",
+      "v4-22": "8"
+    },
+    "radio": {
+      "0": "17",
+      "1": "20",
+      "2": "20",
+      "3": "15"
+    },
+    "sc": {
+      "0_0": "13",
+      "0_1": "13",
+      "0_2": "12",
+      "0_3": "10",
+      "0_4": "10",
+      "1_0": "12",
+      "1_1": "10",
+      "1_2": "5",
+      "1_3": "10",
+      "1_4": "12",
+      "2_0": "10",
+      "2_1": "10",
+      "2_2": "12",
+      "2_3": "11",
+      "2_4": "13",
+      "3_0": "15",
+      "3_1": "15",
+      "3_2": "13",
+      "3_3": "15",
+      "3_4": "0",
+      "4_0": "5",
+      "4_1": "12",
+      "4_2": "10",
+      "4_3": "15",
+      "4_4": "15",
+      "4_5": "8",
+      "4_6": "10"
+    },
+    "phys": "180",
+    "shoot": "290"
   },
   "strength": "",
   "improve": "",
