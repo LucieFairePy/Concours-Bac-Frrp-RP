@@ -80,7 +80,8 @@
     }
   ],
   "ans": {
-    "v4-11": "Le lieu , ce qui se passe, si oui le nombre de personne impliqués , nombre de personnes et descriptif"
+    "v4-11": "Le lieu , ce qui se passe, si oui le nombre de personne impliqués , nombre de personnes et descriptif",
+    "v4-21": "J'annule les renfort si personne interpeller et contacter golf si besoin d'assistance médical"
   },
   "radioAns": [
     "",
