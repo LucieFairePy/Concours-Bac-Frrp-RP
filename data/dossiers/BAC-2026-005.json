@@ -1,0 +1,327 @@
+{
+  "id": "BAC-2026-005",
+  "version": 2,
+  "contentSet": "v4",
+  "status": "closed",
+  "locked": true,
+  "created": "2026-11-09T12:54:02.797Z",
+  "auditTrail": [
+    {
+      "at": "2026-11-09T12:54:02.800Z",
+      "action": "dossier.creation",
+      "who": "sous brigadier Kaysen Vega",
+      "detail": "BAC-2026-005"
+    },
+    {
+      "at": "2026-11-09T15:53:09.344Z",
+      "action": "dossier.cloture",
+      "who": "sous brigadier Kaysen Vega",
+      "detail": "RETENU"
+    }
+  ],
+  "c": {
+    "last": "Scalvini",
+    "first": "Adam",
+    "grade": "GPX-S",
+    "mat": "7199044",
+    "date": "2026-11-09",
+    "start": "14:00"
+  },
+  "ex": [
+    {
+      "grade": "Sous Brigadier",
+      "name": "VEGA Kaysen"
+    }
+  ],
+  "qs": [
+    {
+      "id": "v4-11",
+      "theme": "Radio",
+      "q": "Quelles informations importantes donnes-tu au TN 75 ?"
+    },
+    {
+      "id": "v4-21",
+      "theme": "Organisation",
+      "q": "Pourquoi faut-il prévenir les autres équipages d’un changement ?"
+    },
+    {
+      "id": "v4-24",
+      "theme": "Organisation",
+      "q": "Comment termines-tu une intervention correctement ?"
+    },
+    {
+      "id": "v4-8",
+      "theme": "BAC",
+      "q": "À quoi sert un compte rendu après une intervention ?"
+    },
+    {
+      "id": "v4-29",
+      "theme": "Connaissances BAC",
+      "q": "Que dois-tu faire avant de transmettre une information non vérifiée ?"
+    },
+    {
+      "id": "v4-5",
+      "theme": "BAC",
+      "q": "Quelle est la différence entre la BAC et Police Secours ?"
+    },
+    {
+      "id": "v4-14",
+      "theme": "Radio",
+      "q": "Que transmets-tu si tu as besoin de renfort ?"
+    },
+    {
+      "id": "v4-15",
+      "theme": "Radio",
+      "q": "Que fais-tu si tu reçois une information importante à la radio ?"
+    },
+    {
+      "id": "v4-10",
+      "theme": "BAC",
+      "q": "Que fais-tu si tu ne comprends pas une consigne ?"
+    },
+    {
+      "id": "v4-22",
+      "theme": "Organisation",
+      "q": "Que fais-tu si les informations de deux témoins sont différentes ?"
+    }
+  ],
+  "ans": {
+    "v4-11": "Le lieu , ce qui se passe, si oui le nombre de personne impliqués , nombre de personnes et descriptif",
+    "v4-21": "J'annule les renfort si personne interpeller et contacter golf si besoin d'assistance médical",
+    "v4-24": "J'avertit la TN en lui transmettant un bilan de la situation et lui informer qu'on est de nouveau disponible",
+    "v4-8": "Pour moi le compte rendu sert a retranscrire les faits exactes pour prévenir d'une potentiel et informer la hiérarchie",
+    "v4-29": "La vérifié et en être sur",
+    "v4-5": "La police secours est primo intervenant sur mission simple contrôle de la route accident et BAC flagrant délits",
+    "v4-14": "Je dit pourquoi j'ai besoin de renfort le nombre et le type d'unités demandés",
+    "v4-15": "Si il y'a un descriptif ou des infos les notés",
+    "v4-10": "Demandés de répéter la consigne",
+    "v4-22": "Comparé les deux mais si les deux se contredisent voir comparer au deux lequel est plus crédible , et j'essaye de voir qui est le plus sèrieux et si il y'a d'autres témoins"
+  },
+  "radioAns": [
+    "Un requérant nous signal tel personne avec la description qu'il a voler un téléphone",
+    "J'appel en TPH ou com interne en donnant le lieux pour que les autres équipes se rapprochent avec la description",
+    "J'informe la TN en lui informant de la situation et je demande par exemple un BAC supplémentaire a l'adresse indiqué a la bonne adresse",
+    "J'informe la TN qu'on reprend vacation"
+  ],
+  "scAns": [
+    [
+      "Demander immédiatement un descriptif de l'individu, envoyer une patrouille à sa recherche et en maintenir une autre auprès de la victime.",
+      "En deux équipages de 3",
+      "Un descriptif la direction de fuite si elle est véhiculer , les faits ",
+      "Agresseur partit tel direction effectif déjà présent si y a besoin de renfort le descriptif de la personne ",
+      "Si je vois qu'il y'a un risque je demande un renfort dans la zone"
+    ],
+    [
+      "Premièrement faire une reconnaissance de la maison et des issus , mettre 3 personnes a l'avant 2 a l arrière si personne devant prendre les infos",
+      "Sa dépend si il y'a une porte a l avant je divise en 2 si aucune issus de plus les 5 devant",
+      "Si une CSI est disponible ou un PS pour avoir des effectifs en plus",
+      "Je préviens les effectifs sur place pour pas d'incompréhension , si il y'a des personnes a l'intérieur vérifier que se soit les personnes propriétaires de la maison si il y a trace d'effractions",
+      "Si il y'a des occupants a l'intérieur et si jamais la situation devient incontrôlables home jacking etc... "
+    ],
+    [
+      "Je demande une PS en plus pour sécurisé la rue en deux diviser l'équipage en deux et procéder au contrôle de l'individu",
+      "Si elle est pas sous FPR si elle a des antécédents au TAJ , si elle est agité faire une palpation",
+      "Je ferais 2 personnes de chaque cote on procède au contrôle a 4 si il se laisse pas faire interpellation palpation etc. une personne qui prévient de ce qui se passe",
+      "Si on a interpellé la personne , informé la personne si elle est recherche pourquoi interpelle demander un renfort si besoin",
+      "Je le confronte a la seconde version des faits"
+    ],
+    [
+      "Appelé du renfort demandés a des agents de s'occuper du blessé et appelé les secours",
+      "J'appel via la TN en donnant les première info cause blessure gravité ",
+      "2 personnes pour s'occuper du blesser et les 4 autres s'occuper du périmètre ",
+      "Un périmètre de sécurité ",
+      "Les deux si blessure légère que le responsable spé"
+    ],
+    [
+      "Je demande du renfort directement on se rejoint a un point donné pour être en nombre lors de l'inter",
+      "2 voiture de 4 ",
+      "Un briefing rapide de se qu'on va faire arriver sur les lieux se replier si il faut ",
+      "Directement donner les infos tels qu'elles sont avec le nombre de blesser mise en cause et mis en fuite si il y'en a ",
+      "J'en informe la TN directement",
+      "Si je sais qu'il y  a du monde sur place je demande les renforts dès le début",
+      "Je fais un rapide compte rendu si il y'a eu interpellation a la TN je dis si la situation est terminé comment elle s'est terminée"
+    ]
+  ],
+  "phys": {
+    "run": "1.35",
+    "push": "70",
+    "abs": "59",
+    "jumping": "109",
+    "pursuit": "Le candidat n'a pas réussi à mener à bien la course-poursuite fictive. Plusieurs erreurs tactiques ont été relevées, notamment l'utilisation du GAIL et du BTD pour procéder à l'interpellation, alors que le comportement du suspect ne présentait aucun caractère violent ne justifiant leur emploi.",
+    "cog": "Le candidat a démontré une bonne capacité de mémorisation et de restitution des informations malgré la fatigue physique. Il a su conserver son sang-froid et faire preuve de maîtrise de soi tout au long de l'exercice.",
+    "obs": "Le candidat présente un profil physiquement performant, avec une bonne résistance à l'effort et une réelle détermination. Néanmoins, les erreurs observées lors de la mise en situation révèlent un besoin de progression dans le discernement, la proportionnalité de l'intervention et la maîtrise des techniques professionnelles."
+  },
+  "shoot": {
+    "safety": "",
+    "handling": "",
+    "precision": "",
+    "reaction": "",
+    "memory": "",
+    "memoryAsked": "28",
+    "memoryGood": "28",
+    "memoryErrors": "0",
+    "discern": "",
+    "discernAsked": "Des otages parmis les cibles bien discerner avant de tiré",
+    "discernErrors": "0",
+    "analysis": "Le candidat s'est montré particulièrement confiant à l'issue de son passage. Il estime avoir respecté l'ensemble des consignes et ne pas avoir commis d'erreur. Son analyse témoigne d'une bonne assurance et d'une confiance dans ses capacités de mémorisation et de discernement.",
+    "hostage": 0,
+    "obs": "Le candidat a réalisé un passage particulièrement satisfaisant. Il a correctement mémorisé l'intégralité des numéros attribués aux différentes cibles, avec un résultat de 28/28 et aucune erreur de mémorisation. Il a également fait preuve d'un excellent discernement, en distinguant correctement les cibles hostiles des cibles identifiées comme étant des otages.\n\nAucune erreur de discernement n'a été relevée et aucune cible otage n'a été touchée. Le candidat a respecté les consignes annoncées et démontré une bonne maîtrise générale de l'exercice."
+  },
+  "marks": {
+    "theory": {
+      "v4-11": "7",
+      "v4-21": "5",
+      "v4-24": "10",
+      "v4-8": "7",
+      "v4-29": "8",
+      "v4-5": "6",
+      "v4-14": "6",
+      "v4-15": "10",
+      "v4-10": "10",
+      "v4-22": "8"
+    },
+    "radio": {
+      "0": "17",
+      "1": "20",
+      "2": "20",
+      "3": "15"
+    },
+    "sc": {
+      "0_0": "13",
+      "0_1": "13",
+      "0_2": "12",
+      "0_3": "10",
+      "0_4": "10",
+      "1_0": "12",
+      "1_1": "10",
+      "1_2": "5",
+      "1_3": "10",
+      "1_4": "12",
+      "2_0": "10",
+      "2_1": "10",
+      "2_2": "12",
+      "2_3": "11",
+      "2_4": "13",
+      "3_0": "15",
+      "3_1": "15",
+      "3_2": "13",
+      "3_3": "15",
+      "3_4": "0",
+      "4_0": "5",
+      "4_1": "12",
+      "4_2": "10",
+      "4_3": "15",
+      "4_4": "15",
+      "4_5": "8",
+      "4_6": "10"
+    },
+    "phys": "180",
+    "shoot": "290"
+  },
+  "strength": "Excellentes capacités physiques et bonne résistance à l'effort.\n\nTrès bonne mémorisation et concentration.\n\nDiscernement irréprochable lors de l'épreuve de tir.\n\n\nSang-froid et maîtrise de soi sous fatigue.\n\nForte détermination et implication.\n\nBonne capacité de restitution des informations.",
+  "improve": "Améliorer l'analyse tactique en situation de poursuite.\n\nRenforcer le discernement dans le choix des moyens d'intervention.\n\n\nTravailler la prise de décision en situation de stress.\n\nAméliorer la gestion de l'effort cardiovasculaire.\n\nApprofondir les procédures d'interpellation et la proportionnalité des moyens employés.\n\nPetite lacunes sur les mises en situation manque un peu de précision et de gestion d'équipe",
+  "general": "",
+  "decision": "RETENU",
+  "reason": "Le candidat a réalisé un parcours globalement très satisfaisant, démontrant une réelle détermination, une bonne condition physique ainsi que de solides capacités cognitives. Il s'est particulièrement distingué lors de l'épreuve de tir, avec une réussite parfaite de 28/28, sans aucune erreur de mémorisation ou de discernement. Malgré quelques difficultés rencontrées lors de la mise en situation de poursuite, le candidat a su conserver son sang-froid et faire preuve d'implication tout au long du concours. Son profil présente des aptitudes intéressantes pour intégrer une unité de voie publique spécialisée.",
+  "retakes": [],
+  "retakeDate": "",
+  "el": {
+    "cheat": false,
+    "refusal": false,
+    "abandon": false,
+    "danger": false
+  },
+  "cmd": {
+    "dg": "Capitaine",
+    "dn": "BOUSSERE Kevin",
+    "ag": "Sous Brigadier",
+    "an": "LAURENT Cyril",
+    "bacRetenu": 800,
+    "bacReserve": 650,
+    "cdgQualifie": 800,
+    "cdgReserve": 650,
+    "cdgAjourne": 500,
+    "physRunFort": 300,
+    "physRunBon": 330,
+    "physRunBase": 390,
+    "physPushFort": 45,
+    "physPushBon": 38,
+    "physPushBase": 30,
+    "physAbsFort": 70,
+    "physAbsBon": 60,
+    "physAbsBase": 50,
+    "physJumpingFort": 30,
+    "physJumpingBon": 25,
+    "physJumpingBase": 20
+  },
+  "total": 838,
+  "closedAt": "2026-11-09T15:53:09.344Z",
+  "closedBy": "kaysen-vega",
+  "systemSuggestions": {
+    "at": "2026-11-09T15:53:09.344Z",
+    "theory": {
+      "v4-11": 6,
+      "v4-21": 5,
+      "v4-24": 6,
+      "v4-8": 6,
+      "v4-29": 4,
+      "v4-5": 6,
+      "v4-14": 6,
+      "v4-15": 5,
+      "v4-10": 4,
+      "v4-22": 8
+    },
+    "radio": [
+      14,
+      16,
+      17,
+      11
+    ],
+    "sc": {
+      "0_0": 10,
+      "0_1": 6,
+      "0_2": 8,
+      "0_3": 9,
+      "0_4": 8,
+      "1_0": 11,
+      "1_1": 10,
+      "1_2": 8,
+      "1_3": 12,
+      "1_4": 9,
+      "2_0": 10,
+      "2_1": 10,
+      "2_2": 12,
+      "2_3": 10,
+      "2_4": 7,
+      "3_0": 8,
+      "3_1": 8,
+      "3_2": 8,
+      "3_3": 6,
+      "3_4": 7,
+      "4_0": 9,
+      "4_1": 6,
+      "4_2": 9,
+      "4_3": 10,
+      "4_4": 6,
+      "4_5": 9,
+      "4_6": 11
+    },
+    "sections": {
+      "th": 56,
+      "ra": 58,
+      "sc": 176,
+      "ph": 188,
+      "sh": 296
+    },
+    "total": 774,
+    "decision": "RETENU",
+    "reason": "774/1000 • seuils 800 / 650",
+    "thresholds": {
+      "retenu": 800,
+      "reserve": 650
+    }
+  },
+  "suggestedTotal": 774,
+  "suggestedDecision": "RETENU",
+  "suggestedReason": "774/1000 • seuils 800 / 650"
+}
