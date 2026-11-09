@@ -54,5 +54,20 @@
     "closedAt": "2026-11-04T20:16:08.307Z",
     "closedBy": "boi-kylian",
     "rectifies": null
+  },
+  {
+    "id": "BAC-2026-005",
+    "last": "Scalvini",
+    "first": "Adam",
+    "grade": "GPX-S",
+    "mat": "7199044",
+    "date": "2026-11-09",
+    "decision": "RETENU",
+    "total": 838,
+    "max": 1000,
+    "examiner": "Sous Brigadier VEGA Kaysen",
+    "closedAt": "2026-11-09T15:53:09.344Z",
+    "closedBy": "kaysen-vega",
+    "rectifies": null
   }
 ]
