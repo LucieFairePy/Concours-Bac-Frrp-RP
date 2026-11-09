@@ -138,7 +138,7 @@
   ],
   "phys": {
     "run": "1.35",
-    "push": "40",
+    "push": "50",
     "abs": "",
     "jumping": "",
     "pursuit": "",
