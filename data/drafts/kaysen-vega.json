@@ -79,7 +79,9 @@
       "q": "Que fais-tu si les informations de deux témoins sont différentes ?"
     }
   ],
-  "ans": {},
+  "ans": {
+    "v4-11": "Le lieu "
+  },
   "radioAns": [
     "",
     "",
