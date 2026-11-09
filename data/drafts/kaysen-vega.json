@@ -143,7 +143,7 @@
     "jumping": "109",
     "pursuit": "Le candidat n'a pas réussi à mener à bien la course-poursuite fictive. Plusieurs erreurs tactiques ont été relevées, notamment l'utilisation du GAIL et du BTD pour procéder à l'interpellation, alors que le comportement du suspect ne présentait aucun caractère violent ne justifiant leur emploi.",
     "cog": "Le candidat a démontré une bonne capacité de mémorisation et de restitution des informations malgré la fatigue physique. Il a su conserver son sang-froid et faire preuve de maîtrise de soi tout au long de l'exercice.",
-    "obs": "Il a les compétences physique et s'est donner a l'echec musculaire et cardiovasculaire , très déterminés cependant il a commis plusieurs fautes durant la poursuite fictive et n'a pas réussi a me rattrapper "
+    "obs": "Le candidat présente un profil physiquement performant, avec une bonne résistance à l'effort et une réelle détermination. Néanmoins, les erreurs observées lors de la mise en situation révèlent un besoin de progression dans le discernement, la proportionnalité de l'intervention et la maîtrise des techniques professionnelles."
   },
   "shoot": {
     "safety": "",
@@ -151,15 +151,15 @@
     "precision": "",
     "reaction": "",
     "memory": "",
-    "memoryAsked": "",
-    "memoryGood": "",
-    "memoryErrors": "",
+    "memoryAsked": "28",
+    "memoryGood": "28",
+    "memoryErrors": "0",
     "discern": "",
-    "discernAsked": "",
-    "discernErrors": "",
-    "analysis": "",
+    "discernAsked": "Des otages parmis les cibles bien discerner avant de tiré",
+    "discernErrors": "0",
+    "analysis": "Il est confiant et il est sur de n'avoir commis aucune erreur sans hésitation",
     "hostage": 0,
-    "obs": ""
+    "obs": "Il a parfaitement su mémoriser les numéros attribuer aux cibles et a pu correctement neutraliser les cibles hostiles des cibles otage "
   },
   "marks": {
     "theory": {},
