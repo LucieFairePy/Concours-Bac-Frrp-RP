@@ -79,7 +79,9 @@
       "q": "Pourquoi la BAC peut-elle travailler en tenue civile ?"
     }
   ],
-  "ans": {},
+  "ans": {
+    "v4-8": "Sa sert a informer une hiérarchie d'un incident ou d'une opération avec son déroulement et les détails"
+  },
   "radioAns": [
     "",
     "",
