@@ -1,0 +1,199 @@
+{
+  "id": "BAC-2026-006",
+  "version": 2,
+  "contentSet": "v4",
+  "status": "draft",
+  "locked": false,
+  "created": "2026-11-11T15:14:08.815Z",
+  "auditTrail": [
+    {
+      "at": "2026-11-11T15:14:08.825Z",
+      "action": "dossier.creation",
+      "who": "sous brigadier Kaysen Vega",
+      "detail": "BAC-2026-006"
+    }
+  ],
+  "c": {
+    "last": "",
+    "first": "",
+    "grade": "",
+    "mat": "",
+    "date": "2026-11-11",
+    "start": ""
+  },
+  "ex": [
+    {
+      "grade": "Sous Brigadier",
+      "name": "LAURENT Cyril"
+    }
+  ],
+  "qs": [
+    {
+      "id": "v4-20",
+      "theme": "Sécurité",
+      "q": "Que fais-tu si la situation devient dangereuse pour les passants ?"
+    },
+    {
+      "id": "v4-15",
+      "theme": "Radio",
+      "q": "Que fais-tu si tu reçois une information importante à la radio ?"
+    },
+    {
+      "id": "v4-22",
+      "theme": "Organisation",
+      "q": "Que fais-tu si les informations de deux témoins sont différentes ?"
+    },
+    {
+      "id": "v4-13",
+      "theme": "Radio",
+      "q": "Pourquoi faut-il parler clairement et brièvement à la radio ?"
+    },
+    {
+      "id": "v4-8",
+      "theme": "BAC",
+      "q": "À quoi sert un compte rendu après une intervention ?"
+    },
+    {
+      "id": "v4-1",
+      "theme": "BAC",
+      "q": "Quel est le rôle principal de la BAC ?"
+    },
+    {
+      "id": "v4-2",
+      "theme": "BAC",
+      "q": "Que signifie BAC ?"
+    },
+    {
+      "id": "v4-28",
+      "theme": "Connaissances BAC",
+      "q": "Pourquoi la BAC échange-t-elle des informations avec d’autres services ?"
+    },
+    {
+      "id": "v4-11",
+      "theme": "Radio",
+      "q": "Quelles informations importantes donnes-tu au TN 75 ?"
+    },
+    {
+      "id": "v4-6",
+      "theme": "BAC",
+      "q": "Que fais-tu si tu vois une infraction en cours ?"
+    }
+  ],
+  "ans": {},
+  "radioAns": [
+    "",
+    "",
+    "",
+    ""
+  ],
+  "scAns": [
+    [
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ]
+  ],
+  "phys": {
+    "run": "",
+    "push": "",
+    "abs": "",
+    "jumping": "",
+    "pursuit": "",
+    "cog": "",
+    "obs": ""
+  },
+  "shoot": {
+    "safety": "",
+    "handling": "",
+    "precision": "",
+    "reaction": "",
+    "memory": "",
+    "memoryAsked": "",
+    "memoryGood": "",
+    "memoryErrors": "",
+    "discern": "",
+    "discernAsked": "",
+    "discernErrors": "",
+    "analysis": "",
+    "hostage": 0,
+    "obs": ""
+  },
+  "marks": {
+    "theory": {},
+    "radio": {},
+    "sc": {},
+    "phys": "",
+    "shoot": ""
+  },
+  "strength": "",
+  "improve": "",
+  "general": "",
+  "decision": "",
+  "reason": "",
+  "retakes": [],
+  "retakeDate": "",
+  "el": {
+    "cheat": false,
+    "refusal": false,
+    "abandon": false,
+    "danger": false
+  },
+  "cmd": {
+    "dg": "Capitaine",
+    "dn": "BOUSSERE Kevin",
+    "ag": "Sous Brigadier",
+    "an": "LAURENT Cyril",
+    "bacRetenu": 800,
+    "bacReserve": 650,
+    "cdgQualifie": 800,
+    "cdgReserve": 650,
+    "cdgAjourne": 500,
+    "physRunFort": 300,
+    "physRunBon": 330,
+    "physRunBase": 390,
+    "physPushFort": 45,
+    "physPushBon": 38,
+    "physPushBase": 30,
+    "physAbsFort": 70,
+    "physAbsBon": 60,
+    "physAbsBase": 50,
+    "physJumpingFort": 30,
+    "physJumpingBon": 25,
+    "physJumpingBase": 20
+  },
+  "total": null,
+  "closedAt": null,
+  "closedBy": null
+}
