@@ -141,9 +141,9 @@
     "push": "183",
     "abs": "60",
     "jumping": "72",
-    "pursuit": "",
-    "cog": "",
-    "obs": ""
+    "pursuit": "Il a eu le bon reflexe de prévenir les secours mais il n'a pas réussi a m'arreter",
+    "cog": "Il réstitut bien les infos et a un bon discernement",
+    "obs": "Motivé , bonne capacité musculaire petit effort cardio vasculaire a faire mais sinon aptitude physique apte a la BAC"
   },
   "shoot": {
     "safety": "",
@@ -151,15 +151,15 @@
     "precision": "",
     "reaction": "",
     "memory": "",
-    "memoryAsked": "",
-    "memoryGood": "",
-    "memoryErrors": "",
+    "memoryAsked": "26",
+    "memoryGood": "25",
+    "memoryErrors": "1",
     "discern": "",
-    "discernAsked": "",
-    "discernErrors": "",
+    "discernAsked": "Ne pas tiré sur les cibles dites \"otages\"",
+    "discernErrors": "0",
     "analysis": "",
     "hostage": 0,
-    "obs": ""
+    "obs": "Très bonne maitrise et précision malgré les effort physique bon discernement , exercice conduit en sécurité mais petite erreur concernant un tir de 2 balles au lieu d'une sur une des cibles "
   },
   "marks": {
     "theory": {
