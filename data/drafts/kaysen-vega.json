@@ -2,7 +2,7 @@
   "id": "BAC-2026-006",
   "version": 2,
   "contentSet": "v4",
-  "status": "in_progress",
+  "status": "correction",
   "locked": false,
   "created": "2026-11-25T15:06:20.782Z",
   "auditTrail": [
@@ -162,7 +162,11 @@
     "obs": "Très bonne exécution peu d'hésitation et sang froid malgré les épreuves physiques enduré juste avant"
   },
   "marks": {
-    "theory": {},
+    "theory": {
+      "v4-15": "8",
+      "v4-26": "9",
+      "v4-14": "7"
+    },
     "radio": {},
     "sc": {},
     "phys": "",
