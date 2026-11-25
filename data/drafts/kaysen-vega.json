@@ -2,71 +2,71 @@
   "id": "BAC-2026-006",
   "version": 2,
   "contentSet": "v4",
-  "status": "decision",
+  "status": "draft",
   "locked": false,
-  "created": "2026-11-11T15:14:10.652Z",
+  "created": "2026-11-25T15:06:20.782Z",
   "auditTrail": [
     {
-      "at": "2026-11-11T15:14:23.796Z",
+      "at": "2026-11-25T15:06:20.785Z",
       "action": "dossier.creation",
       "who": "sous brigadier Kaysen Vega",
       "detail": "BAC-2026-006"
     }
   ],
   "c": {
-    "last": "Camara",
-    "first": "Diego",
-    "grade": "GPX",
-    "mat": "5020988",
-    "date": "2000-08-22",
-    "start": "16:00"
+    "last": "",
+    "first": "",
+    "grade": "",
+    "mat": "",
+    "date": "2026-11-25",
+    "start": ""
   },
   "ex": [
     {
       "grade": "Sous Brigadier",
-      "name": "VEGA Kaysen"
+      "name": "LAURENT Cyril"
     }
   ],
   "qs": [
     {
-      "id": "v4-8",
-      "theme": "BAC",
-      "q": "À quoi sert un compte rendu après une intervention ?"
-    },
-    {
-      "id": "v4-13",
+      "id": "v4-15",
       "theme": "Radio",
-      "q": "Pourquoi faut-il parler clairement et brièvement à la radio ?"
+      "q": "Que fais-tu si tu reçois une information importante à la radio ?"
     },
     {
-      "id": "v4-20",
-      "theme": "Sécurité",
-      "q": "Que fais-tu si la situation devient dangereuse pour les passants ?"
-    },
-    {
-      "id": "v4-25",
+      "id": "v4-26",
       "theme": "Connaissances BAC",
-      "q": "La BAC intervient-elle seulement la nuit ? Explique."
+      "q": "Pourquoi la BAC peut-elle travailler en tenue civile ?"
     },
     {
-      "id": "v4-24",
-      "theme": "Organisation",
-      "q": "Comment termines-tu une intervention correctement ?"
+      "id": "v4-14",
+      "theme": "Radio",
+      "q": "Que transmets-tu si tu as besoin de renfort ?"
     },
     {
-      "id": "v4-16",
-      "theme": "Comportement",
-      "q": "Comment réagis-tu face à une personne qui crie ?"
-    },
-    {
-      "id": "v4-5",
+      "id": "v4-6",
       "theme": "BAC",
-      "q": "Quelle est la différence entre la BAC et Police Secours ?"
+      "q": "Que fais-tu si tu vois une infraction en cours ?"
     },
     {
-      "id": "v4-19",
-      "theme": "Sécurité",
-      "q": "Quelle est ta priorité si une personne est blessée ?"
+      "id": "v4-2",
+      "theme": "BAC",
+      "q": "Que signifie BAC ?"
+    },
+    {
+      "id": "v4-17",
+      "theme": "Comportement",
+      "q": "Que fais-tu si un collègue est en difficulté ?"
+    },
+    {
+      "id": "v4-23",
+      "theme": "Organisation",
+      "q": "Quand demandes-tu l’aide d’une autre unité ?"
+    },
+    {
+      "id": "v4-9",
+      "theme": "BAC",
+      "q": "Pourquoi travaille-t-on en équipe à la BAC ?"
     },
     {
       "id": "v4-18",
@@ -74,76 +74,65 @@
       "q": "Pourquoi faut-il rester poli pendant un contrôle ?"
     },
     {
-      "id": "v4-26",
-      "theme": "Connaissances BAC",
-      "q": "Pourquoi la BAC peut-elle travailler en tenue civile ?"
+      "id": "v4-11",
+      "theme": "Radio",
+      "q": "Quelles informations importantes donnes-tu au TN 75 ?"
     }
   ],
-  "ans": {
-    "v4-8": "Sa sert a informer une hiérarchie d'un incident ou d'une opération avec son déroulement et les détails",
-    "v4-13": "Car on est pas tout seul il faut que ce soit clair net et précis",
-    "v4-20": "L'isoler prévenir des unités pour balisage aviser le préfet ",
-    "v4-25": "Non de jour comme de nuit",
-    "v4-24": "Signaler a la TN qu'on est de nouveau disponible , compte rendu si utilisation d'arme avec rapport de tir",
-    "v4-16": "Je la laisse crié , j'essaye de la calmer",
-    "v4-5": "La BAC est une spécialité , ils sont soit en bana soit en sérigraphié , PS prioritaire sur la spé",
-    "v4-19": "Les secours avertir la TN et premier soin si possible",
-    "v4-18": "On ne sait pas comment la personne peut réagir et par respect",
-    "v4-26": "Car leurs principales mission c'est la flagrance et pour pouvoir intervenir en flagrant délit ils doivent pouvoir se fondre dans la masse"
-  },
+  "ans": {},
   "radioAns": [
-    "Je prévient la tn pour dire qu'on est a la recherche d'un individu avec son descriptif sans préciser le motif",
-    "Je leur donne le descriptif en expliquant les fait la localisation et la dernière fois ou il a été repéré ",
-    "Je fais une demande de renfort tablette en contactant la TN pour leur donner le motif la position ",
-    "Je prévient la TN que la situation est terminé on est disponible ou qu'on est retour CIAT pour procédure"
+    "",
+    "",
+    "",
+    ""
   ],
   "scAns": [
     [
-      "Je préviens TN que nous somme au contact d'un requérant a tel endroit",
-      "Je vais pas prendre le risque de les séparés minimum 2 ,filtrés , observé être en liaison TPH ou com interne.",
-      "Son descriptif ce qu'elle a volé et dans quel direction elle est partit et y'a combien de temps.",
-      "Je leur dit qu'on est a la recherche d'un individu avec son descriptif , si il est véhiculé dans quelle endroit quelle direction y'a combien de temps",
-      "On peut pas faire grand chose mis appart rester vigilant et rester a proximité pour éviter récidive et prévenir TN de la potentiel présence de voleur dans la zone"
+      "",
+      "",
+      "",
+      "",
+      ""
     ],
     [
-      "L'adresse , y'a combien de temps , qui a appeler si ils ont constaté la présence des personnes ou pas",
-      "3-3 envoyer 1 des deux constater si infraction si porte effrac , rentrer et l'autre BAC qui couvre les issus",
-      "Je leur demande une PS par sécurité",
-      "Je prévient la TN que l'adresse change et qu'on va procéder a une lever de doute",
-      "Quand y'a nécessité "
+      "",
+      "",
+      "",
+      "",
+      ""
     ],
     [
-      "On demande a TN d'envoyer une PS prendre contact avec la personne",
-      "L'identité de la personne qui crie dans la rue et du requérant ",
-      "1 du requerant 1 qui crie 1 qui gère la radio et le chef de bord",
-      "Je leur prévient qu'on a besoin d'une PS ",
-      "Je le note dans mon rapport en prenant avec des pincette les informations donner par le requérant "
+      "",
+      "",
+      "",
+      "",
+      ""
     ],
     [
-      "Prévenir les secours , la TN demander des renforts pour sécurisation et faire les premiers soins si possible sauf si c'est trop douloureux",
-      "Par la radio ou TPH",
-      "De faire circuler les témoins et faire en sorte de faciliter le passage des secours",
-      "Les mettre  sur le coté demander si ils ont besoin d'un médecin ou psy d'évacuer",
-      "Si j'ai fait déplacé des effectifs autre que la BAC le commandement si c'est juste la BAC celui de spé"
+      "",
+      "",
+      "",
+      "",
+      ""
     ],
     [
-      "Plus d'infos sur effectifs sur place et demander si il y'a réellement besoin de nous ",
-      "Une vacation a 4 et une vacation a deux et une a 3",
-      "La sécurité avant tout , une fois arriver sur place sécuriser la zone",
-      "On se rend sur place avec l'ensemble de la BAC",
-      "Le signaler a la TN prévenir les secours si besoin et faire les premier secours",
-      "Si on arrive pas a gérer la situation ",
-      "Ce qu'il s'est passer et la conclusion"
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
     ]
   ],
   "phys": {
-    "run": "2.46",
-    "push": "183",
-    "abs": "60",
-    "jumping": "72",
-    "pursuit": "Il a eu le bon réflexe de prévenir les secours, mais n'a pas réussi à s'arrêter immédiatement.",
-    "cog": "Bonne restitution des informations malgré la fatigue. Fait preuve d'un bon discernement et d'une bonne capacité de mémorisation",
-    "obs": "Candidat motivé, disposant d'une bonne capacité musculaire. Endurance cardiovasculaire à améliorer légèrement. Aptitudes physiques globalement satisfaisantes pour intégrer la BAC."
+    "run": "",
+    "push": "",
+    "abs": "",
+    "jumping": "",
+    "pursuit": "",
+    "cog": "",
+    "obs": ""
   },
   "shoot": {
     "safety": "",
@@ -151,72 +140,28 @@
     "precision": "",
     "reaction": "",
     "memory": "",
-    "memoryAsked": "26",
-    "memoryGood": "25",
-    "memoryErrors": "1",
+    "memoryAsked": "",
+    "memoryGood": "",
+    "memoryErrors": "",
     "discern": "",
-    "discernAsked": "Ne pas tiré sur les cibles dites \"otages\"",
-    "discernErrors": "0",
-    "analysis": "Il estime avoir été légèrement trop lent dans son exécution.",
+    "discernAsked": "",
+    "discernErrors": "",
+    "analysis": "",
     "hostage": 0,
-    "obs": "Très bonne maîtrise et précision malgré l’effort physique. Bon discernement. Exercice conduit en sécurité. Petite erreur : deux balles tirées sur une cible au lieu d’une seule. Rapidité assez satisfaisante."
+    "obs": ""
   },
   "marks": {
-    "theory": {
-      "v4-8": "10",
-      "v4-13": "10",
-      "v4-20": "8",
-      "v4-25": "10",
-      "v4-24": "10",
-      "v4-16": "8",
-      "v4-5": "6",
-      "v4-19": "8",
-      "v4-18": "10",
-      "v4-26": "8"
-    },
-    "radio": {
-      "0": "22",
-      "1": "22",
-      "2": "20",
-      "3": "18"
-    },
-    "sc": {
-      "0_0": "20",
-      "0_1": "13",
-      "0_2": "14",
-      "0_3": "15",
-      "0_4": "10",
-      "1_0": "12",
-      "1_1": "15",
-      "1_2": "11",
-      "1_3": "12",
-      "1_4": "15",
-      "2_0": "12",
-      "2_1": "10",
-      "2_2": "5",
-      "2_3": "12",
-      "2_4": "15",
-      "3_0": "15",
-      "3_1": "10",
-      "3_2": "12",
-      "3_3": "10",
-      "3_4": "15",
-      "4_0": "10",
-      "4_1": "13",
-      "4_2": "13",
-      "4_3": "10",
-      "4_4": "12",
-      "4_5": "15",
-      "4_6": "13"
-    },
-    "phys": "170",
-    "shoot": "250"
+    "theory": {},
+    "radio": {},
+    "sc": {},
+    "phys": "",
+    "shoot": ""
   },
-  "strength": "Très bon discernement et respect des consignes de sécurité.\n\n\n\nBonne maîtrise et précision au tir.\n\n\n\nBonne capacité de mémorisation et de restitution.\n\n\n\nBonnes capacités physiques et musculaires.\n\n\n\nRéactivité et motivation.",
-  "improve": "- Améliorer la rapidité d'exécution.\n- Travailler davantage l'endurance cardiovasculaire.\n- Renforcer la précision dans le respect des consignes de tir.\n- Gagner en efficacité dans les situations de poursuite.",
+  "strength": "",
+  "improve": "",
   "general": "",
-  "decision": "RETENU",
-  "reason": "Candidat sérieux, motivé et impliqué tout au long des épreuves. Démontre une bonne maîtrise générale, un comportement adapté et une capacité à prendre des décisions sous pression. Niveau global satisfaisant pour intégrer la BAC.",
+  "decision": "",
+  "reason": "",
   "retakes": [],
   "retakeDate": "",
   "el": {
