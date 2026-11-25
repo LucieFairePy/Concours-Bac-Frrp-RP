@@ -2,7 +2,7 @@
   "id": "BAC-2026-006",
   "version": 2,
   "contentSet": "v4",
-  "status": "draft",
+  "status": "in_progress",
   "locked": false,
   "created": "2026-11-25T15:06:20.782Z",
   "auditTrail": [
@@ -14,17 +14,17 @@
     }
   ],
   "c": {
-    "last": "",
-    "first": "",
-    "grade": "",
-    "mat": "",
-    "date": "2026-11-25",
-    "start": ""
+    "last": "Camara",
+    "first": "Diego",
+    "grade": "GPX",
+    "mat": "5020988",
+    "date": "2000-08-22",
+    "start": "16:00"
   },
   "ex": [
     {
       "grade": "Sous Brigadier",
-      "name": "LAURENT Cyril"
+      "name": "VEGA Kaysen"
     }
   ],
   "qs": [
