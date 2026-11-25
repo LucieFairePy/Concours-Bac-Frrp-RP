@@ -141,8 +141,8 @@
     "push": "55",
     "abs": "30",
     "jumping": "37",
-    "pursuit": "",
-    "cog": "",
+    "pursuit": "Il n'a pas réussi a me rattrapper mais il a bien fait les sommation et a essayer de me résonner de m'arreter ",
+    "cog": "Il restitue bien les information donnés ",
     "obs": ""
   },
   "shoot": {
@@ -151,15 +151,15 @@
     "precision": "",
     "reaction": "",
     "memory": "",
-    "memoryAsked": "",
-    "memoryGood": "",
-    "memoryErrors": "",
+    "memoryAsked": "24",
+    "memoryGood": "24",
+    "memoryErrors": "0",
     "discern": "",
-    "discernAsked": "",
-    "discernErrors": "",
-    "analysis": "",
-    "hostage": 0,
-    "obs": ""
+    "discernAsked": "Ne pas tiré sur les cibles 'otages'",
+    "discernErrors": "0",
+    "analysis": "Il est confiant",
+    "hostage": "0",
+    "obs": "Très bonne exécution peu d'hésitation et sang froid malgré les épreuves physiques enduré juste avant"
   },
   "marks": {
     "theory": {},
