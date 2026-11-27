@@ -2,36 +2,36 @@
   "id": "BAC-2026-006",
   "version": 2,
   "contentSet": "v4",
-  "status": "decision",
+  "status": "draft",
   "locked": false,
-  "created": "2026-11-25T15:06:20.782Z",
+  "created": "2026-11-27T15:22:08.981Z",
   "auditTrail": [
     {
-      "at": "2026-11-25T15:06:20.785Z",
+      "at": "2026-11-27T15:22:08.984Z",
       "action": "dossier.creation",
       "who": "sous brigadier Kaysen Vega",
       "detail": "BAC-2026-006"
     }
   ],
   "c": {
-    "last": "Camara",
-    "first": "Diego",
-    "grade": "GPX",
-    "mat": "5020988",
-    "date": "2000-08-22",
-    "start": "16:00"
+    "last": "",
+    "first": "",
+    "grade": "",
+    "mat": "",
+    "date": "2026-11-27",
+    "start": ""
   },
   "ex": [
     {
       "grade": "Sous Brigadier",
-      "name": "VEGA Kaysen"
+      "name": "LAURENT Cyril"
     }
   ],
   "qs": [
     {
-      "id": "v4-15",
-      "theme": "Radio",
-      "q": "Que fais-tu si tu reçois une information importante à la radio ?"
+      "id": "v4-28",
+      "theme": "Connaissances BAC",
+      "q": "Pourquoi la BAC échange-t-elle des informations avec d’autres services ?"
     },
     {
       "id": "v4-26",
@@ -39,24 +39,19 @@
       "q": "Pourquoi la BAC peut-elle travailler en tenue civile ?"
     },
     {
-      "id": "v4-14",
+      "id": "v4-10",
+      "theme": "BAC",
+      "q": "Que fais-tu si tu ne comprends pas une consigne ?"
+    },
+    {
+      "id": "v4-11",
       "theme": "Radio",
-      "q": "Que transmets-tu si tu as besoin de renfort ?"
+      "q": "Quelles informations importantes donnes-tu au TN 75 ?"
     },
     {
-      "id": "v4-6",
-      "theme": "BAC",
-      "q": "Que fais-tu si tu vois une infraction en cours ?"
-    },
-    {
-      "id": "v4-2",
-      "theme": "BAC",
-      "q": "Que signifie BAC ?"
-    },
-    {
-      "id": "v4-17",
-      "theme": "Comportement",
-      "q": "Que fais-tu si un collègue est en difficulté ?"
+      "id": "v4-29",
+      "theme": "Connaissances BAC",
+      "q": "Que dois-tu faire avant de transmettre une information non vérifiée ?"
     },
     {
       "id": "v4-23",
@@ -64,86 +59,80 @@
       "q": "Quand demandes-tu l’aide d’une autre unité ?"
     },
     {
-      "id": "v4-9",
-      "theme": "BAC",
-      "q": "Pourquoi travaille-t-on en équipe à la BAC ?"
-    },
-    {
-      "id": "v4-18",
-      "theme": "Comportement",
-      "q": "Pourquoi faut-il rester poli pendant un contrôle ?"
-    },
-    {
-      "id": "v4-11",
+      "id": "v4-15",
       "theme": "Radio",
-      "q": "Quelles informations importantes donnes-tu au TN 75 ?"
+      "q": "Que fais-tu si tu reçois une information importante à la radio ?"
+    },
+    {
+      "id": "v4-24",
+      "theme": "Organisation",
+      "q": "Comment termines-tu une intervention correctement ?"
+    },
+    {
+      "id": "v4-12",
+      "theme": "Radio",
+      "q": "Comment annonces-tu que ton équipe prend son service ?"
+    },
+    {
+      "id": "v4-6",
+      "theme": "BAC",
+      "q": "Que fais-tu si tu vois une infraction en cours ?"
     }
   ],
-  "ans": {
-    "v4-15": "Vous prenez en compte l'information",
-    "v4-26": "Car elle enquête sur le terrain pour pas se faire reconnaitre et les filatures",
-    "v4-14": "Je demande des renforts a la radio et avec la tablette",
-    "v4-6": "Je la constate et agis en conséquent en fonction de l'infraction verbalisation interpellation etc",
-    "v4-2": "Brigade anti criminalité",
-    "v4-17": "Je vais lui porter assistance",
-    "v4-23": "Dans une situation si on est en infériorité numérique ou quand sa dégénère ",
-    "v4-9": "Par question de sécurité se répartir les taches travailler plus efficacement ",
-    "v4-18": "Car sa peut se retourner contre nous car déontologiquement parlant c'est interdit et que sa peut se retourner contre nous ",
-    "v4-11": "Pour prévoir un danger donner le lieu les motifs et nombre d'individus "
-  },
+  "ans": {},
   "radioAns": [
-    "Je vais appeler TN lui dire qu'on est au niveau de l'arc de triomphe en donnant le descriptif de l'individu que l'individu s'est fait volé son téléphone",
-    "Descriptif de l'individu direction fuite si véhiculé ou non et de tourner dans le secteur pour essayer de le retrouver ",
-    "Je demande des renforts en donnant lieu motif ",
-    "Fin d'intervention au niveau de l'arc de triomphe individu perdu reprise de vacation initiale"
+    "",
+    "",
+    "",
+    ""
   ],
   "scAns": [
     [
-      "Je mettrais en place des agents en civil et d'autres en 75 N , 75N car si il voit la police sur les lieux ca va l'empêcher de réitérer et civil pour prendre en flagrant délit ",
-      "Je mettrais en place des agents en civil et d'autres en 75 N , 75N car si il voit la police sur les lieux ca va l'empêcher de réitérer et civil pour prendre en flagrant délit ",
-      "Un descriptif de l'individu un descriptif physique couleur cheveux vêtement etc. et la direction de fuite ainsi que le descriptif du sac volé, si elle a été agressé ou pas ",
-      "J'annonce la répartition des agents mis en place sur le secteur je retranscrit le descriptif de l'individu ",
-      "Je les prévient qu'un individu volerait des sac dans la rue essayer de les écarter des un des autres et leur demander de pas prendre de risques si ils seraient confronté au voleur"
+      "",
+      "",
+      "",
+      "",
+      ""
     ],
     [
-      "Si y'a des témoins ",
-      "1 BAC qui fait des tours pour constaté et la deuxième au contact de la maison pour clear ",
-      "Des renforts",
-      "Je vais contacter la TN en rectifiant ou apporter des informations ou contacter le requérant si il a des infos",
-      "Si la situation devient dangereuse comme un individu retranché ou un forcené"
+      "",
+      "",
+      "",
+      "",
+      ""
     ],
     [
-      "Contacter la TN pour les prévenir et aller au contact en sécurité de la personne qui crie",
-      "Si il est psychologiquement ou moralement perturber , si il est armé , si il est blessé comprendre pourquoi il crie",
-      "Selon ce que les agents aiment faire et dans ce qu'ils sont bons ",
-      "Je dis ce qu'il se passe les effectifs présent ce que révèle la palpation le motif de pourquoi il crie et si il y'a besoin de renfort ",
-      "Je n'en tient pas compte et je continue mes constation"
+      "",
+      "",
+      "",
+      "",
+      ""
     ],
     [
-      "Je vais informer TN lui demander comment il va et je rend compte a la deuxième bac et j'essaye de savoir la cause de sa blessure  ",
-      "Par la radio et j'envoie ma position TPH",
-      "Je vais demander a une des deux bac de tourner et surveiller les alentours  ",
-      "Les mettre d'un coté les parler si certains on besoin des secours pour eux également et palper des personnes pour vérifier si ils ne sont pas des menaces ",
-      "Un compte rendu corps de commandement "
+      "",
+      "",
+      "",
+      "",
+      ""
     ],
     [
-      "Prendre départ et sur la route demander des informations complémentaires disponibles  a la TN ",
-      "Rester ensemble ",
-      "Pas prendre de risque si il y'a des infos importantes les transmettre et ne jamais rester seul",
-      "Qu'on prend départ sur inter je les informe de notre équipement ",
-      "J'adapte en fonction de celle-ci",
-      "Si la situation est incontrôlable ",
-      "Avec un call radio TN et je donne les infos les blesser les interpellés des pax abattus etc"
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
     ]
   ],
   "phys": {
-    "run": "2.03",
-    "push": "55",
-    "abs": "30",
-    "jumping": "37",
-    "pursuit": "Le candidat n'a pas réussi à rattraper l'examinateur. Il a néanmoins effectué des sommations et tenté de raisonner l'individu afin de le convaincre de s'arrêter.",
-    "cog": "Le candidat a correctement restitué les informations communiquées. Bonne capacité de mémorisation malgré la fatigue physique.",
-    "obs": "Candidat présentant de bonnes capacités physiques générales. Dépasse les objectifs fixés en pompes et en jumping jacks. Résultat perfectible en abdominaux. Bonne attitude lors de la mise en situation et bonne restitution des informations."
+    "run": "",
+    "push": "",
+    "abs": "",
+    "jumping": "",
+    "pursuit": "",
+    "cog": "",
+    "obs": ""
   },
   "shoot": {
     "safety": "",
@@ -151,72 +140,28 @@
     "precision": "",
     "reaction": "",
     "memory": "",
-    "memoryAsked": "24",
-    "memoryGood": "24",
-    "memoryErrors": "0",
+    "memoryAsked": "",
+    "memoryGood": "",
+    "memoryErrors": "",
     "discern": "",
-    "discernAsked": "Ne pas tiré sur les cibles 'otages'",
-    "discernErrors": "0",
-    "analysis": "Il est confiant",
-    "hostage": "0",
-    "obs": "Très bonne exécution peu d'hésitation et sang froid malgré les épreuves physiques enduré juste avant"
+    "discernAsked": "",
+    "discernErrors": "",
+    "analysis": "",
+    "hostage": 0,
+    "obs": ""
   },
   "marks": {
-    "theory": {
-      "v4-15": "8",
-      "v4-26": "9",
-      "v4-14": "7",
-      "v4-6": "10",
-      "v4-2": "10",
-      "v4-17": "10",
-      "v4-23": "10",
-      "v4-9": "8",
-      "v4-18": "7",
-      "v4-11": "6"
-    },
-    "radio": {
-      "0": "17",
-      "1": "22",
-      "2": "18",
-      "3": "20"
-    },
-    "sc": {
-      "0_0": "10",
-      "0_1": "9",
-      "0_2": "12",
-      "0_3": "8",
-      "0_4": "13",
-      "1_0": "10",
-      "1_1": "15",
-      "1_2": "1",
-      "1_3": "13",
-      "1_4": "15",
-      "2_0": "11",
-      "2_1": "12",
-      "2_2": "8",
-      "2_3": "11",
-      "2_4": "11",
-      "3_0": "5",
-      "3_1": "14",
-      "3_2": "7",
-      "3_3": "7",
-      "3_4": "15",
-      "4_0": "8",
-      "4_1": "3",
-      "4_2": "12",
-      "4_3": "10",
-      "4_4": "11",
-      "4_5": "12",
-      "4_6": "7"
-    },
-    "phys": "145",
-    "shoot": "290"
+    "theory": {},
+    "radio": {},
+    "sc": {},
+    "phys": "",
+    "shoot": ""
   },
-  "strength": "Bonne capacité de mémorisation, résistance physique satisfaisante, volonté de coordonner les équipes, réflexes de protection du public, capacité à rendre compte à la hiérarchie et bonne compréhension générale des situations présentées.",
-  "improve": "Améliorer la précision des transmissions radio, la répartition des effectifs, la gestion des priorités et l'analyse des risques. Approfondir les procédures d'intervention et les demandes de renforts. Développer davantage l'autonomie et la prise de décision sous pression.",
+  "strength": "",
+  "improve": "",
   "general": "",
-  "decision": "RESERVE",
-  "reason": "Le candidat démontre une motivation satisfaisante et une volonté de prendre des responsabilités. Il possède des réflexes de communication et de coordination, mais manque encore de précision dans certaines prises de décision. Son niveau général reste encourageant, malgré des lacunes dans l'organisation opérationnelle et la gestion des situations complexes.",
+  "decision": "",
+  "reason": "",
   "retakes": [],
   "retakeDate": "",
   "el": {
