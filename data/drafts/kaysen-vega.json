@@ -151,15 +151,15 @@
     "precision": "",
     "reaction": "",
     "memory": "",
-    "memoryAsked": "",
-    "memoryGood": "",
-    "memoryErrors": "",
+    "memoryAsked": "28",
+    "memoryGood": "26",
+    "memoryErrors": "2",
     "discern": "",
-    "discernAsked": "",
-    "discernErrors": "",
-    "analysis": "",
+    "discernAsked": "Ne pas tiré sur les cibles otages",
+    "discernErrors": "0",
+    "analysis": "Il est confiant pour lui c'est réussi",
     "hostage": 0,
-    "obs": ""
+    "obs": "Aucun otage atteint cependant sur sa deuxieme série de tir il a oublier et fait 2 erreurs en confondant deux cible"
   },
   "marks": {
     "theory": {
