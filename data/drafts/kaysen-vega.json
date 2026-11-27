@@ -93,9 +93,9 @@
   },
   "radioAns": [
     "Qu'une personne nous a interpellé a volé un téléphone avec descriptif si il est véhiculé",
-    "",
-    "",
-    ""
+    "La localisation si il y'a un danger descriptif ",
+    "Une demande de renfort avec le motif et localisation",
+    "Que l'intervention est terminé et que nous sommes de nouveau disponible"
   ],
   "scAns": [
     [
