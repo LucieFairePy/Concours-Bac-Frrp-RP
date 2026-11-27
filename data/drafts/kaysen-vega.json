@@ -2,7 +2,7 @@
   "id": "BAC-2026-006",
   "version": 2,
   "contentSet": "v4",
-  "status": "correction",
+  "status": "decision",
   "locked": false,
   "created": "2026-11-27T15:22:08.981Z",
   "auditTrail": [
@@ -215,8 +215,8 @@
   "strength": "",
   "improve": "",
   "general": "",
-  "decision": "",
-  "reason": "",
+  "decision": "RESERVE",
+  "reason": "À l'issue de l'ensemble des épreuves du concours, le candidat obtient un résultat de 737/1000, témoignant d'un niveau général satisfaisant. Il démontre de bonnes capacités physiques, une restitution cognitive de qualité ainsi qu'une implication sérieuse durant les différentes mises en situation.\n\nSon comportement général et son investissement sont encourageants. Toutefois, certaines lacunes ont été relevées, notamment en matière de mémorisation lors de l'épreuve de tir, ainsi que dans les connaissances théoriques et la coordination radio.\n\nLe candidat présente néanmoins un potentiel intéressant et semble disposer des qualités nécessaires pour poursuivre son parcours, sous réserve d'un encadrement et d'un approfondissement de ses connaissances.",
   "retakes": [],
   "retakeDate": "",
   "el": {
