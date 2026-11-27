@@ -157,7 +157,7 @@
     "discern": "",
     "discernAsked": "Ne pas tiré sur les cibles otages",
     "discernErrors": "0",
-    "analysis": "Il est confiant pour lui c'est réussi",
+    "analysis": "Le candidat se montre confiant quant à sa prestation et estime avoir réalisé un passage satisfaisant. Il semble conscient du bon déroulement général de l'exercice, mais devra rester attentif à la mémorisation des cibles et à la rigueur dans l'identification de celles-ci.",
     "hostage": 0,
     "obs": "Le candidat présente une bonne maîtrise générale de l'exercice et fait preuve de sérieux dans l'application des consignes. Les résultats sont satisfaisants dans l'ensemble, avec 26 réponses correctes sur 28 lors de l'épreuve de mémorisation. Aucun tir sur cible signalée comme otage n'a été constaté. Deux erreurs de mémorisation sont néanmoins relevées lors de la seconde série, témoignant d'un manque ponctuel de concentration."
   },
@@ -175,11 +175,42 @@
       "v4-6": "9"
     },
     "radio": {
-      "0": "18"
+      "0": "18",
+      "1": "12",
+      "2": "20",
+      "3": "20"
     },
-    "sc": {},
-    "phys": "",
-    "shoot": ""
+    "sc": {
+      "0_0": "10",
+      "0_1": "10",
+      "0_2": "13",
+      "0_3": "9",
+      "0_4": "12",
+      "1_0": "11",
+      "1_1": "10",
+      "1_2": "6",
+      "1_3": "13",
+      "1_4": "14",
+      "2_0": "7",
+      "2_1": "12",
+      "2_2": "12",
+      "2_3": "6",
+      "2_4": "0",
+      "3_0": "12",
+      "3_1": "10",
+      "3_2": "5",
+      "3_3": "12",
+      "3_4": "15",
+      "4_0": "12",
+      "4_1": "8",
+      "4_2": "10",
+      "4_3": "11",
+      "4_4": "13",
+      "4_5": "15",
+      "4_6": "08"
+    },
+    "phys": "185",
+    "shoot": "200"
   },
   "strength": "",
   "improve": "",
