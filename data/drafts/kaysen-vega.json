@@ -2,7 +2,7 @@
   "id": "BAC-2026-006",
   "version": 2,
   "contentSet": "v4",
-  "status": "in_progress",
+  "status": "correction",
   "locked": false,
   "created": "2026-11-27T15:22:08.981Z",
   "auditTrail": [
@@ -139,8 +139,8 @@
   "phys": {
     "run": "1.41",
     "push": "64",
-    "abs": "",
-    "jumping": "",
+    "abs": "24",
+    "jumping": "39",
     "pursuit": "",
     "cog": "",
     "obs": ""
@@ -162,8 +162,21 @@
     "obs": ""
   },
   "marks": {
-    "theory": {},
-    "radio": {},
+    "theory": {
+      "v4-28": "6",
+      "v4-26": "8",
+      "v4-10": "10",
+      "v4-11": "7",
+      "v4-29": "10",
+      "v4-23": "1",
+      "v4-15": "8",
+      "v4-24": "9",
+      "v4-12": "10",
+      "v4-6": "9"
+    },
+    "radio": {
+      "0": "18"
+    },
     "sc": {},
     "phys": "",
     "shoot": ""
