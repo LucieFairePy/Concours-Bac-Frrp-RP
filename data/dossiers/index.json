@@ -69,5 +69,20 @@
     "closedAt": "2026-11-09T15:53:09.344Z",
     "closedBy": "kaysen-vega",
     "rectifies": null
+  },
+  {
+    "id": "BAC-2026-006",
+    "last": "VOLKOV",
+    "first": "JORDAN",
+    "grade": "GPX-S",
+    "mat": "2747609",
+    "date": "2000-05-09",
+    "decision": "RESERVE",
+    "total": 737,
+    "max": 1000,
+    "examiner": "Sous Brigadier VEGA Kaysen",
+    "closedAt": "2026-11-28T14:53:35.091Z",
+    "closedBy": "kaysen-vega",
+    "rectifies": null
   }
 ]
