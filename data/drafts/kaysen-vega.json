@@ -14,10 +14,10 @@
     }
   ],
   "c": {
-    "last": "Carter",
-    "first": "Ethan",
+    "last": "Havel",
+    "first": "Vaclav",
     "grade": "GPX-S",
-    "mat": "2287355",
+    "mat": "9041727",
     "date": "2026-11-28",
     "start": "16:00"
   },
@@ -80,8 +80,9 @@
     }
   ],
   "ans": {
-    "v4-16": "Sa attire mon attention et je prend la température",
-    "v4-6": "On agis et on stop dans la limite du possible"
+    "v4-7": "Pour s'adapter aux différentes situations rencontrer ",
+    "v4-21": "Afin de mieux informer les agents des changements ",
+    "v4-12": "Prise d'écoute"
   },
   "radioAns": [
     "",
