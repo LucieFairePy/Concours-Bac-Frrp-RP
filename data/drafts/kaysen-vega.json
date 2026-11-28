@@ -14,10 +14,10 @@
     }
   ],
   "c": {
-    "last": "Havel",
-    "first": "Vaclav",
+    "last": "Carter",
+    "first": "Ethan",
     "grade": "GPX-S",
-    "mat": "9041727",
+    "mat": "2287355",
     "date": "2026-11-28",
     "start": "16:00"
   },
@@ -80,17 +80,17 @@
     }
   ],
   "ans": {
-    "v4-7": "Pour s'adapter aux différentes situations rencontrer ",
-    "v4-21": "Afin de mieux informer les agents des changements ",
-    "v4-12": "Prise d'écoute",
-    "v4-19": "Sécuriser la zone si possible sinon appeler les secours",
-    "v4-20": "Demander la dispértion"
+    "v4-16": "Sa attire mon attention et je prend la température",
+    "v4-6": "On agis et on stop dans la limite du possible",
+    "v4-11": "Notre statut qu'on est en cour d'intervention besoin de renfort prise d'écoute ",
+    "v4-29": "La vérifié",
+    "v4-14": "La situation position nombre de renfort demandés"
   },
   "radioAns": [
-    "J'indique la position le fait la description ",
-    "Je l'informe a la position les fait la description qu'on est sur zone",
-    "Demande de renfort urgente a la position en expliquant les faits ",
-    "Pour vous annoncer la fin d'intervention si on a arrêter un individu un retour CIAT sinon de nouveau disponible"
+    "On se présente spontanément sur un requérant qui signal un vol de son téléphone je donne le déscriptif",
+    "Descriptif de l'individu et la zone d'action ou il pourrait agir de nouveau ",
+    "Je donne position motif brièvement et effectif a envoyer",
+    "Fin d'intervention et notre statut"
   ],
   "scAns": [
     [
@@ -103,23 +103,23 @@
     [
       "Demander si on a de nouvelles informations demander si la zone est compliquer si y' a des véhicules louches des individus armés",
       "1 vacation sur zone et 1 dans les alentours pas directement au contact",
-      "",
-      "",
+      "Si les infos s'actualisent et l'informer de la situation sur place",
+      "Je m'adapte a la situation",
       ""
     ],
     [
-      "",
-      "",
-      "",
-      "",
-      ""
+      "Aller au contact voir pourquoi elle crie voir si elle est pas dangereuse pour lui ou nous et voir si elle est en détresse contacter les secours , l'isoler",
+      "Son identité ce qu'il crie, si le monsieur a des détresse , si il est sous substance alcool ou stup avec test si possible, si elle peut être dangereuse , si elle a des objets dangereux.",
+      "3 a son contact et 2 qui sécurise",
+      "J'informe la TN que 2 bac sont présent sur les lieux qu'il y'a pas de blesser personne sur les lieux écarter si la personne est fortement alcoolisé ou qu'il y'a délit comme possession d'arme contacter un OPJ voir si le monsieur est calme signaler la situation demande de renfort si besoin?",
+      "On vérifie la situation , on varie les source les témoin pour comparé les versions"
     ],
     [
-      "",
-      "",
-      "",
-      "",
-      ""
+      "Le sécurisé alerter protégé porter assistance",
+      "Demande au TN de les envoyer",
+      "J'envoie quelqu'un de plus qualifier pour rester avec le blessé et on sécurise la zone",
+      "Leur demander de quitter la zone , si pas possible sécuriser la zone",
+      "Commandement "
     ],
     [
       "",
