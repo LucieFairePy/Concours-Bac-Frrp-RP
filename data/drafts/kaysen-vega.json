@@ -14,10 +14,10 @@
     }
   ],
   "c": {
-    "last": "Carter",
-    "first": "Ethan",
+    "last": "Havel",
+    "first": "Vaclav",
     "grade": "GPX-S",
-    "mat": "2287355",
+    "mat": "9041727",
     "date": "2026-11-28",
     "start": "16:00"
   },
@@ -79,7 +79,9 @@
       "q": "Que transmets-tu si tu as besoin de renfort ?"
     }
   ],
-  "ans": {},
+  "ans": {
+    "v4-7": "Pour s'adapter aux différentes situations rencontrer "
+  },
   "radioAns": [
     "",
     "",
