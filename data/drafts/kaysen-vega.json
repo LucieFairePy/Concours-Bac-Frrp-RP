@@ -1,0 +1,199 @@
+{
+  "id": "BAC-2026-007",
+  "version": 2,
+  "contentSet": "v4",
+  "status": "draft",
+  "locked": false,
+  "created": "2026-11-28T14:53:44.209Z",
+  "auditTrail": [
+    {
+      "at": "2026-11-28T14:53:44.212Z",
+      "action": "dossier.creation",
+      "who": "sous brigadier Kaysen Vega",
+      "detail": "BAC-2026-007"
+    }
+  ],
+  "c": {
+    "last": "",
+    "first": "",
+    "grade": "",
+    "mat": "",
+    "date": "2026-11-28",
+    "start": ""
+  },
+  "ex": [
+    {
+      "grade": "Sous Brigadier",
+      "name": "LAURENT Cyril"
+    }
+  ],
+  "qs": [
+    {
+      "id": "v4-7",
+      "theme": "BAC",
+      "q": "Pourquoi faut-il bien observer avant d’agir ?"
+    },
+    {
+      "id": "v4-16",
+      "theme": "Comportement",
+      "q": "Comment réagis-tu face à une personne qui crie ?"
+    },
+    {
+      "id": "v4-21",
+      "theme": "Organisation",
+      "q": "Pourquoi faut-il prévenir les autres équipages d’un changement ?"
+    },
+    {
+      "id": "v4-6",
+      "theme": "BAC",
+      "q": "Que fais-tu si tu vois une infraction en cours ?"
+    },
+    {
+      "id": "v4-12",
+      "theme": "Radio",
+      "q": "Comment annonces-tu que ton équipe prend son service ?"
+    },
+    {
+      "id": "v4-11",
+      "theme": "Radio",
+      "q": "Quelles informations importantes donnes-tu au TN 75 ?"
+    },
+    {
+      "id": "v4-19",
+      "theme": "Sécurité",
+      "q": "Quelle est ta priorité si une personne est blessée ?"
+    },
+    {
+      "id": "v4-29",
+      "theme": "Connaissances BAC",
+      "q": "Que dois-tu faire avant de transmettre une information non vérifiée ?"
+    },
+    {
+      "id": "v4-20",
+      "theme": "Sécurité",
+      "q": "Que fais-tu si la situation devient dangereuse pour les passants ?"
+    },
+    {
+      "id": "v4-14",
+      "theme": "Radio",
+      "q": "Que transmets-tu si tu as besoin de renfort ?"
+    }
+  ],
+  "ans": {},
+  "radioAns": [
+    "",
+    "",
+    "",
+    ""
+  ],
+  "scAns": [
+    [
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ]
+  ],
+  "phys": {
+    "run": "",
+    "push": "",
+    "abs": "",
+    "jumping": "",
+    "pursuit": "",
+    "cog": "",
+    "obs": ""
+  },
+  "shoot": {
+    "safety": "",
+    "handling": "",
+    "precision": "",
+    "reaction": "",
+    "memory": "",
+    "memoryAsked": "",
+    "memoryGood": "",
+    "memoryErrors": "",
+    "discern": "",
+    "discernAsked": "",
+    "discernErrors": "",
+    "analysis": "",
+    "hostage": 0,
+    "obs": ""
+  },
+  "marks": {
+    "theory": {},
+    "radio": {},
+    "sc": {},
+    "phys": "",
+    "shoot": ""
+  },
+  "strength": "",
+  "improve": "",
+  "general": "",
+  "decision": "",
+  "reason": "",
+  "retakes": [],
+  "retakeDate": "",
+  "el": {
+    "cheat": false,
+    "refusal": false,
+    "abandon": false,
+    "danger": false
+  },
+  "cmd": {
+    "dg": "Capitaine",
+    "dn": "BOUSSERE Kevin",
+    "ag": "Sous Brigadier",
+    "an": "LAURENT Cyril",
+    "bacRetenu": 800,
+    "bacReserve": 650,
+    "cdgQualifie": 800,
+    "cdgReserve": 650,
+    "cdgAjourne": 500,
+    "physRunFort": 300,
+    "physRunBon": 330,
+    "physRunBase": 390,
+    "physPushFort": 45,
+    "physPushBon": 38,
+    "physPushBase": 30,
+    "physAbsFort": 70,
+    "physAbsBon": 60,
+    "physAbsBase": 50,
+    "physJumpingFort": 30,
+    "physJumpingBon": 25,
+    "physJumpingBase": 20
+  },
+  "total": null,
+  "closedAt": null,
+  "closedBy": null
+}
