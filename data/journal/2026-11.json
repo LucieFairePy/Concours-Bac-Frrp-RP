@@ -46,5 +46,13 @@
     "action": "dossier.cloture",
     "target": "BAC-2026-005",
     "detail": "RETENU — 838/1000"
+  },
+  {
+    "at": "2026-11-28T14:53:41.441Z",
+    "who": "sous brigadier Kaysen Vega",
+    "role": "formateur",
+    "action": "dossier.cloture",
+    "target": "BAC-2026-006",
+    "detail": "RESERVE — 737/1000"
   }
 ]
